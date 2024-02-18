@@ -1,0 +1,24 @@
+@import 'globals.scss';
+
+.sidebar-wrapper {
+    position: sticky;
+    top: 250px;
+    padding-top: 65px;
+}
+.sidebar {
+    color: $secondary;
+    font-size: $h5;
+    font-weight: 700;
+    & ul{
+        margin: 0;
+        padding: 0;
+    }
+    & li {
+        padding: 12px;
+        cursor: pointer;
+        &:hover {
+            color: $primary;
+        }
+    }
+    
+}

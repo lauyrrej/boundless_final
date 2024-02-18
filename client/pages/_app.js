@@ -1,5 +1,6 @@
 import '@/styles/globals.scss'
 import '@/styles/navbar.scss'
+import '@/styles/sidebar.scss'
 import { useEffect } from 'react'
 
 export default function MyApp({ Component, pageProps }) {
