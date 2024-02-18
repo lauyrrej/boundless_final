@@ -2,10 +2,12 @@
 
 .sidebar-wrapper {
     position: sticky;
-    top: 250px;
+    top: 0px;
     padding-top: 65px;
 }
 .sidebar {
+    position: sticky;
+    top: 65px;
     color: $secondary;
     font-size: $h5;
     font-weight: 700;
@@ -20,5 +22,7 @@
             color: $primary;
         }
     }
-    
+    .active {
+        color: $primary;
+    }
 }

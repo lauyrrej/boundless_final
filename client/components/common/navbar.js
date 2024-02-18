@@ -7,7 +7,7 @@ import logoMb from '@/assets/logo_mb.svg'
 export default function Navbar() {
   return (
     <>
-      <header className="header sticky-top w-100 d-flex justify-content-between align-items-center">
+      <header className="header w-100 d-flex justify-content-between align-items-center">
         <a href="#">
           <Image src={logo} alt="logo" className="d-none d-sm-block logo" />
         </a>

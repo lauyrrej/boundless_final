@@ -6,11 +6,21 @@ export default function Test() {
   return (
     <>
       <Navbar />
-      <div className="container"></div>
+      <div className="container">
+        {/* 頁面內容 */}
+        <main
+          className="main"
+          style={{
+            backgroundColor: 'rgb(195, 195, 195)',
+          }}
+        >
+          主要內容
+        </main>
+      </div>
       <Footer />
 
       <style jsx>{`
-        .container {
+        .main {
           min-height: calc(100svh);
         }
       `}</style>

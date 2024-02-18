@@ -1,5 +1,5 @@
 // 引入google字體
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@4300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap');
 // bootstrap樣式
 @import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -135,9 +135,4 @@ ul {
   html {
     color-scheme: dark;
   }
-}
-
-
-#__next{
-  position: relative;
 }

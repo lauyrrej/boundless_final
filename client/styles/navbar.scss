@@ -4,6 +4,9 @@
   background-color: $primary;
   height: 60px;
   padding: 10px 35px;
+  position: fixed;
+  top: 0;
+  z-index: 1200;
   .logo {
     max-width: 180px;
   }
