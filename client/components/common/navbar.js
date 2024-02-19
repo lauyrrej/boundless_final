@@ -34,8 +34,14 @@ export default function Navbar() {
                 <IoCart size={30} className="cart-icon" />
               </a>
             </li>
-            <li>
-              <a href="/login">登入/註冊</a>
+            <li className="login-state d-flex justify-content-center">
+              <a className="" href="/login">
+                登入/註冊
+              </a>
+              {/* 用戶頭像 */}
+              <div className="user-img d-none">
+                <Image src={logoMb} />
+              </div>
             </li>
           </ul>
           {/* 手機版 navbar */}
