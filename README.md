@@ -6,3 +6,6 @@
 <p>github帳號＋動作＋檔案(視情況加上所屬資料夾)＋內容描述(option)</p>
 <p>ex1: antonio88118 新增公版 tempalte.js</p>
 <p>ex2: antonio88118 修改公版 tempalte.js 修改sidebar，現在sidebar可固定在側邊</p>
+
+<h1>三、程式命名規則</h1>
+<p>功能-功能模組.js ex: jam-list.js</p>
