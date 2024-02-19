@@ -48,7 +48,7 @@ export default function Test() {
 
       <style jsx>{`
         .main {
-          min-height: 100svh;
+          min-height: calc(100svh);
         }
       `}</style>
     </>
