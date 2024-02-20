@@ -1,0 +1,45 @@
+/*------------ coupon ------------*/
+.coupon-logo {
+  border-right: 5px solid #b9b9b9;
+  border-radius: 1px;
+  margin-right: 5px;
+  padding: 10px 0 11px 15px;
+}
+.coupon-logo-blue {
+  width: 75px;
+  height: 75px;
+  border-right: 5px solid #b9b9b9;
+  border-radius: 1px;
+  margin-right: 5px;
+  padding: 10px 15px 18px 20px;
+}
+.coupon-text {
+  flex: 1 0 0;
+  color: rgba(0, 0, 0, 0.3);
+}
+.coupon-card {
+  width: 400px;
+  height: 107px;
+  position: relative;
+  .coupon-background {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+.bgWhite{
+  width: 75px;
+  height: 75px;
+}
+
+.coupon-content {
+  width: 110px;
+  height: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+}
