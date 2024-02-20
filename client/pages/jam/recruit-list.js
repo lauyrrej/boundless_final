@@ -15,7 +15,7 @@ export default function Test() {
       <div className="container">
         <div className="row">
           {/* sidebar */}
-          <div className="sidebar-wrapper col-sm-2">
+          <div className="sidebar-wrapper d-none d-sm-block col-sm-2">
             <div className="sidebar">
               <ul className="d-flex flex-column">
                 <li className="active">團員募集</li>
@@ -31,13 +31,14 @@ export default function Test() {
 
           {/* 頁面內容 */}
           <main
-            className="main col-sm-10"
+            className="main col-12 col-sm-10"
             style={{
               backgroundColor: 'rgb(195, 195, 195)',
               paddingLeft: '30px',
             }}
           >
-            主要內容
+            {/* 頂部功能列 */}
+            <div></div>
           </main>
         </div>
       </div>
