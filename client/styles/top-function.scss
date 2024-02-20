@@ -1,0 +1,64 @@
+@import 'globals.scss';
+
+.top-function-container {
+  padding-block: 20px;
+  padding-right: 10px;
+  position: sticky;
+  top: 10px;
+}
+.breadcrumb-wrapper {
+  color: $secondary;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  gap: 6px;
+  margin-bottom: 24px;
+}
+
+.search {
+  width: 300px;
+  border: 1px soild $body;
+  border-radius: 5px;
+  .search-btn {
+    width: 42px;
+    height: 42px;
+    background-color: $light-primary;
+    color: #fff;
+    &:hover {
+      background-color: $primary;
+      border: 1px solid $primary;
+    }
+  }
+}
+
+.filter {
+    color: $secondary;
+    font-weight: 600;
+    font-size: $h6;
+    padding-inline: 10px;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.sort {
+    color: $secondary;
+    font-weight: 600;
+    font-size: $h6;
+    padding-inline: 10px;
+    gap: 8px;
+    .sort-item {
+        padding-inline: 4px;
+        cursor: pointer;
+        transition: 0.3s;
+        &:hover {
+            color: $primary;
+        }
+    }
+    .active {
+        color: $deep-primary;
+        cursor: default;
+        &:hover {
+            color: $deep-primary;
+        }
+    }
+}
