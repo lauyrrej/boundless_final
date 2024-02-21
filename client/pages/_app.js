@@ -1,6 +1,7 @@
 import '@/styles/globals.scss'
 import '@/styles/navbar.scss'
-import '@/styles/coupon.scss'
+import '@/styles/sidebar.scss'
+import '@/styles/top-function.scss'
 import { useEffect } from 'react'
 
 export default function MyApp({ Component, pageProps }) {
