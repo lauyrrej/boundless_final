@@ -104,6 +104,13 @@
         min-height: calc(100vh);
         padding: 0 35px;
       }
+
+      @media screen and (max-width: 576px) {
+        .set-content {
+          display: block !important;
+        }
+      }
+
       .upload-img img {
         width: 150px;
         height: 150px;
@@ -182,7 +189,7 @@
       <!-- setting category -->
       <div class="set-category d-flex justify-content-between row">
         <div class="col-4">
-          <h3>自訂文章分類</h3>
+          <h3>設定文章分類</h3>
         </div>
         <div class="col-8">
           <select class="form-select" aria-label="Default select example">
@@ -198,7 +205,7 @@
         <div class="col-4">
           <h3>自訂文章摘要</h3>
         </div>
-        <div class="col-6">
+        <div class="col-6 d-block">
           <h5 class="text-secondary">
             上限150個字，系統已經先擷取，你也可以自行修改摘要說明。(140/150)
           </h5>
