@@ -1,4 +1,4 @@
-開發前建議詳閱老師的講義↓
+開發前建議詳閱老師的講義↓<br>
 https://drive.google.com/drive/u/0/folders/1ay6Ml4aZ7x3XMG7qJQLoqg06W5ItfiPT
 <h1>一、scss class 命名規則</h1>
 <p>以自己的功能模組為開頭 ex: 樂團列表容器 .jam-list </p>
