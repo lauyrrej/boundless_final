@@ -1,6 +1,6 @@
 import React from 'react'
 
-function ProductCard({
+function InstrumentCard({
   productName,
   productPrice,
   productSold,
@@ -99,7 +99,7 @@ export default function ProductsContainer() {
   return (
     <section className="products-container">
       {products.map((product, index) => (
-        <ProductCard
+        <InstrumentCard
           key={index}
           productName={product.productName}
           productPrice={product.productPrice}

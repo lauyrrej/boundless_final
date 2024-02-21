@@ -208,6 +208,12 @@
           font: 14px Noto Sans TC, sans-serif;
           color: var(--secondary, #5a5a5a);
         }
+       
+        .product-card-full {
+            display: inline-block;
+            margin: 10px;
+        }
+   
   </style>
 </head>
 
@@ -243,75 +249,87 @@
       <div class="col-sm-2" style="background-color: rgb(255, 156, 156); height: 100vh;"></div>
       <div class="col-sm-10" style="background-color: rgb(195, 195, 195); height: 100vh;">
       樂器商域
-      <section class="product-card">
-        <div class="image-container">
-          <img loading="lazy" srcset="https://cdn.builder.io/api/v1/image/assets/TEMP/5992aa8ec15a926ec046436c378c731f27033dfabae741bcd6441da4713d70a9?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&width=100 100w, https://cdn.builder.io/api/v1/image/assets/TEMP/5992aa8ec15a926ec046436c378c731f27033dfabae741bcd6441da4713d70a9?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&width=200 200w, https://cdn.builder.io/api/v1/image/assets/TEMP/5992aa8ec15a926ec046436c378c731f27033dfabae741bcd6441da4713d70a9?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&width=400 400w, https://cdn.builder.io/api/v1/image/assets/TEMP/5992aa8ec15a926ec046436c378c731f27033dfabae741bcd6441da4713d70a9?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&width=800 800w, https://cdn.builder.io/api/v1/image/assets/TEMP/5992aa8ec15a926ec046436c378c731f27033dfabae741bcd6441da4713d70a9?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&width=1200 1200w, https://cdn.builder.io/api/v1/image/assets/TEMP/5992aa8ec15a926ec046436c378c731f27033dfabae741bcd6441da4713d70a9?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&width=1600 1600w, https://cdn.builder.io/api/v1/image/assets/TEMP/5992aa8ec15a926ec046436c378c731f27033dfabae741bcd6441da4713d70a9?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&width=2000 2000w, https://cdn.builder.io/api/v1/image/assets/TEMP/5992aa8ec15a926ec046436c378c731f27033dfabae741bcd6441da4713d70a9?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&"class="product-image" alt="Fender Telecaster model 1970" />
-          <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/f63b958d31f22ceac9729085dc4ee70e1cc6d5a2dab24fdc0543dd3b1c72eac0?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&" class="verification-icon" alt="" />
-        </div>
-        <div class="product-info">
-          <h4 class="product-title">Fender Telecaster model 1970</h4>
-          <p class="product-price">NT$ 22,680</p>
-          <p class="product-sold">已售出 10</p>
-        </div>
-      </section>
-
-   
-         
-        
-      </div></div>
-    </div>
+     
+      <script>
+        for (let i = 1; i <= 20; i++) {
+            // Create a new section element
+            let section = document.createElement("section");
+            section.className = "product-card-full";
     
-    <div class="container-products">
-      <section class="product-list">
-          <article class="product-item">
-              <figure class="product-image">
-                  <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/66b57f5d4ca40da7f3f4a2b1fb8c1901a2a41f62eb118a340fc315213f440ba2?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21" alt="Fender Telecaster model 1970" class="img-primary" />
-                  <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/f63b958d31f22ceac9729085dc4ee70e1cc6d5a2dab24fdc0543dd3b1c72eac0?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&" alt="Fender Telecaster additional view" class="img-secondary"/>
-              </figure>
-              <div class="product-details">
-                  <p class="product-name">Fender Telecaster model 1970</p>
-                  <p class="product-price">NT$ 22,680</p>
-                  <p class="product-sales">已售出 10</p> 
-              </div> 
-          </article>
-          <article class="product-item">
-              <figure class="product-image">
-                  <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/66b57f5d4ca40da7f3f4a2b1fb8c1901a2a41f62eb118a340fc315213f440ba2?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21" alt="Fender Telecaster model 1970" class="img-primary" />
-                  <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/f63b958d31f22ceac9729085dc4ee70e1cc6d5a2dab24fdc0543dd3b1c72eac0?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&" alt="Fender Telecaster additional view" class="img-secondary"/>
-              </figure>
-              <div class="product-details">
-                  <p class="product-name">Fender Telecaster model 1970</p>
-                  <p class="product-price">NT$ 22,680</p>
-                  <p class="product-sales">已售出 10</p> 
-              </div> 
-          </article>
-          <article class="product-item">
-              <figure class="product-image">
-                  <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/66b57f5d4ca40da7f3f4a2b1fb8c1901a2a41f62eb118a340fc315213f440ba2?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21" alt="Fender Telecaster model 1970" class="img-primary" />
-                  <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/f63b958d31f22ceac9729085dc4ee70e1cc6d5a2dab24fdc0543dd3b1c72eac0?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&" alt="Fender Telecaster additional view" class="img-secondary"/>
-              </figure>
-              <div class="product-details">
-                  <p class="product-name">Fender Telecaster model 1970</p>
-                  <p class="product-price">NT$ 22,680</p>
-                  <p class="product-sales">已售出 10</p> 
-              </div> 
-          </article>
-          <article class="product-item">
-              <figure class="product-image">
-                  <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/66b57f5d4ca40da7f3f4a2b1fb8c1901a2a41f62eb118a340fc315213f440ba2?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21" alt="Fender Telecaster model 1970" class="img-primary" />
-                  <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/f63b958d31f22ceac9729085dc4ee70e1cc6d5a2dab24fdc0543dd3b1c72eac0?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&" alt="Fender Telecaster additional view" class="img-secondary"/>
-              </figure>
-              <div class="product-details">
-                  <p class="product-name">Fender Telecaster model 1970</p>
-                  <p class="product-price">NT$ 22,680</p>
-                  <p class="product-sales">已售出 10</p> 
-              </div> 
+            // Create a div for the image container
+            let imageContainer = document.createElement("div");
+            imageContainer.className = "image-container";
+    
+            // Create an image element for the product image
+            let productImage = document.createElement("img");
+            productImage.setAttribute("loading", "lazy");
+            productImage.setAttribute("src", "https://cdn.builder.io/api/v1/image/assets/TEMP/5992aa8ec15a926ec046436c378c731f27033dfabae741bcd6441da4713d70a9?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&width=800");
+            productImage.className = "product-image";
+            productImage.alt = "Fender Telecaster model 1970";
+    
+            // Create an image element for the verification icon
+            let verificationIcon = document.createElement("img");
+            verificationIcon.setAttribute("loading", "lazy");
+            verificationIcon.setAttribute("src", "https://cdn.builder.io/api/v1/image/assets/TEMP/f63b958d31f22ceac9729085dc4ee70e1cc6d5a2dab24fdc0543dd3b1c72eac0?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21");
+            verificationIcon.className = "verification-icon";
+            verificationIcon.alt = "";
+    
+            // Append the product image and verification icon to the image container
+            imageContainer.appendChild(productImage);
+            imageContainer.appendChild(verificationIcon);
+    
+            // Create a div for the product info
+            let productInfo = document.createElement("div");
+            productInfo.className = "product-info";
+    
+            // Create h4 element for the product title
+            let productTitle = document.createElement("h4");
+            productTitle.className = "product-title";
+            productTitle.textContent = "Fender Telecaster model 1970";
+    
+            // Create p element for the product price
+            let productPrice = document.createElement("p");
+            productPrice.className = "product-price";
+            productPrice.textContent = "NT$ 22,680";
+    
+            // Create p element for the product sold count
+            let productSold = document.createElement("p");
+            productSold.className = "product-sold";
+            productSold.textContent = "已售出 10";
+    
+            // Append the product title, price, and sold count to the product info
+            productInfo.appendChild(productTitle);
+            productInfo.appendChild(productPrice);
+            productInfo.appendChild(productSold);
+    
+            // Append the image container and product info to the section
+            section.appendChild(imageContainer);
+            section.appendChild(productInfo);
+    
+            // Append the section to the body
+            document.body.appendChild(section);
+    
+            // Add a line break after every 4 product cards
+            if (i % 4 === 0) {
+                document.body.appendChild(document.createElement("br"));
+            }
+        }
+    </script>
+     
+      </div>
+      
+    </div>
+  </div>
+    
+   
           </article>
           <!-- Add more product-item blocks as necessary -->
+         
+        
       </section>
+      
   </div>
   
- 
   </div>
   <!-- End content -->
 
@@ -319,6 +337,7 @@
     Copyright © 2023 Boundless. All rights reserved.
   </footer>
 
+  
   <!-- Bootstrap JavaScript Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
     integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
