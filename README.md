@@ -1,3 +1,5 @@
+開發前建議詳閱老師的講義↓
+https://drive.google.com/drive/u/0/folders/1ay6Ml4aZ7x3XMG7qJQLoqg06W5ItfiPT
 <h1>一、scss class 命名規則</h1>
 <p>以自己的功能模組為開頭 ex: 樂團列表容器 .jam-list </p>
 <p>同時有該功能限定與共用的情況，以通用性開頭命名 ex: 課程和樂器商品列表 .product-list</p>
