@@ -51,9 +51,7 @@ export default function ArticleList() {
               <div className="breadcrumb-wrapper">
                 <ul className="d-flex align-items-center p-0 m-0">
                   <IoHome size={20} />
-                  <li style={{ marginLeft: '8px' }}>Let&apos;s JAM!</li>
-                  <FaChevronRight />
-                  <li style={{ marginLeft: '10px' }}>團員募集</li>
+                  <li style={{ marginLeft: '8px' }}>樂友論壇</li>
                 </ul>
               </div>
 
