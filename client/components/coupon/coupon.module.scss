@@ -1,0 +1,27 @@
+.couponCard {
+  max-width: 400px;
+  border: 1px solid gray;
+  border-radius: 8px;
+  margin-bottom: 32px;
+}
+.couponCard img {
+  width: 100px;
+  border-right: dashed gray;
+  border-width: 7px;
+  padding: 8px;
+  margin: 16px 0;
+}
+.card-body {
+  padding: 4px;
+  display: flex;
+}
+.couponImg {
+  margin-top: 8px;
+}
+.card-title{
+  margin-top: 8px;
+  margin-bottom: 16px;
+}
+.card-type {
+  margin-bottom: px;
+}
