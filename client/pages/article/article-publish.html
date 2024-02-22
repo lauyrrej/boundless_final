@@ -31,6 +31,8 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
+    <!-- Style-css -->
+    <link rel="stylesheet" href="./article.css" />
 
     <style>
       * {
@@ -103,12 +105,6 @@
       .wrapper {
         min-height: calc(100vh);
         padding: 0 35px;
-      }
-
-      @media screen and (max-width: 576px) {
-        .set-content {
-          display: block !important;
-        }
       }
 
       .upload-img img {
@@ -201,11 +197,11 @@
       </div>
       <hr />
       <!-- setting content -->
-      <div class="set-content d-flex justify-content-between row">
-        <div class="col-4">
+      <div class="set-rwd">
+        <div class="rwd-title">
           <h3>自訂文章摘要</h3>
         </div>
-        <div class="col-6 d-block">
+        <div class="rwd-content">
           <h5 class="text-secondary">
             上限150個字，系統已經先擷取，你也可以自行修改摘要說明。(140/150)
           </h5>
@@ -222,11 +218,11 @@
       </div>
       <hr />
       <!-- setting img -->
-      <div class="set-img d-flex justify-content-between row">
-        <div class="col-4">
+      <div class="set-rwd">
+        <div class="rwd-title">
           <h3>自訂文章縮圖</h3>
         </div>
-        <div class="col-6">
+        <div class="rwd-content">
           <h5 class="text-secondary">
             選擇或上傳照片作為文章縮圖(同時也是社群分享文章連結時的縮圖)。
           </h5>
@@ -242,40 +238,38 @@
       </div>
       <hr />
       <!-- setting tag -->
-      <div class="set-content d-flex justify-content-between row">
-        <div class="col-4">
+      <div class="set-rwd">
+        <div class="rwd-title">
           <h3>自訂文章摘要</h3>
         </div>
-        <div class="col-6">
+        <div class="rwd-content">
           <h5 class="text-secondary">
             設定關鍵字，讓文章更容易被讀者搜尋跟瀏覽
             <br /><br />
             請按 Enter鍵進行分隔 最多4個
           </h5>
           <br /><br />
-          <div class="d-flex justify-content-between">
-            <button class="btn btn-primary" type="submit">
-              標籤1 <i class="fa-solid fa-circle-xmark ms-2"></i>
+          <div class="tag-btns">
+            <button type="button" class="btn btn-outline-secondary">
+              標籤1<i class="fa-solid fa-circle-xmark ms-2"></i>
             </button>
-            <button class="btn btn-primary" type="submit">
-              標籤1 <i class="fa-solid fa-circle-xmark ms-2"></i>
+            <button type="button" class="btn btn-outline-secondary">
+              標籤1<i class="fa-solid fa-circle-xmark ms-2"></i></button
+            ><button type="button" class="btn btn-outline-secondary">
+              標籤1<i class="fa-solid fa-circle-xmark ms-2"></i>
             </button>
-            <button class="btn btn-primary" type="submit">
-              標籤1 <i class="fa-solid fa-circle-xmark ms-2"></i>
-            </button>
-            <button class="btn btn-primary" type="submit">
-              標籤1 <i class="fa-solid fa-circle-xmark ms-2"></i>
-            </button>
-            <button class="btn btn-primary" type="submit">
-              標籤1 <i class="fa-solid fa-circle-xmark ms-2"></i>
+            <button type="button" class="btn btn-outline-secondary">
+              標籤1<i class="fa-solid fa-circle-xmark ms-2"></i></button
+            ><button type="button" class="btn btn-outline-secondary">
+              標籤1<i class="fa-solid fa-circle-xmark ms-2"></i>
             </button>
           </div>
         </div>
       </div>
       <hr />
       <!-- setting publish -->
-      <div class="set-content d-flex justify-content-between row">
-        <div class="col-4">
+      <div class="set-rwd">
+        <div class="rwd-title">
           <h3>選擇發布方式</h3>
         </div>
       </div>
