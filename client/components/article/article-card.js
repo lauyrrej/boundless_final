@@ -1,4 +1,6 @@
 import React from 'react'
+import { FaEye } from "react-icons/fa";
+import { FaBookmark } from "react-icons/fa";
 
 export default function Articlecard() {
   return (
@@ -21,18 +23,18 @@ export default function Articlecard() {
           </div>
           <img
             className="article-image"
-            src="/client-test/components/images/empty.png"
+            src="/article/empty.png"
             alt=""
           />
         </div>
         {/* views-like */}
         <div className="views-like d-flex">
           <div className="views d-flex">
-            <i className="fa-solid fa-eye text-secondary" />
+            <FaEye />
             <p className="text-secondary ms-1">50</p>
           </div>
           <div className="saves d-flex ms-4">
-            <i className="fa-solid fa-bookmark text-secondary" />
+            <FaBookmark />
             <p className="text-secondary ms-1">50</p>
           </div>
         </div>
@@ -40,10 +42,50 @@ export default function Articlecard() {
         <div className="kind-bookmark d-flex justify-content-between align-items-center">
           <div className="article-kind text-black bg-body px-2 pt-1 pb-1">技術</div>
           <div className="bookmark">
-            <i className="fa-regular fa-bookmark text-primary" />
+            <FaBookmark />
           </div>
         </div>
       </div>
+      <style jsx>{`
+      .article-card {
+        width: 525px;
+        height: 238px;
+        {/* background-color: rgb(239, 184, 184); */}
+        padding: 10px;
+      }
+      .article-info {
+        width: 180px;
+      }
+      .article-author {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+      }
+      .info-p {
+        font-family: "Noto Sans TC", sans-serif;
+      }
+      .text {
+        width: 339px;
+        height: 112px;
+      }
+      .text p {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+      }
+      .article-image {
+        width: 162px;
+        height: 102px;
+        border-radius: 5%;
+      }
+      .views-like p {
+        font-size: small;
+      }
+      .bookmark{
+        font-size: large;
+      }
+      `}</style>
     </>
   )
 }

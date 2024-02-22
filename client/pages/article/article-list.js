@@ -87,8 +87,56 @@ export default function ArticleList() {
               </div>
             </div>
             {/* 主內容 */}
-            <div className="content">
+            <h4 className='text-primary pt-2'>熱門文章</h4>
+            <div className="content-pop d-flex flex-wrap justify-content-between">
               <ArticleCard />
+              <ArticleCard />
+              <ArticleCard />
+              <ArticleCard />
+            </div>
+            <hr />
+            <div className="content-pop d-flex flex-wrap justify-content-between pb-3">
+              <ArticleCard />
+              <ArticleCard />
+              <ArticleCard />
+              <ArticleCard />
+              <ArticleCard />
+              <ArticleCard />
+              <ArticleCard />
+              <ArticleCard />
+              <ArticleCard />
+              <ArticleCard />
+            </div>
+            <div className='d-flex justify-content-center pb-3'>
+              <nav aria-label="Page navigation example">
+                <ul className="pagination">
+                  <li className="page-item">
+                    <a className="page-link" href="#" aria-label="Previous">
+                      <span aria-hidden="true">«</span>
+                    </a>
+                  </li>
+                  <li className="page-item">
+                    <a className="page-link" href="#">
+                      1
+                    </a>
+                  </li>
+                  <li className="page-item">
+                    <a className="page-link" href="#">
+                      2
+                    </a>
+                  </li>
+                  <li className="page-item">
+                    <a className="page-link" href="#">
+                      3
+                    </a>
+                  </li>
+                  <li className="page-item">
+                    <a className="page-link" href="#" aria-label="Next">
+                      <span aria-hidden="true">»</span>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
             </div>
           </main>
         </div>
