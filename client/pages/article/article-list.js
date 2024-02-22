@@ -40,10 +40,7 @@ export default function ArticleList() {
 
           {/* 頁面內容 */}
           <main
-            className="col-12 col-sm-10 pe-0"
-            style={{
-              paddingLeft: '30px',
-            }}
+            className="col-12 col-sm-10"
           >
             {/* 頂部功能列 */}
             <div className="top-function-container">
