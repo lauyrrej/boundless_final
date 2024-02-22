@@ -12,11 +12,11 @@ import { FaSortAmountDown } from 'react-icons/fa'
 // coupon
 import CouponWhite from '@/components/coupon/couponWhite'
 import CouponBlue from '@/components/coupon/couponBlue'
+import styles from '@/pages/coupon/userCoupon-test.module.scss'
 
 // sidebar假資料
+const photoData = ['帕魯', 'PalWorld樂團']
 const sidebarData = [
-  '帕魯',
-  'PalWorld樂團',
   '會員資訊',
   '我的樂團',
   '我的訂單',
@@ -32,9 +32,10 @@ export default function Test() {
   return (
     <>
       <Navbar />
-      <div className="hero d-none d-sm-block" style={{ paddingTop: '60px' }}>
-        <Image src={jamHero} className="object-fit-cover w-100" alt="cover" />
-      </div>
+      <div
+        className="hero d-none d-sm-block"
+        style={{ paddingTop: '60px' }}
+      ></div>
       <div className="container">
         <div className="row">
           {/* sidebar */}
@@ -61,59 +62,166 @@ export default function Test() {
           >
             {/* 頂部功能列 */}
             <div className="top-function-container">
-              {/* 麵包屑 */}
-              <div className="breadcrumb-wrapper">
-                <ul className="d-flex align-items-center p-0 m-0">
-                  <IoHome size={20} />
-                  <li style={{ marginLeft: '8px' }}>會員中心</li>
-                  <FaChevronRight />
-                  <li style={{ marginLeft: '10px' }}>我的優惠券</li>
-                </ul>
-              </div>
-
               <div className="d-flex justify-content-between">
                 <div className="filter-sort d-flex justify-content-between">
-                  {/* 資料排序 */}
-                  <div className="sort d-flex justify-content-between align-items-center">
-                    <div className="d-flex align-items-center">
-                      <FaSortAmountDown size={13} />
-                    </div>
-                    <div className="sort-item active">全部</div>
-                    <div className="sort-item">樂器</div>
-                    <div className="sort-item">課程</div>
-                  </div>
-                </div>
-
-                <div className="filter-sort d-flex justify-content-between">
-                  {/* 條件篩選 */}
-                  <div className="filter d-flex align-items-center">
-                    條件篩選
-                    <FaFilter size={13} />
-                  </div>
-                  {/* 資料排序 */}
-                  <div className="sort d-flex justify-content-between align-items-center">
-                    <div className="d-flex align-items-center">
-                      排序
-                      <FaSortAmountDown size={13} />
-                    </div>
-                    <div className="sort-item active">折扣幅度</div>
-                    <div className="sort-item">即將到期</div>
+                  {/* 麵包屑 */}
+                  <div className="breadcrumb-wrapper">
+                    <ul className="d-flex align-items-center p-0 m-0">
+                      <IoHome size={20} />
+                      <li style={{ marginLeft: '8px' }}>會員中心</li>
+                      <FaChevronRight />
+                      <li style={{ marginLeft: '10px' }}>我的優惠券</li>
+                    </ul>
                   </div>
                 </div>
               </div>
             </div>
             {/* 主內容 */}
-            <div className="content">
-              {arr.map((i) => {
-                return <CouponBlue key={i} />
-              })}
+            <div className={styles['couponContentBG']}>
+              <div>
+                <h3 className={styles['myCoupon']}>我的優惠券</h3>
+              </div>
+
+              {/* 條件篩選 */}
+              <div className="filter-sort d-flex justify-content-between p-3">
+                {/* 麵包屑 */}
+                <div>
+                  <nav aria-label="breadcrumb sort d-flex justify-content-between align-items-center">
+                    <ol className="breadcrumb  breadcrumb-line">
+                      <li className="h6 coupon-breadcrumb breadcrumb-item couponBTN">
+                        <a href="#" className="active">
+                          全部
+                        </a>
+                      </li>
+                      <li
+                        className="h6 coupon-breadcrumb coupon-breadcrumb-item breadcrumb-item"
+                        aria-current="page"
+                      >
+                        <a
+                          href="#"
+                          className="coupon-breadcrumb coupon-breadcrumb-item breadcrumb-item"
+                        >
+                          樂器
+                        </a>
+                      </li>
+                      <li
+                        className="h6 coupon-breadcrumb coupon-breadcrumb-item breadcrumb-item"
+                        aria-current="page"
+                      >
+                        <a
+                          href="#"
+                          className="coupon-breadcrumb coupon-breadcrumb-item breadcrumb-item"
+                        >
+                          課程
+                        </a>
+                      </li>
+                    </ol>
+                  </nav>
+                  {/*  */}
+                </div>
+                {/* 資料排序 */}
+                <div className="sort d-flex align-items-center">
+                  <div>
+                    <FaSortAmountDown size={13} />
+                    排序 ：
+                  </div>
+                  <div className="sort-item active">折扣幅度</div>
+                  <div className="sort-item">即將到期</div>
+                </div>
+              </div>
+              <div className={styles['couponImage']}>
+                {arr.map((i) => {
+                  return (
+                    <CouponBlue
+                      key={i}
+                      style={{ flex: '0 0 50%', maxWidth: '50%' }}
+                    />
+                  )
+                })}
+              </div>
+              {/* Pagination */}
+              <div className="d-flex justify-content-center pages">
+                <nav aria-label="Page navigation example">
+                  <ul className="pagination">
+                    <li className="page-item">
+                      <a className="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">«</span>
+                      </a>
+                    </li>
+                    <li className="page-item">
+                      <a className="page-link" href="#">
+                        1
+                      </a>
+                    </li>
+                    <li className="page-item">
+                      <a className="page-link" href="#">
+                        2
+                      </a>
+                    </li>
+                    <li className="page-item">
+                      <a className="page-link" href="#">
+                        3
+                      </a>
+                    </li>
+                    <li className="page-item">
+                      <a className="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">»</span>
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
             </div>
           </main>
         </div>
       </div>
       <Footer />
 
-      <style jsx>{``}</style>
+      <style jsx>{`
+         {
+          /* // 全站配色 colors
+          $primary: #1581cc;
+          $light-primary: #18a1ff;
+          $deep-primary: #124365;
+          $dark: #1d1d1d;
+          $secondary: #5a5a5a;
+          $body: #b9b9b9;
+          $yellow: #faad14;
+          $red: #ec3f3f; */
+        }
+        .breadcrumb-line {
+          border-bottom: 1px solid #fff;
+        }
+
+        .couponBTN {
+          border-radius: 10px 10px 0 0;
+          background-color: #fff;
+        }
+        .coupon-breadcrumb {
+          color: #5a5a5a;
+          font-weight: 600;
+          font-size: h6;
+          padding-inline: 10px;
+          gap: 8px;
+          padding: 5px 10px;
+          margin: 20px 0 0 0;
+          .coupon-breadcrumb-item {
+            padding-inline: 4px;
+            cursor: pointer;
+            transition: 0.3s;
+            &:hover {
+              color: #1581cc;
+            }
+          }
+          .active {
+            color: #124365;
+            cursor: default;
+            &:hover {
+              color: #124365;
+            }
+          }
+        }
+      `}</style>
     </>
   )
 }
