@@ -3,13 +3,23 @@ import Image from 'next/image';
 import Breadcrumb from '@/components/article/breadcrumb'
 import { IoCloseOutline } from "react-icons/io5";
 import React from 'react'
+import { IoIosArrowForward } from "react-icons/io";
+import { IoMdHome } from "react-icons/io";
 
 export default function ArticlePublish() {
   return (
     <>
       {/* wrapper */}
       <div className="wrapper pt-5">
-        <Breadcrumb />
+        {/* 麵包屑 */}
+        <div className="breadcrumb-wrapper m-0 p-0">
+          <ul className="d-flex align-items-center p-0 m-0">
+            <IoMdHome />
+            <li style={{ marginLeft: '8px' }}>樂友論壇</li>
+            <IoIosArrowForward />
+            <li style={{ marginLeft: '8px' }}>文章資訊</li>
+          </ul>
+        </div>
         {/* XLg */}
         <div className="x-lg text-end pb-3">
           <IoCloseOutline size={50} />
