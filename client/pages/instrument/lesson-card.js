@@ -31,15 +31,15 @@ function CourseCard() {
               />
               <span className="rating-value">4.9</span>
               <span className="review-count">(3)</span>
-            </div>
-            <div className="duration">
-              <img
-                loading="lazy"
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/8df3a2bdde335108c6d04c0849bce7699504c28286258ab16838e6cce714455f?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&"
-                alt="Clock icon"
-                className="duration-icon"
-              />
-              <span className="duration-time">5小時</span>
+              <span className="duration-time">
+                <img
+                  loading="lazy"
+                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/8df3a2bdde335108c6d04c0849bce7699504c28286258ab16838e6cce714455f?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&"
+                  alt="Clock icon"
+                  className="duration-icon"
+                />
+                5小時
+              </span>
             </div>
           </div>
           <div className="course-price">NT$ 4,000</div>
@@ -85,6 +85,16 @@ function CourseCard() {
           bottom: 12px;
           right: 12px;
         }
+        .course-info {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .rating {
+          display: flex;
+          align-items: center;
+        }
+
         .course-details {
           display: flex;
           flex-direction: column;
@@ -97,13 +107,15 @@ function CourseCard() {
           font-family: Noto Sans TC, sans-serif;
           margin: 0;
         }
+
         .course-price {
           font-size: 18px;
           font-family: Noto Sans TC, sans-serif;
           font-weight: 700;
           margin-top: 11px;
         }
-        .course-sold {
+        .enrolled-students {
+          text-align: right;
           color: #5a5a5a;
           font-size: 14px;
           font-family: Noto Sans TC, sans-serif;

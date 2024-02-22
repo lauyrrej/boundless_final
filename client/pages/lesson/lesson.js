@@ -15,7 +15,7 @@ import { FaSortAmountDown } from 'react-icons/fa'
 const sidebarData = [
   '歌唱技巧',
   '樂器演奏',
-  '音樂倫理',
+  '音樂理論',
   '詞曲創作',
   '軟體操作',
   '活動專區',
