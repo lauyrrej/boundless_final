@@ -99,7 +99,7 @@ export default function Test() {
                       >
                         <a
                           href="#"
-                          className="coupon-breadcrumb coupon-breadcrumb-item breadcrumb-item"
+                          className="coupon-breadcrumb coupon-breadcrumb-item"
                         >
                           樂器
                         </a>
@@ -110,7 +110,7 @@ export default function Test() {
                       >
                         <a
                           href="#"
-                          className="coupon-breadcrumb coupon-breadcrumb-item breadcrumb-item"
+                          className="coupon-breadcrumb coupon-breadcrumb-item"
                         >
                           課程
                         </a>
@@ -204,7 +204,7 @@ export default function Test() {
           padding-inline: 10px;
           gap: 8px;
           padding: 5px 10px;
-          margin: 20px 0 0 0;
+          margin: 5px 0 0 0;
           .coupon-breadcrumb-item {
             padding-inline: 4px;
             cursor: pointer;
