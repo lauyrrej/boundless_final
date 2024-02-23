@@ -1,27 +1,15 @@
 .couponCard {
-  max-width: 400px;
-  border: 1px solid gray;
+  // width: 300px;
+  background-color: #fff;
   border-radius: 8px;
-  margin-bottom: 32px;
-}
-.couponCard img {
-  width: 100px;
-  border-right: dashed gray;
-  border-width: 7px;
-  padding: 8px;
-  margin: 16px 0;
-}
-.card-body {
-  padding: 4px;
-  display: flex;
+  margin: 24px 20px 0;
+  @media screen and (max-width: 576px) {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
 }
 .couponImg {
-  margin-top: 8px;
-}
-.card-title{
-  margin-top: 8px;
-  margin-bottom: 16px;
-}
-.card-type {
-  margin-bottom: px;
+  border-right: dashed gray;
+  border-width: 4px;
 }
