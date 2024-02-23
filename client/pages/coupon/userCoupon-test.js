@@ -10,9 +10,9 @@ import { IoIosSearch } from 'react-icons/io'
 import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
 // coupon
-import CouponWhite from '@/components/coupon/couponWhite'
-import CouponBlue from '@/components/coupon/couponBlue'
+import CouponBlue from '@/components/coupon/coupon.js'
 import styles from '@/pages/coupon/userCoupon-test.module.scss'
+import Coupon from '@/components/coupon/coupon.js'
 
 // sidebar假資料
 const photoData = ['帕魯', 'PalWorld樂團']
@@ -26,7 +26,7 @@ const sidebarData = [
   '我的課程',
   '我的訊息',
 ]
-let arr = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+let arr = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
 export default function Test() {
   return (
@@ -79,7 +79,7 @@ export default function Test() {
             {/* 主內容 */}
             <div className={styles['couponContentBG']}>
               <div>
-                <h3 className={styles['myCoupon']}>我的優惠券</h3>
+                <h3 className={styles['couponTitle']}>我的優惠券</h3>
               </div>
 
               {/* 條件篩選 */}
@@ -131,12 +131,7 @@ export default function Test() {
               </div>
               <div className={styles['couponImage']}>
                 {arr.map((i) => {
-                  return (
-                    <CouponBlue
-                      key={i}
-                      style={{ flex: '0 0 50%', maxWidth: '50%' }}
-                    />
-                  )
+                  return <Coupon key={i} className={`${styles.couponItem} `} />
                 })}
               </div>
               {/* Pagination */}
@@ -176,7 +171,7 @@ export default function Test() {
         </div>
       </div>
       <Footer />
-      {/* mobile */}
+      {/* rwd */}
       <div className="coupon-rwd">
         <FaSortAmountDown size={13} />
         排序 ：

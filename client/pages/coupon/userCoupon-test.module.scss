@@ -1,19 +1,25 @@
 .couponContentBG {
-  background-color: #b9b9b9;
-  border-radius: 5px;
+  background-color: gray;
+  border-radius: 6px;
+  padding-inline: 12px;
 }
 
-.myCoupon {
+.couponTitle {
   display: flex;
   align-items: flex-start;
-  padding: 20px 0 0 80px;
+  padding: 20px 0 0 20px;
 }
 .couponImage {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
+}
+.couponItem {
+  width: calc(33.33% - 20px); /* 减去 padding 和 margin 的宽度 */
+  margin-bottom: 20px; /* 设置间距 */
 }
 
-.coupon-screen {
+.coupon-rwd {
   @media screen and (min-width: 576px) {
     display: none;
   }
