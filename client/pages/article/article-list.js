@@ -10,8 +10,10 @@ import { IoIosSearch } from 'react-icons/io'
 import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
 import { CgClose } from 'react-icons/cg'
+import ArticleCard from '@/components/article/article-card'
 
-export default function Test() {
+
+export default function ArticleList() {
   const [filterVisible, setFilterVisible] = useState(false)
   useEffect(() => {
     document.addEventListener('click', (e) => {
@@ -29,7 +31,7 @@ export default function Test() {
   }
   // ----------------------假資料  ----------------------
   // sidebar假資料
-  const sidebarData = ['吉他', '貝斯', '鍵盤樂器', '打擊樂器']
+  const sidebarData = ['全部', '技術分享', '音樂評論']
 
   // filter假資料
   const brandData = [
@@ -122,7 +124,7 @@ export default function Test() {
                   <form
                     action="/template-with-sidebar"
                     method="get"
-                    className="d-flex aligh-items-center  position-relative"
+                    className="d-flex align-items-center  position-relative"
                   >
                     <div
                       className="filter-text d-flex align-items-center mx-2"
@@ -261,7 +263,59 @@ export default function Test() {
               </div>
             </div>
             {/* 主內容 */}
-            <main className="content"></main>
+            <main className="content me-2">
+              <h4 className='text-primary pt-2'>熱門文章</h4>
+              <div className="content-pop d-flex flex-wrap justify-content-between pe-2">
+                <ArticleCard />
+                <ArticleCard />
+                <ArticleCard />
+                <ArticleCard />
+              </div>
+              <hr />
+              <div className="content-pop d-flex flex-wrap justify-content-between pb-3">
+                <ArticleCard />
+                <ArticleCard />
+                <ArticleCard />
+                <ArticleCard />
+                <ArticleCard />
+                <ArticleCard />
+                <ArticleCard />
+                <ArticleCard />
+                <ArticleCard />
+                <ArticleCard />
+              </div>
+              <div className='d-flex justify-content-center pb-3'>
+                <nav aria-label="Page navigation example">
+                  <ul className="pagination">
+                    <li className="page-item">
+                      <a className="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">«</span>
+                      </a>
+                    </li>
+                    <li className="page-item">
+                      <a className="page-link" href="#">
+                        1
+                      </a>
+                    </li>
+                    <li className="page-item">
+                      <a className="page-link" href="#">
+                        2
+                      </a>
+                    </li>
+                    <li className="page-item">
+                      <a className="page-link" href="#">
+                        3
+                      </a>
+                    </li>
+                    <li className="page-item">
+                      <a className="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">»</span>
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </main>
           </div>
         </div>
       </div>

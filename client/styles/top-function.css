@@ -1,39 +1,14 @@
-// 引入google字體
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap');
-// bootstrap樣式
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap");
 @import 'bootstrap/dist/css/bootstrap.min.css';
-
-// 全站配色 colors
-$primary: #1581cc;
-$light-primary: #18a1ff;
-$deep-primary: #124365;
-$dark: #1d1d1d;
-$secondary: #5a5a5a;
-$body: #b9b9b9;
-$yellow: #faad14;
-$red: #ec3f3f;
-
-// 字體大小
-$h1: 40px;
-$h2: 32px;
-$h3: 28px;
-$h4: 24px;
-$h5: 20px;
-$h6: 18px;
-$small: 14px;
-
-
 :root {
   --max-width: 1100px;
   --border-radius: 12px;
-  --font-mono: ui-monospace, Menlo, Monaco, 'Cascadia Mono', 'Segoe UI Mono',
-    'Roboto Mono', 'Oxygen Mono', 'Ubuntu Monospace', 'Source Code Pro',
-    'Fira Mono', 'Droid Sans Mono', 'Courier New', monospace;
-
+  --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
+    "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
+    "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
-
   --primary-glow: conic-gradient(
     from 180deg at 50% 50%,
     #16abff33 0deg,
@@ -46,7 +21,6 @@ $small: 14px;
     rgba(255, 255, 255, 1),
     rgba(255, 255, 255, 0)
   );
-
   --tile-start-rgb: 239, 245, 249;
   --tile-end-rgb: 228, 232, 233;
   --tile-border: conic-gradient(
@@ -58,7 +32,6 @@ $small: 14px;
     #00000010,
     #00000080
   );
-
   --callout-rgb: 238, 240, 241;
   --callout-border-rgb: 172, 175, 176;
   --card-rgb: 180, 185, 188;
@@ -70,7 +43,6 @@ $small: 14px;
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
-
     --primary-glow: radial-gradient(rgba(1, 65, 255, 0.4), rgba(1, 65, 255, 0));
     --secondary-glow: linear-gradient(
       to bottom right,
@@ -78,7 +50,6 @@ $small: 14px;
       rgba(1, 65, 255, 0),
       rgba(1, 65, 255, 0.3)
     );
-
     --tile-start-rgb: 2, 13, 46;
     --tile-end-rgb: 2, 5, 19;
     --tile-border: conic-gradient(
@@ -90,14 +61,12 @@ $small: 14px;
       #ffffff10,
       #ffffff80
     );
-
     --callout-rgb: 20, 20, 20;
     --callout-border-rgb: 108, 108, 108;
     --card-rgb: 100, 100, 100;
     --card-border-rgb: 200, 200, 200;
   }
 }
-
 * {
   box-sizing: border-box;
   padding: 0;
@@ -113,12 +82,6 @@ body {
   max-width: 100vw;
   font-family: "Noto Sans TC", sans-serif;
   color: rgb(var(--foreground-rgb));
-  // background: linear-gradient(
-  //     to bottom,
-  //     transparent,
-  //     rgb(var(--background-end-rgb))
-  //   )
-  //   rgb(var(--background-start-rgb));
   background-color: #fff;
 }
 
@@ -136,18 +99,70 @@ ul {
     color-scheme: dark;
   }
 }
-
 main {
-  min-height: calc(150svh - 380px);
+  min-height: 150svh;
 }
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+.top-function-container {
+  padding-block: 20px;
+  padding-right: 10px;
+  position: sticky;
+  top: 10px;
 }
 
-/* Firefox */
-input[type=number] {
-  -moz-appearance: textfield;
+.breadcrumb-wrapper {
+  color: #5a5a5a;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  gap: 6px;
+  margin-bottom: 24px;
 }
+
+.search {
+  width: 300px;
+  border: 1px soild #b9b9b9;
+  border-radius: 5px;
+}
+.search .search-btn {
+  width: 42px;
+  height: 42px;
+  background-color: #18a1ff;
+  color: #fff;
+}
+.search .search-btn:hover {
+  background-color: #1581cc;
+  border: 1px solid #1581cc;
+}
+
+.filter {
+  color: #5a5a5a;
+  font-weight: 600;
+  font-size: 18px;
+  padding-inline: 10px;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.sort {
+  color: #5a5a5a;
+  font-weight: 600;
+  font-size: 18px;
+  padding-inline: 10px;
+  gap: 8px;
+}
+.sort .sort-item {
+  padding-inline: 4px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.sort .sort-item:hover {
+  color: #1581cc;
+}
+.sort .active {
+  color: #124365;
+  cursor: default;
+}
+.sort .active:hover {
+  color: #124365;
+}/*# sourceMappingURL=top-function.css.map */
