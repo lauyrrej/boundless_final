@@ -12,7 +12,6 @@ import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
 import { IoIosArrowForward } from "react-icons/io";
 import { IoMdHome } from "react-icons/io";
-import styles from '@/pages/article/article-content.module.scss'
 
 // sidebar假資料
 const sidebarData = ['全部', '技術分享', '音樂評論']
