@@ -125,7 +125,7 @@ export default function Test() {
                     className="d-flex aligh-items-center  position-relative"
                   >
                     <div
-                      className="filter-text d-flex align-items-center mx-2"
+                      className="filter-text d-flex align-items-center me-3"
                       role="presentation"
                       onClick={onshow}
                     >
