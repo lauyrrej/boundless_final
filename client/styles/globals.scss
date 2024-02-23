@@ -138,5 +138,16 @@ ul {
 }
 
 main {
-  min-height: 150svh;
+  min-height: calc(150svh - 380px);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }
