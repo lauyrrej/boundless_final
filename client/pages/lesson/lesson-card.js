@@ -31,6 +31,8 @@ function CourseCard() {
               />
               <span className="rating-value">4.9</span>
               <span className="review-count">(3)</span>
+            </div>
+            <div>
               <span className="duration-time">
                 <img
                   loading="lazy"
