@@ -132,9 +132,8 @@ export default function Test() {
                       條件篩選
                       <FaFilter size={13} />
                       <div
-                        className={`filter ${
-                          filterVisible === false ? 'd-none' : 'd-block'
-                        }`}
+                        className={`filter ${filterVisible === false ? 'd-none' : 'd-block'
+                          }`}
                         onClick={stopPropagation}
                         role="presentation"
                       >
