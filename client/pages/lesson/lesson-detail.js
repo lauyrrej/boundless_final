@@ -4,7 +4,9 @@ import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
-import jamHero from '@/assets/jam-hero.png'
+import { IoHome } from 'react-icons/io5'
+import Card from '@/components/lesson/card (1)'
+import Lessoncard from '@/components/lesson/lesson-card'
 
 export default function LessonDetail() {
   return (
@@ -12,16 +14,29 @@ export default function LessonDetail() {
       {/* header 頂部導覽列 */}
       <Navbar />
 
-      <div className="hero d-none d-sm-block" style={{ paddingTop: '60px' }}>
-        <Image src={jamHero} className="object-fit-cover w-100" alt="cover" />
-      </div>
-
       {/* content */}
       <div className="container">
         <div className="row">
           <div className="col-sm-12">
-            {/* breadCrumb */}
-            <div className="breadCrumb border border-secondary" />
+            {/* 麵包屑 */}
+            <div className="breadcrumb-wrapper">
+              <ul className="d-flex align-items-center p-0 m-0">
+                <IoHome size={20} />
+                <li style={{ marginLeft: '8px' }}>探索課程</li>
+                <svg
+                  stroke="currentColor"
+                  fill="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  height="1em"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M294.1 256L167 129c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.3 34 0L345 239c9.1 9.1 9.3 23.7.7 33.1L201.1 417c-4.7 4.7-10.9 7-17 7s-12.3-2.3-17-7c-9.4-9.4-9.4-24.6 0-33.9l127-127.1z"></path>
+                </svg>
+                <li style={{ marginLeft: '8px' }}>軟體操作</li>
+              </ul>
+            </div>
             {/* 包左右 */}
             <div className="d-flex">
               {/* 左半部 */}
@@ -29,7 +44,7 @@ export default function LessonDetail() {
                 {/* prodBriefingArea */}
                 <div className="prodBriefingArea d-flex border border-secondary">
                   <img
-                    src="/public/課程與師資/lesson_img/lesson_005.jpeg"
+                    src="/課程與師資/lesson_img/lesson_005.jpeg"
                     alt=""
                     className="prodImg border border-danger"
                   />
@@ -294,8 +309,12 @@ export default function LessonDetail() {
                   <div className="teacher-info border border-secondary mt40">
                     <div className="detail-title">講師資訊</div>
                     <div className="teacher-info-area">
-                      <div className="teacher-img ">
-                        {/* <img loading="lazy" src="/public/課程與師資/teacher_img/teacher_001.jpeg" class="teacherImg"> */}
+                      <div className="teacher-img-con ">
+                        <img
+                          loading="lazy"
+                          src="/課程與師資/teacher_img/teacher_001.jpeg"
+                          className="teacherImg"
+                        />
                       </div>
                       <div className="teacher-info-word">
                         <div className="teacher-name">徐歡CheerHsu</div>
@@ -311,396 +330,213 @@ export default function LessonDetail() {
                 </div>
               </div>
               {/* 右半部 */}
-              <div className="col-sm-6 Right sticky-top">
-                <div className="prodBriefing sticky-top">
-                  <div className="prodMainName">Logic Pro X 從零開始</div>
-                  <div className="Rating">
-                    <div className="star">
-                      <img
-                        loading="lazy"
-                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/84522f0e347edba7963eb335fd5301feca031f8d880bba21dd9760a01286c3a5?"
-                        className="starImg"
-                      />
-                      <div className="ratingNumber">4.9</div>
-                      <div className="commentNumber">(10)</div>
-                    </div>
-                    <div className="sales">購買人數 50</div>
-                  </div>
-                  <div className="productPrice">
-                    <div className="price">NT$ 1,800</div>
-                    <img
-                      loading="lazy"
-                      src="https://cdn.builder.io/api/v1/image/assets/TEMP/5ed2e715f1421a33de89ac321d6dcc6d56fbac40a7d43dfe2cf0ecb15054bd3f?"
-                      className="likesIcon"
-                    />
-                  </div>
-                  <div className="lengthHomeworkArea">
-                    <div className="lengthhomework">
-                      <img
-                        loading="lazy"
-                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/81a1d10e78e821775737fe4938ae726e8de4a80804b01bdda9876d9f86f9b1bb?"
-                        className="lengthIcon"
-                      />
-                      <div className="lengthHomeworkWord">5小時</div>
-                    </div>
-                    <div className="lengthhomework">
-                      <img
-                        loading="lazy"
-                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/4552b4fc37047176a87577807414005cf8e8466b4ef23329066c1c39e5dad447?"
-                        className="img-10"
-                      />
-                      <div className="lengthHomeworkWord">1份作業</div>
-                    </div>
-                  </div>
-                  <div className="lessonIntro">
-                    Logic Pro
-                    為數位音樂編曲入門的必學軟體，從錄音、編曲到混音一次包辦，帶你認識錄音介面、多重效果器，以及豐富的內建素材庫，是對音樂創作有興趣的你不可錯過的專業音樂編曲課程。
-                  </div>
-                  <div className="shoppingBtn">
-                    <div className="cartBtn">
-                      <img
-                        loading="lazy"
-                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
-                        className="cartIcon"
-                      />
-                      <div className="cart">加入購物車</div>
-                    </div>
-                    <div className="buyBtn">
-                      <div className="buy">立即購買</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+
+              <Lessoncard />
             </div>
           </div>
           {/* 猜你喜歡 */}
           <div className="col-sm-12 you-will-like border border-secondary" />
-        </div>
+          <Card />
+              </div>
+         <div > </div>
       </div>
 
       {/* End content */}
       <Footer />
 
       <style jsx>{`
-    * {
-      box-sizing: border-box;
-    }
-    :root {
-      --primary: #1581cc;
-      --light-primary: #18a1ff;
-      --deep-primary: #124365;
-      --dark: #1d1d1d;
-      --secondary: #5a5a5a;
-      --body: #b9b9b9;
-      --yellow: #faad14;
-      --red: #ec3f3f;
-    }
+        * {
+          box-sizing: border-box;
+        }
+        :root {
+          --primary: #1581cc;
+          --light-primary: #18a1ff;
+          --deep-primary: #124365;
+          --dark: #1d1d1d;
+          --secondary: #5a5a5a;
+          --body: #b9b9b9;
+          --yellow: #faad14;
+          --red: #ec3f3f;
+        }
 
-    body {
-      font-family: "Noto Sans TC", sans-serif;
+        body {
+          font-family: 'Noto Sans TC', sans-serif;
 
-      & ul {
-        list-style: none;
-        margin: 0;
-      }
+          & ul {
+            list-style: none;
+            margin: 0;
+          }
 
-      & a {
-        text-decoration: none;
-      }
-    }
+          & a {
+            text-decoration: none;
+          }
+        }
 
-    /* --------------- header & navbar --------------- */
-    header {
-      background-color: var(--primary);
-      height: 60px;
-      padding: 10px 35px;
-      .logo {
-        max-width: 180px;
-      }
-      .logo-mb {
-        max-width: 30px;
-      }
+        /* --------------- header & navbar --------------- */
+        header {
+          background-color: var(--primary);
+          height: 60px;
+          padding: 10px 35px;
+          .logo {
+            max-width: 180px;
+          }
+          .logo-mb {
+            max-width: 30px;
+          }
 
-      @media screen and (max-width:576px){
-        padding-inline: 20px;
-      }
-    }
+          @media screen and (max-width: 576px) {
+            padding-inline: 20px;
+          }
+        }
 
-    nav{
-      flex: 1;
-      max-width: 660px;
-    }
+        nav {
+          flex: 1;
+          max-width: 660px;
+        }
 
-    nav a{
-      display: block;
-      padding: 5px 12px;
-      border-radius: 10px;
-      color: #fff;
-      font-size: 20px;
-      font-weight: 500;
-      &:hover{
-        color: var(--deep-primary);
-        background-color: #fff;
-      }
-    }
+        nav a {
+          display: block;
+          padding: 5px 12px;
+          border-radius: 10px;
+          color: #fff;
+          font-size: 20px;
+          font-weight: 500;
+          &:hover {
+            color: var(--deep-primary);
+            background-color: #fff;
+          }
+        }
 
-    .navbar-mb {
-      color: #fff;
-    }
+        .navbar-mb {
+          color: #fff;
+        }
 
-    /* --------------- container --------------- */
-    .container {
-      min-height: calc(100vh);
-    }
-    .breadCrumb{
-        width: 1320px;
-        height: 43px;
-    }
-    
-    
-    /* prodBriefingArea */
-.prodBriefingArea{
- 
-}
-  .prodImg{
-    width: 660px;
-    height: 394px;
-   background-color: #ff9595;
-   border-radius: 10px
-  }
+        /* --------------- container --------------- */
+        .container {
+          min-height: calc(100vh);
+        }
+        .breadcrumb-wrapper {
+          margin-top: 80px;
+        }
 
-  .mt-60{
-margin-top: 60px;
-  }
+        /* prodBriefingArea */
+        .prodImg {
+          width: 660px;
+          height: 394px;
+          background-color: #ff9595;
+          border-radius: 10px;
+        }
 
-  .Right{
+        .mt-60 {
+          margin-top: 60px;
+        }
+       
 
-  }
-  .prodBriefing{
-     /* background-color: #ff9595; */
-         margin-left: 20px ;
-         top:120px;
-  }
- .prodMainName {
-    color: var(--dark, #1d1d1d);
-    /* font: 700 40px Noto Sans TC, sans-serif; */
-    font-weight: 700;
-font-size: 40px;
+        /* ------------------ */
 
-}
-/*  */
-.font-family{ 
-    font-family:Noto Sans TC, sans-serif;}
-/*  */
+        /* 課程細節 */
+        .mt40 {
+          margin-top: 40px;
+        }
 
-  .Rating {
-    justify-content: space-between;
-    display: flex;
-    margin-top: 10px;
-    width: 100%;
-    gap: 20px;
-    font-weight: 400;
-}
- 
-.star {
-    justify-content: center;
-    align-items: center;
-    display: flex;
-    gap: 10px;
-    white-space: nowrap;
-}
+        /* detail共用 */
+        .detail-title {
+          color: var(--primary-deep, #0d3652);
+          font: 700 24px Noto Sans TC, sans-serif;
+        }
 
-  .ratingNumber {
-    color: var(--yellow, #faad14);
-    align-self: stretch;
-    font: 24px Noto Sans TC, sans-serif;
-}
+        .list {
+          background-color: rgba(185, 185, 185, 0.3);
+        }
 
-.commentNumber {
-    color: var(--body, #b9b9b9);
-    align-self: stretch;
-    flex-grow: 1;
-    margin: auto 0;
-    font: 16px Noto Sans TC, sans-serif;
-}
-  .sales {
-    color: var(--secondary, #5a5a5a);
-    margin: auto 0;
-    font: 16px Noto Sans TC, sans-serif;
-}
- .productPrice {
-    justify-content: space-between;
-    display: flex;
-    margin-top: 10px;
-    gap: 20px;
-}
-.price {
-    color: var(--dark, #1d1d1d);
-    white-space: nowrap;
-    padding: 9px 21px 2px 0;
-    font: 700 28px Noto Sans TC, sans-serif;
-}
-.likesIcon{
-    justify-content: center;
-    align-items: center;
-    border-radius: 5px;
-    border: 1px solid var(--body, #b9b9b9);
-    display: flex;
-    aspect-ratio: 1;
-    width: 34px;
-    height: 34px;
-    margin: auto 0;
-    padding: 0 7px;
-}
-  .lengthHomeworkArea{
-display: flex;
-  }
-  .lengthhomework{
-justify-content: space-between;
-    display: flex;
-    gap: 5px;
-  }
+        .outline {
+          height: 243px;
+          width: 660px;
+        }
+        .suitable {
+          height: 130px;
+          width: 660px;
+        }
+        .achievement {
+          height: 107px;
+          width: 660px;
+        }
+        .review-title {
+          display: flex;
+        }
+        .review-avatar {
+          aspect-ratio: 1;
+          object-fit: auto;
+          object-position: center;
+          width: 44px;
+          border: 1px solid black;
+          border-radius: 50%;
+        }
+        .review-Name {
+          display: flex;
+          gap: 10px;
+        }
+        .comment-Like {
+          display: flex;
+          justify-content: end;
+          gap: 5px;
+        }
+        .comment-Like-Icon {
+          display: flex;
+          border-radius: 3px;
+          border: 1px solid #1581cc;
+          gap: 4px;
+        }
+        .more-review {
+          justify-content: end;
+          display: flex;
+          margin-right: 20px;
+          margin-block: 10px;
+          gap: 9px;
+          font-size: 16px;
+          color: var(--primary, #1581cc);
+          font-weight: 700;
+          padding: 4px 0 4px 80px;
+        }
+        .teacher-info {
+          height: 217px;
+          width: 660px;
+        }
+        .teacher-info-area {
+          display: flex;
+          height: 166px;
+          width: 660px;
+        }
+        .teacher-img-con {
+          width: 140px;
+          height: 140px;
+        }
+        .teacherImg {
+          width: 100%;
+          height: auto;
+          object-fit: cover;
+          overflow: auto;
+        }
+        .teacher-info-word {
+          width: 77%;
+        }
 
-  .lengthHomeworkWord{
-    font-family: Noto Sans TC, sans-serif;
-    flex-grow: 1;
-  }
-  .lessonIntro{
+        /* ------------- */
 
-  }
-  .shoppingBtn {
-    display: flex;
-    margin-top: 20px;
-    justify-content: space-evenly;
-    gap: 12px;
-    font-size: 16px;
-    color: var(--white, #fff);
-    font-weight: 700;
-   
-}
-  .cartBtn{
-    display: flex;
-        justify-content: space-between;
-    border-radius: 5px;
-    background-color: var(--body, #b9b9b9);
- 
-    gap: 12px;
-    padding: 8px 78px;
-  }
-  .buyBtn{
-    display: flex;
-        justify-content: space-between;
-    border-radius: 5px;
-    background-color: #18a1ff;
- 
-    gap: 12px;
-    padding: 8px 78px;
-  }
-  .buy{
-
-  }
-
-/* ------------------ */
-
-/* 課程細節 */
-.mt40{
-    margin-top:40px;
-    
-}
-
-/* detail共用 */
-.detail-title{
-color: var(--primary-deep, #0d3652);
-    font: 700 24px Noto Sans TC, sans-serif;
-}
-
-.list{
-    background-color: rgba(185, 185, 185, 0.3);
-}
-
-  .outline{
-height: 243px;
-width: 660px;
-  }
-  .suitable{
-    height: 130px;
-width: 660px;
-  }
-  .achievement{
-     height: 107px;
-width: 660px;
-  }
-.review-title{
-    display: flex;
-}
-.review-avatar{
-    aspect-ratio: 1;
-    object-fit: auto;
-    object-position: center;
-    width: 44px;
-    border: 1px solid black;
-    border-radius: 50%;
-
-}
-  .review-Name{
-display: flex;
-gap: 10px;
-  }
-  .comment-Like{
-    display: flex;
-    justify-content:end;
-    gap: 5px;
-  }
-  .comment-Like-Icon{
-    display: flex;
-    border-radius: 3px;
-    border:1px solid #1581cc;
-    gap: 4px;
-  }
-  .more-review{
-     justify-content: end;
-    display: flex;
-    margin-right: 20px;
-    margin-block: 10px;
-    gap: 9px;
-    font-size: 16px;
-    color: var(--primary, #1581cc);
-    font-weight: 700;
-    padding: 4px 0 4px 80px;
-  }
-  .teacher-info {
-      height: 217px;
-width: 660px;
-  }
-.teacher-info-area{
-    display: flex;
-}
-  .teacher-img{
-    object-fit: auto;
-    object-position: center;
-        width: 23%;
-  }
-  .teacher-info-word{
-    width: 77%;
-  }
-  
-  /* ------------- */
-
-  .you-will-like{
-    height: 508px;
-    width: 100%;
-margin-top:30px;
-
-  }
-    /* --------------- footer --------------- */
-    footer {
-      background-color: #000;
-      color: #fff;
-      width: 100%;
-      height: 45px;
-      font-size: 16px;
-    }
-  `}</style>
+        .you-will-like {
+          height: 508px;
+          width: 100%;
+          margin-top: 30px;
+        }
+        /* --------------- footer --------------- */
+        footer {
+          background-color: #000;
+          color: #fff;
+          width: 100%;
+          height: 45px;
+          font-size: 16px;
+        }
+      `}</style>
     </>
   )
 }
