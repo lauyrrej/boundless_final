@@ -1,0 +1,10 @@
+
+      .big-pic{
+
+      }
+      @media screen and (max-width: 576px) {
+        .big-pic{
+          weight: 100%;
+          height: 100%;
+        }
+      }

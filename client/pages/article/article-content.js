@@ -12,7 +12,7 @@ import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
 import { IoIosArrowForward } from "react-icons/io";
 import { IoMdHome } from "react-icons/io";
-
+import styles from '@/pages/article/article-content.module.scss'
 
 // sidebar假資料
 const sidebarData = ['全部', '技術分享', '音樂評論']
@@ -102,8 +102,8 @@ export default function ArticleList() {
             撰文：王小明 <br />
             圖片來源：Ernie Ball、Ibanez 官方網站
           </p>
-          <div width="100%">
-            <Image src="/article/music.png" alt="" className="big-pic object-fit-cover w-100" width={1440} height={1000} />
+          <div className='main-img'>
+            <Image src="/article/music.png" alt="" className="big-pic object-fit-cover w-100" responsive fill />
           </div>
           <div className="article-label d-flex pt-4 ps-3">
             <div className="bg-dark text-light pt-1 pb-1 ps-2 pe-2 me-3">標籤</div>
@@ -185,13 +185,20 @@ export default function ArticleList() {
           margin-left: 10px;
         }
       }
+      .main-img{
+        position: relative;
+        weight: 1000px;
+        height: 500px;
+      }
       .big-pic{
-
+        position: absolute;
+        top: 0;
+        left:0;
       }
       @media screen and (max-width: 576px) {
-        .big-pic{
-          weight: 100%;
-          height: 100%;
+        .main-img{
+          weight: 576px;
+          height: 300px;
         }
       }
       `}</style>
