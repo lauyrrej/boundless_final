@@ -9,13 +9,11 @@ import { FaChevronRight } from 'react-icons/fa6'
 import { IoIosSearch } from 'react-icons/io'
 import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
-// coupon
-import CouponBlue from '@/components/coupon/coupon.js'
+// couponE
 import styles from '@/pages/coupon/userCoupon-test.module.scss'
 import Coupon from '@/components/coupon/coupon.js'
 
 // sidebar假資料
-const photoData = ['帕魯', 'PalWorld樂團']
 const sidebarData = [
   '會員資訊',
   '我的樂團',
