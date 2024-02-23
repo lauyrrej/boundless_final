@@ -284,7 +284,9 @@ export default function Test() {
               </div>
             </div>
             {/* 主內容 */}
-            <main className="content">
+            <main className="content jam-list">
+              <RecruitCard />
+              <RecruitCard />
               <RecruitCard />
             </main>
           </div>
@@ -292,7 +294,16 @@ export default function Test() {
       </div>
       <Footer />
 
-      <style jsx>{``}</style>
+      <style jsx>{`
+        .jam-list {
+          display: flex;
+          width: 100%;
+          flex-wrap: wrap;
+           {
+            /* flex-wrap: wrap; */
+          }
+        }
+      `}</style>
     </>
   )
 }

@@ -1,6 +1,7 @@
 .recruitCard {
     width: 100%;
     max-width: 525px;
+    min-width: 390px;
     border: 1px solid #b9b9b9;
     border-radius: 10px;
     background-color: #fff;
@@ -8,7 +9,6 @@
     gap: 12px;
     display: flex;
     flex-direction: column;
-    cursor: pointer;
   }
   .cardBadge {
     color: #fff;

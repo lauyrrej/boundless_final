@@ -6,8 +6,8 @@ import Link from 'next/link'
 export default function RecruitCard() {
   return (
     <>
-      <Link href={'#'}>
-        <div className={`${styles.recruitCard}`}>
+      <div className={`${styles.recruitCard}`}>
+        <Link href="#">
           {/* card-header */}
           <div className={`d-flex justify-content-between`}>
             <div className={`${styles.former}`}>
@@ -73,8 +73,8 @@ export default function RecruitCard() {
               <span>30 天</span>
             </div>
           </div>
-        </div>
-      </Link>
+        </Link>
+      </div>
     </>
   )
 }
