@@ -2,13 +2,19 @@
   background-color: #b9b9b9;
   border-radius: 5px;
 }
+
 .myCoupon {
   display: flex;
   align-items: flex-start;
   padding: 20px 0 0 80px;
-  
 }
 .couponImage {
   display: flex;
   flex-wrap: wrap;
+}
+
+.coupon-screen {
+  @media screen and (min-width: 576px) {
+    display: none;
+  }
 }

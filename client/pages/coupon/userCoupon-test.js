@@ -120,7 +120,7 @@ export default function Test() {
                   {/*  */}
                 </div>
                 {/* 資料排序 */}
-                <div className="sort d-flex align-items-center">
+                <div className="sort d-flex align-items-center coupon-screen">
                   <div>
                     <FaSortAmountDown size={13} />
                     排序 ：
@@ -176,6 +176,11 @@ export default function Test() {
         </div>
       </div>
       <Footer />
+      {/* mobile */}
+      <div className="coupon-rwd">
+        <FaSortAmountDown size={13} />
+        排序 ：
+      </div>
 
       <style jsx>{`
          {
