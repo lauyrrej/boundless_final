@@ -100,6 +100,169 @@
       height: 45px;
       font-size: 16px;
     }
+
+    /* -----------------homePage------------------ */
+    .user-homePage-sideWarp{
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      .user-homePage-content-left{
+        display: flex;
+        width: 330px;
+        padding: 25px 0px;
+        flex-direction: column;
+        align-items: flex-start;
+        border-radius: 10px;
+        background: var(--gray-30, rgba(185, 185, 185, 0.30));
+
+        .user-homePage-topInfo{
+          display: flex;
+          padding: 10px 0px;
+          flex-direction: column;
+          align-items: center;
+          gap: 5px;
+          align-self: stretch;
+          border-radius: 15px;
+
+          .user-homePage-avatar{
+            display: flex;
+            width: 150px;
+            height: 150px;
+            justify-content: center;
+            align-items: center;
+
+            .avatar{
+              width: 150px;
+              height: 150px;
+              flex-shrink: 0;
+              border-radius: 150px;
+              background: url(<path-to-image>), lightgray 50% / cover no-repeat;
+            }
+          }
+
+          .user-homePage-name{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 15px;
+            color: var(--dark, #1D1D1D);
+            text-align: center;
+
+            /* h5 */
+            font-family: "Noto Sans TC";
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+          }
+
+          .user-homePage-bandName{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            color: var(--dark, #1D1D1D);
+            text-align: center;
+
+            /* h5 */
+            font-family: "Noto Sans TC";
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+          }
+          
+        }
+        .user-homePage-Info{
+          display: flex;
+          padding: 10px 19px;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 20px;
+          align-self: stretch;
+          border-radius: 15px;
+
+          .user-homePage-Info-title{
+            color: var(--primary-deep, #124365);
+            text-align: center;
+
+            /* h3 */
+            font-family: "Noto Sans TC";
+            font-size: 28px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: normal;
+          }
+
+          .user-homePage-Info-list{
+            display: flex;
+            padding: 0px 10px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+
+            .user-homePage-info-item{
+              align-self: stretch;
+              justify-content: space-between;
+              align-items: flex-start;
+              display: inline-flex;
+            }
+            .user-homePage-info-item-titleText{
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 10;
+              align-self: stretch;
+              overflow: hidden;
+              color: var(--primary-deep, #124365);
+              text-overflow: ellipsis;
+              font-family: "Noto Sans TC";
+              font-size: 16px;
+              font-style: normal;
+              font-weight: 500;
+              line-height: normal;
+            }
+            .user-homePage-info-item-Content{
+              display: flex;
+              padding: 0px 10px;
+              flex-direction: column;
+              align-items: flex-start;
+              gap: 16px;
+            }
+            .user-homePage-info-item-contentText{
+              display: -webkit-box;
+              width: 140px;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 10;
+              overflow: hidden;
+              color: var(--dark, #1D1D1D);
+              text-overflow: ellipsis;
+
+              /* p */
+              font-family: "Noto Sans TC";
+              font-size: 16px;
+              font-style: normal;
+              font-weight: 400;
+              line-height: normal;
+            }
+          }
+        }
+        .user-homePage-contactInfo{
+          display: flex;
+          padding: 10px 19px;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 20px;
+          align-self: stretch;
+          border-radius: 15px;
+
+        }
+      }
+
+      
+    }
+
+    
   </style>
 </head>
 
@@ -132,8 +295,96 @@
   <!-- contnet -->
   <div class="container">
     <div class="row">
-      <div class="col-sm-2" style="background-color: rgb(255, 156, 156); height: 100vh;"></div>
-      <div class="col-sm-10" style="background-color: rgb(195, 195, 195); height: 100vh;">
+      <div class="col-sm-3" style="background-color: rgb(255, 255, 255); height: 100vh;">
+        <div class="user-homePage-sideWarp">
+          <div class="user-homePage-content-left">
+            <div class="user-homePage-topInfo">
+              <div class="user-homePage-avatar">
+                <img class="avatar" src="/assets/Meiyuyu.jpg" alt="">
+              </div>
+
+              <div class="user-homePage-name">棉悠悠</div>
+
+              <div class="user-homePage-bandName">PalWorld樂團</div>
+            </div>
+
+
+            <div class="user-homePage-Info">
+              <div class="user-homePage-Info-title">會員資訊</div>
+
+              <div class="user-homePage-Info-list">
+
+                <div class="user-homePage-info-item">
+                  <div class="user-homePage-info-item-titleText">
+                    暱稱：
+                  </div>
+
+                  <div class="user-homePage-info-item-Content">
+                    <div class="user-homePage-info-item-contentText">
+                      棉悠悠
+                    </div>
+                  </div>
+                </div>
+
+                <div class="user-homePage-info-item">
+                  <div class="user-homePage-info-item-titleText">
+                    性別：
+                  </div>
+
+                  <div class="user-homePage-info-item-Content">
+                    <div class="user-homePage-info-item-contentText">
+                      男
+                    </div>
+                  </div>
+                </div>
+
+                <div class="user-homePage-info-item">
+                  <div class="user-homePage-info-item-titleText">
+                    生日：
+                  </div>
+
+                  <div class="user-homePage-info-item-Content">
+                    <div class="user-homePage-info-item-contentText">
+                      2024/01/19
+                    </div>
+                  </div>
+                </div>
+
+                <div class="user-homePage-info-item">
+                  <div class="user-homePage-info-item-titleText">
+                    喜歡曲風：
+                  </div>
+
+                  <div class="user-homePage-info-item-Content">
+                    <div class="user-homePage-info-item-contentText">
+                      金屬、搖滾
+                    </div>
+                  </div>
+                </div>
+
+                <div class="user-homePage-info-item">
+                  <div class="user-homePage-info-item-titleText">
+                    演奏樂器：
+                  </div>
+
+                  <div class="user-homePage-info-item-Content">
+                    <div class="user-homePage-info-item-contentText">
+                      貝斯
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="user-homePage-contactInfo"></div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="col-sm-9" style="background-color: rgb(255, 255, 255); height: 100vh;">
       內容</div>
     </div>
   </div>
