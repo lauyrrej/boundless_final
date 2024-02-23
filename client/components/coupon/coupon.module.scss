@@ -2,6 +2,12 @@
   // width: 300px;
   background-color: #fff;
   border-radius: 8px;
+  margin: 24px 20px 0;
+  @media screen and (max-width: 576px) {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
 }
 .couponImg {
   border-right: dashed gray;
