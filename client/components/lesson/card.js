@@ -74,7 +74,6 @@ function InstrumentCard({
         }
         .product-sold {
           color: #5a5a5a;
-          text-align: right;
           font-size: 14px;
           font-family: Noto Sans TC, sans-serif;
           margin-top: 46px;

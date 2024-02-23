@@ -1,4 +1,5 @@
 import React from 'react'
+import { FaHeart } from 'react-icons/fa'
 
 function InstrumentCard({
   productName,
@@ -10,13 +11,15 @@ function InstrumentCard({
   return (
     <article className="product-card">
       <div className="product-image-wrapper">
-        <img
-          loading="lazy"
-          srcSet={productImage}
-          alt={productName}
-          className="product-image"
-        />
-        <img loading="lazy" src={iconImage} alt="" className="icon-image" />
+        <div className="image-container">
+          <img
+            loading="lazy"
+            srcSet={productImage}
+            alt={productName}
+            className="product-image"
+          />
+          <FaHeart className="icon-image" />
+        </div>
       </div>
       <div className="product-details">
         <h3 className="product-title">{productName}</h3>
@@ -42,6 +45,9 @@ function InstrumentCard({
           aspect-ratio: 1.33;
           width: 100%;
         }
+        .image-container {
+          position: relative;
+        }
         .product-image,
         .icon-image {
           width: 100%;
@@ -50,9 +56,10 @@ function InstrumentCard({
         }
         .icon-image {
           position: absolute;
-          width: 20px;
-          bottom: 12px;
-          right: 12px;
+          bottom: 10px;
+          right: 10px;
+          color: gray;
+          font-size: 24px;
         }
         .product-details {
           display: flex;

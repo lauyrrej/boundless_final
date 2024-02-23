@@ -4,7 +4,7 @@ import Footer from '@/components/common/footer'
 import Card from '@/components/instrument/card'
 import Link from 'next/link'
 import Image from 'next/image'
-import jamHero from '@/assets/jam-hero.png'
+import lessonHero from '@/assets/lesson-hero.jpg'
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
 import { IoIosSearch } from 'react-icons/io'
@@ -12,7 +12,15 @@ import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
 
 // sidebar假資料
-const sidebarData = ['吉他', '貝斯', '鍵盤樂器', '打擊樂器']
+const sidebarData = [
+  '歌唱技巧',
+  '樂器演奏',
+  '音樂理論',
+  '詞曲創作',
+  '軟體操作',
+  '活動專區',
+]
+
 let arr = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
 export default function Test() {
@@ -20,7 +28,11 @@ export default function Test() {
     <>
       <Navbar />
       <div className="hero d-none d-sm-block" style={{ paddingTop: '60px' }}>
-        <Image src={jamHero} className="object-fit-cover w-100" alt="cover" />
+        <Image
+          src={lessonHero}
+          className="object-fit-cover w-100"
+          alt="cover"
+        />
       </div>
       <div className="container">
         <div className="row">
@@ -52,7 +64,9 @@ export default function Test() {
               <div className="breadcrumb-wrapper">
                 <ul className="d-flex align-items-center p-0 m-0">
                   <IoHome size={20} />
-                  <li style={{ marginLeft: '8px' }}>樂器商域</li>
+                  <li style={{ marginLeft: '8px' }}>探索課程</li>
+                  <FaChevronRight />
+                  <li style={{ marginLeft: '10px' }}>線上課程</li>
                 </ul>
               </div>
 
@@ -80,8 +94,9 @@ export default function Test() {
                       排序
                       <FaSortAmountDown size={13} />
                     </div>
-                    <div className="sort-item active">新到舊</div>
-                    <div className="sort-item">舊到新</div>
+                    <div className="sort-item active">最熱門</div>
+                    <div className="sort-item">依評價</div>
+                    <div className="sort-item">依實數</div>
                   </div>
                 </div>
               </div>
