@@ -1,0 +1,15 @@
+.couponCard {
+  max-width: 400px;
+}
+.logoBlue {
+  width: 100px;
+  border-right: dashed gray;
+  border-width: 7px;
+  padding: 7px;
+}
+.logoWhite {
+  width: 100px;
+  border-right: dashed gray;
+  border-width: 7px;
+  padding: 7px;
+}
