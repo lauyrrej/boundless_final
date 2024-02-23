@@ -1,39 +1,14 @@
-// 引入google字體
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap');
-// bootstrap樣式
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap");
 @import 'bootstrap/dist/css/bootstrap.min.css';
-
-// 全站配色 colors
-$primary: #1581cc;
-$light-primary: #18a1ff;
-$deep-primary: #124365;
-$dark: #1d1d1d;
-$secondary: #5a5a5a;
-$body: #b9b9b9;
-$yellow: #faad14;
-$red: #ec3f3f;
-
-// 字體大小
-$h1: 40px;
-$h2: 32px;
-$h3: 28px;
-$h4: 24px;
-$h5: 20px;
-$h6: 18px;
-$small: 14px;
-
-
 :root {
   --max-width: 1100px;
   --border-radius: 12px;
-  --font-mono: ui-monospace, Menlo, Monaco, 'Cascadia Mono', 'Segoe UI Mono',
-    'Roboto Mono', 'Oxygen Mono', 'Ubuntu Monospace', 'Source Code Pro',
-    'Fira Mono', 'Droid Sans Mono', 'Courier New', monospace;
-
+  --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
+    "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
+    "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
-
   --primary-glow: conic-gradient(
     from 180deg at 50% 50%,
     #16abff33 0deg,
@@ -46,7 +21,6 @@ $small: 14px;
     rgba(255, 255, 255, 1),
     rgba(255, 255, 255, 0)
   );
-
   --tile-start-rgb: 239, 245, 249;
   --tile-end-rgb: 228, 232, 233;
   --tile-border: conic-gradient(
@@ -58,7 +32,6 @@ $small: 14px;
     #00000010,
     #00000080
   );
-
   --callout-rgb: 238, 240, 241;
   --callout-border-rgb: 172, 175, 176;
   --card-rgb: 180, 185, 188;
@@ -70,7 +43,6 @@ $small: 14px;
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
-
     --primary-glow: radial-gradient(rgba(1, 65, 255, 0.4), rgba(1, 65, 255, 0));
     --secondary-glow: linear-gradient(
       to bottom right,
@@ -78,7 +50,6 @@ $small: 14px;
       rgba(1, 65, 255, 0),
       rgba(1, 65, 255, 0.3)
     );
-
     --tile-start-rgb: 2, 13, 46;
     --tile-end-rgb: 2, 5, 19;
     --tile-border: conic-gradient(
@@ -90,14 +61,12 @@ $small: 14px;
       #ffffff10,
       #ffffff80
     );
-
     --callout-rgb: 20, 20, 20;
     --callout-border-rgb: 108, 108, 108;
     --card-rgb: 100, 100, 100;
     --card-border-rgb: 200, 200, 200;
   }
 }
-
 * {
   box-sizing: border-box;
   padding: 0;
@@ -113,12 +82,6 @@ body {
   max-width: 100vw;
   font-family: "Noto Sans TC", sans-serif;
   color: rgb(var(--foreground-rgb));
-  // background: linear-gradient(
-  //     to bottom,
-  //     transparent,
-  //     rgb(var(--background-end-rgb))
-  //   )
-  //   rgb(var(--background-start-rgb));
   background-color: #fff;
 }
 
@@ -136,18 +99,35 @@ ul {
     color-scheme: dark;
   }
 }
-
 main {
-  min-height: calc(150svh - 380px);
+  min-height: 150svh;
 }
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
+.sidebar-wrapper {
+  position: sticky;
+  top: 0px;
+  padding-top: 65px;
+}
+
+.sidebar {
+  position: sticky;
+  top: 65px;
+  color: #5a5a5a;
+  font-size: 20px;
+  font-weight: 700;
+}
+.sidebar ul {
   margin: 0;
+  padding: 0;
 }
-
-/* Firefox */
-input[type=number] {
-  -moz-appearance: textfield;
+.sidebar li {
+  padding: 12px;
+  cursor: pointer;
 }
+.sidebar li:hover {
+  color: #1581cc;
+}
+.sidebar .active {
+  color: #1581cc;
+  cursor: default;
+}/*# sourceMappingURL=sidebar.css.map */
