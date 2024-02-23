@@ -139,7 +139,7 @@ header {
 .filter {
   width: 220px;
   padding-inline: 8px;
-  padding-block: 8px 16px;
+  padding-block: 16px;
   background-color: #fff;
   border: 2px solid $body;
   border-radius: 5px;
@@ -185,10 +185,6 @@ header {
     &:hover {
       background-color: $primary;
     }
-  }
-  .filter-close {
-    color: $secondary;
-    cursor: pointer;
   }
 }
 
