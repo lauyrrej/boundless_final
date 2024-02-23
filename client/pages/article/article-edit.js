@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Editor from "./test";
+import Editor from "./editor-component";
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import ArticleCard from '@/components/article/article-card'
