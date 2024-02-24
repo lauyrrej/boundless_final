@@ -66,7 +66,9 @@ export default function ProductBriefCard({}) {
       <style jsx>
         {`
           .Right {
-            {/* margin-left: 80px; */}
+             {
+              /* margin-left: 80px; */
+            }
           }
 
           .prodBriefing {
@@ -144,6 +146,10 @@ export default function ProductBriefCard({}) {
             height: 34px;
             margin: auto 0;
             padding: 0 7px;
+           
+          }
+          .likesIcon :hover {
+            background-color: #ffc0cb;
           }
           .lengthHomeworkArea {
             display: flex;
@@ -169,6 +175,7 @@ export default function ProductBriefCard({}) {
             color: var(--white, #fff);
             font-weight: 700;
           }
+
           .cartBtn {
             display: flex;
             justify-content: space-between;
@@ -176,6 +183,9 @@ export default function ProductBriefCard({}) {
             background-color: var(--body, #b9b9b9);
             gap: 12px;
             padding: 8px 78px;
+          }
+          .cartBtn:hover {
+            background-color: #000000;
           }
           .buyBtn {
             display: flex;

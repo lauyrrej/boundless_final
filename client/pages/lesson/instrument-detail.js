@@ -6,7 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { IoHome } from 'react-icons/io5'
 import Card from '@/components/lesson/lesson-card'
-import ProductCard from '@/components/lesson/lesson-productbrief-card'
+import ProductCard from '@/components/lesson/instrument-productbrief-card'
 
 export default function LessonDetail() {
   return (
@@ -463,18 +463,12 @@ export default function LessonDetail() {
 
         .list {
           background-color: rgba(185, 185, 185, 0.3);
-          padding:8px 12px;
         }
 
         .outline {
           height: 243px;
           width: 660px;
         }
-
-        .outline ul{
-list-style-type: disc; 
-        }
-
         .suitable {
           height: 130px;
           width: 660px;

@@ -1,6 +1,6 @@
 import React from 'react'
 
-function CourseCard() {
+export default function CourseCard() {
   return (
     <>
       <article className="course-card">
@@ -129,4 +129,3 @@ function CourseCard() {
   )
 }
 
-export default CourseCard
