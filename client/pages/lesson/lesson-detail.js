@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { useState } from 'react'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
@@ -7,6 +8,7 @@ import Image from 'next/image'
 import { IoHome } from 'react-icons/io5'
 import Card from '@/components/lesson/lesson-card'
 import ProductCard from '@/components/lesson/lesson-productbrief-card'
+
 
 export default function LessonDetail() {
   return (
@@ -467,8 +469,8 @@ export default function LessonDetail() {
         }
 
         .outline {
-          height: 243px;
-          width: 660px;
+          {/* height: 243px;
+          width: 660px; */}
         }
 
         .outline ul{
@@ -476,12 +478,12 @@ list-style-type: disc;
         }
 
         .suitable {
-          height: 130px;
-          width: 660px;
+          {/* height: 130px;
+          width: 660px; */}
         }
         .achievement {
-          height: 107px;
-          width: 660px;
+          {/* height: 107px;
+          width: 660px; */}
         }
         .review-title {
           display: flex;
@@ -521,13 +523,13 @@ list-style-type: disc;
           padding: 4px 0 4px 80px;
         }
         .teacher-info {
-          height: 217px;
-          width: 660px;
+          {/* height: 217px;
+          width: 660px; */}
         }
         .teacher-info-area {
           display: flex;
-          height: 166px;
-          width: 660px;
+          {/* height: 166px;
+          width: 660px; */}
         }
         .teacher-img-con {
           width: 140px;
@@ -546,7 +548,7 @@ list-style-type: disc;
         /* ------------- */
 
         .you-will-like {
-          height: 508px;
+          {/* height: 508px; */}
           width: 100%;
           margin-top: 30px;
         }
@@ -557,13 +559,7 @@ list-style-type: disc;
             
         }
         /* --------------- footer --------------- */
-        footer {
-          background-color: #000;
-          color: #fff;
-          width: 100%;
-          height: 45px;
-          font-size: 16px;
-        }
+    
       `}</style>
     </>
   )
