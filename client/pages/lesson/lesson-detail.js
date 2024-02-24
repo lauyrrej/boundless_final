@@ -5,8 +5,8 @@ import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
 import { IoHome } from 'react-icons/io5'
-import Card from '@/components/lesson/card (1)'
-import Lessoncard from '@/components/lesson/lesson-card'
+import Card from '@/components/lesson/card'
+import ProductCard from '@/components/lesson/productbrief-card'
 
 export default function LessonDetail() {
   return (
@@ -330,15 +330,22 @@ export default function LessonDetail() {
                 </div>
               </div>
               {/* 右半部 */}
-
-              <Lessoncard />
+              <ProductCard />
             </div>
           </div>
           {/* 猜你喜歡 */}
-          <div className="col-sm-12 you-will-like border border-secondary" />
-          <Card />
-              </div>
-         <div > </div>
+          <div className="col-sm-12 you-will-like border border-secondary">
+            <div className="detail-title ">猜你喜歡...</div>
+            <div className="card-con">
+              <Card />
+              <Card />
+              <Card />
+              <Card />
+              <Card />
+            </div>
+          </div>
+        </div>
+        <div> </div>
       </div>
 
       {/* End content */}
@@ -430,7 +437,6 @@ export default function LessonDetail() {
         .mt-60 {
           margin-top: 60px;
         }
-       
 
         /* ------------------ */
 
@@ -527,6 +533,12 @@ export default function LessonDetail() {
           height: 508px;
           width: 100%;
           margin-top: 30px;
+        }
+        .card-con{
+            padding:0;
+            display:flex;
+            justify-content:space-between;
+            
         }
         /* --------------- footer --------------- */
         footer {
