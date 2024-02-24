@@ -142,28 +142,10 @@ export default function Test() {
       <Footer />
 
       <style jsx>{`
-        @media screen and (max-width: 576px) {
-          .sidebar-wrapper {
-            display: none; // 在小型螢幕上隱藏側邊欄
-          }
-
-          .hero {
-            padding-top: '40px'; // 調整小型螢幕的英雄區塊上方填充
-          }
-
-          .breadcrumb-wrapper {
-            margin-left: '8px'; // 調整小型螢幕的麵包屑左邊距
-          }
-
-          .sort-item {
-            display: none; // 在小型螢幕上隱藏排序項目
-          }
-        }
-
-        @media screen and (min-width: 576px) {
+        @media (min-width: 576px) {
           .sidebar-wrapper {
             display: block; // 在中型螢幕上顯示側邊欄
-            width: 200px; // 調整中型螢幕上的側邊欄寬度
+            width: 100%; // 調整中型螢幕上的側邊欄寬度
           }
 
           .col-sm-10 {
