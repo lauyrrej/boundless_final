@@ -192,8 +192,7 @@ header {
 .top-function-container {
   width: 100%;
   background-color: #fff;
-  padding-block: 20px;
-  padding-right: 10px;
+  padding-block: 20px 30px;
   position: sticky;
   top: 10px;
   z-index: 100;
@@ -311,27 +310,27 @@ header {
 }
 
 .sort {
-    color: $secondary;
-    font-weight: 600;
-    font-size: $h6;
-    padding-inline: 10px;
-    gap: 10px;
-    user-select: none;
-    .sort-item {
-        padding-inline: 4px;
-        cursor: pointer;
-        transition: 0.2s;
-        &:hover {
-            color: $light-primary;
-        }
-    }
-    .active {
-        color: $primary;
-        cursor: default;
-        &:hover {
-            color: $primary;
-        }
-    }
+  color: $secondary;
+  font-weight: 600;
+  font-size: $h6;
+  // padding-inline: 10px;
+  gap: 10px;
+  user-select: none;
+  .sort-item {
+      padding-inline: 4px;
+      cursor: pointer;
+      transition: 0.2s;
+      &:hover {
+          color: $light-primary;
+      }
+  }
+  .active {
+      color: $primary;
+      cursor: default;
+      &:hover {
+          color: $primary;
+      }
+  }
 }
 
 .b-btn {

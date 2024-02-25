@@ -241,7 +241,7 @@ export default function Test() {
                   {/*  ---------------------- 條件篩選  ---------------------- */}
                   <form className="d-flex align-items-center  position-relative">
                     <div
-                      className="filter-text d-flex align-items-center me-sm-3"
+                      className="filter-text d-flex align-items-center me-sm-4"
                       role="presentation"
                       onClick={onshow}
                     >
