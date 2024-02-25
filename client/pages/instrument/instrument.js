@@ -1,28 +1,89 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Card from '@/components/instrument/card'
 import Link from 'next/link'
 import Image from 'next/image'
 import productlistHero from '@/assets/product-list-hero.jpg'
+// icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
 import { IoIosSearch } from 'react-icons/io'
 import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
-
-// sidebar假資料
-const sidebarData = [
-  { id: 1, parent_id: null, name: '吉他' },
-  { id: 2, parent_id: null, name: '貝斯' },
-  { id: 3, parent_id: null, name: '鍵盤樂器' },
-  { id: 4, parent_id: 1, name: '電吉他' },
-  { id: 5, parent_id: 1, name: '木吉他' },
-]
-
-let arr = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+import { ImExit } from 'react-icons/im'
+import { IoClose } from 'react-icons/io5'
 
 export default function Test() {
+  // ----------------------手機版本  ----------------------
+  // 主選單
+  const [showMenu, setShowMenu] = useState(false)
+  const menuMbToggle = () => {
+    setShowMenu(!showMenu)
+  }
+  // sidebar
+  const [showSidebar, setShowSidebar] = useState(false)
+  const sidebarToggle = () => {
+    setShowSidebar(!showSidebar)
+  }
+
+  const [filterVisible, setFilterVisible] = useState(false)
+  useEffect(() => {
+    document.addEventListener('click', (e) => {
+      setFilterVisible(false)
+    })
+  }, [])
+  // 阻止事件冒泡造成篩選表單關閉
+  const stopPropagation = (e) => {
+    e.stopPropagation()
+  }
+  // 顯示表單
+  const onshow = (e) => {
+    stopPropagation(e)
+    setFilterVisible(!filterVisible)
+  }
+  // ----------------------假資料  ----------------------
+  // sidebar假資料
+  const sidebarData = [
+    { id: 1, parent_id: null, name: '吉他' },
+    { id: 2, parent_id: null, name: '貝斯' },
+    { id: 3, parent_id: null, name: '鍵盤樂器' },
+    { id: 4, parent_id: null, name: '打擊樂器' },
+    { id: 5, parent_id: null, name: '弓弦樂器' },
+    { id: 6, parent_id: null, name: '管樂器' },
+    { id: 7, parent_id: null, name: '音響設備' },
+    { id: 8, parent_id: 1, name: '電吉他' },
+    { id: 9, parent_id: 1, name: '木吉他' },
+  ]
+  // filter假資料
+  const brandData = [
+    { id: 1, name: 'YAMAHA' },
+    { id: 2, name: 'Roland' },
+    { id: 3, name: 'Fender' },
+    { id: 4, name: 'Gibson' },
+  ]
+  const [brandSelect, setBrandSelect] = useState('all')
+
+  const [priceLow, setPriceLow] = useState('')
+  const [priceHigh, setPriceHigh] = useState('')
+  // 商品評價
+  const scoreState = ['all', '5', '4', '3']
+  const [score, setScore] = useState('all')
+
+  // 促銷商品
+  const [sales, setSales] = useState(false)
+
+  // 清除表單內容
+  const cleanFilter = () => {
+    setBrandSelect('all')
+    setPriceLow('')
+    setPriceHigh('')
+    setScore('all')
+    setSales(false)
+  }
+
+  let arr = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+
   return (
     <>
       <Navbar />
@@ -69,7 +130,7 @@ export default function Test() {
         </div> */}
 
                 <li>
-                  <Link href={'/instrument/event'}>活動促銷</Link>
+                  <Link href={'/instrument/event'}>活動專區</Link>
                 </li>
               </ul>
             </div>
@@ -107,10 +168,136 @@ export default function Test() {
                 </div>
                 <div className="filter-sort d-flex justify-content-between">
                   {/* 條件篩選 */}
-                  <div className="filter d-flex align-items-center">
-                    條件篩選
-                    <FaFilter size={13} />
-                  </div>
+                  <form
+                    action="/template-with-sidebar"
+                    method="get"
+                    className="d-flex aligh-items-center  position-relative"
+                  >
+                    <div
+                      className="filter-text d-flex align-items-center me-3"
+                      role="presentation"
+                      onClick={onshow}
+                    >
+                      條件篩選
+                      <FaFilter size={13} />
+                      <div
+                        className={`filter ${
+                          filterVisible === false ? 'd-none' : 'd-block'
+                        }`}
+                        onClick={stopPropagation}
+                        role="presentation"
+                      >
+                        {/* 品牌 */}
+                        <div className="filter-item">
+                          <div className="filter-title">選擇品牌</div>
+                          <select
+                            className="form-select"
+                            aria-label="Default select example"
+                            value={brandSelect}
+                            name="brand"
+                            onChange={(e) => {
+                              setBrandSelect(e.target.value)
+                            }}
+                          >
+                            <option selected value="all">
+                              全部
+                            </option>
+                            {brandData.map((v) => {
+                              return (
+                                <option key={v.id} value={v.id}>
+                                  {v.name}
+                                </option>
+                              )
+                            })}
+                          </select>
+                        </div>
+                        {/* 價格區間 */}
+                        <div className="filter-item">
+                          <div className="filter-title">價格區間</div>
+                          <input
+                            type="number"
+                            className="form-control mb-2"
+                            placeholder="最低價"
+                            name="priceLow"
+                            value={priceLow}
+                            min={0}
+                            max={priceHigh - 1}
+                            onChange={(e) => {
+                              setPriceLow(e.target.value)
+                            }}
+                          />
+                          <input
+                            type="number"
+                            className="form-control"
+                            placeholder="最高價"
+                            name="priceHigh"
+                            value={priceHigh}
+                            min={priceLow + 1}
+                            onChange={(e) => {
+                              setPriceHigh(e.target.value)
+                            }}
+                          />
+                        </div>
+                        {/* 商品評價 */}
+                        <div className="filter-item m-0">
+                          <div className="filter-title">商品評價</div>
+                          <div className="filter-radio-group d-flex flex-wrap justify-content-between">
+                            {scoreState.map((v, i) => {
+                              return (
+                                <div
+                                  className="filter-radio-item form-check p-0 mb-3"
+                                  key={i}
+                                >
+                                  <label className="form-check-label">
+                                    <input
+                                      classname="form-check-input"
+                                      type="radio"
+                                      name="score"
+                                      value={v}
+                                      checked={v === score}
+                                      onChange={(e) => {
+                                        setScore(e.target.value)
+                                      }}
+                                    />
+                                    &nbsp;{v === 'all' ? '全部' : v + '星'}
+                                  </label>
+                                </div>
+                              )
+                            })}
+                          </div>
+                        </div>
+                        {/* 促銷商品 */}
+                        <div className="filter-item">
+                          <div className="form-check">
+                            <label className="form-check-label filter-title mb-0">
+                              <input
+                                className="form-check-input"
+                                type="checkbox"
+                                value={sales}
+                                name="sales"
+                                onChange={() => {
+                                  setSales(!sales)
+                                }}
+                              />{' '}
+                              促銷商品
+                            </label>
+                          </div>
+                        </div>
+                        <div className="d-flex justify-content-between gap-2">
+                          <div
+                            className="filter-btn clean-btn w-100 d-flex justify-content-center"
+                            role="presentation"
+                            onClick={cleanFilter}
+                          >
+                            清除
+                          </div>
+                          <div className="filter-btn confirm-btn w-100 d-flex justify-content-center">
+                            確認
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
                   {/* 資料排序 */}
                   <div className="sort d-flex justify-content-between align-items-center">
                     <div className="d-flex align-items-center">
@@ -141,30 +328,7 @@ export default function Test() {
       </div>
       <Footer />
 
-      <style jsx>{`
-        @media (min-width: 576px) {
-          .sidebar-wrapper {
-            display: block; // 在中型螢幕上顯示側邊欄
-            width: 100%; // 調整中型螢幕上的側邊欄寬度
-          }
-
-          .col-sm-10 {
-            padding-left: 30px; // 在中型螢幕上恢復左填充
-          }
-
-          .hero {
-            padding-top: '60px'; // 調整中型螢幕的英雄區塊上方填充
-          }
-
-          .breadcrumb-wrapper {
-            margin-left: '12px'; // 調整中型螢幕的麵包屑左邊距
-          }
-
-          .sort-item {
-            display: block; // 在中型螢幕上顯示排序項目
-          }
-        }
-      `}</style>
+      <style jsx>{``}</style>
     </>
   )
 }
