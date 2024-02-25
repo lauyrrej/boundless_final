@@ -97,7 +97,7 @@ export default function LessonDetail() {
                       Logic Pro
                       為數位音樂編曲入門的必學軟體，從錄音、編曲到混音一次包辦，帶你認識錄音介面、多重效果器，以及豐富的內建素材庫，是對音樂創作有興趣的你不可錯過的專業音樂編曲課程。
                     </div>
-                    <div className="shoppingBtn">
+                    <div className="shoppingBtn" id="shoppingBtn">
                       <div className="cartBtn">
                         <img
                           loading="lazy"
@@ -409,7 +409,10 @@ export default function LessonDetail() {
               <Card />
               <Card />
             </div>
-            <div className="card-con-mobile"><HoriCard/></div>
+            {/* 手機版card-con */}
+            <div className="card-con-mobile">
+              <HoriCard />
+            </div>
           </div>
         </div>
         <div> </div>
@@ -624,6 +627,9 @@ list-style-type: disc;
             justify-content:space-between;
             
         }
+        .card-con-mobile{
+            display:none;
+        }
         .Right-mobile{
             display:none;
         }
@@ -631,6 +637,7 @@ list-style-type: disc;
 
         {/* RWD */}
         @media screen and (max-width:576px) {
+
   .Left {
 
   }
@@ -736,6 +743,10 @@ display:block;
                       }
                       .lessonIntro {
                       }
+
+                      .container{
+                        padding-bottom: 95px;
+                      }
                       .shoppingBtn {
                         display: flex;
                         {/* margin-top: 20px; */}
@@ -744,11 +755,16 @@ display:block;
                         font-size: 16px;
                         color: var(--white, #fff);
                         font-weight: 700;
-
                          position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
+                         bottom: 0;
+                        left: 0;
+                        width: 100%;
+                        background-color:white;
+                        padding-top:26px;
+                        padding-bottom:30px;
+                        margin-top:840px;
+                        margin-bottom:45px;
+                        z-index:1200;
                       }
 
                       .cartBtn {
@@ -759,9 +775,7 @@ display:block;
                         gap: 12px;
                         padding: 8px 78px;
                       }
-                      .cartBtn:hover {
-                        background-color: #000000;
-                      }
+                   
                       .buyBtn {
                         display: flex;
                         justify-content: space-between;
@@ -770,9 +784,7 @@ display:block;
                         gap: 12px;
                         padding: 8px 78px;
                       }
-                       .buyBtn:hover {
-                        background-color: #000000;
-                      }
+                   
                       {/* ---------- */}
 
                       {/* detail-mobile */}
@@ -789,6 +801,7 @@ max-width:100%;
                       }
                       .card-con-mobile{
                         display:block:
+                        margin-bottom:100px;
                       }
 }
     
@@ -796,3 +809,22 @@ max-width:100%;
     </>
   )
 }
+
+//想做購物按鈕滑到頂部還是會固定在頁尾的效果
+
+window.addEventListener('scroll', function () {
+  var button = document.querySelector('shoppingBtn')
+  var contentHeight = document.querySelector('container').offsetHeight
+  var windowHeight = window.innerHeight
+  var scrollPosition = window.scrollY
+
+  if (scrollPosition + windowHeight >= contentHeight) {
+    // 当页面滚动到底部时，将按钮固定在页面底部
+    button.style.position = 'fixed'
+    button.style.bottom = '0'
+  } else {
+    // 否则，按钮跟随页面内容
+    button.style.position = 'absolute'
+    button.style.bottom = 'initial'
+  }
+})

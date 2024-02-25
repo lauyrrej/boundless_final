@@ -146,7 +146,6 @@ export default function ProductBriefCard({}) {
             height: 34px;
             margin: auto 0;
             padding: 0 7px;
-           
           }
           .likesIcon :hover {
             background-color: #ffc0cb;
@@ -174,6 +173,7 @@ export default function ProductBriefCard({}) {
             font-size: 16px;
             color: var(--white, #fff);
             font-weight: 700;
+          
           }
 
           .cartBtn {
@@ -194,6 +194,9 @@ export default function ProductBriefCard({}) {
             background-color: #18a1ff;
             gap: 12px;
             padding: 8px 78px;
+          }
+          .buyBtn:hover {
+            background-color: #000000;
           }
         `}
       </style>
