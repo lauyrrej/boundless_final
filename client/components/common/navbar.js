@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { IoCart, IoMenu } from 'react-icons/io5'
 import Image from 'next/image'
 import logo from '@/assets/logo.svg'
 import logoMb from '@/assets/logo_mb.svg'
 
 export default function Navbar() {
+  const [showMenu, setShowMenu] = useState(false)
   return (
     <>
       <header className="w-100 d-flex justify-content-between align-items-center">
@@ -40,7 +41,11 @@ export default function Navbar() {
               </a>
               {/* 用戶頭像 */}
               <div className="user-img d-none">
-                <Image src={logoMb} />
+                <Image
+                  src="/jam/amazingshow.jpg"
+                  alt="user-photo"
+                  fill={true}
+                />
               </div>
             </li>
           </ul>
@@ -49,7 +54,13 @@ export default function Navbar() {
             <a href="/cart" className="p-0 me-3">
               <IoCart size={30} />
             </a>
-            <IoMenu size={30} className="ms-3" />
+            <IoMenu
+              size={30}
+              className="ms-3"
+              onClick={() => {
+                setShowMenu(!showMenu)
+              }}
+            />
           </div>
         </nav>
       </header>

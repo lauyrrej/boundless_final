@@ -132,8 +132,9 @@ export default function Test() {
                       條件篩選
                       <FaFilter size={13} />
                       <div
-                        className={`filter ${filterVisible === false ? 'd-none' : 'd-block'
-                          }`}
+                        className={`filter ${
+                          filterVisible === false ? 'd-none' : 'd-block'
+                        }`}
                         onClick={stopPropagation}
                         role="presentation"
                       >
@@ -233,7 +234,10 @@ export default function Test() {
                             </label>
                           </div>
                         </div>
-                        <div className="d-flex justify-content-between gap-2">
+                        <div
+                          className="d-flex justify-content-between gap-2 mt-1"
+                          style={{ paddingInline: '10px' }}
+                        >
                           <div
                             className="filter-btn clean-btn w-100 d-flex justify-content-center"
                             role="presentation"

@@ -15,9 +15,8 @@ header {
   .logo-mb {
     max-width: 30px;
   }
-
   @media screen and (max-width: 576px) {
-    padding-inline: 20px;
+    padding-inline: 24px;
   }
 }
 
@@ -57,11 +56,12 @@ header {
     width: 40px;
     height: 40px;
     overflow: hidden;
+    position: relative;
     border: 2px solid #fff;
     border-radius: 50%;
     & img {
       height: 100%;
-      object-fit: contain;
+      object-fit: cover;
     }
   }
 }
@@ -95,13 +95,39 @@ header {
   }
 }
 
+.page-control {
+  padding-inline: 30px 0;
+  @media screen and (max-width: 576px) {
+    // padding: 0 20px 0 20px;
+    padding: 0;
+  }
+}
+
+.top-function-flex {
+  display: flex;
+  justify-content: space-between;
+  @media screen and (max-width: 576px) {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}
+
 .top-function-container {
+  width: 100%;
   background-color: #fff;
   padding-block: 20px;
   padding-right: 10px;
   position: sticky;
   top: 10px;
   z-index: 999;
+  @media screen and (max-width: 576px) {
+    top: 58px;
+    padding-block: 22px 12px;
+    padding-inline: 12px;
+    box-shadow: 0px 2px 4px 0px rgba($color: #000000, $alpha: 0.25);
+  }
 }
 .breadcrumb-wrapper {
   color: $secondary;
@@ -112,10 +138,20 @@ header {
   margin-bottom: 24px;
 }
 
+.search-sidebarBtn {
+  @media screen and (max-width: 576px) {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+}
 .search {
   width: 300px;
   border: 1px soild $body;
   border-radius: 5px;
+  @media screen and (max-width: 576px) {
+    width: 270px;
+  }
   .search-btn {
     width: 42px;
     height: 42px;
@@ -137,6 +173,12 @@ header {
     user-select: none;
 }
 
+.filter-sort {
+  @media screen and (max-width: 576px) {
+    width: 100%;
+  }
+}
+
 .filter {
   width: 220px;
   padding-inline: 8px;
@@ -149,6 +191,10 @@ header {
   left: -65px;
   cursor: default;
   user-select: none;
+  @media screen and (max-width: 576px) {
+    top: 50px;
+    left: -102px;
+  }
   .filter-item {
     padding-inline: 12px;
     margin-bottom: 14px;
@@ -211,4 +257,23 @@ header {
             color: $deep-primary;
         }
     }
+}
+
+.b-btn {
+  border-radius: 5px;
+  color: #fff;
+  font-weight: bold;
+  padding-block: 6px;
+}
+.b-btn-primary {
+  background-color: $light-primary;
+  &:hover {
+    background-color: $primary;
+  }
+}
+.b-btn-body {
+  background-color: $body;
+  &:hover {
+    background-color: $secondary;
+  }
 }

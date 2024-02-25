@@ -18,7 +18,7 @@ import RecruitCard from '@/components/jam/recruit-card'
 export default function Test() {
   const [filterVisible, setFilterVisible] = useState(false)
   useEffect(() => {
-    document.addEventListener('click', (e) => {
+    document.addEventListener('click', () => {
       setFilterVisible(false)
     })
   }, [])
@@ -32,6 +32,8 @@ export default function Test() {
     setFilterVisible(!filterVisible)
   }
   // ----------------------假資料  ----------------------
+  // 資料排序
+  const [dataSort, setDataSort] = useState('upToDate')
   // filter假資料
   // 樂手類型資料
   const playerData = [
@@ -79,6 +81,7 @@ export default function Test() {
       >
         <Image src={jamHero} className="object-fit-cover w-100" alt="cover" />
       </div>
+      <div className="menu-mb"></div>
       <div className="container">
         <div className="row">
           {/* sidebar */}
@@ -97,12 +100,7 @@ export default function Test() {
           </div>
 
           {/*   ----------------------頁面內容  ---------------------- */}
-          <div
-            className="col-12 col-sm-10 pe-0"
-            style={{
-              paddingLeft: '30px',
-            }}
-          >
+          <div className="col-12 col-sm-10 page-control">
             {/*  ---------------------- 頂部功能列  ---------------------- */}
             <div className="top-function-container">
               {/*  ---------------------- 麵包屑  ---------------------- */}
@@ -115,20 +113,43 @@ export default function Test() {
                 </ul>
               </div>
 
-              <div className="d-flex justify-content-between">
+              <div className="top-function-flex">
                 {/*  ---------------------- 搜尋欄  ---------------------- */}
-                <div className="search input-group">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="請輸入關鍵字..."
-                  />
-                  <div className="search-btn btn d-flex justify-content-center align-items-center p-0">
-                    <IoIosSearch size={25} />
+                <div className="search-sidebarBtn">
+                  <div
+                    className="d-flex d-sm-none align-items-center b-btn b-btn-body"
+                    style={{ paddingInline: '16px' }}
+                  >
+                    選單
+                  </div>
+                  <div className="search input-group">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="請輸入關鍵字..."
+                    />
+                    <div className="search-btn btn d-flex justify-content-center align-items-center p-0">
+                      <IoIosSearch size={25} />
+                    </div>
                   </div>
                 </div>
 
                 <div className="filter-sort d-flex justify-content-between">
+                  <div className="sort-mb d-block d-sm-none">
+                    <select
+                      className="form-select"
+                      value={dataSort}
+                      name="dataSort"
+                      onChange={(e) => {
+                        setDataSort(e.target.value)
+                      }}
+                    >
+                      <option selected value="upToDate">
+                        即將到期
+                      </option>
+                      <option value="recent">最近發起</option>
+                    </select>
+                  </div>
                   {/*  ---------------------- 條件篩選  ---------------------- */}
                   <form
                     action="/template-with-sidebar"
@@ -256,7 +277,10 @@ export default function Test() {
                             })}
                           </select>
                         </div>
-                        <div className="d-flex justify-content-between gap-2">
+                        <div
+                          className="d-flex justify-content-between gap-2 mt-1"
+                          style={{ paddingInline: '10px' }}
+                        >
                           <div
                             className="filter-btn clean-btn w-100 d-flex justify-content-center"
                             role="presentation"
@@ -272,19 +296,39 @@ export default function Test() {
                     </div>
                   </form>
                   {/* ---------------------- 資料排序  ---------------------- */}
-                  <div className="sort d-flex justify-content-between align-items-center">
+                  <div className="sort d-none d-sm-flex justify-content-between align-items-center">
                     <div className="d-flex align-items-center">
                       排序
                       <FaSortAmountDown size={14} />
                     </div>
-                    <div className="sort-item active">即將到期</div>
-                    <div className="sort-item">最近發起</div>
+                    <div
+                      className={`sort-item ${
+                        dataSort === 'upToDate' ? 'active' : ''
+                      }`}
+                      role="presentation"
+                      onClick={(e) => {
+                        setDataSort('upToDate')
+                      }}
+                    >
+                      即將到期
+                    </div>
+                    <div
+                      className={`sort-item ${
+                        dataSort === 'recent' ? 'active' : ''
+                      }`}
+                      role="presentation"
+                      onClick={(e) => {
+                        setDataSort('recent')
+                      }}
+                    >
+                      最近發起
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
             {/* 主內容 */}
-            <main className="content jam-list">
+            <main className="content">
               <RecruitCard />
               <RecruitCard />
               <RecruitCard />
@@ -295,13 +339,13 @@ export default function Test() {
       <Footer />
 
       <style jsx>{`
-        .jam-list {
+        .content {
           display: flex;
-          width: 100%;
           flex-wrap: wrap;
-           {
-            /* flex-wrap: wrap; */
-          }
+          gap: 20px;
+          align-items: flex-start;
+          align-content: flex-start;
+          align-self: 'stretch';
         }
       `}</style>
     </>
