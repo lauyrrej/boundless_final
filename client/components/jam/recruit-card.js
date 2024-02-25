@@ -9,9 +9,12 @@ export default function RecruitCard() {
     <>
       <Link href="#" className={`${styles.recruitCard}`}>
         {/* card-header */}
-        <div className={`d-flex justify-content-between align-items-center`}>
+        <div
+          className="d-flex justify-content-between align-items-center flex-wrap"
+          style={{ gap: '6px' }}
+        >
           <div className={`${styles.former}`}>
-            <span style={{ color: '#5a5a5a', fontWeight: '500' }}>發起人</span>
+            {/* <span style={{ color: '#5a5a5a', fontWeight: '500' }}>發起人</span> */}
             {/* 發起人頭像 */}
             <div className={`${styles.userPhotoWrapper}`}>
               <Image
@@ -22,7 +25,7 @@ export default function RecruitCard() {
               />
             </div>
             <span style={{ color: '#124365', fontWeight: '500' }}>
-              柏倉隆史
+              Jimi Hendrix
             </span>
             <span className="ms-2" style={{ color: '#124365' }}>
               2024-02-23
@@ -56,13 +59,22 @@ export default function RecruitCard() {
           </div>
         </div>
         {/* genere */}
-        <div className="d-flex align-items-center" style={{ gap: '8px' }}>
+        <div className="d-flex align-items-start" style={{ gap: '8px' }}>
           <span style={{ color: '#124365', fontWeight: 'bold' }}>
             音樂風格：
           </span>
-          <div className={`${styles.cardBadge} ${styles.genere}`}>搖滾</div>
-          <div className={`${styles.cardBadge} ${styles.genere}`}>環境音樂</div>
-          <div className={`${styles.cardBadge} ${styles.genere}`}>世界音樂</div>
+          <div
+            className="d-flex flex-wrap"
+            style={{ gap: '8px', flex: '1 0 0' }}
+          >
+            <div className={`${styles.cardBadge} ${styles.genere}`}>搖滾</div>
+            <div className={`${styles.cardBadge} ${styles.genere}`}>
+              環境音樂
+            </div>
+            <div className={`${styles.cardBadge} ${styles.genere}`}>
+              世界音樂
+            </div>
+          </div>
         </div>
         {/* region & deadline */}
         <div className="d-flex justify-content-between">

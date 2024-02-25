@@ -4,7 +4,7 @@ import Image from 'next/image'
 import logo from '@/assets/logo.svg'
 import logoMb from '@/assets/logo_mb.svg'
 
-export default function Navbar() {
+export default function Navbar({ menuMbToggle }) {
   const [showMenu, setShowMenu] = useState(false)
   return (
     <>
@@ -54,13 +54,7 @@ export default function Navbar() {
             <a href="/cart" className="p-0 me-3">
               <IoCart size={30} />
             </a>
-            <IoMenu
-              size={30}
-              className="ms-3"
-              onClick={() => {
-                setShowMenu(!showMenu)
-              }}
-            />
+            <IoMenu size={30} className="ms-3" onClick={menuMbToggle} />
           </div>
         </nav>
       </header>

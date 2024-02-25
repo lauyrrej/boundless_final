@@ -12,10 +12,25 @@ import { FaChevronRight } from 'react-icons/fa6'
 import { IoIosSearch } from 'react-icons/io'
 import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
+import { ImExit } from 'react-icons/im'
+import { IoClose } from 'react-icons/io5'
 // 自製元件
 import RecruitCard from '@/components/jam/recruit-card'
 
 export default function Test() {
+  // ----------------------手機版本  ----------------------
+  // 主選單
+  const [showMenu, setShowMenu] = useState(false)
+  const menuMbToggle = () => {
+    setShowMenu(!showMenu)
+  }
+  // sidebar
+  const [showSidebar, setShowSidebar] = useState(false)
+  const sidebarToggle = () => {
+    setShowSidebar(!showSidebar)
+  }
+
+  // ----------------------條件篩選  ----------------------
   const [filterVisible, setFilterVisible] = useState(false)
   useEffect(() => {
     document.addEventListener('click', () => {
@@ -70,25 +85,72 @@ export default function Test() {
   // 清除表單內容
   const cleanFilter = () => {
     setPlayer('all')
+    setGenere('all')
+    setDegree('all')
+    setRegion('all')
   }
 
   return (
     <>
-      <Navbar />
+      <Navbar menuMbToggle={menuMbToggle} />
       <div
         className="page-shero d-none d-sm-block"
         style={{ paddingTop: '60px' }}
       >
         <Image src={jamHero} className="object-fit-cover w-100" alt="cover" />
       </div>
-      <div className="menu-mb"></div>
-      <div className="container">
+      <div className="container position-relative">
+        {/* 手機版主選單/navbar */}
+        <div
+          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${
+            showMenu ? 'menu-mb-show' : ''
+          }`}
+        >
+          {/* 用戶資訊 */}
+          <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
+            <div className="mb-photo-wrapper mb-2">
+              <Image
+                src="/jam/amazingshow.jpg"
+                alt="user photo mb"
+                fill
+              ></Image>
+            </div>
+            <div>用戶名稱</div>
+          </div>
+          <Link
+            className="mm-item"
+            href="/user"
+            style={{ borderTop: '1px solid #b9b9b9' }}
+          >
+            會員中心
+          </Link>
+          <Link className="mm-item" href="/lesson/lesson-list">
+            探索課程
+          </Link>
+          <Link className="mm-item" href="/instrument/instrument-list">
+            樂器商城
+          </Link>
+          <Link className="mm-item" href="/jam/recruit-list">
+            Let &apos;s JAM!
+          </Link>
+          <Link className="mm-item" href="/article/article-list">
+            樂友論壇
+          </Link>
+          <div className="mm-item" style={{ color: '#1581cc' }}>
+            登出
+            <ImExit size={20} className="ms-2" />
+          </div>
+        </div>
         <div className="row">
           {/* sidebar */}
           <div className="sidebar-wrapper d-none d-sm-block col-sm-2">
             <div className="sidebar">
               <ul className="d-flex flex-column">
-                <li className="active">團員募集</li>
+                <li>
+                  <Link href={`/jam/recruit-list`} className="active">
+                    團員募集
+                  </Link>
+                </li>
                 <li>
                   <Link href={`/jam/jam-list`}>活動中的JAM</Link>
                 </li>
@@ -101,6 +163,30 @@ export default function Test() {
 
           {/*   ----------------------頁面內容  ---------------------- */}
           <div className="col-12 col-sm-10 page-control">
+            {/* 手機版sidebar */}
+            <div
+              className={`sidebar-mb d-sm-none ${
+                showSidebar ? 'sidebar-mb-show' : ''
+              }`}
+            >
+              <div className="sm-close">
+                <IoClose
+                  size={32}
+                  onClick={() => {
+                    setShowSidebar(false)
+                  }}
+                />
+              </div>
+              <Link href={`/jam/recruit-list`} className="sm-item active">
+                團員募集
+              </Link>
+              <Link href={`/jam/jam-list`} className="sm-item">
+                活動中的JAM
+              </Link>
+              <Link href={`/jam/Q&A`} className="sm-item">
+                什麼是JAM？
+              </Link>
+            </div>
             {/*  ---------------------- 頂部功能列  ---------------------- */}
             <div className="top-function-container">
               {/*  ---------------------- 麵包屑  ---------------------- */}
@@ -117,8 +203,10 @@ export default function Test() {
                 {/*  ---------------------- 搜尋欄  ---------------------- */}
                 <div className="search-sidebarBtn">
                   <div
-                    className="d-flex d-sm-none align-items-center b-btn b-btn-body"
+                    className="d-flex d-sm-none b-btn b-btn-body"
+                    role="presentation"
                     style={{ paddingInline: '16px' }}
+                    onClick={sidebarToggle}
                   >
                     選單
                   </div>
@@ -151,11 +239,7 @@ export default function Test() {
                     </select>
                   </div>
                   {/*  ---------------------- 條件篩選  ---------------------- */}
-                  <form
-                    action="/template-with-sidebar"
-                    method="get"
-                    className="d-flex aligh-items-center  position-relative"
-                  >
+                  <form className="d-flex align-items-center  position-relative">
                     <div
                       className="filter-text d-flex align-items-center me-3"
                       role="presentation"
@@ -278,7 +362,7 @@ export default function Test() {
                           </select>
                         </div>
                         <div
-                          className="d-flex justify-content-between gap-2 mt-1"
+                          className="d-flex justify-content-between gap-2 mt-2"
                           style={{ paddingInline: '10px' }}
                         >
                           <div
