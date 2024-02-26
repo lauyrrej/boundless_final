@@ -3,7 +3,7 @@ import React from 'react'
 export default function ProductBriefCard({}) {
   return (
     <>
-      <div className="col-6 Right sticky-top ">
+      <div className=" Right sticky-top ">
         <div className="prodBriefing sticky-top ">
           <div className="prodMainName">Logic Pro X 從零開始</div>
           <div className="Rating">
@@ -66,14 +66,14 @@ export default function ProductBriefCard({}) {
       <style jsx>
         {`
           .Right {
-             {
-              /* margin-left: 80px; */
-            }
+            padding-left: 100px;
           }
 
           .prodBriefing {
             /* background-color: #ff9595; */
-            margin-left: 110px;
+             {
+              /* margin-left: 20px; */
+            }
             top: 120px;
           }
           .prodMainName {
