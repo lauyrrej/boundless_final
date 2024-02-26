@@ -19,13 +19,14 @@ import ProductCard from '@/components/lesson/lesson-productbrief-card'
 
 
 //試抓資料區
-
-
-
-
+import Lesson from '@/data/Lesson.json'
 
 
 export default function Test() {
+    // -------試抓資料區----------
+    console.log(Lesson)
+ 
+    
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -53,6 +54,7 @@ export default function Test() {
 
   return (
     <>
+      <div>{Lesson.lesson[0].name}</div>
       <Navbar menuMbToggle={menuMbToggle} />
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
@@ -121,7 +123,7 @@ export default function Test() {
                 {/* prodBriefingArea */}
                 <div className="prodBriefingArea d-flex">
                   <img
-                    src="/課程與師資/lesson_img/lesson_005.jpeg"
+                    src="/課程與師資/lesson_img/lesson_001.jpeg"
                     alt=""
                     className="prodImg"
                   />
@@ -187,13 +189,15 @@ export default function Test() {
                     </div>
                   </div>
                 </div>
-                {/*----------------------*/}
+
+                {/*商品細節 */}
                 <div className="detail">
                   {/* 單元一覽 */}
                   <div className="outline detail-wrapp  mt40">
                     <div className="detail-title">單元一覽</div>
                     <div className="list">
                       <ul>
+                        {Lesson.lesson[0].outline}
                         <li>Logic Pro X 從零開始</li>
                         <li>正式課程開始</li>
                         <li>編曲Arrange</li>
@@ -209,6 +213,7 @@ export default function Test() {
                     <div className="detail-title">適合對象</div>
                     <div className="list">
                       <ul>
+                        {Lesson.lesson[0].suitable}
                         <li>本身熱愛音樂，但從沒機會學習過。</li>
                         <li>
                           會至少一樣樂器，但不會音樂製作，想學錄音編曲和混音。
@@ -222,6 +227,7 @@ export default function Test() {
                     <div className="detail-title">你將學到</div>
                     <div className="list">
                       <ol>
+                        {Lesson.lesson[0].achievement}
                         <li>
                           用Logic Pro X 獨立完成一首或更多首屬於自己的音樂。
                         </li>
@@ -473,7 +479,7 @@ export default function Test() {
             </main>
           </div>
 
-          {/*   ----------------------頁面內容  ---------------------- */}
+          {/*   ----------------------頁面內容 右半部---------------------- */}
           <div className="d-none d-sm-block col-sm-6 page-control">
             <ProductCard className="Right-card" />
           </div>
