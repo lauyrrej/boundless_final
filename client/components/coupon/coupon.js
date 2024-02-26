@@ -14,10 +14,15 @@ export default function Coupon() {
             />
           </div>
           <div className="col-8 p-1">
-            <div className="card-body d-flex justify-content-between">
+            <div className="card-body d-flex justify-content-between ">
               <div>
-                <h4 className="card-title fw-bold">註冊禮</h4>
-                <h6>用途：課程</h6>
+                <h4
+                  className={`${styles.couponTitle}
+                  card-title fw-bold`}
+                >
+                  註冊禮
+                </h4>
+                <h6 className={`${styles.couponText} px-1`}>課程</h6>
               </div>
               <div className="card-text d-flex justify-content-center align-items-center">
                 <div className="fs-2 fw-bold salesType">95折</div>

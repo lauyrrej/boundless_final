@@ -83,7 +83,7 @@ export default function Test() {
               {/* 條件篩選 */}
               <div className="filter-sort d-flex justify-content-between p-3">
                 {/* 麵包屑 */}
-                <div>
+                <div className="d-none d-sm-block">
                   <nav aria-label="breadcrumb sort d-flex justify-content-between align-items-center">
                     <ol className="breadcrumb  breadcrumb-line">
                       <li className="h6 coupon-breadcrumb breadcrumb-item couponBTN">
@@ -115,12 +115,22 @@ export default function Test() {
                       </li>
                     </ol>
                   </nav>
-                  {/*  */}
+                </div>
+                {/* RWD */}
+                <div className="sort-mb d-block d-sm-none">
+                  <select
+                    className="form-select"
+                    aria-label="Default select example"
+                  >
+                    <option selected="">全部</option>
+                    <option value={1}>樂器</option>
+                    <option value={2}>課程</option>
+                  </select>
                 </div>
                 {/* 資料排序 */}
                 <div className="sort d-flex align-items-center coupon-screen">
-                  <div>
-                    <FaSortAmountDown size={13} />
+                  <div className="d-none d-sm-block">
+                    <FaFilter size={13} />
                     排序 ：
                   </div>
                   <div className="sort-item active">折扣幅度</div>
@@ -133,7 +143,7 @@ export default function Test() {
                 })}
               </div>
               {/* Pagination */}
-              <div className="d-flex justify-content-center pages">
+              <div className="d-flex justify-content-center pages d-none d-sm-block">
                 <nav aria-label="Page navigation example">
                   <ul className="pagination">
                     <li className="page-item">
@@ -169,12 +179,6 @@ export default function Test() {
         </div>
       </div>
       <Footer />
-      {/* rwd */}
-      <div className="coupon-rwd">
-        <FaSortAmountDown size={13} />
-        排序 ：
-      </div>
-
       <style jsx>{`
          {
           /* // 全站配色 colors
@@ -190,7 +194,6 @@ export default function Test() {
         .breadcrumb-line {
           border-bottom: 1px solid #fff;
         }
-
         .couponBTN {
           border-radius: 10px 10px 0 0;
           background-color: #fff;

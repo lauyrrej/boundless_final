@@ -1,9 +1,14 @@
 .couponCard {
   width: 300px;
   // width: 100%;
-  // max-width: 300px;
+  // width: 350px;
   background-color: #fff;
   border-radius: 8px;
+  @media screen and (max-width: 576px) {
+    min-width: 250px;
+    margin: 0;
+    padding: 0;
+  }
 }
 .couponImg {
   border-right: dashed gray;
@@ -11,5 +16,13 @@
   @media screen and (max-width: 576px) {
     margin: 0;
     padding: 0;
+    border-width: 0px;
   }
+}
+.couponTitle{
+  @media screen and (max-width: 576px) {
+    display: none;
+  }
+}
+.couponText{
 }
