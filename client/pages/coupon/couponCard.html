@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>couponBlue</title>
+    <title>Title</title>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta
@@ -16,38 +16,38 @@
       integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="/styles/coupon.css" />
+    <link rel="stylesheet" href="/pages/newCoupon/coupon.module.css" />
   </head>
 
   <body>
-    <!------------------logo底色白色------------------>
-    <div class="card couponCard mb-3 mt-3">
+    <div class="card mb-3 couponCard">
       <div class="row g-0">
-        <div class="col-md-3 mt-2">
+        <div class="col-md-4">
           <img
+            class="my-2 p-2"
             src="/public/coupon/logoWhite.jpg"
-            class="img-fluid rounded-start logoWhite"
+            class="img-fluid rounded-start"
             alt="..."
           />
         </div>
-        <div class="col-md-9">
-          <div class="card-body p-1 d-flex">
+        <div class="col-md-8 py-2 px-1">
+          <div class="card-body d-flex justify-content-between">
             <div>
-              <h5 class="card-title">課程優惠券</h5>
-              <h3 class="card-text">95折</h3>
-              <p class="card-text">
-                <small class="text-muted">到期日：2024/12/31</small>
-              </p>
+              <h4 class="card-title fw-bold">註冊禮</h4>
+              <h6>用途：課程</h6>
             </div>
-            <div>
-              <h5 class="mb-3">優惠券名稱：</h5>
-              <h5>註冊禮</h5>
+            <div class="card-text d-flex justify-content-center align-items-center px-2">
+              <div class="px-1 fs-2 fw-bold salesType">95折</div>
             </div>
+          </div>
+          <div>
+            <p class="card-text">
+              <small class="text-muted">到期日：2024/12/31</small>
+            </p>
           </div>
         </div>
       </div>
     </div>
-
     <!-- Bootstrap JavaScript Libraries -->
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
