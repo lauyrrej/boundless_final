@@ -2,8 +2,10 @@
   background-color: gray;
   border-radius: 6px;
   padding-inline: 12px;
+  @media screen and (max-width: 576px) {
+    margin: 10px 10px 0 0;
+  }
 }
-
 .couponTitle {
   display: flex;
   align-items: flex-start;
@@ -14,9 +16,12 @@
   flex-wrap: wrap;
   justify-content: space-between;
   margin-left: 16px;
+  @media screen and (max-width: 576px) {
+    padding: 0 80px;
+  }
 }
-.coupon-rwd {
-  @media screen and (min-width: 576px) {
+.couponPages{
+  @media screen and (max-width: 576px) {
     display: none;
   }
 }

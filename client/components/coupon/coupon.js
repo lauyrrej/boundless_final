@@ -4,16 +4,16 @@ export default function Coupon() {
   return (
     <>
       <div className={`${styles.couponCard} card mb-3`}>
-        <div className="row g-0">
+        <div className="row  d-flex  g-0">
           {/* 左 */}
-          <div className="col-md-4">
+          <div className="col-4">
             <img
               className={`${styles.couponImg} my-2 p-2`}
               src="/coupon/logoWhite.jpg"
               alt="..."
             />
           </div>
-          <div className="col-md-8 p-1">
+          <div className="col-8 p-1">
             <div className="card-body d-flex justify-content-between">
               <div>
                 <h4 className="card-title fw-bold">註冊禮</h4>
