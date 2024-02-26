@@ -74,7 +74,7 @@ header {
 }
 .sidebar {
   position: sticky;
-  top: 65px;
+  top: 120px;
   color: $secondary;
   font-size: $h5;
   font-weight: 700;
@@ -101,6 +101,7 @@ header {
   padding-right: 10px;
   position: sticky;
   top: 10px;
+  z-index: 999;
 }
 .breadcrumb-wrapper {
   color: $secondary;
@@ -193,7 +194,7 @@ header {
     font-weight: 600;
     font-size: $h6;
     padding-inline: 10px;
-    gap: 8px;
+    gap: 10px;
     user-select: none;
     .sort-item {
         padding-inline: 4px;
