@@ -199,14 +199,32 @@ export default function Test() {
                   }}
                 />
               </div>
-              <Link href={`/jam/recruit-list`} className="sm-item active">
-                團員募集
+              <Link href={`/instrument/instrument`} className="sm-item active">
+                全部
               </Link>
-              <Link href={`/jam/jam-list`} className="sm-item">
-                活動中的JAM
+              <Link href={`/instrument/instrument`} className="sm-item">
+                吉他
               </Link>
-              <Link href={`/jam/Q&A`} className="sm-item">
-                什麼是JAM？
+              <Link href={`/instrument/instrument`} className="sm-item">
+                貝斯
+              </Link>
+              <Link href={`/instrument/instrument`} className="sm-item">
+                鍵盤樂器
+              </Link>
+              <Link href={`/instrument/instrument`} className="sm-item">
+                打擊樂器
+              </Link>
+              <Link href={`/instrument/instrument`} className="sm-item">
+                弓弦樂器
+              </Link>
+              <Link href={`/instrument/instrument`} className="sm-item">
+                管樂器
+              </Link>
+              <Link href={`/instrument/instrument`} className="sm-item">
+                音響設備
+              </Link>
+              <Link href={`/instrument/instrument`} className="sm-item">
+                活動專區
               </Link>
             </div>
             {/*  ---------------------- 頂部功能列  ---------------------- */}
@@ -253,13 +271,14 @@ export default function Test() {
                       }}
                     >
                       <option selected value="upToDate">
-                        即將到期
+                        最熱銷
                       </option>
-                      <option value="recent">最近發起</option>
+                      <option value="recent">最高價</option>
+                      <option value="recent">最低價</option>
                     </select>
                   </div>
                   {/*  ---------------------- 條件篩選  ---------------------- */}
-                  <form className="d-flex aligh-items-center  position-relative">
+                  <form className="d-flex align-items-center  position-relative">
                     <div
                       className="filter-text d-flex align-items-center me-sm-4"
                       role="presentation"
@@ -390,7 +409,7 @@ export default function Test() {
                   <div className="sort d-none d-sm-flex justify-content-between align-items-center">
                     <div className="d-flex align-items-center">
                       排序
-                      <FaSortAmountDown size={13} />
+                      <FaSortAmountDown size={14} />
                     </div>
 
                     <div className="sort-item active">最熱銷</div>
