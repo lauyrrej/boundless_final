@@ -13,18 +13,14 @@ export default function Coupon() {
               alt="..."
             />
           </div>
-          <div className="col-md-8 py-2 px-1`">
-            <div
-              className={`${styles.couponWrap} d-flex justify-content-between`}
-            >
-              {/* 中 */}
+          <div className="col-md-8 p-1">
+            <div className="card-body d-flex justify-content-between">
               <div>
                 <h4 className="card-title fw-bold">註冊禮</h4>
                 <h6>用途：課程</h6>
               </div>
-              {/* 右 */}
-              <div className="d-flex justify-content-center align-items-center px-2">
-                <div className="px-1 fs-2 fw-bold">95折</div>
+              <div className="card-text d-flex justify-content-center align-items-center">
+                <div className="fs-2 fw-bold salesType">95折</div>
               </div>
             </div>
             {/* 下 */}
