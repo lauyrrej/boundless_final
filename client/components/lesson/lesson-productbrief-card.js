@@ -1,17 +1,19 @@
-import React from 'react'
-
+import { useState } from 'react'
+import { FaHeart } from 'react-icons/fa'
 import Lesson from '@/data/Lesson.json'
 
 //收藏的功能
 
-// 實心圖
-// import bookmarkIconFill from '@/assets/bookmark-fill.svg'
-// 空心圖
-// import bookmarkIcon from '@/assets/bookmark.svg'
-
 //------------------
 
 export default function ProductBriefCard({}) {
+  //收藏按鍵的功能
+  const [colorChange, setcolorChange] = useState(false)
+  const colorToggle = () => {
+    //按按鍵切換狀態
+    setcolorChange(!colorChange)
+  }
+
   return (
     <>
       <div className=" Right sticky-top ">
@@ -31,11 +33,24 @@ export default function ProductBriefCard({}) {
           </div>
           <div className="productPrice">
             <div className="price">NT$ {Lesson.lesson[0].price}</div>
-            <img
+            {/* 收藏功能 */}
+            {/* 做好的 onClick*/}
+            <div className="likesIcon icon-container ">
+              <FaHeart
+                className="likesIcon"
+                size="32px"
+                style={{ color: `${colorChange ? 'red' : ''}` }}
+                onClick={colorToggle}
+              />
+            </div>
+            {/* 本來的likesIcon */}
+            {/* <img
               loading="lazy"
-              src="https://cdn.builder.io/api/v1/image/assets/TEMP/5ed2e715f1421a33de89ac321d6dcc6d56fbac40a7d43dfe2cf0ecb15054bd3f?"
-              className="likesIcon"
-            />
+              src="	https://cdn.builder.io/api/v1/image/assets/TEMP/5e…de89ac321d6dcc6d56fbac40a7d43dfe2cf0ecb15054bd3f?"
+              style={{ color: `${showSidebar ? 'red' : ''}` }}
+              className={`likesIcon ${showSidebar ? 'change-color' : ''}`}
+              onClick={sidebarToggle}
+            /> */}
           </div>
           <div className="lengthHomeworkArea">
             <div className="lengthhomework">
@@ -65,7 +80,7 @@ export default function ProductBriefCard({}) {
               <img
                 loading="lazy"
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
-                className="cartIcon"
+                className=""
               />
               <div className="cart">加入購物車</div>
             </div>
@@ -77,6 +92,14 @@ export default function ProductBriefCard({}) {
       </div>
       <style jsx>
         {`
+          .icon-container {
+            display: flex;
+            padding: 1px 1px; /* 可选：添加一些内边距以使边框与图标之间有空间 */
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+            border: 1px solid var(--body, #b9b9b9);
+          }
           .Right {
             padding-left: 100px;
           }

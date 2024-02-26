@@ -12,20 +12,19 @@ import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
+import { FaHeart } from 'react-icons/fa'
 
 import Card from '@/components/lesson/lesson-card'
 import HoriCard from '@/components/lesson/lesson-card-hori'
 import ProductCard from '@/components/lesson/lesson-productbrief-card'
 
-
 //試抓資料區
-
-
-
-
-
+import Lesson from '@/data/Lesson.json'
 
 export default function Test() {
+  // -------試抓資料區----------
+  console.log(Lesson)
+
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -49,6 +48,14 @@ export default function Test() {
   const onshow = (e) => {
     stopPropagation(e)
     setFilterVisible(!filterVisible)
+  }
+
+    //收藏按鍵的功能
+    //會有兩個狀態 連結會員資料 已經按過讚的收回;沒按過的按讚
+  const [colorChange, setcolorChange] = useState(false)
+  const colorToggle = () => {
+    //按按鍵切換狀態
+    setcolorChange(!colorChange)
   }
 
   return (
@@ -121,7 +128,7 @@ export default function Test() {
                 {/* prodBriefingArea */}
                 <div className="prodBriefingArea d-flex">
                   <img
-                    src="/課程與師資/lesson_img/lesson_005.jpeg"
+                    src="/課程與師資/lesson_img/lesson_001.jpeg"
                     alt=""
                     className="prodImg"
                   />
@@ -144,11 +151,21 @@ export default function Test() {
                     </div>
                     <div className="productPrice">
                       <div className="price">NT$ 1,800</div>
-                      <img
+                      <div className="likesIcon icon-container ">
+                        <FaHeart
+                          className="likesIcon"
+                          size="32px"
+                          style={{ color: `${colorChange ? 'red' : ''}` }}
+                          onClick={colorToggle}
+                        />
+                      </div>
+                      {/* <img
                         loading="lazy"
                         src="https://cdn.builder.io/api/v1/image/assets/TEMP/5ed2e715f1421a33de89ac321d6dcc6d56fbac40a7d43dfe2cf0ecb15054bd3f?"
                         className="likesIcon"
-                      />
+                        style={{ color: `${colorChange ? 'red' : ''}` }}
+                        onClick={colorToggle}
+                      /> */}
                     </div>
                     <div className="lengthHomeworkArea">
                       <div className="lengthhomework">
@@ -187,13 +204,15 @@ export default function Test() {
                     </div>
                   </div>
                 </div>
-                {/*----------------------*/}
+
+                {/*商品細節 */}
                 <div className="detail">
                   {/* 單元一覽 */}
                   <div className="outline detail-wrapp  mt40">
                     <div className="detail-title">單元一覽</div>
                     <div className="list">
                       <ul>
+                        {Lesson.lesson[0].outline}
                         <li>Logic Pro X 從零開始</li>
                         <li>正式課程開始</li>
                         <li>編曲Arrange</li>
@@ -209,6 +228,7 @@ export default function Test() {
                     <div className="detail-title">適合對象</div>
                     <div className="list">
                       <ul>
+                        {Lesson.lesson[0].suitable}
                         <li>本身熱愛音樂，但從沒機會學習過。</li>
                         <li>
                           會至少一樣樂器，但不會音樂製作，想學錄音編曲和混音。
@@ -222,6 +242,7 @@ export default function Test() {
                     <div className="detail-title">你將學到</div>
                     <div className="list">
                       <ol>
+                        {Lesson.lesson[0].achievement}
                         <li>
                           用Logic Pro X 獨立完成一首或更多首屬於自己的音樂。
                         </li>
@@ -473,7 +494,7 @@ export default function Test() {
             </main>
           </div>
 
-          {/*   ----------------------頁面內容  ---------------------- */}
+          {/*   ----------------------頁面內容 右半部---------------------- */}
           <div className="d-none d-sm-block col-sm-6 page-control">
             <ProductCard className="Right-card" />
           </div>
@@ -735,7 +756,7 @@ list-style-type: disc;
 
 
 
-        {/* RWD */}
+        {/* -----------RWD-------------*/}
         @media screen and (max-width:576px) {
 
   .Left {
@@ -745,11 +766,11 @@ list-style-type: disc;
     display:none;
   }
   {/* 手機版productbrief-card */}
-.prodBriefingArea{
+                        .prodBriefingArea{
     width:100%;
     height:204px;
 }
-  .prodImg {
+                        .prodImg {
             padding:0px;
          
           background-color: #ff9595;
@@ -757,10 +778,10 @@ list-style-type: disc;
           height:204px;
           
         }
-  .Right-mobile{
+                        .Right-mobile{
 display:block;
   }
-      .prodBriefing {
+                        .prodBriefing {
                         /* background-color: #ff9595; */
                         {/* margin-left: 110px; */}
                         margin-top: 20px;
@@ -814,6 +835,7 @@ display:block;
                       }
                       .productPrice {
                         justify-content: space-between;
+                        align-items:center;
                         display: flex;
                         margin-top: 10px;
                         gap: 20px;
