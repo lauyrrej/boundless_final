@@ -109,8 +109,10 @@
       .user-homePage-content-left{
         display: flex;
         width: 330px;
+        max-width: 330px;
         padding: 25px 0px;
         flex-direction: column;
+        
         align-items: flex-start;
         border-radius: 10px;
         background: var(--gray-30, rgba(185, 185, 185, 0.30));
@@ -221,6 +223,7 @@
               font-style: normal;
               font-weight: 500;
               line-height: normal;
+              
             }
             .user-homePage-info-item-Content{
               display: flex;
@@ -237,7 +240,9 @@
               overflow: hidden;
               color: var(--dark, #1D1D1D);
               text-overflow: ellipsis;
-
+              word-wrap: break-word;
+              overflow-wrap: break-word;
+              
               /* p */
               font-family: "Noto Sans TC";
               font-size: 16px;
@@ -247,20 +252,140 @@
             }
           }
         }
-        .user-homePage-contactInfo{
+      }
+
+
+
+      
+
+      
+
+      
+    }
+
+    .user-homePage-content-right{
+        
+        display: flex;
+        padding-left: 30px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        flex: 1 0 0;
+
+        .user-homePage-content-right-Info{
+          width: 940px;
           display: flex;
-          padding: 10px 19px;
+          padding: 10px;
           flex-direction: column;
           align-items: flex-start;
           gap: 20px;
           align-self: stretch;
-          border-radius: 15px;
+          border-radius: 10px;
+          background: var(--gray-30, rgba(185, 185, 185, 0.30));
 
+
+        .user-homePage-content-right-titleText{
+          color: var(--primary-deep, #124365);
+          text-align: center;
+
+          /* h3 */
+          font-family: "Noto Sans TC";
+          font-size: 28px;
+          font-style: normal;
+          font-weight: 700;
+          line-height: normal;
+          }
+
+        .user-homePage-content-right-infoText{
+          align-self: stretch;
+          color: #000;
+
+          /* p */
+          font-family: "Noto Sans TC";
+          font-size: 16px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
         }
       }
 
-      
-    }
+
+      .user-homePage-content-right-article{
+        display: flex;
+        padding: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+        align-self: stretch;
+        border-radius: 10px;
+        background: var(--gray-30, rgba(185, 185, 185, 0.30));
+        /* width: 940px; */
+        .user-homePage-content-right-article-titleText{
+          color: var(--primary-deep, #124365);
+          text-align: center;
+
+          /* h3 */
+          font-family: "Noto Sans TC";
+          font-size: 28px;
+          font-style: normal;
+          font-weight: 700;
+          line-height: normal;
+        }
+
+        .user-homePage-content-right-article-cardList{
+          display: flex;
+          align-items: flex-start;
+          align-content: flex-start;
+          gap: 30px;
+          align-self: stretch;
+          flex-wrap: wrap;
+
+          .user-homePage-content-right-article-card{
+            display: flex;
+            height: 237.422px;
+            min-width: 410px;
+            max-width: 525px;
+            padding: 6px 8px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 10px;
+            flex: 1 0 0;
+
+            .user-homePage-content-right-article-card-articleInfo{
+              display: flex;
+              align-items: center;
+              gap: 16px;
+            }
+
+            .user-homePage-content-right-article-card-content{
+              display: flex;
+              justify-content: center;
+              align-items: flex-start;
+              gap: 8px;
+              align-self: stretch;
+            }
+
+            .user-homePage-content-right-article-card-viewsLike{
+              display: flex;
+              align-items: center;
+              gap: 20px;
+              align-self: stretch;
+            }
+
+            .user-homePage-content-right-article-card-kind-bookmark{
+              display: flex;
+              padding-right: 8px;
+              justify-content: space-between;
+              align-items: center;
+              align-self: stretch;
+            }
+
+          }
+        }
+      }
+      }
 
     
   </style>
@@ -378,14 +503,104 @@
 
             </div>
 
-            <div class="user-homePage-contactInfo"></div>
+
+            <div class="user-homePage-Info contactInfo">
+              <div class="user-homePage-Info-title">聯絡方式</div>
+
+              <div class="user-homePage-Info-list">
+
+                
+
+                <div class="user-homePage-info-item">
+                  <div class="user-homePage-info-item-titleText">
+                    手機：　　
+                  </div>
+
+                  <div class="user-homePage-info-item-Content">
+                    <div class="user-homePage-info-item-contentText">
+                      0912456789
+                    </div>
+                  </div>
+                </div>
+
+        
+
+                <div class="user-homePage-info-item">
+                  <div class="user-homePage-info-item-titleText">
+                    信箱：　　
+                  </div>
+
+                  <div class="user-homePage-info-item-Content">
+                    <div class="user-homePage-info-item-contentText">
+                      boundless@gmail.com
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+            
+
+
+
+
+
+
+
+
+
+
+           
           </div>
 
         </div>
       </div>
 
-      <div class="col-sm-9" style="background-color: rgb(255, 255, 255); height: 100vh;">
-      內容</div>
+      <div class="col-sm-9 user-homePage-content-right" style="background-color: rgb(255, 255, 255); height: 100vh;">
+
+        <div class="user-homePage-content-right-Info">
+
+          <div class="user-homePage-content-right-titleText">
+            自我介紹
+          </div>
+
+          <div class="user-homePage-content-right-infoText">
+            　　那個帕魯我已經觀察你很久了，我對你是有些失望的，進了這個營地，不是把事情做好就可以的，你需要有體系化思考的能力。 你做的事情，他的價值在哪裡？ 你是否作出了壁壘，形成了核心競爭力？ 你做的事情，和其他帕魯的差異化在哪裡？ 為什麼是你來做，其他帕魯不能做嗎？ 是否對得起你泡的這兩分鐘溫泉、吃的這兩顆莓果？ 你要有自己的判斷力，不是我說什麼你才做什麼！ 現在的年輕帕魯就是太年輕，工作量稍微大一點就憂鬱生病，你不干有得是帕魯幹，幹得不好能力差就會被優化掉。 我招你進來時為了讓你解決其他帕魯解決不了的問題的，你需要證明你的價值在哪裡！ 你沒有緊迫感，一到時間就睡覺，別人新來的實習帕魯，通宵挖礦。 但我希望你再進步點，有壓力才有動力。
+          </div>
+
+          <div class="user-homePage-content-right-socialMedia">
+
+          </div>
+
+        </div>
+
+
+        <div class="user-homePage-content-right-article">
+
+          <div class="user-homePage-content-right-article-titleText">
+            發表文章
+          </div>
+
+          <div class="user-homePage-content-right-article-cardList">
+
+            <div class="user-homePage-content-right-article-card">
+
+              <div class="user-homePage-content-right-article-card-articleInfo"></div>
+              <div class="user-homePage-content-right-article-card-content"></div>
+              <div class="user-homePage-content-right-article-card-viewsLike"></div>
+              <div class="user-homePage-content-right-article-card-kind-bookmark"></div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+      </div>
     </div>
   </div>
   <!-- End content -->
