@@ -78,10 +78,7 @@ export default function Test() {
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
-      <div
-        className="page-shero d-none d-sm-block"
-        style={{ paddingTop: '60px' }}
-      >
+      <div className="page-shero d-none d-sm-block">
         <Image src={jamHero} className="object-fit-cover w-100" alt="cover" />
       </div>
       <div className="container position-relative">
