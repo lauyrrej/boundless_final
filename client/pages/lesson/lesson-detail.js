@@ -19,7 +19,7 @@ export default function LessonDetail() {
       {/* content */}
       <div className="container">
         <div className="row">
-          <div className="col-sm-12">
+          <div className="col-12">
             {/* 麵包屑 */}
             <div className="breadcrumb-wrapper">
               <ul className="d-flex align-items-center p-0 m-0">
@@ -42,7 +42,7 @@ export default function LessonDetail() {
             {/* 包左右 */}
             <div className="d-flex">
               {/* 左半部 */}
-              <div className="col-sm-6 Left">
+              <div className="col-6 col-sm-12 Left">
                 {/* prodBriefingArea */}
                 <div className="prodBriefingArea d-flex">
                   <img
@@ -400,7 +400,7 @@ export default function LessonDetail() {
             </div>
           </div>
           {/* 猜你喜歡 */}
-          <div className="col-sm-12 you-will-like  -secondary">
+          <div className="col-12 col-sm-12 you-will-like  -secondary">
             <div className="detail-title ">猜你喜歡...</div>
             <div className="card-con">
               <Card />
@@ -494,6 +494,11 @@ export default function LessonDetail() {
         }
         .breadcrumb-wrapper {
           margin-top: 80px;
+            cursor: pointer;
+            transition: 0.3s;
+            &:hover {
+              color: #1581cc;
+            }
         }
 
         /* prodBriefingArea */
@@ -641,7 +646,7 @@ list-style-type: disc;
   .Left {
 
   }
-  .right{
+  .Right{
     display:none;
   }
   {/* 手機版productbrief-card */}
@@ -791,11 +796,15 @@ display:block;
                       .detail{
 max-width:100%;
                       }
+                        //FIXME
                       .review-content{
                         max-width:100%;
                        word-wrap: break-word;
   overflow-wrap: break-word;
+
+  
                       }
+                      //FIXME
                       .card-con{
                         display:none:
                       }
@@ -812,19 +821,19 @@ max-width:100%;
 
 //想做購物按鈕滑到頂部還是會固定在頁尾的效果
 
-window.addEventListener('scroll', function () {
-  var button = document.querySelector('shoppingBtn')
-  var contentHeight = document.querySelector('container').offsetHeight
-  var windowHeight = window.innerHeight
-  var scrollPosition = window.scrollY
+// window.addEventListener('scroll', function () {
+//   var button = document.querySelector('shoppingBtn')
+//   var contentHeight = document.querySelector('container').offsetHeight
+//   var windowHeight = window.innerHeight
+//   var scrollPosition = window.scrollY
 
-  if (scrollPosition + windowHeight >= contentHeight) {
-    // 当页面滚动到底部时，将按钮固定在页面底部
-    button.style.position = 'fixed'
-    button.style.bottom = '0'
-  } else {
-    // 否则，按钮跟随页面内容
-    button.style.position = 'absolute'
-    button.style.bottom = 'initial'
-  }
-})
+//   if (scrollPosition + windowHeight >= contentHeight) {
+//     // 当页面滚动到底部时，将按钮固定在页面底部
+//     button.style.position = 'fixed'
+//     button.style.bottom = '0'
+//   } else {
+//     // 否则，按钮跟随页面内容
+//     button.style.position = 'absolute'
+//     button.style.bottom = 'initial'
+//   }
+// })

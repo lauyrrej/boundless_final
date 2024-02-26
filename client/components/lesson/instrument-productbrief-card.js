@@ -5,7 +5,7 @@ export default function ProductBriefCard({}) {
     <>
       <div className="col-sm-6 Right sticky-top ">
         <div className="prodBriefing sticky-top ">
-          <div className="prodMainName">Logic Pro X 從零開始</div>
+          <div className="prodMainName">Orange Micro Terror</div>
           <div className="Rating">
             <div className="star">
               <img
@@ -14,24 +14,66 @@ export default function ProductBriefCard({}) {
                 className="starImg"
               />
               <div className="ratingNumber">4.9</div>
-              <div className="commentNumber">(10)</div>
+              <div className="commentNumber">(3)</div>
             </div>
-            <div className="sales">購買人數 50</div>
+            <div className="sales">已售出 10</div>
           </div>
           <div className="productPrice">
-            <div className="price">NT$ 1,800</div>
+            <div className="price">NT$ 22,680</div>
             <img
               loading="lazy"
               src="https://cdn.builder.io/api/v1/image/assets/TEMP/5ed2e715f1421a33de89ac321d6dcc6d56fbac40a7d43dfe2cf0ecb15054bd3f?"
               className="likesIcon"
             />
           </div>
-         
-          <div className="lessonIntro">
-            Logic Pro
-            為數位音樂編曲入門的必學軟體，從錄音、編曲到混音一次包辦，帶你認識錄音介面、多重效果器，以及豐富的內建素材庫，是對音樂創作有興趣的你不可錯過的專業音樂編曲課程。
+          <div className="Intro">
+            小巧的放大器，巨大的音色。
+            <br />
+            <br /> Micro Terror是一種全球現象。從最初的 Tiny Terror
+            中汲取靈感，這個微型怪物將一個閥門前置放大器連接到一個固態輸出部分，以獲得巨大的音調，使其小型框架成為一種嘲弄。
+            <br />
+            <br />
+            Micro Terror 重量不到 1
+            公斤，可以說是市場上最便攜的放大器頭。與配套的 PPC108
+            機櫃搭配使用時，Micro Terror 的 Aux
+            輸入和耳機輸出使其成為完美的練習夥伴，即使是最雜亂的餐具櫃也足夠小。
+            然而，不要被它的微型足跡所迷惑，因為尺寸是這款放大器唯一的小問題。Micro
+            Terror 採用高強度鋼外殼，按照與 Terror
+            系列其他產品相同的高標準製造，配備單個 ECC83 (12AX7)
+            前置放大器閥，並與固態功率放大器耦合。這個小東西發出的聲音深度（和音量）確實令人震驚，橙色的咆哮和咬合聲很豐富。更重要的是，Micro
+            Terror 可以與任何 8-16 歐姆音箱一起使用。
           </div>
-          
+          //FIXME
+          {/* 數量選擇器 */}
+          <div className="quantity-selector">
+            <div class="btn-and-quantity-wrap">
+              <div className="btn-and-quantity">
+                <div className="spinner">
+                  <span className="btn minus" data-id="2721888517"></span>
+                  <input
+                    type="text"
+                    id="updates_2721888517"
+                    name="quantity"
+                    value="1"
+                    className="quantity-selector"
+                  />
+                  <input
+                    type="hidden"
+                    id="product_id"
+                    name="product_id"
+                    value="2721888517"
+                  />
+                  <span className="q">Qty.</span>
+                  <span className="btn plus" data-id="2721888517"></span>
+                </div>
+                <div id="AddToCart" quickbeam="add-to-cart">
+                  <span id="AddToCartText">Add to Cart</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h6>暫無庫存</h6>
+          {/*  */}
           <div className="shoppingBtn">
             <div className="cartBtn">
               <img
@@ -50,7 +92,9 @@ export default function ProductBriefCard({}) {
       <style jsx>
         {`
           .Right {
-            {/* margin-left: 80px; */}
+             {
+              /* margin-left: 80px; */
+            }
           }
 
           .prodBriefing {
@@ -142,8 +186,7 @@ export default function ProductBriefCard({}) {
             font-family: Noto Sans TC, sans-serif;
             flex-grow: 1;
           }
-          .lessonIntro {
-          }
+
           .shoppingBtn {
             display: flex;
             margin-top: 20px;

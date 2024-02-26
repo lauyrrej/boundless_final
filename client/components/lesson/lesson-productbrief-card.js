@@ -3,7 +3,7 @@ import React from 'react'
 export default function ProductBriefCard({}) {
   return (
     <>
-      <div className="col-sm-6 Right sticky-top ">
+      <div className="col-6 Right sticky-top ">
         <div className="prodBriefing sticky-top ">
           <div className="prodMainName">Logic Pro X 從零開始</div>
           <div className="Rating">
@@ -173,7 +173,6 @@ export default function ProductBriefCard({}) {
             font-size: 16px;
             color: var(--white, #fff);
             font-weight: 700;
-          
           }
 
           .cartBtn {
@@ -183,10 +182,13 @@ export default function ProductBriefCard({}) {
             background-color: var(--body, #b9b9b9);
             gap: 12px;
             padding: 8px 78px;
+            cursor: pointer;
+            transition: 0.3s;
+            &:hover {
+              background-color: #000000;
+            }
           }
-          .cartBtn:hover {
-            background-color: #000000;
-          }
+
           .buyBtn {
             display: flex;
             justify-content: space-between;
@@ -194,9 +196,16 @@ export default function ProductBriefCard({}) {
             background-color: #18a1ff;
             gap: 12px;
             padding: 8px 78px;
-          }
-          .buyBtn:hover {
-            background-color: #000000;
+            cursor: pointer;
+            transition: 0.3s;
+            &:hover {
+              background-color: #000000;
+               {
+                /* 要改顏色！！ */
+              }
+              //TODO
+              //FIXME
+            }
           }
         `}
       </style>
