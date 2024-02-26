@@ -1,0 +1,82 @@
+<div class="div">
+  <div class="div-2">
+    <div class="div-3">－</div>
+    <div class="div-4">1</div>
+    <div class="div-5"></div>
+  </div>
+  <div class="div-6">暫無庫存</div>
+</div>
+<style>
+  .div {
+    align-self: stretch;
+    display: flex;
+    max-width: 560px;
+    justify-content: space-between;
+    gap: 20px;
+    white-space: nowrap;
+  }
+  @media (max-width: 991px) {
+    .div {
+      flex-wrap: wrap;
+      white-space: initial;
+    }
+  }
+  .div-2 {
+    display: flex;
+    gap: 0px;
+    font-size: 16px;
+    color: #000;
+    font-weight: 700;
+    padding: 0 20px;
+  }
+  @media (max-width: 991px) {
+    .div-2 {
+      white-space: initial;
+    }
+  }
+  .div-3 {
+    font-family: Noto Sans TC, sans-serif;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px 0px 0px 5px;
+    border: 1px solid var(--body, #b9b9b9);
+    background-color: #fff;
+    aspect-ratio: 1;
+    height: 40px;
+    padding: 0 12px;
+  }
+  @media (max-width: 991px) {
+    .div-3 {
+      white-space: initial;
+    }
+  }
+  .div-4 {
+    font-family: Noto Sans TC, sans-serif;
+    justify-content: center;
+    border-top: 1px solid var(--body, #b9b9b9);
+    border-bottom: 1px solid var(--body, #b9b9b9);
+    background-color: #fff;
+    flex-grow: 1;
+    padding: 9px 34px;
+  }
+  @media (max-width: 991px) {
+    .div-4 {
+      white-space: initial;
+      padding: 0 20px;
+    }
+  }
+  .div-5 {
+    border-radius: 5px 0px 0px 5px;
+    background-color: var(--body, #b9b9b9);
+    width: 40px;
+    height: 40px;
+  }
+  .div-6 {
+    color: var(--primary-deep, #124365);
+    align-self: start;
+    margin-top: 8px;
+    flex-grow: 1;
+    flex-basis: auto;
+    font: 400 20px Noto Sans TC, sans-serif;
+  }
+</style>
