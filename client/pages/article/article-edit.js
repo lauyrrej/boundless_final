@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import Editor from "./editor-component";
+import React, { useState, useEffect } from 'react'
+import Editor from './editor-component'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import ArticleCard from '@/components/article/article-card'
@@ -11,20 +11,20 @@ import { FaChevronRight } from 'react-icons/fa6'
 import { IoIosSearch } from 'react-icons/io'
 import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
-import { IoIosArrowForward } from "react-icons/io";
-import { IoMdHome } from "react-icons/io";
+import { IoIosArrowForward } from 'react-icons/io'
+import { IoMdHome } from 'react-icons/io'
 
 // sidebar假資料
 const sidebarData = ['全部', '技術分享', '音樂評論']
 
 export default function ArticleEdit() {
-  const [editorLoaded, setEditorLoaded] = useState(false);
-  const [data, setData] = useState("");
-  const initContent = "JSON text 段落與標題需要分開編輯";
+  const [editorLoaded, setEditorLoaded] = useState(false)
+  const [data, setData] = useState('')
+  const initContent = 'JSON text 段落與標題需要分開編輯'
 
   useEffect(() => {
-    setEditorLoaded(true);
-  }, []);
+    setEditorLoaded(true)
+  }, [])
 
   return (
     <>
@@ -91,7 +91,7 @@ export default function ArticleEdit() {
           <Editor
             name="description"
             onChange={(data) => {
-              setData(data);
+              setData(data)
             }}
             editorLoaded={editorLoaded}
             value={initContent}
@@ -104,49 +104,49 @@ export default function ArticleEdit() {
       <Footer />
 
       <style jsx>{`
-      .nav-category{
-        display: flex;
-        justify-content: between;
-      }
-      @media screen and (max-width: 576px) {
-        .nav-category{
-          display: none;
+        .nav-category {
+          display: flex;
+          justify-content: between;
         }
-      }
-      h1{
-        padding-top:5;
-      }
-      @media screen and (max-width: 576px) {
-        h1{
-          padding-top:0;
+        @media screen and (max-width: 576px) {
+          .nav-category {
+            display: none;
+          }
         }
-      }
-      .breadcrumb-wrapper{
-        margin-top: 50px;
-        margin-left: 50px;
-      }
-      @media screen and (max-width: 576px) {
-        .breadcrumb-wrapper{
-          margin-top: 30px;
-          margin-left: 10px;
+        h1 {
+          padding-top: 5;
         }
-      }
-      .main-img{
-        position: relative;
-        weight: 1000px;
-        height: 500px;
-      }
-      .big-pic{
-        position: absolute;
-        top: 0;
-        left:0;
-      }
-      @media screen and (max-width: 576px) {
-        .main-img{
-          weight: 576px;
-          height: 300px;
+        @media screen and (max-width: 576px) {
+          h1 {
+            padding-top: 0;
+          }
         }
-      }
+        .breadcrumb-wrapper {
+          margin-top: 50px;
+          margin-left: 50px;
+        }
+        @media screen and (max-width: 576px) {
+          .breadcrumb-wrapper {
+            margin-top: 30px;
+            margin-left: 10px;
+          }
+        }
+        .main-img {
+          position: relative;
+          weight: 1000px;
+          height: 500px;
+        }
+        .big-pic {
+          position: absolute;
+          top: 0;
+          left: 0;
+        }
+        @media screen and (max-width: 576px) {
+          .main-img {
+            weight: 576px;
+            height: 300px;
+          }
+        }
       `}</style>
     </>
   )

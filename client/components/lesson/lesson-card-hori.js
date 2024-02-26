@@ -11,12 +11,6 @@ export default function CourseCard() {
             alt="Course Preview"
             className="course-image"
           />
-          <img
-            loading="lazy"
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/f63b958d31f22ceac9729085dc4ee70e1cc6d5a2dab24fdc0543dd3b1c72eac0?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&"
-            alt=""
-            className="icon-image"
-          />
         </section>
         <section className="courset-details">
           <h3 className="course-title">樂理指法一把抓 - 鋼琴基礎從零開始</h3>
@@ -43,46 +37,50 @@ export default function CourseCard() {
                 5小時
               </span>
             </div>
+            <div className="enrolled-students">
+              <img
+                loading="lazy"
+                src="https://cdn.builder.io/api/v1/image/assets/TEMP/6d3076872f8f7cffe3e64f324e5f3c6851c51802240e5b7749e95a5dcbb6ab69?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&"
+                alt="User icon"
+                className="user-icon"
+              />
+              <span className="enrollment-count">50</span>
+            </div>
           </div>
-          <div className="course-price">NT$ 4,000</div>
-          <div className="enrolled-students">
+          <div className="pricelikes">
+            <div className="course-price">NT$ 4,000</div>
             <img
               loading="lazy"
-              src="https://cdn.builder.io/api/v1/image/assets/TEMP/6d3076872f8f7cffe3e64f324e5f3c6851c51802240e5b7749e95a5dcbb6ab69?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&"
-              alt="User icon"
-              className="user-icon"
+              src="https://cdn.builder.io/api/v1/image/assets/TEMP/f63b958d31f22ceac9729085dc4ee70e1cc6d5a2dab24fdc0543dd3b1c72eac0?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&"
+              alt=""
+              className="icon-image"
             />
-            <span className="enrollment-count">50</span>
           </div>
         </section>
       </article>
       <style jsx>{`
         .course-card {
-          max-width: 240px;
+          max-width: 100%;
           border-radius: 5px;
           border: 1px solid #b9b9b9;
           background-color: #fff;
           display: flex;
-          flex-direction: column;
           padding: 8px;
         }
         .course-image-wrapper {
-          display: flex;
-          flex-direction: column;
+          width: 120px;
+          height: 120px;
           align-items: center;
           overflow: hidden;
-          position: relative;
+
           aspect-ratio: 1.33;
-          width: 100%;
         }
-        .course-image,
-        .icon-image {
+        .course-image {
           width: 100%;
           object-fit: cover;
           object-position: center;
         }
         .icon-image {
-          position: absolute;
           width: 20px;
           bottom: 12px;
           right: 12px;
@@ -109,8 +107,11 @@ export default function CourseCard() {
           font-family: Noto Sans TC, sans-serif;
           margin: 0;
         }
-
-        .course-price {
+        .pricelikes{
+        display:flex;
+        justify-content:space-between;
+        }
+         .course-price {
           font-size: 18px;
           font-family: Noto Sans TC, sans-serif;
           font-weight: 700;
@@ -121,7 +122,6 @@ export default function CourseCard() {
           color: #5a5a5a;
           font-size: 14px;
           font-family: Noto Sans TC, sans-serif;
-          margin-top: 46px;
         }
         /* Add your existing styles here */
       `}</style>
