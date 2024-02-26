@@ -1,21 +1,22 @@
 @import 'globals.scss';
 
-.header {
+header {
   background-color: $primary;
   height: 60px;
   padding: 10px 35px;
-  position: fixed;
+  position: sticky;
   top: 0;
   z-index: 1200;
+  box-shadow: 0px 2px 4px 0px rgba($color: #000000, $alpha: 0.25);
+  user-select: none;
   .logo {
     max-width: 180px;
   }
   .logo-mb {
     max-width: 30px;
   }
-
   @media screen and (max-width: 576px) {
-    padding-inline: 20px;
+    padding-inline: 24px;
   }
 }
 
@@ -55,23 +56,73 @@
     width: 40px;
     height: 40px;
     overflow: hidden;
+    position: relative;
     border: 2px solid #fff;
     border-radius: 50%;
     & img {
       height: 100%;
-      object-fit: contain;
+      object-fit: cover;
     }
   }
+}
+// 手機版主選單
+.menu-mb {
+  position: fixed;
+  transform: translateY(-100%);
+  left: 0;
+  z-index: 120;
+  padding-top: 85px;
+  background-color: #fff;
+  color: $secondary;
+  font-size: $h5;
+  width: 100%;
+  height: 100%;
+  transition: 0.5s;
+}
+.menu-mb-show {
+  transform: translateY(0);
+}
+.menu-mb-user-info {
+  color: $primary;
+  font-weight: 500;
+  font-size: $h4;
+  .mb-photo-wrapper {
+  width: 120px;
+  height: 120px;
+  overflow: hidden;
+  border-radius: 50%;
+  position: relative;
+    & img {
+      object-fit: cover;
+    }
+  }
+}
+.mm-item {
+  width: 100%;
+  padding-block: 16px;
+  border-bottom: 1px solid $body;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+.sm-close {
+  width: 100%;
+  padding: 0 6px 8px 0;
+  border-bottom: 1px solid $body;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .sidebar-wrapper {
   position: sticky;
   top: 0px;
   padding-top: 65px;
+  user-select: none;
 }
 .sidebar {
   position: sticky;
-  top: 65px;
+  top: 120px;
   color: $secondary;
   font-size: $h5;
   font-weight: 700;
@@ -81,22 +132,76 @@
   }
   & li {
       padding: 12px;
-      cursor: pointer;
       &:hover {
           color: $primary;
       }
   }
   .active {
       color: $primary;
-      cursor: default;
+  }
+}
+.sidebar-mb {
+  position: fixed;
+  transform: translateX(-100%);
+  top: 180px;
+  z-index: 119;
+  padding-top: 20px;
+  background-color: #fff;
+  color: $secondary;
+  font-size: $h5;
+  width: 100%;
+  height: 100%;
+  transition: 0.5s;
+  .active {
+    color: $primary;
+  }
+}
+.sidebar-mb-show {
+  transform: translateX(0);
+}
+.sm-item {
+  width: 100%;
+  padding: 16px;
+  border-bottom: 1px solid $body;
+  display: flex;
+  // justify-content: start;
+  align-items: center;
+  font-weight: bold;
+}
+
+.page-control {
+  padding-inline: 30px 0;
+  position: relative;
+  @media screen and (max-width: 576px) {
+    // padding: 0 20px 0 20px;
+    padding: 0;
+  }
+}
+
+.top-function-flex {
+  display: flex;
+  justify-content: space-between;
+  @media screen and (max-width: 576px) {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 16px;
   }
 }
 
 .top-function-container {
-  padding-block: 20px;
-  padding-right: 10px;
+  width: 100%;
+  background-color: #fff;
+  padding-block: 20px 30px;
   position: sticky;
   top: 10px;
+  z-index: 100;
+  @media screen and (max-width: 576px) {
+    top: 58px;
+    padding-block: 22px 12px;
+    padding-inline: 12px;
+    box-shadow: 0px 2px 4px 0px rgba($color: #000000, $alpha: 0.25);
+  }
 }
 .breadcrumb-wrapper {
   color: $secondary;
@@ -107,13 +212,23 @@
   margin-bottom: 24px;
 }
 
+.search-sidebarBtn {
+  @media screen and (max-width: 576px) {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+}
 .search {
   width: 300px;
   border: 1px soild $body;
   border-radius: 5px;
+  @media screen and (max-width: 576px) {
+    width: 270px;
+  }
   .search-btn {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
     background-color: $light-primary;
     color: #fff;
     &:hover {
@@ -123,34 +238,117 @@
   }
 }
 
-.filter {
+.filter-text {
     color: $secondary;
     font-weight: 600;
     font-size: $h6;
-    padding-inline: 10px;
     gap: 5px;
     cursor: pointer;
+    user-select: none;
+}
+
+.filter-sort {
+  @media screen and (max-width: 576px) {
+    width: 100%;
+  }
+}
+
+.filter {
+  width: 220px;
+  padding-inline: 8px;
+  padding-block: 16px;
+  background-color: #fff;
+  border: 2px solid $body;
+  border-radius: 5px;
+  position: absolute;
+  top: 42px;
+  left: -65px;
+  cursor: default;
+  user-select: none;
+  @media screen and (max-width: 576px) {
+    top: 50px;
+    left: -118px;
+  }
+  .filter-item {
+    padding-inline: 12px;
+    margin-bottom: 14px;
+  }
+  .filter-title {
+    color: $dark;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+
+  .filter-radio-group {
+    color: $secondary;
+    font-size: 16px;
+    .filter-radio-item {
+      margin-right: 20px;
+    }
+  }
+  .filter-btn {
+    padding-block: 4px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .clean-btn {
+    background-color: $body;
+    color: #fff;
+    &:hover {
+      background-color: $secondary;
+    }
+  }
+  .confirm-btn {
+    background-color: $light-primary;
+    color: #fff;
+    &:hover {
+      background-color: $primary;
+    }
+  }
 }
 
 .sort {
-    color: $secondary;
-    font-weight: 600;
-    font-size: $h6;
-    padding-inline: 10px;
-    gap: 8px;
-    .sort-item {
-        padding-inline: 4px;
-        cursor: pointer;
-        transition: 0.3s;
-        &:hover {
-            color: $primary;
-        }
-    }
-    .active {
-        color: $deep-primary;
-        cursor: default;
-        &:hover {
-            color: $deep-primary;
-        }
-    }
+  color: $secondary;
+  font-weight: 600;
+  font-size: $h6;
+  // padding-inline: 10px;
+  gap: 10px;
+  user-select: none;
+  .sort-item {
+      padding-inline: 4px;
+      cursor: pointer;
+      transition: 0.2s;
+      &:hover {
+          color: $light-primary;
+      }
+  }
+  .active {
+      color: $primary;
+      cursor: default;
+      &:hover {
+          color: $primary;
+      }
+  }
+}
+
+.b-btn {
+  border-radius: 5px;
+  color: #fff;
+  font-weight: bold;
+  padding-block: 6px;
+  align-items: center;
+}
+.b-btn-primary {
+  background-color: $light-primary;
+  &:hover {
+    background-color: $primary;
+  }
+}
+.b-btn-body {
+  background-color: $body;
+  &:hover {
+    background-color: $secondary;
+  }
 }
