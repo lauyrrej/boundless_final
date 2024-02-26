@@ -59,7 +59,7 @@ export default function Test() {
   return (
     <>
       <Navbar />
-      <div className="hero d-none d-sm-block" style={{ paddingTop: '60px' }}>
+      <div className="hero d-none d-sm-block">
         <Image
           src={lessonHero}
           className="object-fit-cover w-100"

@@ -27,9 +27,10 @@ export default function Test() {
     setShowSidebar(!showSidebar)
   }
 
+  // ----------------------條件篩選  ----------------------
   const [filterVisible, setFilterVisible] = useState(false)
   useEffect(() => {
-    document.addEventListener('click', (e) => {
+    document.addEventListener('click', () => {
       setFilterVisible(false)
     })
   }, [])
@@ -43,6 +44,8 @@ export default function Test() {
     setFilterVisible(!filterVisible)
   }
   // ----------------------假資料  ----------------------
+  // 資料排序
+  const [dataSort, setDataSort] = useState('upToDate')
   // sidebar假資料
   const sidebarData = [
     { id: 1, parent_id: null, name: '吉他' },
@@ -86,22 +89,66 @@ export default function Test() {
 
   return (
     <>
-      <Navbar />
-      <div className="hero d-none d-sm-block" style={{ paddingTop: '60px' }}>
+      <Navbar menuMbToggle={menuMbToggle} />
+      <div className="hero d-none d-sm-block">
         <Image
           src={productlistHero}
           className="object-fit-cover w-100"
           alt="cover"
         />
       </div>
-      <div className="container">
+      <div className="container position-relative">
+        {/* 手機版主選單/navbar */}
+        <div
+          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${
+            showMenu ? 'menu-mb-show' : ''
+          }`}
+        >
+          {/* 用戶資訊 */}
+          <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
+            <div className="mb-photo-wrapper mb-2">
+              <Image
+                src="/jam/amazingshow.jpg"
+                alt="user photo mb"
+                fill
+              ></Image>
+            </div>
+            <div>用戶名稱</div>
+          </div>
+          <Link
+            className="mm-item"
+            href="/user"
+            style={{ borderTop: '1px solid #b9b9b9' }}
+          >
+            會員中心
+          </Link>
+          <Link className="mm-item" href="/lesson/lesson-list">
+            探索課程
+          </Link>
+          <Link className="mm-item" href="/instrument/instrument-list">
+            樂器商城
+          </Link>
+          <Link className="mm-item" href="/jam/recruit-list">
+            Let &apos;s JAM!
+          </Link>
+          <Link className="mm-item" href="/article/article-list">
+            樂友論壇
+          </Link>
+          <div className="mm-item" style={{ color: '#1581cc' }}>
+            登出
+            <ImExit size={20} className="ms-2" />
+          </div>
+        </div>
+
         <div className="row">
           {/* sidebar */}
           <div className="sidebar-wrapper d-none d-sm-block  col-sm-2">
             <div className="sidebar">
               <ul className="d-flex flex-column">
                 <li>
-                  <Link href={'/instrument/all'}>全部</Link>
+                  <Link href={'/instrument/all'} className="active">
+                    全部
+                  </Link>
                 </li>
                 {sidebarData.map((item, index) => {
                   if (!item.parent_id) {
@@ -136,17 +183,35 @@ export default function Test() {
             </div>
           </div>
 
-          {/* 頁面內容 */}
-          <main
-            className="col-12 col-sm-10 pe-0"
-            style={{
-              paddingLeft: '15px',
-              paddingRight: '15px',
-            }}
-          >
-            {/* 頂部功能列 */}
+          {/*   ----------------------頁面內容  ---------------------- */}
+          <div className="col-12 col-sm-10 page-control">
+            {/* 手機版sidebar */}
+            <div
+              className={`sidebar-mb d-sm-none ${
+                showSidebar ? 'sidebar-mb-show' : ''
+              }`}
+            >
+              <div className="sm-close">
+                <IoClose
+                  size={32}
+                  onClick={() => {
+                    setShowSidebar(false)
+                  }}
+                />
+              </div>
+              <Link href={`/jam/recruit-list`} className="sm-item active">
+                團員募集
+              </Link>
+              <Link href={`/jam/jam-list`} className="sm-item">
+                活動中的JAM
+              </Link>
+              <Link href={`/jam/Q&A`} className="sm-item">
+                什麼是JAM？
+              </Link>
+            </div>
+            {/*  ---------------------- 頂部功能列  ---------------------- */}
             <div className="top-function-container">
-              {/* 麵包屑 */}
+              {/*  ---------------------- 麵包屑  ---------------------- */}
               <div className="breadcrumb-wrapper">
                 <ul className="d-flex align-items-center p-0 m-0">
                   <IoHome size={20} />
@@ -154,27 +219,49 @@ export default function Test() {
                 </ul>
               </div>
 
-              <div className="d-flex justify-content-between">
-                {/* 搜尋欄 */}
-                <div className="search input-group">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="請輸入關鍵字..."
-                  />
-                  <div className="search-btn btn d-flex justify-content-center align-items-center p-0">
-                    <IoIosSearch size={25} />
+              <div className="top-function-flex">
+                {/*  ---------------------- 搜尋欄  ---------------------- */}
+                <div className="search-sidebarBtn">
+                  <div
+                    className="d-flex d-sm-none b-btn b-btn-body"
+                    role="presentation"
+                    style={{ paddingInline: '16px' }}
+                    onClick={sidebarToggle}
+                  >
+                    選單
+                  </div>
+                  <div className="search input-group">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="請輸入關鍵字..."
+                    />
+                    <div className="search-btn btn d-flex justify-content-center align-items-center p-0">
+                      <IoIosSearch size={25} />
+                    </div>
                   </div>
                 </div>
+
                 <div className="filter-sort d-flex justify-content-between">
-                  {/* 條件篩選 */}
-                  <form
-                    action="/template-with-sidebar"
-                    method="get"
-                    className="d-flex aligh-items-center  position-relative"
-                  >
+                  <div className="sort-mb d-block d-sm-none">
+                    <select
+                      className="form-select"
+                      value={dataSort}
+                      name="dataSort"
+                      onChange={(e) => {
+                        setDataSort(e.target.value)
+                      }}
+                    >
+                      <option selected value="upToDate">
+                        即將到期
+                      </option>
+                      <option value="recent">最近發起</option>
+                    </select>
+                  </div>
+                  {/*  ---------------------- 條件篩選  ---------------------- */}
+                  <form className="d-flex aligh-items-center  position-relative">
                     <div
-                      className="filter-text d-flex align-items-center me-3"
+                      className="filter-text d-flex align-items-center me-sm-4"
                       role="presentation"
                       onClick={onshow}
                     >
@@ -298,12 +385,14 @@ export default function Test() {
                       </div>
                     </div>
                   </form>
+
                   {/* 資料排序 */}
-                  <div className="sort d-flex justify-content-between align-items-center">
+                  <div className="sort d-none d-sm-flex justify-content-between align-items-center">
                     <div className="d-flex align-items-center">
                       排序
                       <FaSortAmountDown size={13} />
                     </div>
+
                     <div className="sort-item active">最熱銷</div>
                     <div className="sort-item">最高價</div>
                     <div className="sort-item">最低價</div>
@@ -311,24 +400,38 @@ export default function Test() {
                 </div>
               </div>
             </div>
-            {/* 主內容 */}
-            <div className="content">
-              <div className="row row-cols-1 row-cols-md-4">
-                {arr.map((i, index) => {
-                  return (
-                    <div key={index} className="col mb-4">
-                      <Card />
-                    </div>
-                  )
-                })}
-              </div>
+          </div>
+          {/* 主內容 */}
+          <div className="content">
+            <div className="instrument-card row row-cols-1 row-cols-md-4">
+              {arr.map((i, index) => {
+                return (
+                  <div key={index} className="col mb-4">
+                    <Card />
+                  </div>
+                )
+              })}
             </div>
-          </main>
+          </div>
         </div>
       </div>
+
       <Footer />
 
-      <style jsx>{``}</style>
+      <style jsx>{`
+        .content {
+          display: flex;
+        }
+        .instrument-card {
+          background-color: #ffcccc;
+          width: 100%;
+        }
+        @media screen and (max-width: 576px) {
+          .instrument-card .col {
+            flex: 0 0 50%; /* 使用 flexbox 將每一列的寬度設為 50% */
+          }
+        }
+      `}</style>
     </>
   )
 }
