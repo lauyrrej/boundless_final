@@ -133,12 +133,16 @@ ul {
 
 @media (prefers-color-scheme: dark) {
   html {
-    color-scheme: dark;
+    // color-scheme: dark;
   }
 }
 
 main {
   min-height: calc(150svh - 380px);
+  @media screen and (max-width: 576px){
+    padding-top: 30px;
+    padding-inline: 20px;
+  }
 }
 
 input::-webkit-outer-spin-button,
