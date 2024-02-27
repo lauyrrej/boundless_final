@@ -115,13 +115,7 @@
 
       /* --------------- user-contect-order--------------- */
 
-      /* RWD讓SIDEBAR消失 測試用記得刪 */
-      @media screen and (max-width: 576px) {
-        .side {
-          display: none;
-        }
-      }
-      /* RWD讓SIDEBAR消失 測試用記得刪 */
+      
 
       .user-content {
         display: flex;
@@ -146,6 +140,56 @@
         font-weight: 700;
         line-height: normal;
       }
+      /*----------------------acticle css----------------------- */
+      .user-acticleList{
+        width: 100%;
+      }
+
+      .user-acticleList-item{
+        
+        align-items: center;
+        margin-inline: auto;
+        
+        .user-acticleList-item-acticleCheck{
+          align-items: center;
+
+        }
+        .user-acticleList-item-acticleLabel{
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          overflow: hidden;
+        }
+
+        
+
+        .user-acticleList-item-time{
+
+        }
+
+        .user-acticleList-item-message{
+          
+        }
+
+
+        .user-acticleList-item-btnGroup{
+          /* width: 200px; */
+          gap: 10px;
+          align-items: center;
+          .user-acticleList-item-btn{
+            align-items: self-end;
+          }
+
+          
+        }
+      }
+
+      
+        
+        
+
+
+      /*----------------------acticle css----------------------- */
 
       
 
@@ -159,6 +203,41 @@
 
       }
 
+      /* RWD未生效 */
+      @media screen and (max-width: 576px) {
+
+        .user-content {
+          .user-acticleList-item{
+
+.user-acticleList-item-acticleLabel{
+-webkit-line-clamp: 2;
+}
+.user-acticleList-item-message{
+  display: none;
+}
+.user-acticleList-item-time{
+font-size:12px ;
+/* display: none; */
+}
+
+.user-acticleList-item-btnGroup{
+  justify-content: flex-end;
+  font-size:12px ;
+
+.user-acticleList-item-btn{
+  font-size:12px ;
+  padding:3px;
+}
+}
+
+
+}
+
+        }
+
+      
+      
+      }
       
       
     </style>
@@ -214,6 +293,47 @@
               <div class="user-title-userInfo">我的文章</div>
             </div>
 
+            <div class="user-acticleList">
+
+
+              
+              <div class="user-acticleList-item d-flex row mb-2">
+
+
+                <div class="form-check col-sm-6 col-5 ">
+                  <input class="form-check-input user-acticleList-item-acticleCheck" type="checkbox" value="" id="user-acticleList-item-acticleCheck">
+                  <label class="form-check-label user-acticleList-item-acticleLabel" for="user-acticleList-item-acticleCheck">
+                    那些在買七弦吉他前，需要注意的調 Tone 撇步！需要注意的調 Tone 撇步！需要注意的調 Tone 撇步！需要注意的調 Tone 撇步！需要注意的調 Tone 撇步！需要注意的調 Tone 撇步！
+                  </label>
+                </div>         
+
+                <div class="user-acticleList-item-time col-sm-2 col-3">
+                  2024/01/14
+                </div>
+
+                <div class="user-acticleList-item-message col-sm-1 col-1 ">
+                  10
+                </div>
+
+                <div class="user-acticleList-item-btnGroup col-sm-3 col-4 row ">
+                  <div class="user-acticleList-item-btn   col-sm-5 col-12">
+                    已發布
+                  </div>
+                  
+                  <div class=" btn btn-primary user-acticleList-item-btn col-sm-5 col-12">
+                    編輯
+                  </div>
+
+                </div>
+
+
+              </div>
+              <hr>
+
+              
+
+
+            </div>
             
 
             <div class="user-orderList-pagination">
