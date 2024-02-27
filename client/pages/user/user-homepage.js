@@ -107,7 +107,7 @@ export default function Test() {
             </div>
             {/* 主內容 */}
             <main className="content">
-              <div className="container">
+              <div className="container custom-container">
                 <div className="row">
                   <div className="col-lg-3 col-sm-12">
                     <div className="user-homePage-sideWarp">
@@ -185,7 +185,7 @@ export default function Test() {
                           <div className="user-homePage-Info-list">
                             <div className="user-homePage-info-item">
                               <div className="user-homePage-info-item-titleText">
-                                手機：
+                                手機：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                               </div>
                               <div className="user-homePage-info-item-Content">
                                 <div className="user-homePage-info-item-contentText">
@@ -195,7 +195,7 @@ export default function Test() {
                             </div>
                             <div className="user-homePage-info-item">
                               <div className="user-homePage-info-item-titleText">
-                                信箱：
+                                信箱：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                               </div>
                               <div className="user-homePage-info-item-Content">
                                 <div className="user-homePage-info-item-contentText">
@@ -261,10 +261,8 @@ export default function Test() {
 
       <style jsx>{`
         /* -----------------homePage------------------ */
-         {
-          /* * {
-          max-height: 100vh;
-        } */
+        .custom-container {
+          padding: 0;
         }
         .user-homePage-sideWarp {
           display: flex;

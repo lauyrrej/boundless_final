@@ -78,12 +78,13 @@ export default function Test() {
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
-      <div
+      {/* 先把HEROSECTION隱藏 */}
+      {/* <div
         className="page-shero d-none d-sm-block"
         style={{ paddingTop: '60px' }}
       >
         <Image src={jamHero} className="object-fit-cover w-100" alt="cover" />
-      </div>
+      </div> */}
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
         <div
@@ -393,7 +394,80 @@ export default function Test() {
                   >
                     <div className="user-content col-12">
                       <div className="user-content-top">
-                        <div className="user-title-userInfo">我的訂單</div>
+                        <div className="user-title-userInfo">我的文章</div>
+                        <div className="user-acticle-newBtn btn btn-primary">
+                          <div>新文章</div>
+                        </div>
+                      </div>
+
+                      <div className="user-acticleList ">
+                        <div className="user-acticleList-item-title d-flex row mb-2">
+                          <div className="form-check col-sm-6 col-6 ">
+                            <input
+                              className="form-check-input user-acticleList-item-title-acticleCheck"
+                              type="checkbox"
+                              defaultValue=""
+                              id="user-acticleList-item-title-acticleCheck"
+                            />
+                            <label
+                              className="form-check-label user-acticleList-item-title-acticleLabel"
+                              htmlFor="user-acticleList-item-title-acticleCheck"
+                            >
+                              文章標題
+                            </label>
+                          </div>
+                          <div className="user-acticleList-item-title-time col-sm-2 col-2">
+                            時間
+                          </div>
+                          <div className="user-acticleList-item-title-message col-sm-1 col-1 px-2">
+                            留言數
+                          </div>
+                          <div className="user-acticleList-item-title-btnGroup col-sm-3 col-4 row ">
+                            <div className=" btn btn-primary user-acticleList-item-title-newBtn col-sm-5 col-9">
+                              新文章
+                            </div>
+                            <div className=" btn btn-primary user-acticleList-item-title-btn col-sm-5 col-9">
+                              刪除
+                            </div>
+                          </div>
+                        </div>
+                        <hr />
+
+                        <div className="user-acticleList-item d-flex row mb-2">
+                          <div className="form-check col-sm-6 col-6 ">
+                            <input
+                              className="form-check-input user-acticleList-item-acticleCheck"
+                              type="checkbox"
+                              defaultValue=""
+                              id="user-acticleList-item-acticleCheck"
+                            />
+                            <label
+                              className="form-check-label user-acticleList-item-acticleLabel"
+                              htmlFor="user-acticleList-item-acticleCheck"
+                            >
+                              那些在買七弦吉他前，需要注意的調 Tone
+                              撇步！那些在買七弦吉他前，需要注意的調 Tone
+                              撇步！那些在買七弦吉他前，需要注意的調 Tone
+                              撇步！那些在買七弦吉他前，需要注意的調 Tone
+                              撇步！那些在買七弦吉他前，需要注意的調 Tone 撇步！
+                            </label>
+                          </div>
+                          <div className="user-acticleList-item-time col-sm-2 col-2">
+                            2024/01/14
+                          </div>
+                          <div className="user-acticleList-item-message col-sm-1 col-1 px-2">
+                            10
+                          </div>
+                          <div className="user-acticleList-item-btnGroup col-sm-3 col-4 row ">
+                            <div className="user-acticleList-item-text   col-sm-5 col-9 ">
+                              已發布
+                            </div>
+                            <div className=" btn btn-primary user-acticleList-item-btn col-sm-5 col-9">
+                              編輯
+                            </div>
+                          </div>
+                        </div>
+                        <hr />
                       </div>
 
                       <div className="user-orderList-pagination">
@@ -411,7 +485,9 @@ export default function Test() {
 
       <style jsx>{`
         /* --------------- user-contect-acticle--------------- */
-
+        hr {
+          margin: 10px;
+        }
         .custom-container {
           padding: 0;
 
@@ -435,17 +511,24 @@ export default function Test() {
             color: var(--primary-deep, #124365);
           }
 
-          .user-content {
+          .user-orderList-pagination {
             display: flex;
-            width: 1070px;
-            padding: 20px 10px;
-            margin: 0;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 20px;
-            border-radius: 5px;
-            background: var(--gray-30, rgba(185, 185, 185, 0.3));
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            align-self: stretch;
           }
+        }
+
+        .user-content {
+          display: flex;
+          width: 1070px;
+          padding: 20px 10px;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 20px;
+          border-radius: 5px;
+          background: var(--gray-30, rgba(185, 185, 185, 0.3));
 
           .user-content-top {
             display: flex;
@@ -453,13 +536,94 @@ export default function Test() {
             align-self: stretch;
             color: var(--primary-deep, #124365);
             text-align: center;
+            justify-content: space-between;
             /* h3 */
             font-family: 'Noto Sans TC';
             font-size: 28px;
             font-style: normal;
             font-weight: 700;
             line-height: normal;
+
+            .user-acticle-newBtn {
+              display: none;
+            }
           }
+          /*----------------------acticle css----------------------- */
+          .user-acticleList {
+            width: 100%;
+          }
+
+          .user-acticleList-item {
+            align-items: center;
+            margin-inline: auto;
+            /*height: 60px; */
+
+            .user-acticleList-item-acticleCheck {
+            }
+            .user-acticleList-item-acticleLabel {
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 1;
+              overflow: hidden;
+            }
+
+            .user-acticleList-item-time {
+            }
+
+            .user-acticleList-item-message {
+            }
+
+            .user-acticleList-item-btnGroup {
+              /* width: 200px; */
+              gap: 10px;
+              align-items: center;
+              justify-content: end;
+
+              .user-acticleList-item-text {
+                color: var(--primary-deep, #124365);
+                font-weight: bold;
+                font-size: 20px;
+              }
+              .user-acticleList-item-btn {
+                align-items: self-end;
+              }
+            }
+          }
+
+          .user-acticleList-item-title {
+            align-items: center;
+            margin-inline: auto;
+            .user-acticleList-item-title-acticleCheck {
+            }
+            .user-acticleList-item-title-acticleLabel {
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 1;
+              overflow: hidden;
+            }
+
+            .user-acticleList-item-title-time {
+            }
+
+            .user-acticleList-item-title-message {
+            }
+
+            .user-acticleList-item-title-btnGroup {
+              /* width: 200px; */
+              gap: 10px;
+              justify-content: end;
+
+              .user-acticleList-item-title-text {
+                color: var(--primary-deep, #124365);
+                font-weight: bold;
+              }
+              .user-acticleList-item-title-btn {
+                align-items: self-end;
+              }
+            }
+          }
+
+          /*----------------------acticle css----------------------- */
 
           .user-orderList-pagination {
             display: flex;
@@ -469,6 +633,8 @@ export default function Test() {
             align-self: stretch;
           }
         }
+
+        /* RWD未生效 */
 
         /* RWD讓SIDEBAR消失 測試用記得刪 */
         @media screen and (max-width: 576px) {
@@ -483,6 +649,81 @@ export default function Test() {
               width: 390px;
               padding: 10px;
               overflow: hidden;
+
+              .user-acticle-newBtn {
+                display: flex;
+                margin-right: 25px;
+              }
+            }
+          }
+
+          .user-content {
+            .user-acticleList-item-title {
+              .user-acticleList-item-title-acticleCheck {
+              }
+              .user-acticleList-item-title-acticleLabel {
+                -webkit-line-clamp: 2;
+              }
+              .user-acticleList-item-title-message {
+                display: none;
+              }
+              .user-acticleList-item-title-time {
+                text-align: right;
+                font-size: 12px;
+
+                /* display: none; */
+              }
+
+              .user-acticleList-item-title-btnGroup {
+                justify-content: flex-end;
+                font-size: 12px;
+
+                .user-acticleList-item-title-newBtn {
+                  display: none;
+                }
+                .user-acticleList-item-title-text {
+                  text-align: right;
+                  font-size: 12px;
+                  padding: 3px;
+                }
+
+                .user-acticleList-item-title-btn {
+                  font-size: 12px;
+                  padding: 3px;
+                }
+              }
+            }
+
+            .user-acticleList-item {
+              .user-acticleList-item-acticleCheck {
+                margin-top: 15px;
+              }
+              .user-acticleList-item-acticleLabel {
+                -webkit-line-clamp: 2;
+              }
+              .user-acticleList-item-message {
+                display: none;
+              }
+              .user-acticleList-item-time {
+                font-size: 12px;
+                /* display: none; */
+              }
+
+              .user-acticleList-item-btnGroup {
+                justify-content: flex-end;
+                font-size: 12px;
+
+                .user-acticleList-item-text {
+                  text-align: right;
+                  font-size: 20px;
+                  padding: 3px;
+                }
+
+                .user-acticleList-item-btn {
+                  font-size: 12px;
+                  padding: 3px;
+                }
+              }
             }
           }
         }

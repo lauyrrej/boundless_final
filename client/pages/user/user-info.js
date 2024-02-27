@@ -27,7 +27,16 @@ export default function Test() {
   }
   // ----------------------假資料  ----------------------
   // sidebar假資料
-  const sidebarData = ['吉他', '貝斯', '鍵盤樂器', '打擊樂器']
+  const sidebarData = [
+    '會員資訊',
+    '我的樂團',
+    '我的訂單',
+    '我的文章',
+    '我的收藏',
+    '我的優惠券 ',
+    '我的課程',
+    '我的訊息',
+  ]
 
   // 資料排序
   const [dataSort, setDataSort] = useState('latest')
@@ -78,12 +87,13 @@ export default function Test() {
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
-      <div
+      {/* 先把HEROSECTION隱藏 */}
+      {/* <div
         className="page-shero d-none d-sm-block"
         style={{ paddingTop: '60px' }}
       >
         <Image src={jamHero} className="object-fit-cover w-100" alt="cover" />
-      </div>
+      </div> */}
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
         <div
@@ -130,6 +140,16 @@ export default function Test() {
           {/* sidebar */}
           <div className="sidebar-wrapper d-none d-sm-block col-sm-2">
             <div className="sidebar">
+              <div className="sidebar-user-info">
+                <div className="sidebar-user-info-img"></div>
+                <div className="sidebar-user-info-text">
+                  <div className="sidebar-user-info-name">棉悠悠</div>
+                  <div className="sidebar-user-info-band">幻獸帕魯</div>
+                </div>
+                <div className="sidebar-user-info-Camera-img">
+                  <Image src={IoHome} alt="user photo mb" fill></Image>
+                </div>
+              </div>
               <ul className="d-flex flex-column">
                 {sidebarData.map((item, index) => {
                   return (
@@ -158,14 +178,30 @@ export default function Test() {
                   }}
                 />
               </div>
+
               <Link href={`/jam/recruit-list`} className="sm-item active">
-                團員募集
+                會員資訊
               </Link>
-              <Link href={`/jam/jam-list`} className="sm-item">
-                活動中的JAM
+              <Link href={`/jam/recruit-list`} className="sm-item">
+                我的樂團
               </Link>
-              <Link href={`/jam/Q&A`} className="sm-item">
-                什麼是JAM？
+              <Link href={`/jam/recruit-list`} className="sm-item">
+                我的訂單
+              </Link>
+              <Link href={`/jam/recruit-list`} className="sm-item">
+                我的文章
+              </Link>
+              <Link href={`/jam/recruit-list`} className="sm-item">
+                我的收藏
+              </Link>
+              <Link href={`/jam/recruit-list`} className="sm-item">
+                我的優惠券
+              </Link>
+              <Link href={`/jam/recruit-list`} className="sm-item">
+                我的課程
+              </Link>
+              <Link href={`/jam/recruit-list`} className="sm-item">
+                我的訊息
               </Link>
             </div>
             {/*  ---------------------- 頂部功能列  ---------------------- */}
@@ -547,6 +583,51 @@ export default function Test() {
 
       <style jsx>{`
         /* --------------- user-contect-acticle--------------- */
+        .sidebar-user-info {
+          display: flex;
+          padding: 0px 12px;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+          align-self: stretch;
+          position: relative;
+
+          .sidebar-user-info-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 100px;
+            background: url(<path-to-image>),
+              lightgray -26.448px -3.114px / 132.653% 100% no-repeat;
+          }
+          .sidebar-user-info-text {
+            display: flex;
+            width: 100px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+            color: var(--dark, #1d1d1d);
+            text-align: center;
+
+            /* h5 */
+            font-family: 'Noto Sans TC';
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            .sidebar-user-info-band {
+              margin-bottom: 20px;
+            }
+          }
+
+          .sidebar-user-info-Camera-img {
+            width: 30px;
+            height: 30px;
+            position: absolute;
+            left: 85px;
+            top: 70px;
+            fill: var(--light-gray, #cfcfcf);
+          }
+        }
 
         .custom-container {
           padding: 0;

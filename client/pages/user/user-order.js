@@ -78,12 +78,13 @@ export default function Test() {
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
-      <div
+      {/* 先把HEROSECTION隱藏 */}
+      {/* <div
         className="page-shero d-none d-sm-block"
         style={{ paddingTop: '60px' }}
       >
         <Image src={jamHero} className="object-fit-cover w-100" alt="cover" />
-      </div>
+      </div> */}
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
         <div
