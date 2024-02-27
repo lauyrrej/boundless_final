@@ -7,10 +7,11 @@ import jamHero from '@/assets/jam-hero.png'
 // data
 import CityCountyData from '@/data/CityCountyData.json'
 import jamData from '@/data/jam/jam.json'
+import playerData from '@/data/player.json'
+import genereData from '@/data/genere.json'
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
-import { IoIosSearch } from 'react-icons/io'
 import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
@@ -51,36 +52,15 @@ export default function Test() {
   // 資料排序
   const [dataSort, setDataSort] = useState('upToDate')
   // filter假資料
-  // 樂手類型資料
-  const playerData = [
-    { id: 1, name: '木吉他' },
-    { id: 2, name: '電吉他' },
-    { id: 3, name: '貝斯' },
-    { id: 4, name: '電貝斯' },
-    { id: 5, name: '鋼琴' },
-    { id: 6, name: '爵士鼓' },
-    { id: 7, name: '薩克斯風' },
-    { id: 8, name: '小提琴' },
-  ]
   const [player, setPlayer] = useState('all')
 
-  const genereData = [
-    { id: 1, name: '民謠' },
-    { id: 2, name: '搖滾' },
-    { id: 3, name: '金屬' },
-    { id: 4, name: '嘻哈' },
-    { id: 5, name: '靈魂' },
-    { id: 6, name: '世界音樂' },
-    { id: 7, name: '電子' },
-    { id: 8, name: '古典' },
-  ]
   const [genere, setGenere] = useState('all')
 
   const [degree, setDegree] = useState('all')
   // 篩選城市用的資料
   const cityData = CityCountyData.map((v, i) => {
     return v.CityName
-  }).filter((v, i) => {
+  }).filter((v) => {
     return v !== '釣魚臺' && v !== '南海島'
   })
   const [region, setRegion] = useState('all')
@@ -94,6 +74,9 @@ export default function Test() {
   }
 
   // ---------------------- jam 假資料  ----------------------
+  const recruitData = jamData.filter((v) => {
+    return v.formed_time === ''
+  })
 
   return (
     <>
@@ -212,16 +195,9 @@ export default function Test() {
                   >
                     選單
                   </div>
-                  <div className="search input-group">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="請輸入關鍵字..."
-                    />
-                    <div className="search-btn btn d-flex justify-content-center align-items-center p-0">
-                      <IoIosSearch size={25} />
-                    </div>
-                  </div>
+                  <Link href="/jam/form">
+                    <div className="b-btn b-btn-primary px-3">發起JAM</div>
+                  </Link>
                 </div>
 
                 <div className="filter-sort d-flex justify-content-between">
@@ -405,7 +381,7 @@ export default function Test() {
             </div>
             {/* 主內容 */}
             <main className="content">
-              {jamData.map((v, i) => {
+              {recruitData.map((v, i) => {
                 const {
                   id,
                   former,

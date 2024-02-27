@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import styles from '@/components/jam/recruit-card.module.scss'
 import Image from 'next/image'
 import Link from 'next/link'

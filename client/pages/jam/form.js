@@ -3,17 +3,12 @@ import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
-import jamHero from '@/assets/jam-hero.png'
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
-import { IoIosSearch } from 'react-icons/io'
-import { FaFilter } from 'react-icons/fa6'
-import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
-import { IoClose } from 'react-icons/io5'
 
-export default function Test() {
+export default function Form() {
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -104,13 +99,21 @@ export default function Test() {
             <main className="content"></main>
           </div>
 
-          {/*   ---------------------- 頁面右側內容  ---------------------- */}
-          <div className="d-none d-sm-block col-sm-4 page-control"></div>
+          {/*   ---------------------- 發起須知  ---------------------- */}
+          <div className="form-rules col-12 col-sm-4">
+            <div>1111</div>
+          </div>
         </div>
       </div>
       <Footer />
 
-      <style jsx>{``}</style>
+      <style jsx>{`
+        .form-rules {
+          padding-right: 20px;
+          background-color: #1581cc;
+          height: 100%;
+        }
+      `}</style>
     </>
   )
 }

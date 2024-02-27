@@ -6,6 +6,8 @@ import Image from 'next/image'
 import jamHero from '@/assets/jam-hero.png'
 // data
 import CityCountyData from '@/data/CityCountyData.json'
+import jamData from '@/data/jam/jam.json'
+import genereData from '@/data/genere.json'
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
@@ -15,6 +17,7 @@ import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 // 自製元件
+import JamCard from '@/components/jam/jam-card'
 
 export default function Test() {
   // ----------------------手機版本  ----------------------
@@ -48,17 +51,6 @@ export default function Test() {
   // ----------------------假資料  ----------------------
   // 資料排序
   const [dataSort, setDataSort] = useState('latest')
-  // filter假資料
-  const genereData = [
-    { id: 1, name: '民謠' },
-    { id: 2, name: '搖滾' },
-    { id: 3, name: '金屬' },
-    { id: 4, name: '嘻哈' },
-    { id: 5, name: '靈魂' },
-    { id: 6, name: '世界音樂' },
-    { id: 7, name: '電子' },
-    { id: 8, name: '古典' },
-  ]
   const [genere, setGenere] = useState('all')
   // 篩選城市用的資料
   const cityData = CityCountyData.map((v, i) => {
@@ -73,6 +65,12 @@ export default function Test() {
     setGenere('all')
     setRegion('all')
   }
+
+  // ---------------------- jam假資料  ----------------------
+  const formedJamData = jamData.filter((v) => {
+    return v.formed_time !== ''
+  })
+  console.log(formedJamData)
 
   return (
     <>
