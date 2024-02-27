@@ -176,7 +176,7 @@ export default function Test() {
                   <IoHome size={20} />
                   <li style={{ marginLeft: '8px' }}>會員中心</li>
                   <FaChevronRight />
-                  <li style={{ marginLeft: '10px' }}>會員資訊</li>
+                  <li style={{ marginLeft: '10px' }}>我的文章</li>
                 </ul>
               </div>
 
@@ -393,147 +393,11 @@ export default function Test() {
                   >
                     <div className="user-content col-12">
                       <div className="user-content-top">
-                        <div className="user-title-userInfo">會員資訊</div>
-                        <div className="user-btnGroup">
-                          <div className="user-btnGroup-btn1">
-                            <div>預覽個人首頁</div>
-                          </div>
-                          <div className="user-btnGroup-btn2">
-                            <div>編輯資訊</div>
-                          </div>
-                        </div>
+                        <div className="user-title-userInfo">我的訂單</div>
                       </div>
-                      <div className="user-info-item">
-                        <div className="user-info-item-titleText">真實姓名</div>
-                        <div className="user-info-item-Content">
-                          <div className="user-info-item-contentText">
-                            鍾傑元
-                          </div>
-                        </div>
-                      </div>
-                      <div className="user-info-item">
-                        <div className="user-info-item-titleText">暱稱</div>
-                        <div className="user-info-item-Content">
-                          <div className="user-info-item-contentText">阿傑</div>
-                        </div>
-                      </div>
-                      <div className="user-info-item">
-                        <div className="user-info-item-titleText">性別</div>
-                        <div className="user-info-item-Content">
-                          <div className="user-info-item-contentText">男</div>
-                        </div>
-                      </div>
-                      <div className="user-info-item">
-                        <div className="user-info-item-titleText">喜歡曲風</div>
-                        <div className="user-info-item-Content">
-                          <div className="user-info-item-contentText">
-                            金屬、搖滾
-                          </div>
-                        </div>
-                      </div>
-                      <div className="user-info-item">
-                        <div className="user-info-item-titleText">演奏樂器</div>
-                        <div className="user-info-item-Content">
-                          <div className="user-info-item-contentText">貝斯</div>
-                        </div>
-                      </div>
-                      <div className="user-info-item">
-                        <div className="user-info-item-titleText">公開資訊</div>
-                        <div className="user-info-item-checkBoxGroup ">
-                          <div className="form-check">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              defaultValue=""
-                              id="privacyBD"
-                              defaultChecked=""
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="privacyBD"
-                            >
-                              生日
-                            </label>
-                          </div>
-                          <div className="form-check">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              defaultValue=""
-                              id="privacyPhone"
-                              defaultChecked=""
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="privacyPhone"
-                            >
-                              手機
-                            </label>
-                          </div>
-                          <div className="form-check">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              defaultValue=""
-                              id="privacyEmail"
-                              defaultChecked=""
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="privacyEmail"
-                            >
-                              電子信箱
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="user-info-item">
-                        <div className="user-info-item-titleText">生日</div>
-                        <div className="user-info-item-Content">
-                          <div className="user-info-item-contentText">
-                            1985-01-19
-                          </div>
-                        </div>
-                      </div>
-                      <div className="user-info-item">
-                        <div className="user-info-item-titleText">手機</div>
-                        <div className="user-info-item-Content">
-                          <div className="user-info-item-contentText">
-                            0910047354
-                          </div>
-                        </div>
-                      </div>
-                      <div className="user-info-item">
-                        <div className="user-info-item-titleText">信箱</div>
-                        <div className="user-info-item-Content">
-                          <div className="user-info-item-contentText">
-                            harmon4652@gmail.com
-                          </div>
-                        </div>
-                      </div>
-                      <div className="user-info-item">
-                        <div className="user-info-item-titleText">地址</div>
-                        <div className="user-info-item-Content">
-                          <div className="user-info-item-contentText">
-                            臺東縣臺東市同樂街87號6樓
-                          </div>
-                        </div>
-                      </div>
-                      <div className="user-info-item-info">
-                        <div className="user-info-item-info-titleText">
-                          自我介紹
-                        </div>
-                        <div className="user-info-item-info2">
-                          <div className="user-info-item-info-contentText">
-                            嗨，大家好，我是阿傑！我的音樂旅程始於青少年時期，當時我對貝斯的低沉與穩定的音色深感著迷。這把強而有力的樂器成為我表達情感的媒介，並啟發我不斷追求音樂創作的腳步。
-                            <br />
-                            我的演奏風格融合了多種音樂元素，從爵士樂的靈活性到搖滾樂的澎湃力道，我喜歡在音符之間探索各種可能性。音樂對我而言不僅僅是一種技能，更是一種生活的態度，一種能夠連結人心的語言。
-                            <br />
-                            在這支樂團中，我將負責打造穩固的節奏底層，並以創意豐富的貝斯線條為樂曲增色。我相信每一個音符都有其特殊的故事，而我將竭盡所能，透過貝斯的振奏，向大家傳達那些動人的音樂故事。
-                            <br />
-                            不論是舞台上的熱情演奏還是幕後的音樂創作，我都全心全意地致力於音樂之中。期待與你們一同創造出充滿魔力的音樂體驗，讓每一位聽眾都能沉浸在音樂的海洋中，一同感受音符的力量！
-                          </div>
-                        </div>
+
+                      <div className="user-orderList-pagination">
+                        <p>待放分頁元件 注意class</p>
                       </div>
                     </div>
                   </div>
@@ -583,149 +447,17 @@ export default function Test() {
             background: var(--gray-30, rgba(185, 185, 185, 0.3));
           }
 
-          .user-content {
-            max-width: 1076px;
-            /* width: 1100px; */
-            /* height: 705px; */
-            padding-left: 10px;
-            padding-right: 10px;
-            padding-top: 20px;
-            padding-bottom: 20px;
-            background: rgba(185, 185, 185, 0.3);
-            border-radius: 5px;
-            flex-direction: column;
-            justify-content: start;
-            align-items: flex-start;
-            gap: 5px;
-            display: inline-flex;
-            font-family: Noto Sans TC;
-          }
-
           .user-content-top {
-            align-self: stretch;
-            justify-content: space-between;
-            align-items: flex-start;
-            display: inline-flex;
-            word-wrap: break-word;
-          }
-
-          .user-title-userInfo {
-            color: #0d3652;
-            font-size: 28px;
-            font-weight: 700;
-          }
-
-          .user-btnGroup {
-            justify-content: flex-start;
-            align-items: flex-start;
-            gap: 10px;
             display: flex;
-            color: white;
-            font-size: 18px;
-            font-weight: 700;
-          }
-
-          .user-btnGroup-btn1 {
-            padding: 10px;
-            background: #b9b9b9;
-            border-radius: 5px;
-            overflow: hidden;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            display: flex;
-          }
-          .user-btnGroup-btn2 {
-            padding: 10px;
-            background: #18a1ff;
-            border-radius: 5px;
-            overflow: hidden;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            display: flex;
-          }
-
-          /* ------------------ */
-          .user-info-item {
-            align-self: stretch;
-            justify-content: space-between;
-            align-items: center;
-            display: flex;
-
-            .user-info-item-titleText {
-              display: flex;
-              color: #124365;
-              font-size: 16px;
-              font-family: Noto Sans TC;
-              font-weight: 700;
-              word-wrap: break-word;
-            }
-
-            .user-info-item-checkBoxGroup {
-              display: flex;
-              height: 38px;
-              max-width: 900px;
-              padding: 3px 0px;
-              align-items: center;
-              gap: 10px;
-              flex: 1 0 0;
-              color: #000;
-            }
-
-            .user-info-item-Content {
-              display: flex;
-              height: 38px;
-              max-width: 900px;
-              padding: 3px 0px;
-              align-items: center;
-              gap: 10px;
-              flex: 1 0 0;
-
-              .user-info-item-contentText {
-                flex: 1 1 0;
-                color: black;
-                font-size: 16px;
-                font-family: Noto Sans TC;
-                font-weight: 400;
-                word-wrap: break-word;
-              }
-            }
-          }
-
-          .user-info-item-info {
-            display: flex;
-            justify-content: space-between;
             align-items: flex-start;
             align-self: stretch;
-          }
-
-          .user-info-item-info-titleText {
             color: var(--primary-deep, #124365);
+            text-align: center;
+            /* h3 */
             font-family: 'Noto Sans TC';
-            font-size: 16px;
+            font-size: 28px;
             font-style: normal;
             font-weight: 700;
-            line-height: normal;
-          }
-
-          .user-info-item-info2 {
-            display: flex;
-            max-width: 900px;
-            align-items: center;
-            gap: 10px;
-            flex: 1 0 0;
-          }
-
-          .user-info-item-info-contentText {
-            flex: 1 0 0;
-            color: #000;
-            text-align: justify;
-
-            font-family: 'Noto Sans TC';
-            font-size: 16px;
-            font-style: normal;
-            font-weight: 400;
             line-height: normal;
           }
 
