@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 export default function RecruitCard() {
-  const [discount, setDiscount] = useState('1')
+  const [countDown, setCountDown] = useState('1')
   return (
     <>
       <Link href="#" className={`${styles.recruitCard}`}>
@@ -88,7 +88,7 @@ export default function RecruitCard() {
             </span>
             <span
               style={
-                discount === '2' ? { color: '#1d1d1d' } : { color: '#ec3f3f' }
+                countDown === '2' ? { color: '#1d1d1d' } : { color: '#ec3f3f' }
               }
             >
               30 天

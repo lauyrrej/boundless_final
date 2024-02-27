@@ -1,6 +1,6 @@
 [
   {
-    "CityName": "臺北市",
+    "CityName": "台北市",
     "CityEngName": "Taipei City",
     "AreaList": [
       {
@@ -457,7 +457,7 @@
     ]
   },
   {
-    "CityName": "臺中市",
+    "CityName": "台中市",
     "CityEngName": "Taichung City",
     "AreaList": [
       { "ZipCode": "400", "AreaName": "中區", "AreaEngName": "Central Dist." },
@@ -913,7 +913,7 @@
     ]
   },
   {
-    "CityName": "臺南市",
+    "CityName": "台南市",
     "CityEngName": "Tainan City",
     "AreaList": [
       {
@@ -1389,7 +1389,7 @@
     ]
   },
   {
-    "CityName": "臺東縣",
+    "CityName": "台東縣",
     "CityEngName": "Taitung County",
     "AreaList": [
       { "ZipCode": "950", "AreaName": "臺東市", "AreaEngName": "Taitung City" },

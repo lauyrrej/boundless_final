@@ -79,6 +79,8 @@ export default function Test() {
   // 篩選城市用的資料
   const cityData = CityCountyData.map((v, i) => {
     return v.CityName
+  }).filter((v, i) => {
+    return v !== '釣魚臺' && v !== '南海島'
   })
   const [region, setRegion] = useState('all')
 
@@ -236,7 +238,7 @@ export default function Test() {
                     </select>
                   </div>
                   {/*  ---------------------- 條件篩選  ---------------------- */}
-                  <form className="d-flex align-items-center  position-relative">
+                  <form className="d-flex align-items-center position-relative">
                     <div
                       className="filter-text d-flex align-items-center me-sm-4"
                       role="presentation"

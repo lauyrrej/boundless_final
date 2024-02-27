@@ -63,6 +63,8 @@ export default function Test() {
   // 篩選城市用的資料
   const cityData = CityCountyData.map((v, i) => {
     return v.CityName
+  }).filter((v, i) => {
+    return v !== '釣魚臺' && v !== '南海島'
   })
   const [region, setRegion] = useState('all')
 
