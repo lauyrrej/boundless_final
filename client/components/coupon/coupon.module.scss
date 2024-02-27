@@ -1,5 +1,5 @@
 .couponCard {
-  width: 300px;
+  width: 340px;
   // width: 100%;
   // width: 350px;
   background-color: #fff;
@@ -18,11 +18,4 @@
     padding: 0;
     border-width: 0px;
   }
-}
-.couponTitle{
-  @media screen and (max-width: 576px) {
-    display: none;
-  }
-}
-.couponText{
 }

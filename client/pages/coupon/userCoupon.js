@@ -12,6 +12,7 @@ import { FaSortAmountDown } from 'react-icons/fa'
 // coupon
 import styles from '@/pages/coupon/userCoupon.module.scss'
 import Coupon from '@/components/coupon/coupon.js'
+import Data from '@/data/Coupon.json'
 
 // sidebar假資料
 const sidebarData = [
@@ -27,6 +28,7 @@ const sidebarData = [
 let arr = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
 export default function Test() {
+  console.log(Data)
   return (
     <>
       <Navbar />
@@ -122,7 +124,7 @@ export default function Test() {
                     className="form-select"
                     aria-label="Default select example"
                   >
-                    <option selected="">全部</option>
+                    <option value>全部</option>
                     <option value={1}>樂器</option>
                     <option value={2}>課程</option>
                   </select>
@@ -135,10 +137,11 @@ export default function Test() {
                   </div>
                   <div className="sort-item active">折扣幅度</div>
                   <div className="sort-item">即將到期</div>
+                  <div className="sort-item">已使用</div>
                 </div>
               </div>
               <div className={styles['couponImage']}>
-                {arr.map((i) => {
+                {arr.map((v, i) => {
                   return <Coupon key={i} className={`${styles.couponItem} `} />
                 })}
               </div>
@@ -222,6 +225,23 @@ export default function Test() {
             }
           }
         }
+        /*------------- RWD  ----------- */
+        @media screen and (max-width: 576px) {
+          body {
+            padding-inline: 20px;
+          }
+
+          .custom-container {
+            overflow: hidden;
+
+            .user-content {
+              width: 390px;
+              padding: 10px;
+              overflow: hidden;
+            }
+          }
+        }
+        /*------------- RWD  ----------- */
       `}</style>
     </>
   )

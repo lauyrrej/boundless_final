@@ -1,37 +1,47 @@
 import React from 'react'
 import styles from '@/components/coupon/coupon.module.scss'
+import Data from '@/data/Coupon.json'
+
 export default function Coupon() {
+  console.log(Data)
   return (
     <>
       <div className={`${styles.couponCard} card mb-3`}>
-        <div className="row  d-flex  g-0">
+        <div className="row  d-flex g-0">
           {/* 左 */}
-          <div className="col-4">
+          <div className="col-3">
             <img
-              className={`${styles.couponImg} my-2 p-2`}
+              className={`${styles.couponImg} my-3 p-2`}
               src="/coupon/logoWhite.jpg"
               alt="..."
             />
           </div>
-          <div className="col-8 p-1">
-            <div className="card-body d-flex justify-content-between ">
+          <div className="col-9">
+            <div className="card-body d-flex justify-content-between py-2">
               <div>
-                <h4
-                  className={`${styles.couponTitle}
-                  card-title fw-bold`}
+                <h5
+                  className="p-1
+                  card-title fw-bold"
                 >
-                  註冊禮
+                  {Data[6].name}
+                  {/* 註冊禮XX */}
+                </h5>
+                <h4 className="px-3 py-2">
+                  {Data[6].kind}
+                  {/* 課程 */}
                 </h4>
-                <h6 className={`${styles.couponText} px-1`}>課程</h6>
               </div>
               <div className="card-text d-flex justify-content-center align-items-center">
-                <div className="fs-2 fw-bold salesType">95折</div>
+                <div className="fs-2 fw-bold salesType">
+                  {Data[6].discount}
+                  {/* 95折 */}
+                </div>
               </div>
             </div>
             {/* 下 */}
             <div>
-              <p className="card-text">
-                <small className="text-muted">到期日：2024/12/31</small>
+              <p className="card-text px-4 py-1">
+                <small className="text-muted ">到期日：2024/12/31</small>
               </p>
             </div>
           </div>

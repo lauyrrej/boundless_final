@@ -1,13 +1,14 @@
 .couponContentBG {
-  background-color: gray;
+  background-color: #b9b9b94d;
   border-radius: 6px;
-  padding-inline: 12px;
+  padding-inline: 6px;
   @media screen and (max-width: 576px) {
-    margin: 20px 30px 20px 0;
+    margin: 20px 20px 20px 0;
   }
 }
 .couponTitle {
   display: flex;
+  color: #124365;
   align-items: flex-start;
   padding: 20px 0 0 20px;
 }
