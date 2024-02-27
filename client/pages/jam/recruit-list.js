@@ -6,6 +6,7 @@ import Image from 'next/image'
 import jamHero from '@/assets/jam-hero.png'
 // data
 import CityCountyData from '@/data/CityCountyData.json'
+import jamData from '@/data/jam/jam.json'
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
@@ -46,7 +47,7 @@ export default function Test() {
     stopPropagation(e)
     setFilterVisible(!filterVisible)
   }
-  // ----------------------假資料  ----------------------
+  // ---------------------- filter 假資料  ----------------------
   // 資料排序
   const [dataSort, setDataSort] = useState('upToDate')
   // filter假資料
@@ -91,6 +92,8 @@ export default function Test() {
     setDegree('all')
     setRegion('all')
   }
+
+  // ---------------------- jam 假資料  ----------------------
 
   return (
     <>
@@ -231,9 +234,7 @@ export default function Test() {
                         setDataSort(e.target.value)
                       }}
                     >
-                      <option selected value="upToDate">
-                        即將到期
-                      </option>
+                      <option defaultValue="upToDate">即將到期</option>
                       <option value="recent">最近發起</option>
                     </select>
                   </div>
@@ -269,9 +270,7 @@ export default function Test() {
                               setPlayer(e.target.value)
                             }}
                           >
-                            <option selected value="all">
-                              全部
-                            </option>
+                            <option defaultValue="all">全部</option>
                             {playerData.map((v) => {
                               return (
                                 <option key={v.id} value={v.id}>
@@ -297,9 +296,7 @@ export default function Test() {
                               setGenere(e.target.value)
                             }}
                           >
-                            <option selected value="all">
-                              全部
-                            </option>
+                            <option defaultValue="all">全部</option>
                             {genereData.map((v) => {
                               return (
                                 <option key={v.id} value={v.id}>
@@ -325,9 +322,7 @@ export default function Test() {
                               setDegree(e.target.value)
                             }}
                           >
-                            <option selected value="all">
-                              全部
-                            </option>
+                            <option defaultValue="all">全部</option>
                             <option value="1">新手練功</option>
                             <option value="2">老手同樂</option>
                           </select>
@@ -348,9 +343,7 @@ export default function Test() {
                               setRegion(e.target.value)
                             }}
                           >
-                            <option selected value="all">
-                              全部
-                            </option>
+                            <option defaultValue="all">全部</option>
                             {cityData.map((v, i) => {
                               return (
                                 <option key={i} value={v}>
@@ -412,9 +405,32 @@ export default function Test() {
             </div>
             {/* 主內容 */}
             <main className="content">
-              <RecruitCard />
-              <RecruitCard />
-              <RecruitCard />
+              {jamData.map((v, i) => {
+                const {
+                  id,
+                  former,
+                  member,
+                  title,
+                  degree,
+                  genere,
+                  player,
+                  region,
+                  created_time,
+                } = v
+                return (
+                  <RecruitCard
+                    key={id}
+                    former={former}
+                    member={member}
+                    title={title}
+                    degree={degree}
+                    genere={genere}
+                    player={player}
+                    region={region}
+                    created_time={created_time}
+                  />
+                )
+              })}
             </main>
           </div>
         </div>

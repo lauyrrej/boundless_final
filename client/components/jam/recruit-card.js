@@ -3,8 +3,37 @@ import styles from '@/components/jam/recruit-card.module.scss'
 import Image from 'next/image'
 import Link from 'next/link'
 
-export default function RecruitCard() {
-  const [countDown, setCountDown] = useState('1')
+import playerData from '@/data/player.json'
+
+export default function RecruitCard({
+  former,
+  member,
+  title,
+  degree,
+  genere,
+  player,
+  region,
+  created_time,
+}) {
+  const playerName = player
+    .map((p) => {
+      const matchedPlayer = playerData.find((pd) => pd.id === p)
+      return matchedPlayer ? matchedPlayer.name : null
+    })
+    .filter((name) => name !== null)
+  console.log(playerName)
+
+  // 組合日期
+  const createdYear = new Date(created_time).getFullYear()
+  const createdMonth = new Date(created_time).getMonth()
+  const createdDate = new Date(created_time).getDate()
+  const combineDate = `${createdYear}-${createdMonth}-${createdDate}`
+  // 計算剩餘天數
+  const createdTime = new Date(created_time).getTime()
+  const currentTime = new Date().getTime()
+  // 取得毫秒後，轉換成天數
+  const countDown = Math.ceil((createdTime - currentTime) / (1000 * 3600 * 24))
+  // console.log(currentTime)
   return (
     <>
       <Link href="#" className={`${styles.recruitCard}`}>
@@ -25,22 +54,22 @@ export default function RecruitCard() {
               />
             </div>
             <span style={{ color: '#124365', fontWeight: '500' }}>
-              Jimi Hendrix
+              {former.id}
             </span>
-            <span className="ms-2" style={{ color: '#124365' }}>
-              2024-02-23
+            <span className="ms-2" style={{ color: '#1d1d1d' }}>
+              {combineDate}
             </span>
           </div>
           {/* 程度 */}
           <div
             className={`${styles.cardBadge} ${styles.degree} d-flex align-items-center`}
           >
-            老手同樂
+            {degree == 1 ? '新手練功' : '老手同樂'}
           </div>
         </div>
         {/* card-title */}
         <div style={{ fontSize: '18px', color: '#1d1d1d', fontWeight: '500' }}>
-          北部上班族想組樂團
+          {title}
         </div>
         {/* player */}
         <div className="d-flex align-items-start" style={{ gap: '8px' }}>
@@ -51,11 +80,9 @@ export default function RecruitCard() {
             className="d-flex flex-wrap"
             style={{ gap: '8px', flex: '1 0 0' }}
           >
-            <div className={`${styles.cardBadge} ${styles.player}`}>吉他</div>
-            <div className={`${styles.cardBadge} ${styles.player}`}>貝斯</div>
-            <div className={`${styles.cardBadge} ${styles.player}`}>貝斯</div>
-            <div className={`${styles.cardBadge} ${styles.player}`}>貝斯</div>
-            <div className={`${styles.cardBadge} ${styles.player}`}>貝斯</div>
+            {playerName.map((v, i) => {
+              ;<div className={`${styles.cardBadge} ${styles.player}`}>{v}</div>
+            })}
           </div>
         </div>
         {/* genere */}
@@ -88,10 +115,10 @@ export default function RecruitCard() {
             </span>
             <span
               style={
-                countDown === '2' ? { color: '#1d1d1d' } : { color: '#ec3f3f' }
+                countDown <= 3 ? { color: '#ec3f3f' } : { color: '#1d1d1d' }
               }
             >
-              30 天
+              {countDown == 0 ? '今天' : countDown + ' 天'}
             </span>
           </div>
         </div>
