@@ -419,17 +419,18 @@ export default function Test() {
                 </div>
               </div>
             </div>
-          </div>
-          {/* 主內容 */}
-          <div className="content">
-            <div className="instrument-card row row-cols-1 row-cols-md-4">
-              {arr.map((i, index) => {
-                return (
-                  <div key={index} className="col mb-4">
-                    <Card />
-                  </div>
-                )
-              })}
+
+            {/* 主內容 */}
+            <div className="content">
+              <div className="instrument-card row row-cols-1 row-cols-md-4">
+                {arr.map((i, index) => {
+                  return (
+                    <div key={index} className="col mb-4">
+                      <Card />
+                    </div>
+                  )
+                })}
+              </div>
             </div>
           </div>
         </div>
@@ -443,7 +444,6 @@ export default function Test() {
         }
         .instrument-card {
           background-color: #ffcccc;
-          width: 100%;
         }
         @media screen and (max-width: 576px) {
           .instrument-card .col {
