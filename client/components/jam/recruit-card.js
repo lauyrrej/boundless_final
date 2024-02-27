@@ -4,10 +4,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import playerData from '@/data/player.json'
+import genereData from '@/data/genere.json'
 
 export default function RecruitCard({
   former,
-  member,
   title,
   degree,
   genere,
@@ -15,13 +15,16 @@ export default function RecruitCard({
   region,
   created_time,
 }) {
-  const playerName = player
-    .map((p) => {
-      const matchedPlayer = playerData.find((pd) => pd.id === p)
-      return matchedPlayer ? matchedPlayer.name : null
-    })
-    .filter((name) => name !== null)
-  console.log(playerName)
+  // 讓player代碼對應樂器種類
+  const playerName = player.map((p) => {
+    const matchedPlayer = playerData.find((pd) => pd.id === p) // 物件
+    return matchedPlayer.name
+  })
+  // genere對應
+  const genereName = genere.map((g) => {
+    const matchedGenere = genereData.find((gd) => gd.id === g)
+    return matchedGenere.name
+  })
 
   // 組合日期
   const createdYear = new Date(created_time).getFullYear()
@@ -81,7 +84,11 @@ export default function RecruitCard({
             style={{ gap: '8px', flex: '1 0 0' }}
           >
             {playerName.map((v, i) => {
-              ;<div className={`${styles.cardBadge} ${styles.player}`}>{v}</div>
+              return (
+                <div key={i} className={`${styles.cardBadge} ${styles.player}`}>
+                  {v}
+                </div>
+              )
             })}
           </div>
         </div>
@@ -94,20 +101,20 @@ export default function RecruitCard({
             className="d-flex flex-wrap"
             style={{ gap: '8px', flex: '1 0 0' }}
           >
-            <div className={`${styles.cardBadge} ${styles.genere}`}>搖滾</div>
-            <div className={`${styles.cardBadge} ${styles.genere}`}>
-              環境音樂
-            </div>
-            <div className={`${styles.cardBadge} ${styles.genere}`}>
-              世界音樂
-            </div>
+            {genereName.map((v, i) => {
+              return (
+                <div key={i} className={`${styles.cardBadge} ${styles.genere}`}>
+                  {v}
+                </div>
+              )
+            })}
           </div>
         </div>
         {/* region & deadline */}
         <div className="d-flex justify-content-between">
           <div>
             <span style={{ color: '#124365', fontWeight: 'bold' }}>地區：</span>
-            <span style={{ color: '#1d1d1d' }}>臺北市</span>
+            <span style={{ color: '#1d1d1d' }}>{region}</span>
           </div>
           <div>
             <span style={{ color: '#124365', fontWeight: 'bold' }}>
