@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Card from '@/components/lesson/lesson-card'
+import Cardrwd from '@/components/lesson/lesson-card-rwd'
 import Link from 'next/link'
 import Image from 'next/image'
 import lessonHero from '@/assets/lesson-hero.jpg'
@@ -15,6 +16,22 @@ import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 
 export default function Test() {
+  // 在電腦版或手機版時
+  const [isSmallScreen, setIsSmallScreen] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth <= 576)
+    }
+
+    handleResize()
+
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -361,7 +378,7 @@ export default function Test() {
                 {arr.map((i, index) => {
                   return (
                     <div key={index} className="col mb-4">
-                      <Card />
+                      {isSmallScreen ? <Cardrwd /> : <Card />}
                     </div>
                   )
                 })}
