@@ -3,7 +3,7 @@ import React from 'react'
 export default function ProductBriefCard({}) {
   return (
     <>
-      <div className="col-sm-6 Right sticky-top ">
+      <div className="Right sticky-top ">
         <div className="prodBriefing sticky-top ">
           <div className="prodMainName">Orange Micro Terror</div>
           <div className="Rating">
@@ -43,36 +43,14 @@ export default function ProductBriefCard({}) {
             前置放大器閥，並與固態功率放大器耦合。這個小東西發出的聲音深度（和音量）確實令人震驚，橙色的咆哮和咬合聲很豐富。更重要的是，Micro
             Terror 可以與任何 8-16 歐姆音箱一起使用。
           </div>
-          //FIXME
+
           {/* 數量選擇器 */}
-          <div className="quantity-selector">
-            <div class="btn-and-quantity-wrap">
-              <div className="btn-and-quantity">
-                <div className="spinner">
-                  <span className="btn minus" data-id="2721888517"></span>
-                  <input
-                    type="text"
-                    id="updates_2721888517"
-                    name="quantity"
-                    value="1"
-                    className="quantity-selector"
-                  />
-                  <input
-                    type="hidden"
-                    id="product_id"
-                    name="product_id"
-                    value="2721888517"
-                  />
-                  <span className="q">Qty.</span>
-                  <span className="btn plus" data-id="2721888517"></span>
-                </div>
-                <div id="AddToCart" quickbeam="add-to-cart">
-                  <span id="AddToCartText">Add to Cart</span>
-                </div>
-              </div>
-            </div>
+          <div className="quantitySelector ">
+            <div className="btn decrease-btn">-</div>
+            <div className="quantity">1</div>
+            <div className="btn increase-btn">+</div>
+            <h6 className="ms-4">暫無庫存</h6>
           </div>
-          <h6>暫無庫存</h6>
           {/*  */}
           <div className="shoppingBtn">
             <div className="cartBtn">
@@ -99,7 +77,7 @@ export default function ProductBriefCard({}) {
 
           .prodBriefing {
             /* background-color: #ff9595; */
-            margin-left: 110px;
+            margin-left: 45px;
             top: 120px;
           }
           .prodMainName {
@@ -173,24 +151,36 @@ export default function ProductBriefCard({}) {
             margin: auto 0;
             padding: 0 7px;
           }
-          .lengthHomeworkArea {
+          .quantitySelector {
             display: flex;
+            align-items: center;
+            margin-top: 20px;
           }
-          .lengthhomework {
-            justify-content: space-between;
+          .decrease-btn {
+            height: 40px;
+            width: 40px;
+            border-radius: 5px 0px 0px 5px;
+            border: 1px solid var(--body, #b9b9b9);
+          }
+          .quantity {
             display: flex;
-            gap: 5px;
+            width: 78px;
+            height: 40px;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid var(--body, #b9b9b9);
           }
-
-          .lengthHomeworkWord {
-            font-family: Noto Sans TC, sans-serif;
-            flex-grow: 1;
+          .increase-btn {
+            color: white;
+            height: 40px;
+            width: 40px;
+            border-radius: 0px 5px 5px 0px;
+            background: var(--body, #b9b9b9);
           }
-
           .shoppingBtn {
             display: flex;
             margin-top: 20px;
-            justify-content: space-evenly;
+            justify-content: space-between;
             gap: 12px;
             font-size: 16px;
             color: var(--white, #fff);
@@ -203,14 +193,27 @@ export default function ProductBriefCard({}) {
             background-color: var(--body, #b9b9b9);
             gap: 12px;
             padding: 8px 78px;
+            flex: 1 0 0;
+            cursor: pointer;
+            transition: 0.3s;
+            &:hover {
+              background-color: #000000;
+            }
           }
           .buyBtn {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             border-radius: 5px;
             background-color: #18a1ff;
             gap: 12px;
             padding: 8px 78px;
+            flex: 1 0 0;
+            cursor: pointer;
+            transition: 0.3s;
+            &:hover {
+              background-color: #000000;
+             
+            }
           }
         `}
       </style>

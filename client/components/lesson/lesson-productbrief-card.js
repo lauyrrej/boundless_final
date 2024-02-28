@@ -101,14 +101,11 @@ export default function ProductBriefCard({}) {
             border: 1px solid var(--body, #b9b9b9);
           }
           .Right {
-            padding-left: 100px;
+            margin-left: 45px;
           }
 
           .prodBriefing {
-            /* background-color: #ff9595; */
-             {
-              /* margin-left: 20px; */
-            }
+            padding-top: 50px;
             top: 120px;
           }
           .prodMainName {
@@ -217,6 +214,7 @@ export default function ProductBriefCard({}) {
             background-color: var(--body, #b9b9b9);
             gap: 12px;
             padding: 8px 78px;
+            flex: 1 0 0;
             cursor: pointer;
             transition: 0.3s;
             &:hover {
@@ -226,20 +224,16 @@ export default function ProductBriefCard({}) {
 
           .buyBtn {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             border-radius: 5px;
             background-color: #18a1ff;
             gap: 12px;
             padding: 8px 78px;
+            flex: 1 0 0;
             cursor: pointer;
             transition: 0.3s;
             &:hover {
               background-color: #000000;
-               {
-                /* 要改顏色！！ */
-              }
-              //TODO
-              //FIXME
             }
           }
         `}

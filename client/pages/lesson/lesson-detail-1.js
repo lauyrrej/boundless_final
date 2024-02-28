@@ -681,10 +681,10 @@ list-style-type: disc;
           justify-content: end;
           gap: 5px;
         }
-        .comment-Like-Icon {
+         .comment-Like-Icon {
           display: flex;
-          -radius: 3px;
-          : 1px solid #1581cc;
+          border-radius: 3px;
+          border: 1px solid #1581cc;
           gap: 4px;
         }
         .more-review {
@@ -722,7 +722,7 @@ list-style-type: disc;
         }
 
 .page-control{
-     margin-top:170px;
+     margin-top:128px;
             
 }
     
