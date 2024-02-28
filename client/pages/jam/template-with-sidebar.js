@@ -78,8 +78,13 @@ export default function Test() {
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
-      <div className="page-shero d-none d-sm-block">
-        <Image src={jamHero} className="object-fit-cover w-100" alt="cover" />
+      <div className="page-hero d-none d-sm-block">
+        <Image
+          src={jamHero}
+          className="object-fit-cover w-100"
+          alt="cover"
+          priority
+        />
       </div>
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
@@ -91,11 +96,7 @@ export default function Test() {
           {/* 用戶資訊 */}
           <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
             <div className="mb-photo-wrapper mb-2">
-              <Image
-                src="/jam/amazingshow.jpg"
-                alt="user photo mb"
-                fill
-              ></Image>
+              <Image src="/jam/amazingshow.jpg" alt="user photo mb" fill />
             </div>
             <div>用戶名稱</div>
           </div>
@@ -210,9 +211,7 @@ export default function Test() {
                         setDataSort(e.target.value)
                       }}
                     >
-                      <option selected value="latest">
-                        新到舊
-                      </option>
+                      <option defaultValue="latest">新到舊</option>
                       <option value="oldest">舊到新</option>
                     </select>
                   </div>
@@ -244,9 +243,7 @@ export default function Test() {
                               setBrandSelect(e.target.value)
                             }}
                           >
-                            <option selected value="all">
-                              全部
-                            </option>
+                            <option defaultValue="all">全部</option>
                             {brandData.map((v) => {
                               return (
                                 <option key={v.id} value={v.id}>
@@ -295,7 +292,6 @@ export default function Test() {
                                 >
                                   <label className="form-check-label">
                                     <input
-                                      classname="form-check-input"
                                       type="radio"
                                       name="score"
                                       value={v}

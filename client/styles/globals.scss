@@ -138,12 +138,12 @@ ul {
 }
 
 main {
-  min-height: calc(100svh - 380px);
+  min-height: calc(120svh - 380px);
   padding-bottom: 30px;
   @media screen and (max-width: 576px){
     padding-top: 30px;
     padding-inline: 20px;
-    min-height: calc(100svh - 234px);
+    min-height: calc(120svh - 234px);
   }
 }
 

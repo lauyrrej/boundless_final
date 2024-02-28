@@ -81,8 +81,13 @@ export default function Test() {
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
-      <div className="page-shero d-none d-sm-block">
-        <Image src={jamHero} className="object-fit-cover w-100" alt="cover" />
+      <div className="page-hero d-none d-sm-block">
+        <Image
+          src={jamHero}
+          className="object-fit-cover w-100"
+          alt="cover"
+          priority
+        />
       </div>
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
@@ -94,11 +99,7 @@ export default function Test() {
           {/* 用戶資訊 */}
           <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
             <div className="mb-photo-wrapper mb-2">
-              <Image
-                src="/jam/amazingshow.jpg"
-                alt="user photo mb"
-                fill
-              ></Image>
+              <Image src="/jam/amazingshow.jpg" alt="user photo mb" fill />
             </div>
             <div>用戶名稱</div>
           </div>
@@ -230,6 +231,27 @@ export default function Test() {
                         onClick={stopPropagation}
                         role="presentation"
                       >
+                        {/* 技術程度 */}
+                        <div className="filter-item">
+                          <div
+                            className="filter-title"
+                            style={{ color: '#5a5a5a' }}
+                          >
+                            技術程度
+                          </div>
+                          <select
+                            className="form-select"
+                            value={degree}
+                            name="degree"
+                            onChange={(e) => {
+                              setDegree(e.target.value)
+                            }}
+                          >
+                            <option defaultValue="all">全部</option>
+                            <option value="1">新手練功</option>
+                            <option value="2">老手同樂</option>
+                          </select>
+                        </div>
                         {/* 徵求樂手 */}
                         <div className="filter-item">
                           <div
@@ -282,27 +304,7 @@ export default function Test() {
                             })}
                           </select>
                         </div>
-                        {/* 技術程度 */}
-                        <div className="filter-item">
-                          <div
-                            className="filter-title"
-                            style={{ color: '#5a5a5a' }}
-                          >
-                            技術程度
-                          </div>
-                          <select
-                            className="form-select"
-                            value={degree}
-                            name="degree"
-                            onChange={(e) => {
-                              setDegree(e.target.value)
-                            }}
-                          >
-                            <option defaultValue="all">全部</option>
-                            <option value="1">新手練功</option>
-                            <option value="2">老手同樂</option>
-                          </select>
-                        </div>
+
                         {/* 地區 */}
                         <div className="filter-item">
                           <div
@@ -421,6 +423,9 @@ export default function Test() {
           align-items: flex-start;
           align-content: flex-start;
           align-self: 'stretch';
+          @media screen and (max-width: 576px) {
+            justify-content: center;
+          }
         }
       `}</style>
     </>

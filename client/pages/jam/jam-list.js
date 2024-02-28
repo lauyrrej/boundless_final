@@ -75,8 +75,13 @@ export default function Test() {
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
-      <div className="page-shero d-none d-sm-block">
-        <Image src={jamHero} className="object-fit-cover w-100" alt="cover" />
+      <div className="page-hero d-none d-sm-block">
+        <Image
+          src={jamHero}
+          className="object-fit-cover w-100"
+          alt="cover"
+          priority
+        />
       </div>
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
