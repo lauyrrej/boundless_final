@@ -108,10 +108,9 @@ export default function ProductBriefCard({}) {
               <div className="cart">加入購物車</div>
             </div>
             <div className="buyBtn">
-              <div className="buy">
+              <Link className="buy" href="/cart/checkorder">
                 立即購買
-              </div>
-              <Link to="about">立即購買</Link>
+              </Link>
             </div>
           </div>
         </div>
