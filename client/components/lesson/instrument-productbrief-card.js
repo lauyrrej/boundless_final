@@ -1,6 +1,24 @@
-import React from 'react'
+import { React, useState } from 'react'
+import { FaHeart } from 'react-icons/fa'
+export default function ProductBriefCard() {
+  //收藏按鍵的功能
+  const [colorChange, setcolorChange] = useState(false)
+  const colorToggle = () => {
+    //按按鍵切換狀態
+    setcolorChange(!colorChange)
+  }
+  //數量增減功能
+  const [quantity, setQuantity] = useState(1)
 
-export default function ProductBriefCard({}) {
+  const increaseQuantity = () => {
+    setQuantity(quantity + 1)
+  }
+
+  const decreaseQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1)
+    }
+  }
   return (
     <>
       <div className="Right sticky-top ">
@@ -20,11 +38,16 @@ export default function ProductBriefCard({}) {
           </div>
           <div className="productPrice">
             <div className="price">NT$ 22,680</div>
-            <img
-              loading="lazy"
-              src="https://cdn.builder.io/api/v1/image/assets/TEMP/5ed2e715f1421a33de89ac321d6dcc6d56fbac40a7d43dfe2cf0ecb15054bd3f?"
-              className="likesIcon"
-            />
+            {/* 收藏功能 */}
+            {/* 做好的 onClick*/}
+            <div className="likesIcon icon-container ">
+              <FaHeart
+                className="likesIcon"
+                size="32px"
+                style={{ color: `${colorChange ? 'red' : ''}` }}
+                onClick={colorToggle}
+              />
+            </div>
           </div>
           <div className="Intro">
             小巧的放大器，巨大的音色。
@@ -43,15 +66,24 @@ export default function ProductBriefCard({}) {
             前置放大器閥，並與固態功率放大器耦合。這個小東西發出的聲音深度（和音量）確實令人震驚，橙色的咆哮和咬合聲很豐富。更重要的是，Micro
             Terror 可以與任何 8-16 歐姆音箱一起使用。
           </div>
-
           {/* 數量選擇器 */}
-          <div className="quantitySelector ">
-            <div className="btn decrease-btn">-</div>
-            <div className="quantity">1</div>
-            <div className="btn increase-btn">+</div>
-            <h6 className="ms-4">暫無庫存</h6>
+          {/* 庫存等於0時應該顯示 暫無庫存*/}
+          //TODO
+          <div>
+            {quantity === 0 ? (
+              <h6 className="ms-4 mt-2">暫無庫存</h6>
+            ) : (
+              <div className="quantitySelector">
+                <div className="btn decrease-btn" onClick={decreaseQuantity}>
+                  -
+                </div>
+                <div className="quantity">{quantity}</div>
+                <div className="btn increase-btn" onClick={increaseQuantity}>
+                  +
+                </div>
+              </div>
+            )}
           </div>
-          {/*  */}
           <div className="shoppingBtn">
             <div className="cartBtn">
               <img
@@ -70,9 +102,7 @@ export default function ProductBriefCard({}) {
       <style jsx>
         {`
           .Right {
-             {
-              /* margin-left: 80px; */
-            }
+            padding-top: 80px;
           }
 
           .prodBriefing {
@@ -212,7 +242,6 @@ export default function ProductBriefCard({}) {
             transition: 0.3s;
             &:hover {
               background-color: #000000;
-             
             }
           }
         `}

@@ -211,6 +211,15 @@ header {
   gap: 6px;
   margin-bottom: 24px;
 }
+.breadcrumb-wrapper-ns {
+  color: $secondary;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  gap: 6px;
+  padding-block: 20px 30px;
+  padding-inline: 0;
+}
 
 .search-sidebarBtn {
   @media screen and (max-width: 576px) {
@@ -339,6 +348,8 @@ header {
   font-weight: bold;
   padding-block: 6px;
   align-items: center;
+  user-select: none;
+  cursor: pointer;
 }
 .b-btn-primary {
   background-color: $light-primary;

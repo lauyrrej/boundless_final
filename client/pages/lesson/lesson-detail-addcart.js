@@ -20,8 +20,10 @@ import ProductCard from '@/components/lesson/lesson-productbrief-card'
 
 //試抓資料區
 import Lesson from '@/data/Lesson.json'
+//跳轉頁面
+import Link from 'next/link'
 
-export default function Test() {
+export default function LessonDetailPage() {
   // -------試抓資料區----------
   console.log(Lesson)
 

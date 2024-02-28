@@ -103,25 +103,25 @@ export default function Test() {
             <ImExit size={20} className="ms-2" />
           </div>
         </div>
+        {/* 麵包屑 */}
+        <div
+          className="breadcrumb-wrapper"
+          style={{ paddingBlock: '20px 30px' }}
+        >
+          <ul className="d-flex align-items-center p-0 m-0">
+            <IoHome size={20} />
+            <li style={{ marginLeft: '8px' }}>Let&apos;s JAM!</li>
+            <FaChevronRight />
+            <Link href="/jam/recruit-list">
+              <li style={{ marginLeft: '10px' }}>團員募集</li>
+            </Link>
+
+            <FaChevronRight />
+            <li style={{ marginLeft: '10px' }}>JAM 資訊</li>
+          </ul>
+        </div>
         <div className="row">
           <div className="col-12 col-sm-6">
-            {/* 麵包屑 */}
-            <div
-              className="breadcrumb-wrapper"
-              style={{ paddingBlock: '20px 30px' }}
-            >
-              <ul className="d-flex align-items-center p-0 m-0">
-                <IoHome size={20} />
-                <li style={{ marginLeft: '8px' }}>Let&apos;s JAM!</li>
-                <FaChevronRight />
-                <Link href="/jam/recruit-list">
-                  <li style={{ marginLeft: '10px' }}>團員募集</li>
-                </Link>
-
-                <FaChevronRight />
-                <li style={{ marginLeft: '10px' }}>JAM 資訊</li>
-              </ul>
-            </div>
             {/* 主內容 */}
             <main className="content">
               <div className="Left">
@@ -165,7 +165,7 @@ export default function Test() {
                   {/* 手機版productbrief-card放這 */}
                   <div className="Right-mobile">
                     <div className="prodBriefing  ">
-                      <div className="prodMainName">Logic Pro X 從零開始</div>
+                      <div className="prodMainName">Orange Micro Terror</div>
                       <div className="Rating">
                         <div className="star">
                           <img
@@ -176,10 +176,10 @@ export default function Test() {
                           <div className="ratingNumber">4.9</div>
                           <div className="commentNumber">(10)</div>
                         </div>
-                        <div className="sales">購買人數 50</div>
+                        <div className="sales">已售出 10</div>
                       </div>
                       <div className="productPrice">
-                        <div className="price">NT$ 1,800</div>
+                        <div className="price">NT$ 22,680</div>
                         <div className="likesIcon icon-container ">
                           <FaHeart
                             className="likesIcon"
@@ -196,27 +196,23 @@ export default function Test() {
                         onClick={colorToggle}
                       /> */}
                       </div>
-                      <div className="lengthHomeworkArea">
-                        <div className="lengthhomework">
-                          <img
-                            loading="lazy"
-                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/81a1d10e78e821775737fe4938ae726e8de4a80804b01bdda9876d9f86f9b1bb?"
-                            className="lengthIcon"
-                          />
-                          <div className="lengthHomeworkWord">5小時</div>
-                        </div>
-                        <div className="lengthhomework">
-                          <img
-                            loading="lazy"
-                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/4552b4fc37047176a87577807414005cf8e8466b4ef23329066c1c39e5dad447?"
-                            className="img-10"
-                          />
-                          <div className="lengthHomeworkWord">1份作業</div>
-                        </div>
-                      </div>
-                      <div className="lessonIntro">
-                        Logic Pro
-                        為數位音樂編曲入門的必學軟體，從錄音、編曲到混音一次包辦，帶你認識錄音介面、多重效果器，以及豐富的內建素材庫，是對音樂創作有興趣的你不可錯過的專業音樂編曲課程。
+
+                      <div className="Intro">
+                        小巧的放大器，巨大的音色。
+                        <br />
+                        <br /> Micro Terror是一種全球現象。從最初的 Tiny Terror
+                        中汲取靈感，這個微型怪物將一個閥門前置放大器連接到一個固態輸出部分，以獲得巨大的音調，使其小型框架成為一種嘲弄。
+                        <br />
+                        <br />
+                        Micro Terror 重量不到 1
+                        公斤，可以說是市場上最便攜的放大器頭。與配套的 PPC108
+                        機櫃搭配使用時，Micro Terror 的 Aux
+                        輸入和耳機輸出使其成為完美的練習夥伴，即使是最雜亂的餐具櫃也足夠小。
+                        然而，不要被它的微型足跡所迷惑，因為尺寸是這款放大器唯一的小問題。Micro
+                        Terror 採用高強度鋼外殼，按照與 Terror
+                        系列其他產品相同的高標準製造，配備單個 ECC83 (12AX7)
+                        前置放大器閥，並與固態功率放大器耦合。這個小東西發出的聲音深度（和音量）確實令人震驚，橙色的咆哮和咬合聲很豐富。更重要的是，Micro
+                        Terror 可以與任何 8-16 歐姆音箱一起使用。
                       </div>
                       <div className="shoppingBtn" id="shoppingBtn">
                         <div className="cartBtn">
@@ -224,7 +220,8 @@ export default function Test() {
                             loading="lazy"
                             src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
                             className="cartIcon"
-                          />
+                                                  />
+                                                  //FIXME
                           <div className="cart">加入購物車</div>
                         </div>
                         <div className="buyBtn">
@@ -492,10 +489,10 @@ export default function Test() {
           {/* 手機版card-con */}
           <div className="card-con-mobile row d-flex gy-4">
             <div className="col-6">
-              <CardIns/>
+              <CardIns />
             </div>
             <div className="col-6">
-              <CardIns/>
+              <CardIns />
             </div>
             <div className="col-6">
               <CardIns />
@@ -580,7 +577,6 @@ export default function Test() {
           min-height: calc(100vh);
         }
         .breadcrumb-wrapper {
-          margin-top: 80px;
             cursor: pointer;
             transition: 0.3s;
             &:hover {
@@ -734,7 +730,7 @@ list-style-type: disc;
         }
 
 .page-control{
-     margin-top:140px;
+    
             
 }
     
@@ -763,9 +759,6 @@ list-style-type: disc;
             display:none;
         }
         /* --------------- footer --------------- */
-
-
-
 
 
         {/* -----------RWD-------------*/}
@@ -886,21 +879,6 @@ display:block;
                       .likesIcon :hover {
                         background-color: #ffc0cb;
                       }
-                      .lengthHomeworkArea {
-                        display: flex;
-                      }
-                      .lengthhomework {
-                        justify-content: space-between;
-                        display: flex;
-                        gap: 5px;
-                      }
-
-                      .lengthHomeworkWord {
-                        font-family: Noto Sans TC, sans-serif;
-                        flex-grow: 1;
-                      }
-                      .lessonIntro {
-                      }
 
                       .container{
                         padding-bottom: 95px;
@@ -918,29 +896,30 @@ display:block;
                         left: 0;
                         width: 100%;
                         background-color:white;
-                        padding-top:26px;
-                        padding-bottom:30px;
-                        margin-top:840px;
+                        margin-top:870px;
                         margin-bottom:45px;
                         z-index:1200;
                       }
 
                       .cartBtn {
                         display: flex;
-                        justify-content: space-between;
+                        {/* justify-content: space-between; */}
                         border-radius: 5px;
                         background-color: var(--body, #b9b9b9);
                         gap: 12px;
                         padding: 8px 78px;
+                        flex: 1 0 0;
                       }
-                   
+                   .cart{
+                    line-height: normal;
+                   }
                       .buyBtn {
-                        display: flex;
                         justify-content: space-between;
                         border-radius: 5px;
                         background-color: #18a1ff;
                         gap: 12px;
                         padding: 8px 78px;
+                        flex: 1 0 0;
                       }
                    
                       {/* ---------- */}
