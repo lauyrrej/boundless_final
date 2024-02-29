@@ -85,29 +85,26 @@ export default function Test() {
           </div>
         </div>
         <div className="row">
-          <div className="col-12 col-sm-8">
-            {/* 麵包屑 */}
-            <div
-              className="breadcrumb-wrapper"
-              style={{ paddingBlock: '20px 30px' }}
-            >
-              <ul className="d-flex align-items-center p-0 m-0">
-                <IoHome size={20} />
-                <li style={{ marginLeft: '8px' }}>Let&apos;s JAM!</li>
-                <FaChevronRight />
-                <Link href="/jam/recruit-list">
-                  <li style={{ marginLeft: '10px' }}>團員募集</li>
-                </Link>
+          {/* 麵包屑 */}
+          <div className="breadcrumb-wrapper-ns">
+            <ul className="d-flex align-items-center p-0 m-0">
+              <IoHome size={20} />
+              <li style={{ marginLeft: '8px' }}>Let&apos;s JAM!</li>
+              <FaChevronRight />
+              <Link href="/jam/recruit-list">
+                <li style={{ marginLeft: '10px' }}>團員募集</li>
+              </Link>
 
-                <FaChevronRight />
-                <li style={{ marginLeft: '10px' }}>JAM 資訊</li>
-              </ul>
-            </div>
+              <FaChevronRight />
+              <li style={{ marginLeft: '10px' }}>JAM 資訊</li>
+            </ul>
+          </div>
+          <div className="col-12 col-sm-8">
             {/* 主內容 */}
             <main className="content"></main>
           </div>
 
-          {/*   ----------------------頁面內容  ---------------------- */}
+          {/*   ---------------------- 頁面右側內容  ---------------------- */}
           <div className="d-none d-sm-block col-sm-4 page-control"></div>
         </div>
       </div>

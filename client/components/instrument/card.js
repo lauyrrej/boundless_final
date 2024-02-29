@@ -32,6 +32,7 @@ function InstrumentCard({
           display: flex;
           flex-direction: column;
           padding: 8px;
+          flex: 0 0 50%;
         }
         .product-image-wrapper {
           display: flex;
@@ -78,6 +79,9 @@ function InstrumentCard({
           font-size: 14px;
           font-family: Noto Sans TC, sans-serif;
           margin-top: 46px;
+        }
+        .products-container {
+          flex: 0 0 50%;
         }
       `}</style>
     </article>

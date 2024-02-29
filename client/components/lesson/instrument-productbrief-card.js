@@ -1,9 +1,27 @@
-import React from 'react'
+import { React, useState } from 'react'
+import { FaHeart } from 'react-icons/fa'
+export default function ProductBriefCard() {
+  //收藏按鍵的功能
+  const [colorChange, setcolorChange] = useState(false)
+  const colorToggle = () => {
+    //按按鍵切換狀態
+    setcolorChange(!colorChange)
+  }
+  //數量增減功能
+  const [quantity, setQuantity] = useState(1)
 
-export default function ProductBriefCard({}) {
+  const increaseQuantity = () => {
+    setQuantity(quantity + 1)
+  }
+
+  const decreaseQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1)
+    }
+  }
   return (
     <>
-      <div className="col-sm-6 Right sticky-top ">
+      <div className="Right sticky-top ">
         <div className="prodBriefing sticky-top ">
           <div className="prodMainName">Orange Micro Terror</div>
           <div className="Rating">
@@ -20,11 +38,16 @@ export default function ProductBriefCard({}) {
           </div>
           <div className="productPrice">
             <div className="price">NT$ 22,680</div>
-            <img
-              loading="lazy"
-              src="https://cdn.builder.io/api/v1/image/assets/TEMP/5ed2e715f1421a33de89ac321d6dcc6d56fbac40a7d43dfe2cf0ecb15054bd3f?"
-              className="likesIcon"
-            />
+            {/* 收藏功能 */}
+            {/* 做好的 onClick*/}
+            <div className="likesIcon icon-container ">
+              <FaHeart
+                className="likesIcon"
+                size="32px"
+                style={{ color: `${colorChange ? 'red' : ''}` }}
+                onClick={colorToggle}
+              />
+            </div>
           </div>
           <div className="Intro">
             小巧的放大器，巨大的音色。
@@ -43,37 +66,24 @@ export default function ProductBriefCard({}) {
             前置放大器閥，並與固態功率放大器耦合。這個小東西發出的聲音深度（和音量）確實令人震驚，橙色的咆哮和咬合聲很豐富。更重要的是，Micro
             Terror 可以與任何 8-16 歐姆音箱一起使用。
           </div>
-          //FIXME
           {/* 數量選擇器 */}
-          <div className="quantity-selector">
-            <div class="btn-and-quantity-wrap">
-              <div className="btn-and-quantity">
-                <div className="spinner">
-                  <span className="btn minus" data-id="2721888517"></span>
-                  <input
-                    type="text"
-                    id="updates_2721888517"
-                    name="quantity"
-                    value="1"
-                    className="quantity-selector"
-                  />
-                  <input
-                    type="hidden"
-                    id="product_id"
-                    name="product_id"
-                    value="2721888517"
-                  />
-                  <span className="q">Qty.</span>
-                  <span className="btn plus" data-id="2721888517"></span>
+          {/* 庫存等於0時應該顯示 暫無庫存*/}
+          //TODO
+          <div>
+            {quantity === 0 ? (
+              <h6 className="ms-4 mt-2">暫無庫存</h6>
+            ) : (
+              <div className="quantitySelector">
+                <div className="btn decrease-btn" onClick={decreaseQuantity}>
+                  -
                 </div>
-                <div id="AddToCart" quickbeam="add-to-cart">
-                  <span id="AddToCartText">Add to Cart</span>
+                <div className="quantity">{quantity}</div>
+                <div className="btn increase-btn" onClick={increaseQuantity}>
+                  +
                 </div>
               </div>
-            </div>
+            )}
           </div>
-          <h6>暫無庫存</h6>
-          {/*  */}
           <div className="shoppingBtn">
             <div className="cartBtn">
               <img
@@ -92,14 +102,12 @@ export default function ProductBriefCard({}) {
       <style jsx>
         {`
           .Right {
-             {
-              /* margin-left: 80px; */
-            }
+            padding-top: 80px;
           }
 
           .prodBriefing {
             /* background-color: #ff9595; */
-            margin-left: 110px;
+            margin-left: 45px;
             top: 120px;
           }
           .prodMainName {
@@ -173,24 +181,36 @@ export default function ProductBriefCard({}) {
             margin: auto 0;
             padding: 0 7px;
           }
-          .lengthHomeworkArea {
+          .quantitySelector {
             display: flex;
+            align-items: center;
+            margin-top: 20px;
           }
-          .lengthhomework {
-            justify-content: space-between;
+          .decrease-btn {
+            height: 40px;
+            width: 40px;
+            border-radius: 5px 0px 0px 5px;
+            border: 1px solid var(--body, #b9b9b9);
+          }
+          .quantity {
             display: flex;
-            gap: 5px;
+            width: 78px;
+            height: 40px;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid var(--body, #b9b9b9);
           }
-
-          .lengthHomeworkWord {
-            font-family: Noto Sans TC, sans-serif;
-            flex-grow: 1;
+          .increase-btn {
+            color: white;
+            height: 40px;
+            width: 40px;
+            border-radius: 0px 5px 5px 0px;
+            background: var(--body, #b9b9b9);
           }
-
           .shoppingBtn {
             display: flex;
             margin-top: 20px;
-            justify-content: space-evenly;
+            justify-content: space-between;
             gap: 12px;
             font-size: 16px;
             color: var(--white, #fff);
@@ -203,14 +223,26 @@ export default function ProductBriefCard({}) {
             background-color: var(--body, #b9b9b9);
             gap: 12px;
             padding: 8px 78px;
+            flex: 1 0 0;
+            cursor: pointer;
+            transition: 0.3s;
+            &:hover {
+              background-color: #000000;
+            }
           }
           .buyBtn {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             border-radius: 5px;
             background-color: #18a1ff;
             gap: 12px;
             padding: 8px 78px;
+            flex: 1 0 0;
+            cursor: pointer;
+            transition: 0.3s;
+            &:hover {
+              background-color: #000000;
+            }
           }
         `}
       </style>
