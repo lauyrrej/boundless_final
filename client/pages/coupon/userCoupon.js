@@ -9,6 +9,8 @@ import { FaChevronRight } from 'react-icons/fa6'
 import { IoIosSearch } from 'react-icons/io'
 import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
+// user
+import avatar from '@/public/user/Meiyuyu.jpg'
 // coupon
 import styles from '@/pages/coupon/userCoupon.module.scss'
 import Coupon from '@/components/coupon/coupon.js'
@@ -32,15 +34,32 @@ export default function Test() {
   return (
     <>
       <Navbar />
-      <div
+      {/*<div
         className="hero d-none d-sm-block"
         style={{ paddingTop: '60px' }}
-      ></div>
+      ></div>*/}
       <div className="container">
         <div className="row">
           {/* sidebar */}
           <div className="sidebar-wrapper d-none d-sm-block  col-sm-2">
             <div className="sidebar">
+              <div className="sidebar-user-info">
+                <div className="sidebar-user-info-imgBox">
+                  <Image
+                    style={{ width: 100, height: 100, resizeMode: 'cover' }}
+                    src={avatar}
+                    alt="user photo mb"
+                  ></Image>
+                </div>
+                <div className="sidebar-user-info-text">
+                  <div className="sidebar-user-info-name">棉悠悠</div>
+                  <div className="sidebar-user-info-band">幻獸帕魯</div>
+                </div>
+                {/* 更換大頭貼的功能暫定併回會員資訊 故不再sidebar顯示 */}
+                {/* <div className="sidebar-user-info-Camera-img">
+                  <Image src={avatar} alt="user photo mb" fill></Image>
+                </div> */}
+              </div>
               <ul className="d-flex flex-column">
                 {sidebarData.map((item, index) => {
                   return (
@@ -183,6 +202,56 @@ export default function Test() {
       </div>
       <Footer />
       <style jsx>{`
+        /* -------------------user sidebar-------------------- */
+        .sidebar-user-info {
+          display: flex;
+          padding: 0px 12px;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+          align-self: stretch;
+
+          /* position: relative; */
+
+          .sidebar-user-info-imgBox {
+            width: 100px;
+            height: 100px;
+            border-radius: 100px;
+            background: url(<path-to-image>),
+              lightgray -26.448px -3.114px / 132.653% 100% no-repeat;
+          }
+          .sidebar-user-info-text {
+            display: flex;
+            width: 100px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+            color: var(--dark, #1d1d1d);
+            text-align: center;
+
+            /* h5 */
+            font-family: 'Noto Sans TC';
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            .sidebar-user-info-band {
+              margin-bottom: 20px;
+            }
+          }
+
+          .sidebar-user-info-Camera-img {
+            width: 30px;
+            height: 30px;
+            position: absolute;
+            left: 85px;
+            top: 70px;
+            fill: var(--light-gray, #cfcfcf);
+          }
+        }
+
+        /* -------------------user sidebar-------------------- */
+
          {
           /* // 全站配色 colors
           $primary: #1581cc;
