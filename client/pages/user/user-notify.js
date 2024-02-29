@@ -4,6 +4,8 @@ import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
 import jamHero from '@/assets/jam-hero.png'
+import avatar from '@/public/user/Meiyuyu.jpg'
+
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
@@ -27,7 +29,16 @@ export default function Test() {
   }
   // ----------------------假資料  ----------------------
   // sidebar假資料
-  const sidebarData = ['吉他', '貝斯', '鍵盤樂器', '打擊樂器']
+  const sidebarData = [
+    '會員資訊',
+    '我的樂團',
+    '我的訂單',
+    '我的文章',
+    '我的收藏',
+    '我的優惠券 ',
+    '我的課程',
+    '我的訊息',
+  ]
 
   // 資料排序
   const [dataSort, setDataSort] = useState('latest')
@@ -78,12 +89,13 @@ export default function Test() {
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
-      <div
+      {/* 先把HEROSECTION隱藏 */}
+      {/* <div
         className="page-shero d-none d-sm-block"
         style={{ paddingTop: '60px' }}
       >
         <Image src={jamHero} className="object-fit-cover w-100" alt="cover" />
-      </div>
+      </div> */}
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
         <div
@@ -130,6 +142,23 @@ export default function Test() {
           {/* sidebar */}
           <div className="sidebar-wrapper d-none d-sm-block col-sm-2">
             <div className="sidebar">
+              <div className="sidebar-user-info">
+                <div className="sidebar-user-info-imgBox">
+                  <Image
+                    style={{ width: 100, height: 100, resizeMode: 'cover' }}
+                    src={avatar}
+                    alt="user photo mb"
+                  ></Image>
+                </div>
+                <div className="sidebar-user-info-text">
+                  <div className="sidebar-user-info-name">棉悠悠</div>
+                  <div className="sidebar-user-info-band">幻獸帕魯</div>
+                </div>
+                {/* 更換大頭貼的功能暫定併回會員資訊 故不再sidebar顯示 */}
+                {/* <div className="sidebar-user-info-Camera-img">
+                  <Image src={avatar} alt="user photo mb" fill></Image>
+                </div> */}
+              </div>
               <ul className="d-flex flex-column">
                 {sidebarData.map((item, index) => {
                   return (
@@ -171,12 +200,12 @@ export default function Test() {
             {/*  ---------------------- 頂部功能列  ---------------------- */}
             <div className="top-function-container">
               {/*  ---------------------- 麵包屑  ---------------------- */}
-              <div className="breadcrumb-wrapper">
+              <div className="breadcrumb-wrapper-ns">
                 <ul className="d-flex align-items-center p-0 m-0">
                   <IoHome size={20} />
-                  <li style={{ marginLeft: '8px' }}>Let&apos;s JAM!</li>
+                  <li style={{ marginLeft: '8px' }}>會員中心</li>
                   <FaChevronRight />
-                  <li style={{ marginLeft: '10px' }}>團員募集</li>
+                  <li style={{ marginLeft: '10px' }}>我的通知</li>
                 </ul>
               </div>
 
@@ -220,7 +249,7 @@ export default function Test() {
                     </select>
                   </div>
                   {/*  ---------------------- 條件篩選  ---------------------- */}
-                  <form className="d-flex align-items-center  position-relative">
+                  <form className="d-flex align-items-center position-relative">
                     <div
                       className="filter-text d-flex align-items-center me-sm-4"
                       role="presentation"
@@ -382,13 +411,331 @@ export default function Test() {
               </div>
             </div>
             {/* 主內容 */}
-            <main className="content"></main>
+            <main className="content">
+              <div className="container custom-container">
+                <div className="row">
+                  <div
+                    className="col-sm-10 col-12"
+                    style={{
+                      backgroundColor: 'rgb(255, 255, 255)',
+                    }}
+                  >
+                    <div className="user-content col-12">
+                      <div className="user-content-top">
+                        <div className="user-title-userInfo">我的訊息</div>
+                      </div>
+
+                      <div className="user-notifyList ">
+                        <div className="user-notifyList-item d-flex row mb-2">
+                          <div className=" col-sm-auto col-12 ">
+                            <div
+                              className=" user-notifyList-item-notifyLabel"
+                              htmlFor="user-notifyList-item-content"
+                            >
+                              那些在買七弦吉他前，需要注意的調 Tone 撇步！
+                            </div>
+                          </div>
+
+                          <div className="user-notifyList-item-type col-sm-4 col-12">
+                            <span className="user-notifyList-item-message">
+                              有新的留言！
+                            </span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10分鐘前
+                          </div>
+                        </div>
+                        <hr />
+
+                        {/* ----------------重複內容 測試-------------------- */}
+                        <div className="user-notifyList-item d-flex row mb-2">
+                          <div className=" col-sm-auto col-12 ">
+                            <div
+                              className=" user-notifyList-item-notifyLabel"
+                              htmlFor="user-notifyList-item-content"
+                            >
+                              那些在買七弦吉他前，需要注意的調 Tone 撇步！
+                            </div>
+                          </div>
+
+                          <div className="user-notifyList-item-type col-sm-4 col-12">
+                            <span className="user-notifyList-item-message">
+                              有新的留言！
+                            </span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10分鐘前
+                          </div>
+                        </div>
+                        <hr />
+                        <div className="user-notifyList-item d-flex row mb-2">
+                          <div className=" col-sm-auto col-12 ">
+                            <div
+                              className=" user-notifyList-item-notifyLabel"
+                              htmlFor="user-notifyList-item-content"
+                            >
+                              那些在買七弦吉他前，需要注意的調 Tone 撇步！
+                            </div>
+                          </div>
+
+                          <div className="user-notifyList-item-type col-sm-4 col-12">
+                            <span className="user-notifyList-item-message">
+                              有新的留言！
+                            </span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10分鐘前
+                          </div>
+                        </div>
+                        <hr />
+                        <div className="user-notifyList-item d-flex row mb-2">
+                          <div className=" col-sm-auto col-12 ">
+                            <div
+                              className=" user-notifyList-item-notifyLabel"
+                              htmlFor="user-notifyList-item-content"
+                            >
+                              那些在買七弦吉他前，需要注意的調 Tone 撇步！
+                            </div>
+                          </div>
+
+                          <div className="user-notifyList-item-type col-sm-4 col-12">
+                            <span className="user-notifyList-item-message">
+                              有新的留言！
+                            </span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10分鐘前
+                          </div>
+                        </div>
+                        <hr />
+                        <div className="user-notifyList-item d-flex row mb-2">
+                          <div className=" col-sm-auto col-12 ">
+                            <div
+                              className=" user-notifyList-item-notifyLabel"
+                              htmlFor="user-notifyList-item-content"
+                            >
+                              那些在買七弦吉他前，需要注意的調 Tone 撇步！
+                            </div>
+                          </div>
+
+                          <div className="user-notifyList-item-type col-sm-4 col-12">
+                            <span className="user-notifyList-item-message">
+                              有新的留言！
+                            </span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10分鐘前
+                          </div>
+                        </div>
+                        <hr />
+                        <div className="user-notifyList-item d-flex row mb-2">
+                          <div className=" col-sm-auto col-12 ">
+                            <div
+                              className=" user-notifyList-item-notifyLabel"
+                              htmlFor="user-notifyList-item-content"
+                            >
+                              那些在買七弦吉他前，需要注意的調 Tone 撇步！
+                            </div>
+                          </div>
+
+                          <div className="user-notifyList-item-type col-sm-4 col-12">
+                            <span className="user-notifyList-item-message">
+                              有新的留言！
+                            </span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10分鐘前
+                          </div>
+                        </div>
+                        <hr />
+                        {/* ----------------重複內容 測試-------------------- */}
+                      </div>
+
+                      <div className="user-orderList-pagination">
+                        <p>待放分頁元件 注意class</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </main>
           </div>
         </div>
       </div>
       <Footer />
 
-      <style jsx>{``}</style>
+      <style jsx>{`
+        /* -------------------user sidebar-------------------- */
+        .sidebar-user-info {
+          display: flex;
+          padding: 0px 12px;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+          align-self: stretch;
+
+          /* position: relative; */
+
+          .sidebar-user-info-imgBox {
+            width: 100px;
+            height: 100px;
+            border-radius: 100px;
+            background: url(<path-to-image>),
+              lightgray -26.448px -3.114px / 132.653% 100% no-repeat;
+          }
+          .sidebar-user-info-text {
+            display: flex;
+            width: 100px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+            color: var(--dark, #1d1d1d);
+            text-align: center;
+
+            /* h5 */
+            font-family: 'Noto Sans TC';
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            .sidebar-user-info-band {
+              margin-bottom: 20px;
+            }
+          }
+
+          .sidebar-user-info-Camera-img {
+            width: 30px;
+            height: 30px;
+            position: absolute;
+            left: 85px;
+            top: 70px;
+            fill: var(--light-gray, #cfcfcf);
+          }
+        }
+
+        /* -------------------user sidebar-------------------- */
+        /* --------------- user-contect-notify--------------- */
+        hr {
+          margin: 10px;
+        }
+        .custom-container {
+          padding: 0;
+          color: #000;
+
+          & p {
+            font-family: 'Noto Sans TC';
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            overflow: hidden;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            color: #000;
+            text-overflow: ellipsis;
+          }
+          & h5 {
+            font-family: 'Noto Sans TC';
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            color: var(--primary-deep, #124365);
+          }
+
+          .user-orderList-pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            align-self: stretch;
+          }
+        }
+
+        .user-content {
+          display: flex;
+          width: 1070px;
+          padding: 20px 10px;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 20px;
+          border-radius: 5px;
+          background: var(--gray-30, rgba(185, 185, 185, 0.3));
+
+          .user-content-top {
+            display: flex;
+            align-items: flex-start;
+            align-self: stretch;
+            color: var(--primary-deep, #124365);
+            text-align: center;
+            justify-content: space-between;
+            /* h3 */
+            font-family: 'Noto Sans TC';
+            font-size: 28px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: normal;
+
+            .user-notify-newBtn {
+              display: none;
+            }
+          }
+          /*----------------------notify css----------------------- */
+          .user-notifyList {
+            width: 100%;
+          }
+
+          .user-notifyList-item {
+            align-items: center;
+            padding-left: 25px;
+            margin-inline: auto;
+            /*height: 60px; */
+
+            .user-notifyList-item-notifyLabel {
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 1;
+              overflow: hidden;
+            }
+            .user-notifyList-item-type {
+              /*text-align: end;*/
+            }
+            .user-notifyList-item-message {
+              color: var(--primary-deep, #124365);
+            }
+          }
+
+          /*----------------------notify css----------------------- */
+
+          .user-orderList-pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            align-self: stretch;
+          }
+        }
+
+        /* RWD讓SIDEBAR消失 測試用記得刪 */
+        @media screen and (max-width: 576px) {
+          body {
+            padding-inline: 20px;
+          }
+
+          .custom-container {
+            overflow: hidden;
+
+            .user-content {
+              width: 390px;
+              padding: 10px;
+              overflow: hidden;
+            }
+          }
+
+          .user-content {
+            .user-notifyList-item {
+              padding-left: 0px;
+              font-size: 20px;
+
+              .user-notifyList-item-notifyLabel {
+                -webkit-line-clamp: 2;
+              }
+
+              .user-notifyList-item-type {
+                font-size: 16px;
+              }
+            }
+          }
+        }
+        /* RWD讓SIDEBAR消失 測試用記得刪 */
+      `}</style>
     </>
   )
 }
