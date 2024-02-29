@@ -1,156 +1,625 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <title>Boundless</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
 
-<head>
-  <title>Boundless</title>
-  <!-- Required meta tags -->
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- Bootstrap CSS v5.2.1 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
 
-  <!-- Bootstrap CSS v5.2.1 -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <!-- google字體 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <!-- google字體 -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap"
-    rel="stylesheet" />
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-    :root {
-      --primary: #1581cc;
-      --light-primary: #18a1ff;
-      --deep-primary: #124365;
-      --dark: #1d1d1d;
-      --secondary: #5a5a5a;
-      --body: #b9b9b9;
-      --yellow: #faad14;
-      --red: #ec3f3f;
-    }
-
-    body {
-      font-family: "Noto Sans TC", sans-serif;
-
-      & ul {
-        list-style: none;
-        margin: 0;
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      :root {
+        --primary: #1581cc;
+        --light-primary: #18a1ff;
+        --deep-primary: #124365;
+        --dark: #1d1d1d;
+        --secondary: #5a5a5a;
+        --body: #b9b9b9;
+        --yellow: #faad14;
+        --red: #ec3f3f;
       }
 
-      & a {
-        text-decoration: none;
-      }
-    }
+      body {
+        font-family: 'Noto Sans TC', sans-serif;
 
-    /* --------------- header & navbar --------------- */
-    header {
-      background-color: var(--primary);
-      height: 60px;
-      padding: 10px 35px;
-      .logo {
-        max-width: 180px;
-      }
-      .logo-mb {
-        max-width: 30px;
+        & ul {
+          list-style: none;
+          margin: 0;
+        }
+
+        & a {
+          text-decoration: none;
+        }
       }
 
-      @media screen and (max-width:576px){
-        padding-inline: 20px;
+      /* --------------- header & navbar --------------- */
+      header {
+        background-color: var(--primary);
+        height: 60px;
+        padding: 10px 35px;
+        .logo {
+          max-width: 180px;
+        }
+        .logo-mb {
+          max-width: 30px;
+        }
+
+        @media screen and (max-width: 576px) {
+          padding-inline: 20px;
+        }
       }
-    }
 
-    nav{
-      flex: 1;
-      max-width: 660px;
-    }
-
-    nav a{
-      display: block;
-      padding: 5px 12px;
-      border-radius: 10px;
-      color: #fff;
-      font-size: 20px;
-      font-weight: 500;
-      &:hover{
-        color: var(--deep-primary);
-        background-color: #fff;
+      nav {
+        flex: 1;
+        max-width: 660px;
       }
-    }
 
-    .navbar-mb {
-      color: #fff;
-    }
+      nav a {
+        display: block;
+        padding: 5px 12px;
+        border-radius: 10px;
+        color: #fff;
+        font-size: 20px;
+        font-weight: 500;
+        &:hover {
+          color: var(--deep-primary);
+          background-color: #fff;
+        }
+      }
 
-    /* --------------- container --------------- */
-    .container {
-      min-height: calc(100vh);
-    }
+      .navbar-mb {
+        color: #fff;
+      }
 
-    /* --------------- footer --------------- */
-    footer {
-      background-color: #000;
-      color: #fff;
-      width: 100%;
-      height: 45px;
-      font-size: 16px;
-    }
-  </style>
-</head>
+      /* --------------- container --------------- */
+      .container {
+        min-height: calc(100vh);
+      }
 
-<body>
-  <!-- header 頂部導覽列 -->
-  <header class="w-100 sticky-top d-flex justify-content-between align-items-center">
-    <a href=""><img class="logo d-none d-sm-block" src="logo.svg" alt="" /></a>
-    <a href=""><img class="logo-mb d-sm-none" src="logo_mb.svg" alt="" /></a>
+      /* --------------- footer --------------- */
+      footer {
+        background-color: #000;
+        color: #fff;
+        width: 100%;
+        height: 45px;
+        font-size: 16px;
+      }
 
-    <nav>
-      <ul class="navbar d-none d-sm-flex justify-content-between flex-row">
-        <li><a href="">探索課程</a></li>
-        <li><a href="">樂器商城</a></li>
-        <li><a href="">Let's JAM!</a></li>
-        <li><a href="">樂友論壇</a></li>
-        <li class="ms-3">
-          <a href=""><i class="fa-solid fa-cart-shopping fa-lg"></i></a>
-        </li>
-        <li><a href="">登入/註冊</a></li>
-      </ul>
-      <!-- 手機toogle navbar -->
-      <div class="navbar-mb d-sm-none d-flex justify-content-end align-items-center">
-        <a href="" class="p-0 me-3"><i class="fa-solid fa-cart-shopping fa-xl"></i></a>
-        <i class="fa-solid fa-bars fa-2xl ms-3"></i>
+      /* --------------- user-contect-order--------------- */
+
+      /* RWD讓SIDEBAR消失 測試用記得刪 */
+      @media screen and (max-width: 576px) {
+        body{
+          /* padding-inline: 20px; */
+        max-width: 430px;
+        }
+        
+        .side {
+          display: none;
+        }
+      }
+      /* RWD讓SIDEBAR消失 測試用記得刪 */
+
+      .user-content {
+        display: flex;
+        /* width: 1100px; */
+        padding: 20px 10px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+        border-radius: 5px;
+        background: var(--gray-30, rgba(185, 185, 185, 0.3));
+
+        
+
+        .user-content-top {
+        display: flex;
+        align-items: flex-start;
+        align-self: stretch;
+        color: var(--primary-deep, #124365);
+        text-align: center;
+        /* h3 */
+        font-family: 'Noto Sans TC';
+        font-size: 28px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+      }
+
+      .user-order-item-instrument {
+        padding-left: 25px;
+        display: flex;
+        width: 1050px;
+        height: 250px;
+        align-items: center;
+        gap: 20px;
+        border-bottom: 1px solid var(--body, #b9b9b9);
+        
+
+        .user-order-item-instrument-leftSide {
+          /* padding-left: 25px; */
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          gap: 10px;
+
+          .user-order-item-instrument-leftSide-img {
+            display: flex;
+            width: 150px;
+            height: 150px;
+            align-items: flex-start;
+            gap: 10px;
+            border-radius: 10px;
+            border: 1px solid var(--body, #b9b9b9);
+            background: #fff;
+          }
+
+          .user-order-item-instrument-leftSide-btn {
+            display: flex;
+            padding: 3px 15px;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            border-radius: 5px;
+            background: var(--primary, #1581cc);
+          }
+        }
+
+        .user-order-item-instrument-detail {
+          padding-left: 25px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: flex-start;
+          /* gap: 30px; */
+          flex: 1 0 0;
+
+          .user-order-item-instrument-detail-row{
+            
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            align-self: stretch;
+
+            .user-order-item-instrument-detail-row-col-productName{
+              width: 700px;
+              padding: 0px 20px 5px 0px;
+              font-size: 20px;
+              
+              & span{
+                font-family: "Noto Sans TC";
+                font-style: normal;
+                font-weight: 400;
+                line-height: normal;
+                color: var(--primary-deep, #124365);
+              }
+            }
+
+
+            .user-order-item-instrument-detail-row-col{
+              width: 200px;
+              display: flex;
+              padding: 0px 20px 5px 0px;
+              align-items: center;
+
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 2;
+              overflow: hidden;
+              
+              text-overflow: ellipsis;
+
+              & p{
+                font-family: "Noto Sans TC";
+              font-size: 16px;
+              font-style: normal;
+              font-weight: 400;
+              line-height: normal;
+              overflow: hidden;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 2;
+              color: #000;
+              text-overflow: ellipsis;
+              }
+              
+
+              & h5{
+                font-family: "Noto Sans TC";
+                font-size: 20px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: normal;
+                color: var(--primary-deep, #124365);
+              }
+
+              
+            }
+
+
+            .user-order-item-instrument-detail-row-col-address{
+                width: 800px;
+                & h5{
+                font-family: "Noto Sans TC";
+                font-size: 20px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: normal;
+                color: var(--primary-deep, #124365);
+              } 
+              }
+            }
+              
+            
+          }
+
+          
+        }
+
+      .user-order-item-lesson {
+      padding-left: 25px;
+      display: flex;
+      width: 1050px;
+      height: 250px;
+      align-items: center;
+      gap: 20px;
+      border-bottom: 1px solid var(--body, #b9b9b9);
+
+      .user-order-item-lesson-leftSide {
+        /* padding-left: 25px; */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+
+        .user-order-item-lesson-leftSide-img {
+          display: flex;
+          width: 150px;
+          height: 150px;
+          align-items: flex-start;
+          gap: 10px;
+          border-radius: 10px;
+          border: 1px solid var(--body, #b9b9b9);
+          background: #fff;
+        }
+
+        .user-order-item-lesson-leftSide-btn {
+          display: flex;
+          padding: 3px 15px;
+          justify-content: center;
+          align-items: center;
+          gap: 10px;
+          border-radius: 5px;
+          background: var(--primary, #1581cc);
+        }
+      }
+
+      .user-order-item-lesson-detail {
+        padding-left: 25px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        /* gap: 30px; */
+        flex: 1 0 0;
+
+        .user-order-item-lesson-detail-row{
+          
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          align-self: stretch;
+
+          .user-order-item-lesson-detail-row-col-productName{
+            width: 700px;
+            padding: 0px 20px 5px 0px;
+            font-size: 20px;
+            
+            & span{
+              font-family: "Noto Sans TC";
+              font-style: normal;
+              font-weight: 400;
+              line-height: normal;
+              color: var(--primary-deep, #124365);
+            }
+          }
+
+
+          .user-order-item-lesson-detail-row-col{
+            width: 200px;
+            display: flex;
+            padding: 0px 20px 5px 0px;
+            align-items: center;
+
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+            
+            text-overflow: ellipsis;
+
+            & p{
+              font-family: "Noto Sans TC";
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            overflow: hidden;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            color: #000;
+            text-overflow: ellipsis;
+            }
+            
+
+            & h5{
+              font-family: "Noto Sans TC";
+              font-size: 20px;
+              font-style: normal;
+              font-weight: 400;
+              line-height: normal;
+              color: var(--primary-deep, #124365);
+            }
+
+            
+          }
+
+
+          
+          }
+            
+          
+        }
+
+        
+      }
+
+      .user-orderList-pagination{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        align-self: stretch;
+      }
+
+      }
+
+      
+      
+    </style>
+  </head>
+
+  <body>
+    <!-- header 頂部導覽列 -->
+    <header
+      class="w-100 sticky-top d-flex justify-content-between align-items-center"
+    >
+      <a href=""
+        ><img class="logo d-none d-sm-block" src="logo.svg" alt=""
+      /></a>
+      <a href=""><img class="logo-mb d-sm-none" src="logo_mb.svg" alt="" /></a>
+
+      <nav>
+        <ul class="navbar d-none d-sm-flex justify-content-between flex-row">
+          <li><a href="">探索課程</a></li>
+          <li><a href="">樂器商城</a></li>
+          <li><a href="">Let's JAM!</a></li>
+          <li><a href="">樂友論壇</a></li>
+          <li class="ms-3">
+            <a href=""><i class="fa-solid fa-cart-shopping fa-lg"></i></a>
+          </li>
+          <li><a href="">登入/註冊</a></li>
+        </ul>
+        <!-- 手機toogle navbar -->
+        <div
+          class="navbar-mb d-sm-none d-flex justify-content-end align-items-center"
+        >
+          <a href="" class="p-0 me-3"
+            ><i class="fa-solid fa-cart-shopping fa-xl"></i
+          ></a>
+          <i class="fa-solid fa-bars fa-2xl ms-3"></i>
+        </div>
+      </nav>
+    </header>
+    <!-- End header -->
+
+    <!-- contnet -->
+    <div class="container">
+      <div class="row">
+        <div
+          class="col-sm-2 side"
+          style="background-color: rgb(255, 156, 156); height: 100vh"
+        ></div>
+        <div
+          class="col-sm-10 row"
+          style="background-color: rgb(255, 255, 255); height: 100vh"
+        >
+          <div class="user-content col-12">
+            <div class="user-content-top">
+              <div class="user-title-userInfo">我的訂單</div>
+            </div>
+
+            <div class="user-orderList">
+              <div class="user-order-item-instrument">
+                <div class="user-order-item-instrument-leftSide">
+                  <div class="user-order-item-instrument-leftSide-img">
+                    <img src="" alt="" />
+                  </div>
+
+                  <div
+                    class="user-order-item-instrument-leftSide-btn btn btn-primary"
+                  >
+                    退貨
+                  </div>
+                </div>
+
+                <div class="user-order-item-instrument-detail">
+
+                  <div class="user-order-item-instrument-detail-row">
+                    <div class="user-order-item-instrument-detail-row-col-productName">
+                      <p><span>商品名稱：</span> YBH_621S X 1</p>
+                    </div>
+
+
+                  </div>
+
+                  <div class="user-order-item-instrument-detail-row">
+
+                    <div class="user-order-item-instrument-detail-row-col">
+                      <h5>訂單編號</h5>
+                      <p>31700023464729</p>
+                    </div>
+
+                    <div class="user-order-item-instrument-detail-row-col">
+                      <h5>購買日期</h5>
+                      <p>2024/01/14</p>
+
+                    </div>
+
+                    <div class="user-order-item-instrument-detail-row-col ">
+                      <h5>付款金額</h5>
+                      <p>$ 72000</p>
+
+                    </div>
+                  </div>
+
+                  <div class="user-order-item-instrument-detail-row">
+
+                    <div class="user-order-item-instrument-detail-row-col">
+                      <h5>付款方式</h5>
+                      <p>信用卡</p>
+                    </div>
+
+                    <div class="user-order-item-instrument-detail-row-col">
+                      <h5>商品狀態</h5>
+                      <p>配送完成</p>
+
+                    </div>
+
+                    <div class="user-order-item-instrument-detail-row-col-address">
+                      <h5>配送地址</h5>
+                      <p>320桃園市中壢區新生路二段421號</p>
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="user-order-item-lesson">
+                <div class="user-order-item-lesson-leftSide">
+                  <div class="user-order-item-lesson-leftSide-img">
+                    <img src="" alt="" />
+                  </div>
+
+                  <div
+                    class="user-order-item-lesson-leftSide-btn btn btn-primary"
+                  >
+                    修改訂單
+                  </div>
+                </div>
+
+                <div class="user-order-item-lesson-detail">
+
+                  <div class="user-order-item-lesson-detail-row">
+                    <div class="user-order-item-lesson-detail-row-col-productName">
+                      <p><span>商品名稱：</span> 上課</p>
+                    </div>
+
+
+                  </div>
+
+                  <div class="user-order-item-lesson-detail-row">
+
+                    <div class="user-order-item-lesson-detail-row-col">
+                      <h5>訂單編號</h5>
+                      <p>31700023464729</p>
+                    </div>
+
+                    <div class="user-order-item-lesson-detail-row-col">
+                      <h5>購買日期</h5>
+                      <p>2024/01/14</p>
+
+                    </div>
+
+                    <div class="user-order-item-lesson-detail-row-col ">
+                      <h5>付款金額</h5>
+                      <p>$ 72000</p>
+
+                    </div>
+                  </div>
+
+                  <div class="user-order-item-lesson-detail-row">
+
+                    <div class="user-order-item-lesson-detail-row-col">
+                      <h5>付款方式</h5>
+                      <p>信用卡</p>
+                    </div>
+
+                    
+                  </div>
+
+                </div>
+              </div>
+
+              
+            </div>
+
+            <div class="user-orderList-pagination">
+              待放分頁元件 注意class
+            </div>
+
+
+          </div>
+        </div>
       </div>
-    </nav>
-  </header>
-  <!-- End header -->
-
-  <!-- contnet -->
-  <div class="container">
-    <div class="row">
-      <div class="col-sm-2" style="background-color: rgb(255, 156, 156); height: 100vh;"></div>
-      <div class="col-sm-10" style="background-color: rgb(195, 195, 195); height: 100vh;">
-      內容</div>
     </div>
-  </div>
-  <!-- End content -->
+    <!-- End content -->
 
-  <footer class="d-flex align-items-center justify-content-center">
-    Copyright © 2023 Boundless. All rights reserved.
-  </footer>
+    <footer class="d-flex align-items-center justify-content-center">
+      Copyright © 2023 Boundless. All rights reserved.
+    </footer>
 
-  <!-- Bootstrap JavaScript Libraries -->
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-    crossorigin="anonymous"></script>
+    <!-- Bootstrap JavaScript Libraries -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
-    integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
-    crossorigin="anonymous"></script>
-</body>
-
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+      integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+      crossorigin="anonymous"
+    ></script>
+  </body>
 </html>
