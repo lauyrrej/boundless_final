@@ -251,53 +251,38 @@ export default function Test() {
                       <IoIosSearch size={25} />
                     </div>
                   </div> */}
-                  {/* 類型分類 */}
+                  {/* 分頁 */}
                   <div className="d-none d-sm-block">
                     <nav aria-label="breadcrumb sort d-flex justify-content-between align-items-center">
                       <ol className="breadcrumb  breadcrumb-line">
-                        <li className="h5 coupon-breadcrumb breadcrumb-item couponBTN">
+                        <li className="h5 breadcrumb-item coupon-breadcrumb couponBTN">
                           <a href="#" className="active">
                             全部
                           </a>
                         </li>
                         <li
-                          className="h5 coupon-breadcrumb coupon-breadcrumb-item breadcrumb-item"
+                          className="h5 breadcrumb-item coupon-breadcrumb coupon-breadcrumb-item"
                           aria-current="page"
                         >
-                          <a
-                            href="#"
-                            className="coupon-breadcrumb coupon-breadcrumb-item"
-                          >
-                            樂器
-                          </a>
+                          <a href="#">樂器</a>
                         </li>
                         <li
-                          className="h5 coupon-breadcrumb coupon-breadcrumb-item breadcrumb-item"
+                          className="h5 breadcrumb-item coupon-breadcrumb coupon-breadcrumb-item"
                           aria-current="page"
                         >
-                          <a
-                            href="#"
-                            className="coupon-breadcrumb coupon-breadcrumb-item"
-                          >
-                            課程
-                          </a>
+                          <a href="#">課程</a>
                         </li>
                         <li
-                          className="h5 coupon-breadcrumb coupon-breadcrumb-item breadcrumb-item"
+                          className="h5 breadcrumb-item coupon-breadcrumb coupon-breadcrumb-item"
                           aria-current="page"
                         >
-                          <a
-                            href="#"
-                            className="coupon-breadcrumb coupon-breadcrumb-item"
-                          >
-                            已使用
-                          </a>
+                          <a href="#">已使用</a>
                         </li>
                       </ol>
                     </nav>
                   </div>
                 </div>
-
+                {/* 分頁RWD */}
                 <div className="filter-sort d-flex justify-content-between">
                   <div className="sort-mb d-block d-sm-none">
                     <select
@@ -316,7 +301,7 @@ export default function Test() {
                       <option value="oldest">已使用</option>
                     </select>
                   </div>
-                  {/*條件篩選*/}
+                  {/*篩選*/}
                   <form className="d-flex align-items-center position-relative">
                     <div
                       className="filter-text d-flex align-items-center me-sm-4"
@@ -332,10 +317,10 @@ export default function Test() {
                         onClick={stopPropagation}
                         role="presentation"
                       >
-                        {/*條件篩選*/}
+                        {/*條件篩選 無法d-none d-sm-block */}
                         <div className="filter-item">
                           <div className="filter-title">折扣幅度</div>
-                          <div className="filter-title">選擇品牌</div>
+                          <div className=" filter-title">選擇品牌</div>
                         </div>
                         {/* 品牌 */}
                         <div className="filter-item">
