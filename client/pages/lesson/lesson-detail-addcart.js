@@ -64,15 +64,15 @@ export default function LessonDetailPage() {
   }
   // ----------------------加入右上角購物車的功能  ----------------------
 
-    //FIXME
-    // ReactDOM.render(
-    //   <React.StrictMode>
-    //     <ToastProvider>
-    //       <App />
-    //     </ToastProvider>
-    //   </React.StrictMode>,
-    //   document.getElementById('root')
-    // )
+  //FIXME
+  // ReactDOM.render(
+  //   <React.StrictMode>
+  //     <ToastProvider>
+  //       <App />
+  //     </ToastProvider>
+  //   </React.StrictMode>,
+  //   document.getElementById('root')
+  // )
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
@@ -143,8 +143,7 @@ export default function LessonDetailPage() {
                 {/* prodBriefingArea */}
                 <div className="prodBriefingArea d-flex">
                   <img
-                    src="/課程與師資/lesson_img/lesson_001.jpeg"
-                    alt=""
+                    src={`/課程與師資/lesson_img/${Lesson[0].img}`}
                     className="prodImg"
                   />
                 </div>
@@ -227,7 +226,7 @@ export default function LessonDetailPage() {
                     <div className="detail-title">單元一覽</div>
                     <div className="list">
                       <ul>
-                        {Lesson.lesson[0].outline}
+                        {Lesson[0].outline}
                         <li>Logic Pro X 從零開始</li>
                         <li>正式課程開始</li>
                         <li>編曲Arrange</li>
@@ -243,7 +242,7 @@ export default function LessonDetailPage() {
                     <div className="detail-title">適合對象</div>
                     <div className="list">
                       <ul>
-                        {Lesson.lesson[0].suitable}
+                        {Lesson[0].suitable}
                         <li>本身熱愛音樂，但從沒機會學習過。</li>
                         <li>
                           會至少一樣樂器，但不會音樂製作，想學錄音編曲和混音。
@@ -257,7 +256,7 @@ export default function LessonDetailPage() {
                     <div className="detail-title">你將學到</div>
                     <div className="list">
                       <ol>
-                        {Lesson.lesson[0].achievement}
+                        {Lesson[0].achievement}
                         <li>
                           用Logic Pro X 獨立完成一首或更多首屬於自己的音樂。
                         </li>
