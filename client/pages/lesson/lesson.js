@@ -46,12 +46,13 @@ export default function Test() {
 
   // ----------------------條件篩選  ----------------------
   const [filterVisible, setFilterVisible] = useState(false)
+
   useEffect(() => {
     document.addEventListener('click', () => {
       setFilterVisible(false)
-    })
-  }, [])
-  // 阻止事件冒泡造成篩選表單關閉
+    }) //鉤子在組件渲染完成後註冊了一個點擊事件監聽器。當點擊事件發生時，會調用一個函數來將 filterVisible 設置為 false，從而隱藏篩選表單。
+  }, []) //這個事件監聽器只會在組件首次渲染時被註冊，並且在組件卸載時被清理。
+  // 阻止事件冒泡造成篩選表單關閉//防止觸發組件外部的點擊事件，進而導致篩選表單被關閉。
   const stopPropagation = (e) => {
     e.stopPropagation()
   }
@@ -374,10 +375,10 @@ export default function Test() {
             </div>
             {/* 主內容 */}
             <div className="content">
-              <div className="row row-cols-1 row-cols-md-4">
+              <div className="lesson-card-group">
                 {arr.map((i, index) => {
                   return (
-                    <div key={index} className="col mb-4">
+                    <div key={index} className="mb-4">
                       {isSmallScreen ? <Cardrwd /> : <Card />}
                     </div>
                   )
@@ -390,7 +391,7 @@ export default function Test() {
       <Footer />
 
       <style jsx>{`
-        .content {
+        .lesson-card-group {
           display: flex;
           flex-wrap: wrap;
           gap: 20px;

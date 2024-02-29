@@ -120,10 +120,7 @@ export default function LessonDetailPage() {
         </div>
         <div className="row">
           {/* 麵包屑 */}
-          <div
-            className="breadcrumb-wrapper"
-            style={{ paddingBlock: '20px 30px' }}
-          >
+          <div className="breadcrumb-wrapper" style={{ paddingBlock: '20px' }}>
             <ul className="d-flex align-items-center p-0 m-0">
               <IoHome size={20} />
               <li style={{ marginLeft: '8px' }}>Let&apos;s JAM!</li>
@@ -149,7 +146,7 @@ export default function LessonDetailPage() {
                 </div>
                 {/* 手機版productbrief-card放這 */}
                 <div className="Right-mobile">
-                  <div className="prodBriefing  ">
+                  <div className="prodBriefing sticky-top">
                     <div className="prodMainName">Logic Pro X 從零開始</div>
                     <div className="Rating">
                       <div className="star">
@@ -203,19 +200,6 @@ export default function LessonDetailPage() {
                       Logic Pro
                       為數位音樂編曲入門的必學軟體，從錄音、編曲到混音一次包辦，帶你認識錄音介面、多重效果器，以及豐富的內建素材庫，是對音樂創作有興趣的你不可錯過的專業音樂編曲課程。
                     </div>
-                    <div className="shoppingBtn" id="shoppingBtn">
-                      <div className="cartBtn">
-                        <img
-                          loading="lazy"
-                          src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
-                          className="cartIcon"
-                        />
-                        <div className="cart">加入購物車</div>
-                      </div>
-                      <div className="buyBtn">
-                        <div className="buy">立即購買</div>
-                      </div>
-                    </div>
                   </div>
                 </div>
 
@@ -238,7 +222,7 @@ export default function LessonDetailPage() {
                     </div>
                   </div>
                   {/* 適合對象 */}
-                  <div className="suitable  -secondary mt40">
+                  <div className="suitable   mt40">
                     <div className="detail-title">適合對象</div>
                     <div className="list">
                       <ul>
@@ -534,6 +518,19 @@ export default function LessonDetailPage() {
           </div>
         </div>
       </div>
+      <div className="shoppingBtn sticky-top" id="shoppingBtn">
+        <div className="cartBtn">
+          <img
+            loading="lazy"
+            src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
+            className="cartIcon"
+          />
+          <div className="cart">加入購物車</div>
+        </div>
+        <div className="buyBtn">
+          <div className="buy">立即購買</div>
+        </div>
+      </div>
       <Footer />
 
       <style jsx>{`
@@ -763,6 +760,9 @@ list-style-type: disc;
         .you-will-like-mobile{
             display:none;
         }
+        .shoppingBtn{
+             display:none;
+        }
         /* --------------- footer --------------- */
 
 
@@ -772,8 +772,8 @@ list-style-type: disc;
         {/* -----------RWD-------------*/}
         @media screen and (max-width:576px) {
 
-  .Left {
-
+  .breadcrumb-wrapper {
+margin-bottom:0px;
   }
   .Right{
     display:none;
@@ -892,7 +892,7 @@ display:block;
                       }
 
                       .container{
-                        padding-bottom: 95px;
+                        padding-bottom: 20px;
                       }
                       .shoppingBtn {
                         display: flex;
@@ -902,34 +902,36 @@ display:block;
                         font-size: 16px;
                         color: var(--white, #fff);
                         font-weight: 700;
-                         position: fixed;
+                         position: sticky-bottom;
                          bottom: 0;
                         left: 0;
                         width: 100%;
                         background-color:white;
-                        padding-top:26px;
-                        padding-bottom:30px;
-                        margin-top:840px;
-                        margin-bottom:45px;
+                        padding-bottom:5px;
+                        padding: 26px 0px 30px 0px;
                         z-index:1200;
                       }
 
                       .cartBtn {
                         display: flex;
-                        justify-content: space-between;
+                        justify-content: center;
                         border-radius: 5px;
                         background-color: var(--body, #b9b9b9);
                         gap: 12px;
-                        padding: 8px 78px;
+                        padding: 8px ;
+                        margin-left:5px;
+                        width: 100%;
                       }
                    
                       .buyBtn {
                         display: flex;
-                        justify-content: space-between;
+                        justify-content: center;
                         border-radius: 5px;
                         background-color: #18a1ff;
                         gap: 12px;
-                        padding: 8px 78px;
+                        padding: 8px ;
+                        margin-right:5px;
+                        width: 100%;
                       }
                    
                       {/* ---------- */}
