@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
-import Card from '@/components/lesson/lesson-card'
-import Cardrwd from '@/components/lesson/lesson-card-rwd'
+//試抓資料區
+import Card from '@/components/lesson/lesson-card-data'
+import Cardrwd from '@/components/lesson/lesson-card-rwd-data'
+
 import Link from 'next/link'
 import Image from 'next/image'
 import lessonHero from '@/assets/lesson-hero.jpg'
