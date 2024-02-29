@@ -83,6 +83,7 @@ export default function Test() {
       <Footer />
 
       <style jsx>{`
+      
         .cart-process {
           padding: 8px 40px;
         }
