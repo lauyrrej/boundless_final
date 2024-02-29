@@ -19,8 +19,8 @@ export default function CourseCard() {
           />
         </section>
         <section className="course-details">
-          <h3 className="course-title">樂理指法一把抓 - 鋼琴基礎從零開始</h3>
-          <p className="course-instructor">by XX老師</p>
+          <div className="course-title">樂理指法一把抓 - 鋼琴基礎從零開始</div>
+          <div className="course-instructor">by XX老師</div>
           <div className="course-info">
             <div className="rating">
               <img
@@ -29,8 +29,8 @@ export default function CourseCard() {
                 alt="Rating stars"
                 className="rating-stars"
               />
-              <span className="rating-value">4.9</span>
-              <span className="review-count">(3)</span>
+              <div className="rating-value">4.9</div>
+              <div className="review-count">(3)</div>
             </div>
             <div>
               <span className="duration-time">
@@ -100,7 +100,9 @@ export default function CourseCard() {
         .course-details {
           display: flex;
           flex-direction: column;
-          color: #1d1d1d;
+           {
+            {/* /* color: #1d1d1d; */ */}
+          }
           font-weight: 400;
           padding: 14px 12px;
         }

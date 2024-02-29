@@ -374,7 +374,7 @@ export default function Test() {
             </div>
             {/* 主內容 */}
             <div className="content">
-              <div className="row row-cols-1 row-cols-md-4">
+              <div className="lesson-card-group">
                 {arr.map((i, index) => {
                   return (
                     <div key={index} className="col mb-4">
@@ -397,6 +397,11 @@ export default function Test() {
           align-items: flex-start;
           align-content: flex-start;
           align-self: 'stretch';
+        }
+        .lesson-card-group {
+          justify-content: space-between;
+          margin-block: 30px;
+          gap: 10px;
         }
       `}</style>
     </>

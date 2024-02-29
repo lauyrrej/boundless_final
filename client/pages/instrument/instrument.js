@@ -456,14 +456,12 @@ export default function Test() {
         .instrument-card-group {
           display: flex;
           justify-content: space-between;
-          margin-inline: 20px;
           margin-block: 30px;
           gap: 10px;
           flex-wrap: wrap;
         }
 
         .hot-instrument-card {
-          margin-inline: 20px;
           margin-block: 30px;
           gap: 10px;
           display: flex;
