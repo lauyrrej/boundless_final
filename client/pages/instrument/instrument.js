@@ -85,7 +85,7 @@ export default function Test() {
     setSales(false)
   }
 
-  let arr = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+  let arr = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
   return (
     <>
@@ -421,17 +421,27 @@ export default function Test() {
             </div>
 
             {/* 主內容 */}
-            <div className="content">
-              <div className="instrument-card row row-cols-1 row-cols-md-4">
+            <main className="content">
+              <div className="hot-instrument">
+                <h4 className="text-primary ms-4">熱銷商品</h4>
+                <div className="hot-instrument-card">
+                  <Card />
+                  <Card />
+                  <Card />
+                  <Card />
+                </div>
+              </div>
+              <hr />
+              <div className="instrument-card-group">
                 {arr.map((i, index) => {
                   return (
-                    <div key={index} className="col mb-4">
+                    <div key={index} className="">
                       <Card />
                     </div>
                   )
                 })}
               </div>
-            </div>
+            </main>
           </div>
         </div>
       </div>
@@ -440,15 +450,23 @@ export default function Test() {
 
       <style jsx>{`
         .content {
+          display: block;
+        }
+        .instrument-card-group {
           display: flex;
+          justify-content: space-between;
+          margin-inline: 20px;
+          margin-block: 30px;
+          gap: 10px;
+          flex-wrap: wrap;
         }
-        .instrument-card {
-          background-color: #ffcccc;
-        }
-        @media screen and (max-width: 576px) {
-          .instrument-card .col {
-            flex: 0 0 50%; /* 使用 flexbox 將每一列的寬度設為 50% */
-          }
+
+        .hot-instrument-card {
+          margin-inline: 20px;
+          margin-block: 30px;
+          gap: 10px;
+          display: flex;
+          justify-content: space-between;
         }
       `}</style>
     </>

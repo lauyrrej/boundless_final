@@ -12,7 +12,6 @@ import { FaSortAmountDown } from 'react-icons/fa'
 import { CgClose } from 'react-icons/cg'
 import ArticleCard from '@/components/article/article-card'
 
-
 export default function ArticleList() {
   const [filterVisible, setFilterVisible] = useState(false)
   useEffect(() => {
@@ -134,8 +133,9 @@ export default function ArticleList() {
                       條件篩選
                       <FaFilter size={13} />
                       <div
-                        className={`filter ${filterVisible === false ? 'd-none' : 'd-block'
-                          }`}
+                        className={`filter ${
+                          filterVisible === false ? 'd-none' : 'd-block'
+                        }`}
                         onClick={stopPropagation}
                         role="presentation"
                       >
@@ -264,7 +264,7 @@ export default function ArticleList() {
             </div>
             {/* 主內容 */}
             <main className="content me-2">
-              <h4 className='text-primary pt-2'>熱門文章</h4>
+              <h4 className="text-primary pt-2">熱門文章</h4>
               <div className="content-pop d-flex flex-wrap justify-content-between pe-2">
                 <ArticleCard />
                 <ArticleCard />
@@ -284,7 +284,7 @@ export default function ArticleList() {
                 <ArticleCard />
                 <ArticleCard />
               </div>
-              <div className='d-flex justify-content-center pb-3'>
+              <div className="d-flex justify-content-center pb-3">
                 <nav aria-label="Page navigation example">
                   <ul className="pagination">
                     <li className="page-item">

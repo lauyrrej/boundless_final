@@ -26,13 +26,16 @@ function InstrumentCard({
       <style jsx>{`
         .product-card {
           max-width: 240px;
+          width: 100%;
           border-radius: 5px;
           border: 1px solid #b9b9b9;
           background-color: #fff;
           display: flex;
           flex-direction: column;
           padding: 8px;
-          flex: 0 0 50%;
+          @media screen and (max-width: 576px) {
+            width: 190px;
+          }
         }
         .product-image-wrapper {
           display: flex;
