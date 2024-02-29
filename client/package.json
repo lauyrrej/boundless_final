@@ -16,6 +16,7 @@
     "@ckeditor/ckeditor5-react": "^6.2.0",
     "axios": "^1.4.0",
     "bootstrap": "^5.3.3",
+    "json": "^11.0.0",
     "lodash": "^4.17.21",
     "next": "^14.1.0",
     "prop-types": "^15.8.1",
@@ -29,6 +30,8 @@
     "sweetalert2-react-content": "^5.0.7",
     "validator": "^13.9.0",
     "next/link": "https://github.com/next/link.git"
+    "server": "^1.0.38",
+    "validator": "^13.9.0"
   },
   "devDependencies": {
     "eslint": "^8",
