@@ -20,8 +20,11 @@ import ProductCard from '@/components/lesson/lesson-productbrief-card'
 
 //試抓資料區
 import Lesson from '@/data/Lesson.json'
-//跳轉頁面
-import Link from 'next/link'
+//toast
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { ToastProvider } from 'react-hot-toast'
+import App from '@/pages/_app'
 
 export default function LessonDetailPage() {
   // -------試抓資料區----------
@@ -61,6 +64,15 @@ export default function LessonDetailPage() {
   }
   // ----------------------加入右上角購物車的功能  ----------------------
 
+    //FIXME
+    // ReactDOM.render(
+    //   <React.StrictMode>
+    //     <ToastProvider>
+    //       <App />
+    //     </ToastProvider>
+    //   </React.StrictMode>,
+    //   document.getElementById('root')
+    // )
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />

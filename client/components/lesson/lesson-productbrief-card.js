@@ -262,8 +262,9 @@ export default function ProductBriefCard({}) {
             }
           }
           .toaster {
-            margin-top: 300px;
-            position: sticky-top;
+            position: fixed;
+            top: 500px; /* 距離頂部的距離 */
+            z-index: 100000; /* 設置較高的 z-index */
           }
         `}
       </style>
