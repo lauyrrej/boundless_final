@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
-import Card from '@/components/lesson/lesson-card'
-import Cardrwd from '@/components/lesson/lesson-card-rwd'
 import Link from 'next/link'
 import Image from 'next/image'
-import lessonHero from '@/assets/lesson-hero.jpg'
+import jamHero from '@/assets/jam-hero.png'
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
@@ -16,22 +14,6 @@ import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 
 export default function Test() {
-  // 在電腦版或手機版時
-  const [isSmallScreen, setIsSmallScreen] = useState(false)
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsSmallScreen(window.innerWidth <= 576)
-    }
-
-    handleResize()
-
-    window.addEventListener('resize', handleResize)
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [])
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -43,11 +25,16 @@ export default function Test() {
   const sidebarToggle = () => {
     setShowSidebar(!showSidebar)
   }
+  // ----------------------假資料  ----------------------
+  // sidebar假資料
+  const sidebarData = ['吉他', '貝斯', '鍵盤樂器', '打擊樂器']
 
+  // 資料排序
+  const [dataSort, setDataSort] = useState('latest')
   // ----------------------條件篩選  ----------------------
   const [filterVisible, setFilterVisible] = useState(false)
   useEffect(() => {
-    document.addEventListener('click', () => {
+    document.addEventListener('click', (e) => {
       setFilterVisible(false)
     })
   }, [])
@@ -60,46 +47,42 @@ export default function Test() {
     stopPropagation(e)
     setFilterVisible(!filterVisible)
   }
-  // ----------------------假資料  ----------------------
-  // 資料排序
-  const [dataSort, setDataSort] = useState('upToDate')
-  // sidebar假資料
-  const sidebarData = [
-    '歌唱技巧',
-    '樂器演奏',
-    '音樂理論',
-    '詞曲創作',
-    '軟體操作',
-    '活動專區',
+  // filter假資料
+  const brandData = [
+    { id: 1, name: 'YAMAHA' },
+    { id: 2, name: 'Roland' },
+    { id: 3, name: 'Fender' },
+    { id: 4, name: 'Gibson' },
   ]
+  const [brandSelect, setBrandSelect] = useState('all')
+
   const [priceLow, setPriceLow] = useState('')
   const [priceHigh, setPriceHigh] = useState('')
+
   // 課程評價
   const scoreState = ['all', '5', '4', '3']
   const [score, setScore] = useState('all')
 
-  // 促銷課程
+  // 活動促銷
   const [sales, setSales] = useState(false)
 
   // 清除表單內容
   const cleanFilter = () => {
+    setBrandSelect('all')
     setPriceLow('')
     setPriceHigh('')
     setScore('all')
     setSales(false)
   }
 
-  let arr = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
-      <div className="hero d-none d-sm-block">
-        <Image
-          src={lessonHero}
-          className="object-fit-cover w-100"
-          alt="cover"
-        />
+      <div
+        className="page-shero d-none d-sm-block"
+        style={{ paddingTop: '60px' }}
+      >
+        <Image src={jamHero} className="object-fit-cover w-100" alt="cover" />
       </div>
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
@@ -143,15 +126,11 @@ export default function Test() {
             <ImExit size={20} className="ms-2" />
           </div>
         </div>
-
         <div className="row">
           {/* sidebar */}
-          <div className="sidebar-wrapper d-none d-sm-block  col-sm-2">
+          <div className="sidebar-wrapper d-none d-sm-block col-sm-2">
             <div className="sidebar">
               <ul className="d-flex flex-column">
-                <li>
-                  <Link href={'/lesson/all'}>全部</Link>
-                </li>
                 {sidebarData.map((item, index) => {
                   return (
                     <li key={index}>
@@ -163,7 +142,7 @@ export default function Test() {
             </div>
           </div>
 
-          {/* 頁面內容 */}
+          {/*   ----------------------頁面內容  ---------------------- */}
           <div className="col-12 col-sm-10 page-control">
             {/* 手機版sidebar */}
             <div
@@ -179,38 +158,25 @@ export default function Test() {
                   }}
                 />
               </div>
-              <Link href={`/instrument/instrument`} className="sm-item active">
-                全部
+              <Link href={`/jam/recruit-list`} className="sm-item active">
+                團員募集
               </Link>
-              <Link href={`/instrument/instrument`} className="sm-item">
-                歌唱技巧
+              <Link href={`/jam/jam-list`} className="sm-item">
+                活動中的JAM
               </Link>
-              <Link href={`/instrument/instrument`} className="sm-item">
-                樂器演奏
-              </Link>
-              <Link href={`/instrument/instrument`} className="sm-item">
-                音樂理論
-              </Link>
-              <Link href={`/instrument/instrument`} className="sm-item">
-                詞曲創作
-              </Link>
-              <Link href={`/instrument/instrument`} className="sm-item">
-                軟體操作
-              </Link>
-              <Link href={`/instrument/instrument`} className="sm-item">
-                活動專區
+              <Link href={`/jam/Q&A`} className="sm-item">
+                什麼是JAM？
               </Link>
             </div>
-
-            {/* 頂部功能列 */}
+            {/*  ---------------------- 頂部功能列  ---------------------- */}
             <div className="top-function-container">
-              {/* 麵包屑 */}
+              {/*  ---------------------- 麵包屑  ---------------------- */}
               <div className="breadcrumb-wrapper">
                 <ul className="d-flex align-items-center p-0 m-0">
                   <IoHome size={20} />
-                  <li style={{ marginLeft: '8px' }}>探索課程</li>
+                  <li style={{ marginLeft: '8px' }}>會員中心</li>
                   <FaChevronRight />
-                  <li style={{ marginLeft: '10px' }}>線上課程</li>
+                  <li style={{ marginLeft: '10px' }}>我的文章</li>
                 </ul>
               </div>
 
@@ -218,7 +184,7 @@ export default function Test() {
                 {/*  ---------------------- 搜尋欄  ---------------------- */}
                 <div className="search-sidebarBtn">
                   <div
-                    className="d-flex d-sm-none b-btn b-btn-body"
+                    className="d-flex d-sm-none align-items-center b-btn b-btn-body"
                     role="presentation"
                     style={{ paddingInline: '16px' }}
                     onClick={sidebarToggle}
@@ -247,16 +213,14 @@ export default function Test() {
                         setDataSort(e.target.value)
                       }}
                     >
-                      <option selected value="upToDate">
-                        最熱門
+                      <option selected value="latest">
+                        新到舊
                       </option>
-                      <option value="recent">依評價</option>
-                      <option value="recent">依時數</option>
+                      <option value="oldest">舊到新</option>
                     </select>
                   </div>
-
-                  {/* 條件篩選 */}
-                  <form className="d-flex align-items-center  position-relative">
+                  {/*  ---------------------- 條件篩選  ---------------------- */}
+                  <form className="d-flex align-items-center position-relative">
                     <div
                       className="filter-text d-flex align-items-center me-sm-4"
                       role="presentation"
@@ -271,6 +235,30 @@ export default function Test() {
                         onClick={stopPropagation}
                         role="presentation"
                       >
+                        {/* 品牌 */}
+                        <div className="filter-item">
+                          <div className="filter-title">選擇品牌</div>
+                          <select
+                            className="form-select"
+                            aria-label="Default select example"
+                            value={brandSelect}
+                            name="brand"
+                            onChange={(e) => {
+                              setBrandSelect(e.target.value)
+                            }}
+                          >
+                            <option selected value="all">
+                              全部
+                            </option>
+                            {brandData.map((v) => {
+                              return (
+                                <option key={v.id} value={v.id}>
+                                  {v.name}
+                                </option>
+                              )
+                            })}
+                          </select>
+                        </div>
                         {/* 價格區間 */}
                         <div className="filter-item">
                           <div className="filter-title">價格區間</div>
@@ -343,7 +331,10 @@ export default function Test() {
                             </label>
                           </div>
                         </div>
-                        <div className="d-flex justify-content-between gap-2">
+                        <div
+                          className="d-flex justify-content-between gap-2 mt-2"
+                          style={{ paddingInline: '10px' }}
+                        >
                           <div
                             className="filter-btn clean-btn w-100 d-flex justify-content-center"
                             role="presentation"
@@ -358,46 +349,144 @@ export default function Test() {
                       </div>
                     </div>
                   </form>
-                  {/* 資料排序 */}
+                  {/* ---------------------- 資料排序  ---------------------- */}
                   <div className="sort d-none d-sm-flex justify-content-between align-items-center">
                     <div className="d-flex align-items-center">
                       排序
                       <FaSortAmountDown size={14} />
                     </div>
-
-                    <div className="sort-item active">最熱門</div>
-                    <div className="sort-item">依評價</div>
-                    <div className="sort-item">依實數</div>
+                    <div
+                      className={`sort-item ${
+                        dataSort === 'latest' ? 'active' : ''
+                      }`}
+                      role="presentation"
+                      onClick={(e) => {
+                        setDataSort('latest')
+                      }}
+                    >
+                      新到舊
+                    </div>
+                    <div
+                      className={`sort-item ${
+                        dataSort === 'oldest' ? 'active' : ''
+                      }`}
+                      role="presentation"
+                      onClick={(e) => {
+                        setDataSort('oldest')
+                      }}
+                    >
+                      舊到新
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
             {/* 主內容 */}
-            <div className="content">
-              <div className="row row-cols-1 row-cols-md-4">
-                {arr.map((i, index) => {
-                  return (
-                    <div key={index} className="col mb-4">
-                      {isSmallScreen ? <Cardrwd /> : <Card />}
+            <main className="content">
+              <div className="container custom-container">
+                <div className="row">
+                  <div
+                    className="col-sm-10 col-12"
+                    style={{
+                      backgroundColor: 'rgb(255, 255, 255)',
+                    }}
+                  >
+                    <div className="user-content col-12">
+                      <div className="user-content-top">
+                        <div className="user-title-userInfo">我的訂單</div>
+                      </div>
+
+                      <div className="user-orderList-pagination">
+                        <p>待放分頁元件 注意class</p>
+                      </div>
                     </div>
-                  )
-                })}
+                  </div>
+                </div>
               </div>
-            </div>
+            </main>
           </div>
         </div>
       </div>
       <Footer />
 
       <style jsx>{`
-        .content {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 20px;
-          align-items: flex-start;
-          align-content: flex-start;
-          align-self: 'stretch';
+        /* --------------- user-contect-acticle--------------- */
+
+        .custom-container {
+          padding: 0;
+
+          & p {
+            font-family: 'Noto Sans TC';
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            overflow: hidden;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            color: #000;
+            text-overflow: ellipsis;
+          }
+          & h5 {
+            font-family: 'Noto Sans TC';
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            color: var(--primary-deep, #124365);
+          }
+
+          .user-content {
+            display: flex;
+            width: 1070px;
+            padding: 20px 10px;
+            margin: 0;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+            border-radius: 5px;
+            background: var(--gray-30, rgba(185, 185, 185, 0.3));
+          }
+
+          .user-content-top {
+            display: flex;
+            align-items: flex-start;
+            align-self: stretch;
+            color: var(--primary-deep, #124365);
+            text-align: center;
+            /* h3 */
+            font-family: 'Noto Sans TC';
+            font-size: 28px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: normal;
+          }
+
+          .user-orderList-pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            align-self: stretch;
+          }
         }
+
+        /*------------- RWD1  ----------- */
+        @media screen and (max-width: 576px) {
+          body {
+            padding-inline: 20px;
+          }
+
+          .custom-container {
+            overflow: hidden;
+
+            .user-content {
+              width: 390px;
+              padding: 10px;
+              overflow: hidden;
+            }
+          }
+        }
+        /*------------- RWD  ----------- */
       `}</style>
     </>
   )
