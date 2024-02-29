@@ -1,0 +1,100 @@
+.row {
+  --primary: #1581cc;
+  --light-primary: #18a1ff;
+  --deep-primary: #124365;
+  --dark: #1d1d1d;
+  --secondary: #5a5a5a;
+  --body: #b9b9b9;
+  --yellow: #faad14;
+  --red: #ec3f3f;
+  --back: rgba(185, 185, 185, 0.3);
+}
+.formTitle {
+  color: var(--deep-primary);
+  font-size: 24px;
+  font-weight: bold;
+}
+.jamForm {
+  background-color: var(--back);
+  padding: 16px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  @media screen and (max-width: 576px) {
+    margin-inline: 20px;
+    margin-bottom: 20px;
+  }
+}
+
+.formItem {
+  padding-inline: 16px;
+  @media screen and (max-width: 576px) {
+    gap: 8px;
+  }
+}
+.itemTitle {
+  padding: 0;
+  color: var(--deep-primary);
+  font-size: 18px;
+  font-weight: bold;
+}
+.itemInputWrapper {
+    padding: 0;
+}
+.itemInput {
+    width: 50%;
+    @media screen and (max-width: 576px) {
+        width: 100%;
+    }
+}
+.selectGroup {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    @media screen and (max-width: 576px) {
+        width: 100%;
+        gap: 4px;
+    }
+}
+.plusBtn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 8px;
+}
+.textArea {
+    resize: none;
+    height: 120px;
+    @media screen and (max-width: 576px) {
+        height: 210px;
+    }
+}
+// ----------------- 發起須知 -----------------
+.formRulesWrapper {
+  padding-inline: 20px 0;
+  padding-bottom: 30px;
+  @media screen and (max-width: 576px) {
+    padding-inline: 0;
+  }
+}
+.formRules {
+  background-color: var(--back);
+  padding: 16px;
+  border-radius: 10px;
+  @media screen and (max-width: 576px) {
+    margin-inline: 20px;
+  }
+}
+.rules {
+    padding-left: 20px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    text-align: justify;
+    color: var(--dark);
+}
+.point {
+    color: var(--primary);
+    font-weight: 500;
+}

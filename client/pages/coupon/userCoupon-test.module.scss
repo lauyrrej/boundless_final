@@ -13,12 +13,8 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  margin-left: 16px;
 }
-.couponItem {
-  width: calc(33.33% - 20px); /* 减去 padding 和 margin 的宽度 */
-  margin-bottom: 20px; /* 设置间距 */
-}
-
 .coupon-rwd {
   @media screen and (min-width: 576px) {
     display: none;
