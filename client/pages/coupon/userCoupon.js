@@ -9,9 +9,10 @@ import { FaChevronRight } from 'react-icons/fa6'
 import { IoIosSearch } from 'react-icons/io'
 import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
-// couponE
-import styles from '@/pages/coupon/userCoupon-test.module.scss'
+// coupon
+import styles from '@/pages/coupon/userCoupon.module.scss'
 import Coupon from '@/components/coupon/coupon.js'
+import Data from '@/data/Coupon.json'
 
 // sidebar假資料
 const sidebarData = [
@@ -27,6 +28,7 @@ const sidebarData = [
 let arr = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
 export default function Test() {
+  console.log(Data)
   return (
     <>
       <Navbar />
@@ -83,7 +85,7 @@ export default function Test() {
               {/* 條件篩選 */}
               <div className="filter-sort d-flex justify-content-between p-3">
                 {/* 麵包屑 */}
-                <div>
+                <div className="d-none d-sm-block">
                   <nav aria-label="breadcrumb sort d-flex justify-content-between align-items-center">
                     <ol className="breadcrumb  breadcrumb-line">
                       <li className="h6 coupon-breadcrumb breadcrumb-item couponBTN">
@@ -115,25 +117,36 @@ export default function Test() {
                       </li>
                     </ol>
                   </nav>
-                  {/*  */}
+                </div>
+                {/* RWD */}
+                <div className="sort-mb d-block d-sm-none">
+                  <select
+                    className="form-select"
+                    aria-label="Default select example"
+                  >
+                    <option value>全部</option>
+                    <option value={1}>樂器</option>
+                    <option value={2}>課程</option>
+                  </select>
                 </div>
                 {/* 資料排序 */}
                 <div className="sort d-flex align-items-center coupon-screen">
-                  <div>
-                    <FaSortAmountDown size={13} />
+                  <div className="d-none d-sm-block">
+                    <FaFilter size={13} />
                     排序 ：
                   </div>
                   <div className="sort-item active">折扣幅度</div>
                   <div className="sort-item">即將到期</div>
+                  <div className="sort-item">已使用</div>
                 </div>
               </div>
               <div className={styles['couponImage']}>
-                {arr.map((i) => {
+                {arr.map((v, i) => {
                   return <Coupon key={i} className={`${styles.couponItem} `} />
                 })}
               </div>
               {/* Pagination */}
-              <div className="d-flex justify-content-center pages">
+              <div className="d-flex justify-content-center pages d-none d-sm-block">
                 <nav aria-label="Page navigation example">
                   <ul className="pagination">
                     <li className="page-item">
@@ -169,12 +182,6 @@ export default function Test() {
         </div>
       </div>
       <Footer />
-      {/* rwd */}
-      <div className="coupon-rwd">
-        <FaSortAmountDown size={13} />
-        排序 ：
-      </div>
-
       <style jsx>{`
          {
           /* // 全站配色 colors
@@ -190,7 +197,6 @@ export default function Test() {
         .breadcrumb-line {
           border-bottom: 1px solid #fff;
         }
-
         .couponBTN {
           border-radius: 10px 10px 0 0;
           background-color: #fff;
@@ -219,6 +225,23 @@ export default function Test() {
             }
           }
         }
+        /*------------- RWD  ----------- */
+        @media screen and (max-width: 576px) {
+          body {
+            padding-inline: 20px;
+          }
+
+          .custom-container {
+            overflow: hidden;
+
+            .user-content {
+              width: 390px;
+              padding: 10px;
+              overflow: hidden;
+            }
+          }
+        }
+        /*------------- RWD  ----------- */
       `}</style>
     </>
   )
