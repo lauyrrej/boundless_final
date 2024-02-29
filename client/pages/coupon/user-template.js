@@ -470,7 +470,7 @@ export default function Test() {
           }
         }
 
-        /*------------- RWD  ----------- */
+        /*------------- RWD1  ----------- */
         @media screen and (max-width: 576px) {
           body {
             padding-inline: 20px;
