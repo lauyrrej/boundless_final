@@ -90,7 +90,7 @@ export default function Test() {
           <div className="col-12">
             {/* 麵包屑 */}
             <div
-              className="breadcrumb-wrapper"
+              className="breadcrumb-wrapper-ns"
               style={{ paddingBlock: '20px 30px' }}
             >
               <ul className="d-flex align-items-center p-0 m-0">
@@ -502,6 +502,7 @@ export default function Test() {
               gap: 30px;
               align-self: stretch;
               flex-wrap: wrap;
+              color: #000;
 
               .user-homePage-content-right-article-card {
                 display: flex;

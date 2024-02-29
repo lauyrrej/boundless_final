@@ -205,7 +205,7 @@ export default function Test() {
                   <IoHome size={20} />
                   <li style={{ marginLeft: '8px' }}>會員中心</li>
                   <FaChevronRight />
-                  <li style={{ marginLeft: '10px' }}>我的訂單</li>
+                  <li style={{ marginLeft: '10px' }}>我的收藏</li>
                 </ul>
               </div>
 
@@ -422,96 +422,27 @@ export default function Test() {
                   >
                     <div className="user-content col-12">
                       <div className="user-content-top">
-                        <div className="user-title-userInfo">我的訂單</div>
+                        <div className="user-title-userInfo">我的課程</div>
                       </div>
-                      <div className="user-orderList">
-                        <div className="user-order-item-instrument">
-                          <div className="user-order-item-instrument-leftSide">
-                            <div className="user-order-item-instrument-leftSide-img">
-                              <img src="" alt="" />
-                            </div>
-                            <div className="user-order-item-instrument-leftSide-btn btn btn-primary">
-                              退貨
-                            </div>
-                          </div>
-                          <div className="user-order-item-instrument-detail">
-                            <div className="user-order-item-instrument-detail-row">
-                              <div className="user-order-item-instrument-detail-row-col-productName">
-                                <p>
-                                  <span>商品名稱：</span> YBH_621S X 1
-                                </p>
-                              </div>
-                            </div>
-                            <div className="user-order-item-instrument-detail-row">
-                              <div className="user-order-item-instrument-detail-row-col">
-                                <h5>訂單編號</h5>
-                                <p>31700023464729</p>
-                              </div>
-                              <div className="user-order-item-instrument-detail-row-col">
-                                <h5>購買日期</h5>
-                                <p>2024/01/14</p>
-                              </div>
-                              <div className="user-order-item-instrument-detail-row-col ">
-                                <h5>付款金額</h5>
-                                <p>$ 72000</p>
-                              </div>
-                            </div>
-                            <div className="user-order-item-instrument-detail-row">
-                              <div className="user-order-item-instrument-detail-row-col">
-                                <h5>付款方式</h5>
-                                <p>信用卡</p>
-                              </div>
-                              <div className="user-order-item-instrument-detail-row-col">
-                                <h5>商品狀態</h5>
-                                <p>配送完成</p>
-                              </div>
-                              <div className="user-order-item-instrument-detail-row-col-address">
-                                <h5>配送地址</h5>
-                                <p>320桃園市中壢區新生路二段421號</p>
-                              </div>
-                            </div>
-                          </div>
+
+                      <div className="user-lesson-cardList">
+                        <div className="user-lesson-cardList-row">
+                          <div>待放課程卡片元件</div>
+                          <div>待放課程卡片元件</div>
+                          <div>待放課程卡片元件</div>
                         </div>
-                        <div className="user-order-item-lesson">
-                          <div className="user-order-item-lesson-leftSide">
-                            <div className="user-order-item-lesson-leftSide-img">
-                              <img src="" alt="" />
-                            </div>
-                            <div className="user-order-item-lesson-leftSide-btn btn btn-primary">
-                              修改訂單
-                            </div>
-                          </div>
-                          <div className="user-order-item-lesson-detail">
-                            <div className="user-order-item-lesson-detail-row">
-                              <div className="user-order-item-lesson-detail-row-col-productName">
-                                <p>
-                                  <span>商品名稱：</span> 上課
-                                </p>
-                              </div>
-                            </div>
-                            <div className="user-order-item-lesson-detail-row">
-                              <div className="user-order-item-lesson-detail-row-col">
-                                <h5>訂單編號</h5>
-                                <p>31700023464729</p>
-                              </div>
-                              <div className="user-order-item-lesson-detail-row-col">
-                                <h5>購買日期</h5>
-                                <p>2024/01/14</p>
-                              </div>
-                              <div className="user-order-item-lesson-detail-row-col ">
-                                <h5>付款金額</h5>
-                                <p>$ 72000</p>
-                              </div>
-                            </div>
-                            <div className="user-order-item-lesson-detail-row">
-                              <div className="user-order-item-lesson-detail-row-col">
-                                <h5>付款方式</h5>
-                                <p>信用卡</p>
-                              </div>
-                            </div>
-                          </div>
+                        <div className="user-lesson-cardList-row">
+                          <div>待放課程卡片元件</div>
+                          <div>待放課程卡片元件</div>
+                          <div>待放課程卡片元件</div>
+                        </div>
+                        <div className="user-lesson-cardList-row">
+                          <div>待放課程卡片元件</div>
+                          <div>待放課程卡片元件</div>
+                          <div>待放課程卡片元件</div>
                         </div>
                       </div>
+
                       <div className="user-orderList-pagination">
                         <p>待放分頁元件 注意class</p>
                       </div>
@@ -575,7 +506,8 @@ export default function Test() {
         }
 
         /* -------------------user sidebar-------------------- */
-        /* --------------- user-contect-order--------------- */
+
+        /* --------------- user-contect-acticle--------------- */
 
         .custom-container {
           padding: 0;
@@ -627,185 +559,19 @@ export default function Test() {
             line-height: normal;
           }
 
-          .user-order-item-instrument {
-            /* padding-left: 25px;*/
+          .user-lesson-cardList {
             display: flex;
-            width: 1050px;
-            height: 250px;
+            flex-direction: column;
             align-items: center;
-            gap: 20px;
-            border-bottom: 1px solid var(--body, #b9b9b9);
-
-            .user-order-item-instrument-leftSide {
-              /* padding-left: 25px; */
+            gap: 30px;
+            align-self: stretch;
+            .user-lesson-cardList-row {
               display: flex;
-              flex-direction: column;
-              justify-content: center;
-              align-items: center;
-              gap: 10px;
-
-              .user-order-item-instrument-leftSide-img {
-                display: flex;
-                width: 150px;
-                height: 150px;
-                align-items: flex-start;
-                gap: 10px;
-                border-radius: 10px;
-                border: 1px solid var(--body, #b9b9b9);
-                background: #fff;
-              }
-
-              .user-order-item-instrument-leftSide-btn {
-                display: flex;
-                padding: 3px 15px;
-                justify-content: center;
-                align-items: center;
-                gap: 10px;
-                border-radius: 5px;
-                background: var(--primary, #1581cc);
-              }
-            }
-
-            .user-order-item-instrument-detail {
-              /*padding-left: 25px; */
-              display: flex;
-              flex-direction: column;
+              padding: 0px 40px;
               justify-content: center;
               align-items: flex-start;
-              /* gap: 30px; */
-              flex: 1 0 0;
-
-              .user-order-item-instrument-detail-row {
-                display: flex;
-                align-items: center;
-                gap: 5px;
-                align-self: stretch;
-
-                .user-order-item-instrument-detail-row-col-productName {
-                  width: 700px;
-                  padding: 0px 20px 5px 0px;
-                  font-size: 20px;
-
-                  & span {
-                    font-family: 'Noto Sans TC';
-                    font-style: normal;
-                    font-weight: 400;
-                    line-height: normal;
-                    color: var(--primary-deep, #124365);
-                  }
-                }
-
-                .user-order-item-instrument-detail-row-col {
-                  width: 200px;
-                  display: flex;
-                  padding: 0px 20px 5px 0px;
-                  align-items: center;
-
-                  display: -webkit-box;
-                  -webkit-box-orient: vertical;
-                  -webkit-line-clamp: 2;
-                  overflow: hidden;
-
-                  text-overflow: ellipsis;
-                }
-
-                .user-order-item-instrument-detail-row-col-address {
-                  width: 800px;
-                  & h5 {
-                    font-family: 'Noto Sans TC';
-                    font-size: 20px;
-                    font-style: normal;
-                    font-weight: 400;
-                    line-height: normal;
-                    color: var(--primary-deep, #124365);
-                  }
-                }
-              }
-            }
-          }
-
-          .user-order-item-lesson {
-            /* padding-left: 25px; */
-            display: flex;
-            width: 1050px;
-            height: 250px;
-            align-items: center;
-            gap: 20px;
-            border-bottom: 1px solid var(--body, #b9b9b9);
-
-            .user-order-item-lesson-leftSide {
-              /* padding-left: 25px; */
-              display: flex;
-              flex-direction: column;
-              justify-content: center;
-              align-items: center;
-              gap: 10px;
-
-              .user-order-item-lesson-leftSide-img {
-                display: flex;
-                width: 150px;
-                height: 150px;
-                align-items: flex-start;
-                gap: 10px;
-                border-radius: 10px;
-                border: 1px solid var(--body, #b9b9b9);
-                background: #fff;
-              }
-
-              .user-order-item-lesson-leftSide-btn {
-                display: flex;
-                padding: 3px 15px;
-                justify-content: center;
-                align-items: center;
-                gap: 10px;
-                border-radius: 5px;
-                background: var(--primary, #1581cc);
-              }
-            }
-
-            .user-order-item-lesson-detail {
-              /*padding-left: 25px;*/
-              display: flex;
-              flex-direction: column;
-              justify-content: center;
-              align-items: flex-start;
-              /* gap: 30px; */
-              flex: 1 0 0;
-
-              .user-order-item-lesson-detail-row {
-                display: flex;
-                align-items: center;
-                gap: 5px;
-                align-self: stretch;
-
-                .user-order-item-lesson-detail-row-col-productName {
-                  width: 700px;
-                  padding: 0px 20px 5px 0px;
-                  font-size: 20px;
-
-                  & span {
-                    font-family: 'Noto Sans TC';
-                    font-style: normal;
-                    font-weight: 400;
-                    line-height: normal;
-                    color: var(--primary-deep, #124365);
-                  }
-                }
-
-                .user-order-item-lesson-detail-row-col {
-                  width: 200px;
-                  display: flex;
-                  padding: 0px 20px 5px 0px;
-                  align-items: center;
-
-                  display: -webkit-box;
-                  -webkit-box-orient: vertical;
-                  -webkit-line-clamp: 2;
-                  overflow: hidden;
-
-                  text-overflow: ellipsis;
-                }
-              }
+              gap: 60px;
+              align-self: stretch;
             }
           }
 
@@ -818,7 +584,7 @@ export default function Test() {
           }
         }
 
-        /* RWD讓SIDEBAR消失 測試用記得刪 */
+        /*------------- RWD  ----------- */
         @media screen and (max-width: 576px) {
           body {
             padding-inline: 20px;
@@ -831,24 +597,25 @@ export default function Test() {
               width: 390px;
               padding: 10px;
               overflow: hidden;
-            }
-            .user-order-item-instrument {
-              width: 370px;
-              overflow: hidden;
-            }
 
-            .user-order-item-instrument-detail-row-col-address {
-              width: 370px;
-              overflow: hidden;
-            }
-
-            .user-order-item-lesson {
-              width: 370px;
-              overflow: hidden;
+              .user-lesson-cardList {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                align-self: stretch;
+                gap: 15px;
+                .user-lesson-cardList-row {
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  gap: 15px;
+                  align-self: stretch;
+                }
+              }
             }
           }
         }
-        /* RWD讓SIDEBAR消失 測試用記得刪 */
+        /*------------- RWD  ----------- */
       `}</style>
     </>
   )

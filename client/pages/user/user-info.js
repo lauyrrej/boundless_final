@@ -4,6 +4,8 @@ import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
 import jamHero from '@/assets/jam-hero.png'
+import avatar from '@/public/user/Meiyuyu.jpg'
+
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
@@ -141,14 +143,21 @@ export default function Test() {
           <div className="sidebar-wrapper d-none d-sm-block col-sm-2">
             <div className="sidebar">
               <div className="sidebar-user-info">
-                <div className="sidebar-user-info-img"></div>
+                <div className="sidebar-user-info-imgBox">
+                  <Image
+                    style={{ width: 100, height: 100, resizeMode: 'cover' }}
+                    src={avatar}
+                    alt="user photo mb"
+                  ></Image>
+                </div>
                 <div className="sidebar-user-info-text">
                   <div className="sidebar-user-info-name">棉悠悠</div>
                   <div className="sidebar-user-info-band">幻獸帕魯</div>
                 </div>
-                <div className="sidebar-user-info-Camera-img">
-                  <Image src={IoHome} alt="user photo mb" fill></Image>
-                </div>
+                {/* 更換大頭貼的功能暫定併回會員資訊 故不再sidebar顯示 */}
+                {/* <div className="sidebar-user-info-Camera-img">
+                  <Image src={avatar} alt="user photo mb" fill></Image>
+                </div> */}
               </div>
               <ul className="d-flex flex-column">
                 {sidebarData.map((item, index) => {
@@ -207,7 +216,7 @@ export default function Test() {
             {/*  ---------------------- 頂部功能列  ---------------------- */}
             <div className="top-function-container">
               {/*  ---------------------- 麵包屑  ---------------------- */}
-              <div className="breadcrumb-wrapper">
+              <div className="breadcrumb-wrapper-ns">
                 <ul className="d-flex align-items-center p-0 m-0">
                   <IoHome size={20} />
                   <li style={{ marginLeft: '8px' }}>會員中心</li>
@@ -226,193 +235,6 @@ export default function Test() {
                     onClick={sidebarToggle}
                   >
                     選單
-                  </div>
-                  <div className="search input-group">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="請輸入關鍵字..."
-                    />
-                    <div className="search-btn btn d-flex justify-content-center align-items-center p-0">
-                      <IoIosSearch size={25} />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="filter-sort d-flex justify-content-between">
-                  <div className="sort-mb d-block d-sm-none">
-                    <select
-                      className="form-select"
-                      value={dataSort}
-                      name="dataSort"
-                      onChange={(e) => {
-                        setDataSort(e.target.value)
-                      }}
-                    >
-                      <option selected value="latest">
-                        新到舊
-                      </option>
-                      <option value="oldest">舊到新</option>
-                    </select>
-                  </div>
-                  {/*  ---------------------- 條件篩選  ---------------------- */}
-                  <form className="d-flex align-items-center position-relative">
-                    <div
-                      className="filter-text d-flex align-items-center me-sm-4"
-                      role="presentation"
-                      onClick={onshow}
-                    >
-                      條件篩選
-                      <FaFilter size={13} />
-                      <div
-                        className={`filter ${
-                          filterVisible === false ? 'd-none' : 'd-block'
-                        }`}
-                        onClick={stopPropagation}
-                        role="presentation"
-                      >
-                        {/* 品牌 */}
-                        <div className="filter-item">
-                          <div className="filter-title">選擇品牌</div>
-                          <select
-                            className="form-select"
-                            aria-label="Default select example"
-                            value={brandSelect}
-                            name="brand"
-                            onChange={(e) => {
-                              setBrandSelect(e.target.value)
-                            }}
-                          >
-                            <option selected value="all">
-                              全部
-                            </option>
-                            {brandData.map((v) => {
-                              return (
-                                <option key={v.id} value={v.id}>
-                                  {v.name}
-                                </option>
-                              )
-                            })}
-                          </select>
-                        </div>
-                        {/* 價格區間 */}
-                        <div className="filter-item">
-                          <div className="filter-title">價格區間</div>
-                          <input
-                            type="number"
-                            className="form-control mb-2"
-                            placeholder="最低價"
-                            name="priceLow"
-                            value={priceLow}
-                            min={0}
-                            max={priceHigh - 1}
-                            onChange={(e) => {
-                              setPriceLow(e.target.value)
-                            }}
-                          />
-                          <input
-                            type="number"
-                            className="form-control"
-                            placeholder="最高價"
-                            name="priceHigh"
-                            value={priceHigh}
-                            min={priceLow + 1}
-                            onChange={(e) => {
-                              setPriceHigh(e.target.value)
-                            }}
-                          />
-                        </div>
-                        {/* 商品評價 */}
-                        <div className="filter-item m-0">
-                          <div className="filter-title">商品評價</div>
-                          <div className="filter-radio-group d-flex flex-wrap justify-content-between">
-                            {scoreState.map((v, i) => {
-                              return (
-                                <div
-                                  className="filter-radio-item form-check p-0 mb-3"
-                                  key={i}
-                                >
-                                  <label className="form-check-label">
-                                    <input
-                                      classname="form-check-input"
-                                      type="radio"
-                                      name="score"
-                                      value={v}
-                                      checked={v === score}
-                                      onChange={(e) => {
-                                        setScore(e.target.value)
-                                      }}
-                                    />
-                                    &nbsp;{v === 'all' ? '全部' : v + '星'}
-                                  </label>
-                                </div>
-                              )
-                            })}
-                          </div>
-                        </div>
-                        {/* 促銷商品 */}
-                        <div className="filter-item">
-                          <div className="form-check">
-                            <label className="form-check-label filter-title mb-0">
-                              <input
-                                className="form-check-input"
-                                type="checkbox"
-                                value={sales}
-                                name="sales"
-                                onChange={() => {
-                                  setSales(!sales)
-                                }}
-                              />{' '}
-                              促銷商品
-                            </label>
-                          </div>
-                        </div>
-                        <div
-                          className="d-flex justify-content-between gap-2 mt-2"
-                          style={{ paddingInline: '10px' }}
-                        >
-                          <div
-                            className="filter-btn clean-btn w-100 d-flex justify-content-center"
-                            role="presentation"
-                            onClick={cleanFilter}
-                          >
-                            清除
-                          </div>
-                          <div className="filter-btn confirm-btn w-100 d-flex justify-content-center">
-                            確認
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-                  {/* ---------------------- 資料排序  ---------------------- */}
-                  <div className="sort d-none d-sm-flex justify-content-between align-items-center">
-                    <div className="d-flex align-items-center">
-                      排序
-                      <FaSortAmountDown size={14} />
-                    </div>
-                    <div
-                      className={`sort-item ${
-                        dataSort === 'latest' ? 'active' : ''
-                      }`}
-                      role="presentation"
-                      onClick={(e) => {
-                        setDataSort('latest')
-                      }}
-                    >
-                      新到舊
-                    </div>
-                    <div
-                      className={`sort-item ${
-                        dataSort === 'oldest' ? 'active' : ''
-                      }`}
-                      role="presentation"
-                      onClick={(e) => {
-                        setDataSort('oldest')
-                      }}
-                    >
-                      舊到新
-                    </div>
                   </div>
                 </div>
               </div>
@@ -582,7 +404,7 @@ export default function Test() {
       <Footer />
 
       <style jsx>{`
-        /* --------------- user-contect-acticle--------------- */
+        /* -------------------user sidebar-------------------- */
         .sidebar-user-info {
           display: flex;
           padding: 0px 12px;
@@ -590,9 +412,10 @@ export default function Test() {
           align-items: flex-start;
           gap: 10px;
           align-self: stretch;
-          position: relative;
 
-          .sidebar-user-info-img {
+          /* position: relative; */
+
+          .sidebar-user-info-imgBox {
             width: 100px;
             height: 100px;
             border-radius: 100px;
@@ -629,8 +452,13 @@ export default function Test() {
           }
         }
 
+        /* -------------------user sidebar-------------------- */
+
+        /* --------------- user-contect-acticle--------------- */
+
         .custom-container {
           padding: 0;
+          color: #000;
 
           & p {
             font-family: 'Noto Sans TC';
@@ -832,7 +660,16 @@ export default function Test() {
               width: 390px;
               padding: 10px;
               overflow: hidden;
-            }
+              margin-bottom:20px;
+
+
+              .user-info-item {           
+                display: block;
+              }
+
+              .user-info-item-info {
+                display: block;
+          }
           }
         }
         /*------------- RWD  ----------- */

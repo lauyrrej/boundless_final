@@ -205,7 +205,7 @@ export default function Test() {
                   <IoHome size={20} />
                   <li style={{ marginLeft: '8px' }}>會員中心</li>
                   <FaChevronRight />
-                  <li style={{ marginLeft: '10px' }}>我的訂單</li>
+                  <li style={{ marginLeft: '10px' }}>我的通知</li>
                 </ul>
               </div>
 
@@ -422,96 +422,123 @@ export default function Test() {
                   >
                     <div className="user-content col-12">
                       <div className="user-content-top">
-                        <div className="user-title-userInfo">我的訂單</div>
+                        <div className="user-title-userInfo">我的訊息</div>
                       </div>
-                      <div className="user-orderList">
-                        <div className="user-order-item-instrument">
-                          <div className="user-order-item-instrument-leftSide">
-                            <div className="user-order-item-instrument-leftSide-img">
-                              <img src="" alt="" />
-                            </div>
-                            <div className="user-order-item-instrument-leftSide-btn btn btn-primary">
-                              退貨
+
+                      <div className="user-notifyList ">
+                        <div className="user-notifyList-item d-flex row mb-2">
+                          <div className=" col-sm-auto col-12 ">
+                            <div
+                              className=" user-notifyList-item-notifyLabel"
+                              htmlFor="user-notifyList-item-content"
+                            >
+                              那些在買七弦吉他前，需要注意的調 Tone 撇步！
                             </div>
                           </div>
-                          <div className="user-order-item-instrument-detail">
-                            <div className="user-order-item-instrument-detail-row">
-                              <div className="user-order-item-instrument-detail-row-col-productName">
-                                <p>
-                                  <span>商品名稱：</span> YBH_621S X 1
-                                </p>
-                              </div>
-                            </div>
-                            <div className="user-order-item-instrument-detail-row">
-                              <div className="user-order-item-instrument-detail-row-col">
-                                <h5>訂單編號</h5>
-                                <p>31700023464729</p>
-                              </div>
-                              <div className="user-order-item-instrument-detail-row-col">
-                                <h5>購買日期</h5>
-                                <p>2024/01/14</p>
-                              </div>
-                              <div className="user-order-item-instrument-detail-row-col ">
-                                <h5>付款金額</h5>
-                                <p>$ 72000</p>
-                              </div>
-                            </div>
-                            <div className="user-order-item-instrument-detail-row">
-                              <div className="user-order-item-instrument-detail-row-col">
-                                <h5>付款方式</h5>
-                                <p>信用卡</p>
-                              </div>
-                              <div className="user-order-item-instrument-detail-row-col">
-                                <h5>商品狀態</h5>
-                                <p>配送完成</p>
-                              </div>
-                              <div className="user-order-item-instrument-detail-row-col-address">
-                                <h5>配送地址</h5>
-                                <p>320桃園市中壢區新生路二段421號</p>
-                              </div>
-                            </div>
+
+                          <div className="user-notifyList-item-type col-sm-4 col-12">
+                            <span className="user-notifyList-item-message">
+                              有新的留言！
+                            </span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10分鐘前
                           </div>
                         </div>
-                        <div className="user-order-item-lesson">
-                          <div className="user-order-item-lesson-leftSide">
-                            <div className="user-order-item-lesson-leftSide-img">
-                              <img src="" alt="" />
-                            </div>
-                            <div className="user-order-item-lesson-leftSide-btn btn btn-primary">
-                              修改訂單
+                        <hr />
+
+                        {/* ----------------重複內容 測試-------------------- */}
+                        <div className="user-notifyList-item d-flex row mb-2">
+                          <div className=" col-sm-auto col-12 ">
+                            <div
+                              className=" user-notifyList-item-notifyLabel"
+                              htmlFor="user-notifyList-item-content"
+                            >
+                              那些在買七弦吉他前，需要注意的調 Tone 撇步！
                             </div>
                           </div>
-                          <div className="user-order-item-lesson-detail">
-                            <div className="user-order-item-lesson-detail-row">
-                              <div className="user-order-item-lesson-detail-row-col-productName">
-                                <p>
-                                  <span>商品名稱：</span> 上課
-                                </p>
-                              </div>
-                            </div>
-                            <div className="user-order-item-lesson-detail-row">
-                              <div className="user-order-item-lesson-detail-row-col">
-                                <h5>訂單編號</h5>
-                                <p>31700023464729</p>
-                              </div>
-                              <div className="user-order-item-lesson-detail-row-col">
-                                <h5>購買日期</h5>
-                                <p>2024/01/14</p>
-                              </div>
-                              <div className="user-order-item-lesson-detail-row-col ">
-                                <h5>付款金額</h5>
-                                <p>$ 72000</p>
-                              </div>
-                            </div>
-                            <div className="user-order-item-lesson-detail-row">
-                              <div className="user-order-item-lesson-detail-row-col">
-                                <h5>付款方式</h5>
-                                <p>信用卡</p>
-                              </div>
-                            </div>
+
+                          <div className="user-notifyList-item-type col-sm-4 col-12">
+                            <span className="user-notifyList-item-message">
+                              有新的留言！
+                            </span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10分鐘前
                           </div>
                         </div>
+                        <hr />
+                        <div className="user-notifyList-item d-flex row mb-2">
+                          <div className=" col-sm-auto col-12 ">
+                            <div
+                              className=" user-notifyList-item-notifyLabel"
+                              htmlFor="user-notifyList-item-content"
+                            >
+                              那些在買七弦吉他前，需要注意的調 Tone 撇步！
+                            </div>
+                          </div>
+
+                          <div className="user-notifyList-item-type col-sm-4 col-12">
+                            <span className="user-notifyList-item-message">
+                              有新的留言！
+                            </span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10分鐘前
+                          </div>
+                        </div>
+                        <hr />
+                        <div className="user-notifyList-item d-flex row mb-2">
+                          <div className=" col-sm-auto col-12 ">
+                            <div
+                              className=" user-notifyList-item-notifyLabel"
+                              htmlFor="user-notifyList-item-content"
+                            >
+                              那些在買七弦吉他前，需要注意的調 Tone 撇步！
+                            </div>
+                          </div>
+
+                          <div className="user-notifyList-item-type col-sm-4 col-12">
+                            <span className="user-notifyList-item-message">
+                              有新的留言！
+                            </span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10分鐘前
+                          </div>
+                        </div>
+                        <hr />
+                        <div className="user-notifyList-item d-flex row mb-2">
+                          <div className=" col-sm-auto col-12 ">
+                            <div
+                              className=" user-notifyList-item-notifyLabel"
+                              htmlFor="user-notifyList-item-content"
+                            >
+                              那些在買七弦吉他前，需要注意的調 Tone 撇步！
+                            </div>
+                          </div>
+
+                          <div className="user-notifyList-item-type col-sm-4 col-12">
+                            <span className="user-notifyList-item-message">
+                              有新的留言！
+                            </span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10分鐘前
+                          </div>
+                        </div>
+                        <hr />
+                        <div className="user-notifyList-item d-flex row mb-2">
+                          <div className=" col-sm-auto col-12 ">
+                            <div
+                              className=" user-notifyList-item-notifyLabel"
+                              htmlFor="user-notifyList-item-content"
+                            >
+                              那些在買七弦吉他前，需要注意的調 Tone 撇步！
+                            </div>
+                          </div>
+
+                          <div className="user-notifyList-item-type col-sm-4 col-12">
+                            <span className="user-notifyList-item-message">
+                              有新的留言！
+                            </span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10分鐘前
+                          </div>
+                        </div>
+                        <hr />
+                        {/* ----------------重複內容 測試-------------------- */}
                       </div>
+
                       <div className="user-orderList-pagination">
                         <p>待放分頁元件 注意class</p>
                       </div>
@@ -575,8 +602,10 @@ export default function Test() {
         }
 
         /* -------------------user sidebar-------------------- */
-        /* --------------- user-contect-order--------------- */
-
+        /* --------------- user-contect-notify--------------- */
+        hr {
+          margin: 10px;
+        }
         .custom-container {
           padding: 0;
           color: #000;
@@ -601,17 +630,24 @@ export default function Test() {
             color: var(--primary-deep, #124365);
           }
 
-          .user-content {
+          .user-orderList-pagination {
             display: flex;
-            width: 1070px;
-            padding: 20px 10px;
-            margin: 0;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 20px;
-            border-radius: 5px;
-            background: var(--gray-30, rgba(185, 185, 185, 0.3));
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            align-self: stretch;
           }
+        }
+
+        .user-content {
+          display: flex;
+          width: 1070px;
+          padding: 20px 10px;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 20px;
+          border-radius: 5px;
+          background: var(--gray-30, rgba(185, 185, 185, 0.3));
 
           .user-content-top {
             display: flex;
@@ -619,195 +655,44 @@ export default function Test() {
             align-self: stretch;
             color: var(--primary-deep, #124365);
             text-align: center;
+            justify-content: space-between;
             /* h3 */
             font-family: 'Noto Sans TC';
             font-size: 28px;
             font-style: normal;
             font-weight: 700;
             line-height: normal;
+
+            .user-notify-newBtn {
+              display: none;
+            }
+          }
+          /*----------------------notify css----------------------- */
+          .user-notifyList {
+            width: 100%;
           }
 
-          .user-order-item-instrument {
-            /* padding-left: 25px;*/
-            display: flex;
-            width: 1050px;
-            height: 250px;
+          .user-notifyList-item {
             align-items: center;
-            gap: 20px;
-            border-bottom: 1px solid var(--body, #b9b9b9);
+            padding-left: 25px;
+            margin-inline: auto;
+            /*height: 60px; */
 
-            .user-order-item-instrument-leftSide {
-              /* padding-left: 25px; */
-              display: flex;
-              flex-direction: column;
-              justify-content: center;
-              align-items: center;
-              gap: 10px;
-
-              .user-order-item-instrument-leftSide-img {
-                display: flex;
-                width: 150px;
-                height: 150px;
-                align-items: flex-start;
-                gap: 10px;
-                border-radius: 10px;
-                border: 1px solid var(--body, #b9b9b9);
-                background: #fff;
-              }
-
-              .user-order-item-instrument-leftSide-btn {
-                display: flex;
-                padding: 3px 15px;
-                justify-content: center;
-                align-items: center;
-                gap: 10px;
-                border-radius: 5px;
-                background: var(--primary, #1581cc);
-              }
+            .user-notifyList-item-notifyLabel {
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 1;
+              overflow: hidden;
             }
-
-            .user-order-item-instrument-detail {
-              /*padding-left: 25px; */
-              display: flex;
-              flex-direction: column;
-              justify-content: center;
-              align-items: flex-start;
-              /* gap: 30px; */
-              flex: 1 0 0;
-
-              .user-order-item-instrument-detail-row {
-                display: flex;
-                align-items: center;
-                gap: 5px;
-                align-self: stretch;
-
-                .user-order-item-instrument-detail-row-col-productName {
-                  width: 700px;
-                  padding: 0px 20px 5px 0px;
-                  font-size: 20px;
-
-                  & span {
-                    font-family: 'Noto Sans TC';
-                    font-style: normal;
-                    font-weight: 400;
-                    line-height: normal;
-                    color: var(--primary-deep, #124365);
-                  }
-                }
-
-                .user-order-item-instrument-detail-row-col {
-                  width: 200px;
-                  display: flex;
-                  padding: 0px 20px 5px 0px;
-                  align-items: center;
-
-                  display: -webkit-box;
-                  -webkit-box-orient: vertical;
-                  -webkit-line-clamp: 2;
-                  overflow: hidden;
-
-                  text-overflow: ellipsis;
-                }
-
-                .user-order-item-instrument-detail-row-col-address {
-                  width: 800px;
-                  & h5 {
-                    font-family: 'Noto Sans TC';
-                    font-size: 20px;
-                    font-style: normal;
-                    font-weight: 400;
-                    line-height: normal;
-                    color: var(--primary-deep, #124365);
-                  }
-                }
-              }
+            .user-notifyList-item-type {
+              /*text-align: end;*/
+            }
+            .user-notifyList-item-message {
+              color: var(--primary-deep, #124365);
             }
           }
 
-          .user-order-item-lesson {
-            /* padding-left: 25px; */
-            display: flex;
-            width: 1050px;
-            height: 250px;
-            align-items: center;
-            gap: 20px;
-            border-bottom: 1px solid var(--body, #b9b9b9);
-
-            .user-order-item-lesson-leftSide {
-              /* padding-left: 25px; */
-              display: flex;
-              flex-direction: column;
-              justify-content: center;
-              align-items: center;
-              gap: 10px;
-
-              .user-order-item-lesson-leftSide-img {
-                display: flex;
-                width: 150px;
-                height: 150px;
-                align-items: flex-start;
-                gap: 10px;
-                border-radius: 10px;
-                border: 1px solid var(--body, #b9b9b9);
-                background: #fff;
-              }
-
-              .user-order-item-lesson-leftSide-btn {
-                display: flex;
-                padding: 3px 15px;
-                justify-content: center;
-                align-items: center;
-                gap: 10px;
-                border-radius: 5px;
-                background: var(--primary, #1581cc);
-              }
-            }
-
-            .user-order-item-lesson-detail {
-              /*padding-left: 25px;*/
-              display: flex;
-              flex-direction: column;
-              justify-content: center;
-              align-items: flex-start;
-              /* gap: 30px; */
-              flex: 1 0 0;
-
-              .user-order-item-lesson-detail-row {
-                display: flex;
-                align-items: center;
-                gap: 5px;
-                align-self: stretch;
-
-                .user-order-item-lesson-detail-row-col-productName {
-                  width: 700px;
-                  padding: 0px 20px 5px 0px;
-                  font-size: 20px;
-
-                  & span {
-                    font-family: 'Noto Sans TC';
-                    font-style: normal;
-                    font-weight: 400;
-                    line-height: normal;
-                    color: var(--primary-deep, #124365);
-                  }
-                }
-
-                .user-order-item-lesson-detail-row-col {
-                  width: 200px;
-                  display: flex;
-                  padding: 0px 20px 5px 0px;
-                  align-items: center;
-
-                  display: -webkit-box;
-                  -webkit-box-orient: vertical;
-                  -webkit-line-clamp: 2;
-                  overflow: hidden;
-
-                  text-overflow: ellipsis;
-                }
-              }
-            }
-          }
+          /*----------------------notify css----------------------- */
 
           .user-orderList-pagination {
             display: flex;
@@ -832,19 +717,20 @@ export default function Test() {
               padding: 10px;
               overflow: hidden;
             }
-            .user-order-item-instrument {
-              width: 370px;
-              overflow: hidden;
-            }
+          }
 
-            .user-order-item-instrument-detail-row-col-address {
-              width: 370px;
-              overflow: hidden;
-            }
+          .user-content {
+            .user-notifyList-item {
+              padding-left: 0px;
+              font-size: 20px;
 
-            .user-order-item-lesson {
-              width: 370px;
-              overflow: hidden;
+              .user-notifyList-item-notifyLabel {
+                -webkit-line-clamp: 2;
+              }
+
+              .user-notifyList-item-type {
+                font-size: 16px;
+              }
             }
           }
         }
