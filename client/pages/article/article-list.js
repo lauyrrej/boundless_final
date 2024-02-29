@@ -13,6 +13,8 @@ import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 import ArticleCard from '@/components/article/article-card'
+import Pagination from '@/components/article/pagination'
+import ArticleJson from 'data/article/article.json'
 
 export default function ArticleList() {
   // ----------------------手機版本  ----------------------
@@ -26,7 +28,14 @@ export default function ArticleList() {
   const sidebarToggle = () => {
     setShowSidebar(!showSidebar)
   }
+
+  // ----------------------真資料  ----------------------
+
+  // Article-card
+  const cardData = { ArticleJson }
+
   // ----------------------假資料  ----------------------
+
   // sidebar假資料
   const sidebarData = ['全部', '技術分享', '音樂評論']
 
@@ -378,25 +387,32 @@ export default function ArticleList() {
             <main className="content me-2">
               <h4 className='text-primary pt-2'>熱門文章</h4>
               <div className="content-pop d-flex flex-wrap justify-content-between pe-2">
-                <ArticleCard />
-                <ArticleCard />
-                <ArticleCard />
-                <ArticleCard />
+                {ArticleJson.slice(0, 4).map((v, i) => {
+                  {/* 熱門文章的分類目前是抓前4筆 */ }
+                  const { id, title, content, img, author, publish_time } = v
+                  return (
+                    <ArticleCard key={id} id={id} title={title} content={content} img={img} author={author} publish_time={publish_time.split(" ")[0]} />
+                  )
+                })}
               </div>
               <hr />
               <div className="content-pop d-flex flex-wrap justify-content-between pb-3">
-                <ArticleCard />
-                <ArticleCard />
-                <ArticleCard />
-                <ArticleCard />
-                <ArticleCard />
-                <ArticleCard />
-                <ArticleCard />
-                <ArticleCard />
-                <ArticleCard />
-                <ArticleCard />
+                {ArticleJson.map((v, i) => {
+                  const { id, title, content, img, author, publish_time } = v
+                  return (
+                    <ArticleCard key={id} id={id} title={title} content={content} img={img} author={author} publish_time={publish_time.split(" ")[0]} />
+                  )
+                })}
+
               </div>
-              <div className='d-flex justify-content-center pb-3'>
+              {/* 分頁按鈕 */}
+              <Pagination
+                totalItems={totalItems}
+                itemsPerPage={itemsPerPage}
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+              />
+              {/* <div className='d-flex justify-content-center pb-3'>
                 <nav aria-label="Page navigation example">
                   <ul className="pagination">
                     <li className="page-item">
@@ -426,7 +442,7 @@ export default function ArticleList() {
                     </li>
                   </ul>
                 </nav>
-              </div>
+              </div> */}
             </main>
           </div>
         </div>

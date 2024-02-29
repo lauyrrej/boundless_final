@@ -7,7 +7,9 @@ import data from '@/data/article.json'
 import Image from 'next/image';
 
 
-export default function Articlecard() {
+export default function Articlecard({
+  id, title, content, img, author, publish_time
+}) {
   const [discount, setDiscount] = useState('1')
   // console.log(products)
 
@@ -34,21 +36,20 @@ export default function Articlecard() {
         <div className="article-info d-flex 
         justify-content-between align-items-center mb-3">
           <img className="article-author" src="/article/empty.png" alt="空的圖" />
-          <span className="info-p text-secondary">Joe</span>
-          <span className="info-p text-secondary">2023/11/27</span>
+          <span className="info-p text-secondary">{author}</span>
+          <span className="info-p text-secondary">{publish_time}</span>
         </div>
         {/* article區塊 */}
         <div className="content d-flex">
           <div className="text me-1">
-            <h5 className="fw-bold">那些在買七弦吉他前，需要注意的調 Tone 撇步！</h5>
+            <h5 className="fw-bold clamped-text">{title}</h5>
             <p className="text-secondary">
-              說到使用七弦電吉他的樂手你會先想到誰呢？現代人想到七弦吉他常常會想到90年代
-              Steve Vai、Korn樂團、Fear Factory 樂團等重金屬音樂
+              {content}
             </p>
           </div>
           <img
             className="article-image"
-            src="/article/empty.png"
+            src={`/article/${img}`}
             alt=""
           />
         </div>
@@ -98,6 +99,13 @@ export default function Articlecard() {
         height: 30px;
         border-radius: 50%;
       }
+      .clamped-text{
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        -webkit-line-clamp: 2;
+
+      }
       .info-p {
         font-family: "Noto Sans TC", sans-serif;
       }
@@ -115,6 +123,7 @@ export default function Articlecard() {
         width: 162px;
         height: 102px;
         border-radius: 5%;
+        object-fit: cover;
       }
       .views-like p {
         font-size: small;
