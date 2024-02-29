@@ -16,7 +16,7 @@ import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 
 export default function Test() {
-  // 在電腦版或手機版時
+  // 在電腦版或手機版時，決定card的樣式，電腦版是直的，手機板是橫的
   const [isSmallScreen, setIsSmallScreen] = useState(false)
 
   useEffect(() => {

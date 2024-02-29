@@ -43,6 +43,7 @@ export default function Test() {
     stopPropagation(e)
     setFilterVisible(!filterVisible)
   }
+
   // ----------------------假資料  ----------------------
   // 資料排序
   const [dataSort, setDataSort] = useState('upToDate')
@@ -467,6 +468,16 @@ export default function Test() {
           gap: 10px;
           display: flex;
           justify-content: space-between;
+        }
+        @media screen and (max-width: 576px) {
+          .hot-instrument-card {
+            flex-wrap: wrap;
+          }
+          .hot-instrument-card > :global(div) {
+            flex-basis: calc(
+              40% - 40px
+            ); /* Two cards in a row with a 10px gap */
+          }
         }
       `}</style>
     </>
