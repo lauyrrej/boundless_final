@@ -30,7 +30,7 @@ export default function ArticleEdit() {
     <>
       <Navbar />
       {/* wrapper */}
-      <div className="wrapper pt-5">
+      <div className="wrapper">
         {/* 麵包屑 */}
         <div className="breadcrumb-wrapper">
           <ul className="d-flex align-items-center p-0 m-0">
@@ -104,6 +104,9 @@ export default function ArticleEdit() {
       <Footer />
 
       <style jsx>{`
+        .wrapper{
+          min-height: 100svh;
+        }
         .nav-category {
           display: flex;
           justify-content: between;

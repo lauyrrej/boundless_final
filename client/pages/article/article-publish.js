@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import Image from 'next/image';
-import Breadcrumb from '@/components/article/breadcrumb'
 import { IoCloseOutline } from "react-icons/io5";
 import React from 'react'
 import { IoIosArrowForward } from "react-icons/io";

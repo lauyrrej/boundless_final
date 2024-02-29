@@ -407,10 +407,6 @@ export default function ArticleList() {
               </div>
               {/* 分頁按鈕 */}
               <Pagination
-                totalItems={totalItems}
-                itemsPerPage={itemsPerPage}
-                currentPage={currentPage}
-                onPageChange={handlePageChange}
               />
               {/* <div className='d-flex justify-content-center pb-3'>
                 <nav aria-label="Page navigation example">

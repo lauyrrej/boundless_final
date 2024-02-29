@@ -157,6 +157,10 @@ export default function ArticleList() {
       <Footer />
 
       <style jsx>{`
+      .wrapper{
+        padding-left: 20px;
+        padding-right: 20px;
+      }
       .nav-category{
         display: flex;
         justify-content: between;
