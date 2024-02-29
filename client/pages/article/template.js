@@ -4,7 +4,7 @@ import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
 import jamHero from '@/assets/jam-hero.png'
-import Editor from './editor-component'
+// icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
 import { IoIosSearch } from 'react-icons/io'
@@ -14,14 +14,6 @@ import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 
 export default function Test() {
-  const [editorLoaded, setEditorLoaded] = useState(false)
-  const [data, setData] = useState('')
-  const initContent = 'JSON text 段落與標題需要分開編輯'
-
-  useEffect(() => {
-    setEditorLoaded(true)
-  }, [])
-
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -106,70 +98,18 @@ export default function Test() {
               <li style={{ marginLeft: '10px' }}>JAM 資訊</li>
             </ul>
           </div>
-          <div className="">
+          <div className="col-12 col-sm-8">
             {/* 主內容 */}
-            <main>
-              <Editor
-                name="description"
-                onChange={(data) => {
-                  setData(data)
-                }}
-                editorLoaded={editorLoaded}
-                value={initContent}
-              />
-            </main>
+            <main className="content"></main>
           </div>
+
+          {/*   ---------------------- 頁面右側內容  ---------------------- */}
+          <div className="d-none d-sm-block col-sm-4 page-control"></div>
         </div>
       </div>
       <Footer />
 
-      <style jsx>{`
-      main{
-          min-height: 100svh;
-        }
-        .nav-category {
-          display: flex;
-          justify-content: between;
-        }
-        @media screen and (max-width: 576px) {
-          .nav-category {
-            display: none;
-          }
-        }
-        h1 {
-          padding-top: 5;
-        }
-        @media screen and (max-width: 576px) {
-          h1 {
-            padding-top: 0;
-          }
-        }
-        .breadcrumb-wrapper {
-          margin-top: 50px;
-          margin-left: 50px;
-        }
-        @media screen and (max-width: 576px) {
-          .breadcrumb-wrapper {
-            margin-top: 30px;
-            margin-left: 10px;
-          }
-        }
-        .main-img {
-          position: relative;
-          weight: 1000px;
-          height: 500px;
-        }
-        .big-pic {
-          position: absolute;
-          top: 0;
-          left: 0;
-        }
-        @media screen and (max-width: 576px) {
-          .main-img {
-            weight: 576px;
-            height: 300px;
-          }
-        }`}</style>
+      <style jsx>{``}</style>
     </>
   )
 }
