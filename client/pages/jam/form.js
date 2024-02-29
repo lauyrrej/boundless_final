@@ -124,7 +124,7 @@ export default function Form() {
               </Link>
 
               <FaChevronRight />
-              <li style={{ marginLeft: '10px' }}>JAM 資訊</li>
+              <li style={{ marginLeft: '10px' }}>發起 JAM</li>
             </ul>
           </div>
           <div className="col-12 col-sm-8" style={{ padding: 0 }}>
@@ -140,7 +140,7 @@ export default function Form() {
                   <input
                     type="text"
                     className={`${styles.itemInput} form-control`}
-                    placeholder="組團理由，限20字"
+                    placeholder="發起動機或目的，限20字"
                     maxLength={20}
                     onChange={(e) => {
                       setTitle(e.target.value)
@@ -211,7 +211,9 @@ export default function Form() {
                             setGenereSelect(newArr)
                           }}
                         />
-                        <span>(剩餘 {3 - genereSelect.length})</span>
+                        <span style={{ color: '#1d1d1d' }}>
+                          (剩餘 {3 - genereSelect.length})
+                        </span>
                       </div>
                     ) : (
                       ''
@@ -287,7 +289,9 @@ export default function Form() {
                             setPlayersSelect(newArr)
                           }}
                         />
-                        <span>(剩餘 {6 - playersSelect.length})</span>
+                        <span style={{ color: '#1d1d1d' }}>
+                          (剩餘 {6 - playersSelect.length})
+                        </span>
                       </div>
                     ) : (
                       ''
@@ -380,7 +384,7 @@ export default function Form() {
                 <li>
                   為避免頻繁改變樂團方向，造成和參與者間的協調糾紛，發起後
                   <span className={`${styles.point}`}>
-                    僅能修改其他條件和描述內容
+                    僅能修改標題、其他條件及描述內容
                   </span>
                   ，請送出前再三確認。
                 </li>
