@@ -102,6 +102,10 @@
       /* --------------- container --------------- */
       .container {
         min-height: calc(100vh);
+        width: 1920px;
+        padding: 60px 60px 110px 60px;
+        min-height: 912px;
+        gap: 10px;
       }
 
       /* --------------- footer --------------- */
@@ -116,13 +120,18 @@
       .cart-process {
         padding: 8px 40px;
       }
-      .cart-main{
+      .cart-main {
         display: flex;
         flex-direction: column;
         gap: 16px;
       }
+      .active{
+        background: var(--primary-light, #18A1FF);
+      }
+      .inactive{
+        background: var(--body, #B9B9B9);
+      }
       .ball {
-        background-color: var(--primary);
         color: #fff;
         text-align: center;
         height: 50px;
@@ -150,7 +159,7 @@
         font-weight: 700;
         line-height: normal;
       }
-      .h6{
+      .h6 {
         font-family: "Noto Sans TC";
         font-size: 18px;
         font-style: normal;
@@ -192,17 +201,23 @@
         flex-direction: column;
         width: 100%;
       }
+      .cart-instrument {
+        display: flex;
+        gap: 12px;
+        flex-direction: column;
+        width: 100%;
+      }
       .cart-title {
-          color: var(--white, #fff);
-          font-family: "Noto Sans TC";
-          font-size: 24px;
-          font-style: normal;
-          font-weight: 700;
-          line-height: normal;
-          background-color: var(--body);
-          max-width: 880px;
-          padding: 5px 12px;
-        }
+        color: var(--white, #fff);
+        font-family: "Noto Sans TC";
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+        background-color: var(--body);
+        max-width: 880px;
+        padding: 5px 12px;
+      }
       .cart-thead {
         width: 100%;
         padding: 4px 12px;
@@ -224,19 +239,20 @@
           grid-row: 1/2;
           grid-column: 4/9;
         }
-        .instrument-product{
+        .instrument-product {
           grid-row: 1/2;
           grid-column: 1/4;
         }
-        .instrument-price{
+        .instrument-price {
           grid-row: 1/2;
           grid-column: 4/5;
         }
-        .instrument-quantity{
+        .instrument-quantity {
           grid-row: 1/2;
           grid-column: 5/7;
+          margin: auto;
         }
-        .instrument-total{
+        .instrument-total {
           grid-row: 1/2;
           grid-column: 7/8;
         }
@@ -244,115 +260,154 @@
       .cart-item-group {
         gap: 12px;
         padding: 12px;
-        .lesson-item{
+        .lesson-item {
           display: grid;
           place-content: center;
           grid-template-columns: repeat(8, 1fr);
-          .lesson-item-pic{
-            width: 110px;
-            height: 110px;
+          .lesson-item-pic {
+            width: 100%;
+            height: 100%;
             grid-column: 1/2;
-            img{
+            img {
               width: 100%;
               object-fit: cover;
             }
           }
-          .lesson-item-name{
+          .lesson-item-name {
             grid-row: 1/2;
             grid-column: 2/4;
             margin-block: auto;
             padding-left: 10px;
           }
-          .lesson-item-price{
+          .lesson-item-price {
             grid-row: 1/2;
             grid-column: 4/5;
             margin-block: auto;
           }
-          .lesson-button{
+          .lesson-button {
             grid-row: 1/2;
             grid-column: 8/9;
             margin: auto;
           }
         }
-        .instrument-item{
+        .instrument-item {
           display: grid;
           place-content: center;
           grid-template-columns: repeat(8, 1fr);
-          .instrument-item-pic{
-            width: 110px;
-            height: 110px;
+          .instrument-item-pic {
+            width: 100%;
+            height: 100%;
             grid-column: 1/2;
-            img{
+            img {
               width: 100%;
               object-fit: cover;
             }
           }
-          .instrument-item-name{
+          .instrument-item-name {
             grid-row: 1/2;
             grid-column: 2/4;
             margin-block: auto;
             padding-left: 10px;
           }
-          .instrument-item-price{
+          .instrument-item-price {
             grid-row: 1/2;
             grid-column: 4/5;
             margin-block: auto;
           }
-          .instrument-item-quantity{
+          .instrument-item-quantity {
+            padding: 0 26px;
             grid-row: 1/2;
             grid-column: 5/7;
             margin-block: auto;
           }
-          .instrument-item-total{
+          .instrument-item-total {
             grid-row: 1/2;
             grid-column: 7/8;
             margin-block: auto;
           }
-          .instrument-button{
+          .instrument-button {
             grid-row: 1/2;
             grid-column: 8/9;
             margin: auto;
           }
+          .quantity-left-minus{
+            margin: auto;
 
+            width: 40px;
+            height: 40px;
+            .minussign::before {
+              content: "\2212";
+              color: #000;
+            /* sidebar-font */
+              font-family: "Noto Sans TC";
+              font-size: 16px;
+              font-style: normal;
+              font-weight: 700;
+              line-height: normal;
+            }
+          }
+          .quantity-right-plus{
+            width: 40px;
+            height: 40px;
+            .plussign::before {
+              content: "\2795";
+              color: var(--white, #FFF);
+            /* sidebar-font */
+              font-family: "Noto Sans TC";
+              font-size: 12px;
+              font-style: normal;
+              font-weight: 700;
+              line-height: normal;
+            }
+          }
+          .input-number{
+            text-align: center;
+            color: #000;
+
+            /* sidebar-font */
+            font-family: "Noto Sans TC";
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: normal;
+          }
         }
       }
-      .cart-coupon{
-        display: grid;
-        grid-template-columns: repeat(8, 1fr);
+      .cart-coupon {
+        display: flex;
         padding: 0 12px;
-        .coupon-selector{
-          grid-column: 1/4;
+        .coupon-selector {
           display: flex;
           align-items: center;
           gap: 20px;
         }
-        .cart-coupon-text{
+        .cart-coupon-text {
           font-family: Inter;
           font-size: 20px;
           font-style: normal;
           font-weight: 400;
           line-height: 24px; /* 120% */
         }
-        .cart-discount{
+        .cart-discount {
           color: var(--primary);
           grid-column: 7/9;
           margin-left: auto;
         }
       }
-      .cart-subtotal{
-          display: flex;
-          padding: 4px 12px;
-          justify-content: flex-end;
-          align-items: center;
-          align-self: stretch;
-      }
-      .cart-total{
+      .cart-subtotal {
         display: flex;
         padding: 4px 12px;
         justify-content: flex-end;
         align-items: center;
         align-self: stretch;
-        .cart-total-text{
+      }
+      .cart-total {
+        display: flex;
+        padding: 4px 12px;
+        justify-content: flex-end;
+        align-items: center;
+        align-self: stretch;
+        .cart-total-text {
           font-family: "Noto Sans TC";
           font-size: 24px;
           font-style: normal;
@@ -402,19 +457,19 @@
       <div><h2>購物車</h2></div>
       <div class="d-flex justify-content-between cart-process">
         <div class="d-flex align-items-center" style="gap: 10px">
-          <div class="ball d-flex align-items-center justify-content-center">
+          <div class="ball d-flex align-items-center justify-content-center active">
             1
           </div>
           <div class="h5">確認/修改訂單</div>
         </div>
         <div class="d-flex align-items-center" style="gap: 10px">
-          <div class="ball d-flex align-items-center justify-content-center">
+          <div class="ball d-flex align-items-center justify-content-center inactive">
             2
           </div>
           <div class="h5">填寫訂單資料</div>
         </div>
         <div class="d-flex align-items-center" style="gap: 10px">
-          <div class="ball d-flex align-items-center justify-content-center">
+          <div class="ball d-flex align-items-center justify-content-center inactive">
             3
           </div>
           <div class="h5">結帳確認</div>
@@ -424,49 +479,43 @@
         <div class="w-100 p-0 cart-main" style="height: 100vh">
           <div class="cart-lesson">
             <div class="cart-title">課程</div>
-              <div class="cart-thead">
-                <div class="lesson-product">商品</div>
-                <div class="lesson-price">售價</div>
-              </div>
-              <div class="cart-item-group">
-                <div class="lesson-item">
-                  <div class="lesson-item-pic">
-                    <img src="/public/coupon/CameraFill.png" alt="">
-                  </div>
-                  <div class="lesson-item-name h6">
-                    Logic Pro X 從零開始
-                  </div>
-                  <div class="lesson-item-price h6">
-                    $26000
-                  </div>
-                  <div class="lesson-button">
-                    <button>del</button>
-                  </div>
+            <div class="cart-thead">
+              <div class="lesson-product">商品</div>
+              <div class="lesson-price">售價</div>
+            </div>
+            <div class="cart-item-group">
+              <div class="lesson-item">
+                <div class="lesson-item-pic">
+                  <img src="/public/coupon/CameraFill.png" alt="" />
+                </div>
+                <div class="lesson-item-name h6">Logic Pro X 從零開始</div>
+                <div class="lesson-item-price h6">$26000</div>
+                <div class="lesson-button">
+                  <button>刪除</button>
                 </div>
               </div>
-              <div class="cart-subtotal h6">原價 NT$ 999999</div>
-              <div class="cart-coupon">
-                <div class="coupon-selector">
-                  <div class="cart-coupon-text">
-                    優惠券
-                  </div>
-                  <div>
-                    <select class="form-select" aria-label="Default select example">
-                      <option selected>Open this select menu</option>
-                      <option value="1">One</option>
-                      <option value="2">Two</option>
-                      <option value="3">Three</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="cart-discount h6">折扣 -NT$ 1400000</div>
-              </div>
-              <div class="cart-total">
-                <div class="cart-total-text">
-                  小計 NT$ 300000
+            </div>
+            <div class="cart-subtotal h6">原價 NT$ 999999</div>
+            <div class="cart-coupon">
+              <div class="coupon-selector">
+                <div class="cart-coupon-text">優惠券</div>
+                <div>
+                  <select
+                    class="form-select"
+                    aria-label="Default select example"
+                  >
+                    <option selected>Open this select menu</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                  </select>
                 </div>
               </div>
-
+              <div class="cart-discount h6">折扣 -NT$ 1400000</div>
+            </div>
+            <div class="cart-total">
+              <div class="cart-total-text">小計 NT$ 300000</div>
+            </div>
           </div>
 
           <div class="cart-instrument">
@@ -480,34 +529,36 @@
             <div class="cart-item-group">
               <div class="instrument-item">
                 <div class="instrument-item-pic">
-                  <img src="/public/coupon/CameraFill.png" alt="">
+                  <img src="/public/coupon/CameraFill.png" alt="" />
                 </div>
-                <div class="instrument-item-name h6">
-                  Logic Pro X 從零開始
-                </div>
-                <div class="instrument-item-price h6">
-                  $26000
-                </div>
+                <div class="instrument-item-name h6">Logic Pro X 從零開始</div>
+                <div class="instrument-item-price h6">$26000</div>
                 <div class="instrument-item-quantity h6">
-                  $26000
+                  <div class="input-group">
+                    <button class="btn btn-light quantity-left-minus">
+                      <div class="minussign"></div>
+                    </button>
+                    <input type="text" class="form-control input-number" id="quantity" name="quantity" value="10" min="1" max="100"/>
+                    <button class="btn btn-primary quantity-right-plus">
+                      <div class="plussign"></div>
+                    </button>
+                  </div>
                 </div>
-                <div class="instrument-item-total h6">
-                  $26000
-                </div>
+                <div class="instrument-item-total h6">$26000</div>
                 <div class="instrument-button">
-                  <button>del</button>
+                  <button>刪除</button>
                 </div>
               </div>
-
             </div>
             <div class="cart-subtotal h6">原價 NT$ 999999</div>
             <div class="cart-coupon">
               <div class="coupon-selector">
-                <div class="cart-coupon-text">
-                  優惠券
-                </div>
+                <div class="cart-coupon-text">優惠券</div>
                 <div>
-                  <select class="form-select" aria-label="Default select example">
+                  <select
+                    class="form-select"
+                    aria-label="Default select example"
+                  >
                     <option selected>Open this select menu</option>
                     <option value="1">One</option>
                     <option value="2">Two</option>
@@ -518,9 +569,7 @@
               <div class="cart-discount h6">折扣 -NT$ 1400000</div>
             </div>
             <div class="cart-total">
-              <div class="cart-total-text">
-                小計 NT$ 300000
-              </div>
+              <div class="cart-total-text">小計 NT$ 300000</div>
             </div>
           </div>
         </div>
