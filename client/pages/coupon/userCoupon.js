@@ -101,9 +101,9 @@ export default function Test() {
                 <h3 className={styles['couponTitle']}>我的優惠券</h3>
               </div>
 
-              {/* 條件篩選 */}
+              {/* 篩選列 */}
               <div className="filter-sort d-flex justify-content-between p-3">
-                {/* 麵包屑 */}
+                {/* 左分類 */}
                 <div className="d-none d-sm-block">
                   <nav aria-label="breadcrumb sort d-flex justify-content-between align-items-center">
                     <ol className="breadcrumb  breadcrumb-line">
@@ -134,10 +134,21 @@ export default function Test() {
                           課程
                         </a>
                       </li>
+                      <li
+                        className="h6 coupon-breadcrumb coupon-breadcrumb-item breadcrumb-item"
+                        aria-current="page"
+                      >
+                        <a
+                          href="#"
+                          className="coupon-breadcrumb coupon-breadcrumb-item"
+                        >
+                          已使用
+                        </a>
+                      </li>
                     </ol>
                   </nav>
                 </div>
-                {/* RWD */}
+                {/* 左分類RWD */}
                 <div className="sort-mb d-block d-sm-none">
                   <select
                     className="form-select"
@@ -146,9 +157,11 @@ export default function Test() {
                     <option value>全部</option>
                     <option value={1}>樂器</option>
                     <option value={2}>課程</option>
+                    <option value={3}>已使用</option>
                   </select>
+                  {/* 左分類RWD */}
                 </div>
-                {/* 資料排序 */}
+                {/* 右條件篩選 */}
                 <div className="sort d-flex align-items-center coupon-screen">
                   <div className="d-none d-sm-block">
                     <FaFilter size={13} />
@@ -156,9 +169,10 @@ export default function Test() {
                   </div>
                   <div className="sort-item active">折扣幅度</div>
                   <div className="sort-item">即將到期</div>
-                  <div className="sort-item">已使用</div>
                 </div>
+                {/* 右條件篩選 */}
               </div>
+              {/* 篩選列 */}
               <div className={styles['couponImage']}>
                 {arr.map((v, i) => {
                   return <Coupon key={i} className={`${styles.couponItem} `} />
