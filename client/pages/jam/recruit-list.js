@@ -6,10 +6,12 @@ import Image from 'next/image'
 import jamHero from '@/assets/jam-hero.png'
 // data
 import CityCountyData from '@/data/CityCountyData.json'
+import jamData from '@/data/jam/jam.json'
+import playerData from '@/data/player.json'
+import genereData from '@/data/genere.json'
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
-import { IoIosSearch } from 'react-icons/io'
 import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
@@ -46,39 +48,20 @@ export default function Test() {
     stopPropagation(e)
     setFilterVisible(!filterVisible)
   }
-  // ----------------------假資料  ----------------------
+  // ---------------------- filter 假資料  ----------------------
   // 資料排序
   const [dataSort, setDataSort] = useState('upToDate')
   // filter假資料
-  // 樂手類型資料
-  const playerData = [
-    { id: 1, name: '木吉他' },
-    { id: 2, name: '電吉他' },
-    { id: 3, name: '貝斯' },
-    { id: 4, name: '電貝斯' },
-    { id: 5, name: '鋼琴' },
-    { id: 6, name: '爵士鼓' },
-    { id: 7, name: '薩克斯風' },
-    { id: 8, name: '小提琴' },
-  ]
   const [player, setPlayer] = useState('all')
 
-  const genereData = [
-    { id: 1, name: '民謠' },
-    { id: 2, name: '搖滾' },
-    { id: 3, name: '金屬' },
-    { id: 4, name: '嘻哈' },
-    { id: 5, name: '靈魂' },
-    { id: 6, name: '世界音樂' },
-    { id: 7, name: '電子' },
-    { id: 8, name: '古典' },
-  ]
   const [genere, setGenere] = useState('all')
 
   const [degree, setDegree] = useState('all')
   // 篩選城市用的資料
   const cityData = CityCountyData.map((v, i) => {
     return v.CityName
+  }).filter((v) => {
+    return v !== '釣魚臺' && v !== '南海島'
   })
   const [region, setRegion] = useState('all')
 
@@ -90,11 +73,21 @@ export default function Test() {
     setRegion('all')
   }
 
+  // ---------------------- jam 假資料  ----------------------
+  const recruitData = jamData.filter((v) => {
+    return v.formed_time === ''
+  })
+
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
-      <div className="page-shero d-none d-sm-block">
-        <Image src={jamHero} className="object-fit-cover w-100" alt="cover" />
+      <div className="page-hero d-none d-sm-block">
+        <Image
+          src={jamHero}
+          className="object-fit-cover w-100"
+          alt="cover"
+          priority
+        />
       </div>
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
@@ -106,11 +99,7 @@ export default function Test() {
           {/* 用戶資訊 */}
           <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
             <div className="mb-photo-wrapper mb-2">
-              <Image
-                src="/jam/amazingshow.jpg"
-                alt="user photo mb"
-                fill
-              ></Image>
+              <Image src="/jam/amazingshow.jpg" alt="user photo mb" fill />
             </div>
             <div>用戶名稱</div>
           </div>
@@ -207,16 +196,9 @@ export default function Test() {
                   >
                     選單
                   </div>
-                  <div className="search input-group">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="請輸入關鍵字..."
-                    />
-                    <div className="search-btn btn d-flex justify-content-center align-items-center p-0">
-                      <IoIosSearch size={25} />
-                    </div>
-                  </div>
+                  <Link href="/jam/form">
+                    <div className="b-btn b-btn-primary px-3">發起JAM</div>
+                  </Link>
                 </div>
 
                 <div className="filter-sort d-flex justify-content-between">
@@ -229,14 +211,12 @@ export default function Test() {
                         setDataSort(e.target.value)
                       }}
                     >
-                      <option selected value="upToDate">
-                        即將到期
-                      </option>
+                      <option defaultValue="upToDate">即將到期</option>
                       <option value="recent">最近發起</option>
                     </select>
                   </div>
                   {/*  ---------------------- 條件篩選  ---------------------- */}
-                  <form className="d-flex align-items-center  position-relative">
+                  <form className="d-flex align-items-center position-relative">
                     <div
                       className="filter-text d-flex align-items-center me-sm-4"
                       role="presentation"
@@ -251,6 +231,27 @@ export default function Test() {
                         onClick={stopPropagation}
                         role="presentation"
                       >
+                        {/* 技術程度 */}
+                        <div className="filter-item">
+                          <div
+                            className="filter-title"
+                            style={{ color: '#5a5a5a' }}
+                          >
+                            技術程度
+                          </div>
+                          <select
+                            className="form-select"
+                            value={degree}
+                            name="degree"
+                            onChange={(e) => {
+                              setDegree(e.target.value)
+                            }}
+                          >
+                            <option defaultValue="all">全部</option>
+                            <option value="1">新手練功</option>
+                            <option value="2">老手同樂</option>
+                          </select>
+                        </div>
                         {/* 徵求樂手 */}
                         <div className="filter-item">
                           <div
@@ -267,9 +268,7 @@ export default function Test() {
                               setPlayer(e.target.value)
                             }}
                           >
-                            <option selected value="all">
-                              全部
-                            </option>
+                            <option defaultValue="all">全部</option>
                             {playerData.map((v) => {
                               return (
                                 <option key={v.id} value={v.id}>
@@ -295,9 +294,7 @@ export default function Test() {
                               setGenere(e.target.value)
                             }}
                           >
-                            <option selected value="all">
-                              全部
-                            </option>
+                            <option defaultValue="all">全部</option>
                             {genereData.map((v) => {
                               return (
                                 <option key={v.id} value={v.id}>
@@ -307,29 +304,7 @@ export default function Test() {
                             })}
                           </select>
                         </div>
-                        {/* 技術程度 */}
-                        <div className="filter-item">
-                          <div
-                            className="filter-title"
-                            style={{ color: '#5a5a5a' }}
-                          >
-                            技術程度
-                          </div>
-                          <select
-                            className="form-select"
-                            value={degree}
-                            name="degree"
-                            onChange={(e) => {
-                              setDegree(e.target.value)
-                            }}
-                          >
-                            <option selected value="all">
-                              全部
-                            </option>
-                            <option value="1">新手練功</option>
-                            <option value="2">老手同樂</option>
-                          </select>
-                        </div>
+
                         {/* 地區 */}
                         <div className="filter-item">
                           <div
@@ -346,9 +321,7 @@ export default function Test() {
                               setRegion(e.target.value)
                             }}
                           >
-                            <option selected value="all">
-                              全部
-                            </option>
+                            <option defaultValue="all">全部</option>
                             {cityData.map((v, i) => {
                               return (
                                 <option key={i} value={v}>
@@ -410,9 +383,32 @@ export default function Test() {
             </div>
             {/* 主內容 */}
             <main className="content">
-              <RecruitCard />
-              <RecruitCard />
-              <RecruitCard />
+              {recruitData.map((v, i) => {
+                const {
+                  id,
+                  former,
+                  member,
+                  title,
+                  degree,
+                  genere,
+                  player,
+                  region,
+                  created_time,
+                } = v
+                return (
+                  <RecruitCard
+                    key={id}
+                    former={former}
+                    member={member}
+                    title={title}
+                    degree={degree}
+                    genere={genere}
+                    player={player}
+                    region={region}
+                    created_time={created_time}
+                  />
+                )
+              })}
             </main>
           </div>
         </div>
@@ -427,6 +423,9 @@ export default function Test() {
           align-items: flex-start;
           align-content: flex-start;
           align-self: 'stretch';
+          @media screen and (max-width: 576px) {
+            justify-content: center;
+          }
         }
       `}</style>
     </>
