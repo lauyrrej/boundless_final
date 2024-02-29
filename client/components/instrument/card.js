@@ -21,7 +21,7 @@ function InstrumentCard({
       <div className="product-details">
         <h3 className="product-title">{productName}</h3>
         <p className="product-price">{productPrice}</p>
-        <p className="product-sold">已售出 {productSold}</p>
+        <p className="product-sold mt-sm-4 mt-1">已售出 {productSold}</p>
       </div>
       <style jsx>{`
         .product-card {
@@ -78,7 +78,9 @@ function InstrumentCard({
           text-align: right;
           font-size: 14px;
           font-family: Noto Sans TC, sans-serif;
-          margin-top: 46px;
+           {
+            /* margin-top: 46px; */
+          }
         }
         .products-container {
           flex: 0 0 50%;
