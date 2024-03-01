@@ -16,6 +16,10 @@ import { FaPlus } from 'react-icons/fa'
 import { FaMinus } from 'react-icons/fa'
 import { FaTrash } from 'react-icons/fa6'
 
+//css module
+import Lesson from '@/pages/cart/lesson-item.module.scss'
+import Instrument from '@/pages/cart/instrument-item.module.scss'
+
 export default function Test() {
   // ----------------------手機版本  ----------------------
   // 主選單
@@ -88,23 +92,32 @@ export default function Test() {
           </div>
         </div>
         <>
-          <div className='cart'>
+          <div className="cart">
             <h2>購物車</h2>
           </div>
           <div className="d-flex justify-content-between cart-process">
-            <div className="d-flex align-items-center ballbox step1" style={{ gap: 10 }}>
+            <div
+              className="d-flex align-items-center ballbox step1"
+              style={{ gap: 10 }}
+            >
               <div className="ball d-flex align-items-center justify-content-center active">
                 1
               </div>
               <div className="h5 cart-process-text">確認/修改訂單</div>
             </div>
-            <div className="d-flex align-items-center ballbox step2" style={{ gap: 10 }}>
+            <div
+              className="d-flex align-items-center ballbox step2"
+              style={{ gap: 10 }}
+            >
               <div className="ball d-flex align-items-center justify-content-center inactive">
                 2
               </div>
               <div className="h5 cart-process-text">填寫訂單資料</div>
             </div>
-            <div className="d-flex align-items-center ballbox step3" style={{ gap: 10 }}>
+            <div
+              className="d-flex align-items-center ballbox step3"
+              style={{ gap: 10 }}
+            >
               <div className="ball d-flex align-items-center justify-content-center inactive">
                 3
               </div>
@@ -112,7 +125,7 @@ export default function Test() {
             </div>
           </div>
           <div className="d-flex">
-            <div className="w-100 p-0 cart-main" style={{ height: '100vh' }}>
+            <div className="w-100 p-0 cart-main" style={{ height: '' }}>
               <div className="cart-lesson">
                 <div className="cart-title">課程</div>
                 <div className="cart-thead">
@@ -120,15 +133,15 @@ export default function Test() {
                   <div className="lesson-price">售價</div>
                 </div>
                 <div className="cart-item-group">
-                  <div className="lesson-item">
-                    <div className="lesson-item-pic">
-                      <Image src="/jam/amazingshow.jpg" fill />
+                  <div className={`${Lesson.lessonItem}`}>
+                    <div className={`${Lesson.lesson_item_pic}`}>
+                      <Image className={`${Lesson.lesson_item_pic_div}`} src="/jam/amazingshow.jpg" fill />
                     </div>
-                    <div className="lesson-item-name h6">
+                    <div className={`${Lesson.lesson_item_name} h6`}>
                       Logic Pro X 從零開始
                     </div>
-                    <div className="lesson-item-price h6">$26000</div>
-                    <div className="lesson-button">
+                    <div className={`${Lesson.lesson_item_price} h6`}>$26000</div>
+                    <div className={`${Lesson.lesson_button} h6`}>
                       <button type="button" className="btn delete-btn">
                         <div>
                           <FaTrash />
@@ -137,15 +150,15 @@ export default function Test() {
                       </button>
                     </div>
                   </div>
-                  <div className="lesson-item">
-                    <div className="lesson-item-pic">
-                      <Image src="/jam/amazingshow.jpg" fill />
+                  <div className={`${Lesson.lessonItem}`}>
+                    <div className={`${Lesson.lesson_item_pic}`}>
+                      <Image className={`${Lesson.lesson_item_pic_div}`} src="/jam/amazingshow.jpg" fill />
                     </div>
-                    <div className="lesson-item-name h6">
+                    <div className={`${Lesson.lesson_item_name} h6`}>
                       Logic Pro X 從零開始
                     </div>
-                    <div className="lesson-item-price h6">$26000</div>
-                    <div className="lesson-button">
+                    <div className={`${Lesson.lesson_item_price} h6`}>$26000</div>
+                    <div className={`${Lesson.lesson_button} h6`}>
                       <button type="button" className="btn delete-btn">
                         <div>
                           <FaTrash />
@@ -189,35 +202,35 @@ export default function Test() {
                   <div className="instrument-total">總價</div>
                 </div>
                 <div className="cart-item-group">
-                  <div className="instrument-item">
-                    <div className="instrument-item-pic">
-                      <Image src="/jam/amazingshow.jpg" fill />
+                  <div className={`${Instrument.instrumentItem}`}>
+                    <div className={`${Instrument.instrument_item_pic}`}>
+                      <Image className={`${Instrument.instrument_item_pic_div}`} src="/jam/amazingshow.jpg" fill />
                     </div>
-                    <div className="instrument-item-name h6">
+                    <div className={`${Instrument.instrument_item_name} h6`}>
                       Logic Pro X 從零開始
                     </div>
-                    <div className="instrument-item-price h6">$26000</div>
-                    <div className="instrument-item-quantity h6">
+                    <div className={`${Instrument.instrument_item_price} h6`}>$26000</div>
+                    <div className={`${Instrument.instrument_item_quantity} h6`}>
                       <div className="input-group">
-                        <button className="btn btn-light quantity-left-minus">
+                        <button className={`${Instrument.quantity_left_minus} btn btn-light`}>
                           <FaMinus />
                         </button>
                         <input
                           type="text"
-                          className="form-control input-number"
+                          className={`${Instrument.input_number} form-control`}
                           id="quantity"
                           name="quantity"
                           defaultValue={10}
                           min={1}
                           max={100}
                         />
-                        <button className="btn btn-primary quantity-right-plus">
+                        <button className={`${Instrument.quantity_right_plus} btn btn-primary`}>
                           <FaPlus />
                         </button>
                       </div>
                     </div>
-                    <div className="instrument-item-total h6">$26000</div>
-                    <div className="instrument-button">
+                    <div className={`${Instrument.instrument_item_total} h6`}>$26000</div>
+                    <div className={`${Instrument.instrument_button}`}>
                       <button type="button" className="btn delete-btn">
                         <div>
                           <FaTrash />
@@ -226,35 +239,35 @@ export default function Test() {
                       </button>
                     </div>
                   </div>
-                  <div className="instrument-item">
-                    <div className="instrument-item-pic">
-                      <Image src="/jam/amazingshow.jpg" fill />
+                  <div className={`${Instrument.instrumentItem}`}>
+                    <div className={`${Instrument.instrument_item_pic}`}>
+                      <Image className={`${Instrument.instrument_item_pic_div}`} src="/jam/amazingshow.jpg" fill />
                     </div>
-                    <div className="instrument-item-name h6">
+                    <div className={`${Instrument.instrument_item_name} h6`}>
                       Logic Pro X 從零開始
                     </div>
-                    <div className="instrument-item-price h6">$26000</div>
-                    <div className="instrument-item-quantity h6">
+                    <div className={`${Instrument.instrument_item_price} h6`}>$26000</div>
+                    <div className={`${Instrument.instrument_item_quantity} h6`}>
                       <div className="input-group">
-                        <button className="btn btn-light quantity-left-minus">
+                        <button className={`${Instrument.quantity_left_minus} btn btn-light`}>
                           <FaMinus />
                         </button>
                         <input
                           type="text"
-                          className="form-control input-number"
+                          className={`${Instrument.input_number} form-control`}
                           id="quantity"
                           name="quantity"
                           defaultValue={10}
                           min={1}
                           max={100}
                         />
-                        <button className="btn btn-primary quantity-right-plus">
+                        <button className={`${Instrument.quantity_right_plus} btn btn-primary`}>
                           <FaPlus />
                         </button>
                       </div>
                     </div>
-                    <div className="instrument-item-total h6">$26000</div>
-                    <div className="instrument-button">
+                    <div className={`${Instrument.instrument_item_total} h6`}>$26000</div>
+                    <div className={`${Instrument.instrument_button}`}>
                       <button type="button" className="btn delete-btn">
                         <div>
                           <FaTrash />
@@ -317,17 +330,45 @@ export default function Test() {
                   </div>
                 </div>
                 <div className="cart-btn">
-                  <div className="btn btn-primary">結帳</div>
+                  <div className="b-btn b-btn-primary d-flex w-100 h-100 justify-content-center" style={{padding: '14px 0'}}>結帳</div>
                 </div>
               </div>
             </div>
           </div>
         </>
       </div>
+      <div className="flow-cart-mb" style={{}}>
+        <div
+          className="d-flex flex-column position-sticky"
+          style={{ gap: 20, top: 110 }}
+        >
+          <div className="total d-flex flex-column" style={{ gap: 20 }}>
+            <div className="d-flex justify-content-between carttext">
+              <div>商品數量</div>
+              <div>樂器*3 課程*2</div>
+            </div>
+            <div className="d-flex justify-content-between carttext">
+              <div>原價合計</div>
+              <div>NT $864000</div>
+            </div>
+            <div className="d-flex justify-content-between carttext discount">
+              <div>折扣合計</div>
+              <div>-NT $3400</div>
+            </div>
+            <div className="d-flex justify-content-between h3">
+              <div>合計</div>
+              <div>NT $790000</div>
+            </div>
+          </div>
+          <div className="cart-btn">
+            <div className="b-btn b-btn-primary d-flex w-100 h-100 justify-content-center" style={{padding: '14px 0'}}>結帳</div>
+          </div>
+        </div>
+      </div>
       <Footer />
 
       <style jsx>{`
-        .cart{
+        .cart {
           color: black;
           padding: 20px 0;
         }
@@ -336,7 +377,7 @@ export default function Test() {
             display: none;
           }
         }
-        .ballbox{
+        .ballbox {
           @media screen and (max-width: 576px) {
             flex-wrap: wrap;
             justify-content: center;
@@ -346,15 +387,15 @@ export default function Test() {
           padding: 8px 40px;
           margin-bottom: 20px;
           @media screen and (max-width: 576px) {
-            padding:0 0 0 0;
-            gap:25px;
+            padding: 0 0 0 0;
+            gap: 25px;
           }
-          .cart-process-text{
-            font-size:20px;
+          .cart-process-text {
+            font-size: 20px;
             text-align: center;
             @media screen and (max-width: 576px) {
-              font-size:14px;
-              width:100px;
+              font-size: 14px;
+              width: 100px;
             }
           }
         }
@@ -381,10 +422,10 @@ export default function Test() {
           font-weight: 700;
           line-height: normal;
           @media screen and (max-width: 576px) {
-            height:40px;
-            width:40px;
+            height: 40px;
+            width: 40px;
             font-size: 18px;
-              }
+          }
         }
         .h5 {
           color: #000;
@@ -425,19 +466,16 @@ export default function Test() {
           border: 1px solid var(--primary, #1581cc);
           padding: 20px;
           align-self: stretch;
+          @media screen and (max-width: 576px) {
+            border: 0;
+            padding: 0;
+            gap: 10px !important;
+          }
         }
         .cart-btn {
           width: 100%;
           display: flex;
-
           justify-content: center;
-          align-items: center;
-          align-self: stretch;
-          border-radius: 5px;
-          .btn {
-            width: 100%;
-            padding: 14px 0px !important;
-          }
         }
         .cart-lesson {
           display: flex;
@@ -504,69 +542,12 @@ export default function Test() {
           }
         }
         .cart-item-group {
-          display:flex;
+          display: flex;
           flex-wrap: wrap;
           gap: 20px;
           padding: 12px;
           color: black;
-          .lesson-item {
-            display: grid;
-            place-content: center;
-            grid-template-columns: repeat(8, 110px);
-            @media screen and (max-width: 576px) {
-              grid-template-columns: repeat(3, 132px);
-              grid-template-rows: repeat(3, 44px);
-            }
-            .lesson-item-pic {
-              width: 110px;
-              height: 110px;
-              grid-column: 1/2;
-              overflow: hidden;
-              position: relative;
-              & img {
-                object-fit: cover;
-              }
-              @media screen and (max-width: 576px) {
-                width: 132px;
-                height: 132px;
-                grid-row: 1/3;
-                grid-column: 1/2;
-              }
-            }
-            .lesson-item-name {
-              grid-row: 1/2;
-              grid-column: 2/4;
-              margin-block: auto;
-              padding-left: 10px;
-              @media screen and (max-width: 576px) {
-                grid-row: 1/2;
-                grid-column: 2/4;
-                margin-block: auto;
-                padding-left: 10px;
-              }
-            }
-            .lesson-item-price {
-              grid-row: 1/2;
-              grid-column: 4/5;
-              margin-block: auto;
-              @media screen and (max-width: 576px) {
-                grid-row: 2/3;
-                grid-column: 2/4;
-                margin-block: auto;
-                padding-left: 10px;
-              }
-            }
-            .lesson-button {
-              grid-row: 1/2;
-              grid-column: 8/9;
-              margin: auto;
-              @media screen and (max-width: 576px) {
-                grid-row: 3/4;
-                grid-column: 3/4;
-                margin-right: 0;
-              }
-            }
-          }
+
           .instrument-item {
             display: grid;
             place-content: center;
@@ -621,7 +602,6 @@ export default function Test() {
                 padding-right: 0;
                 grid-row: 3/4;
                 grid-column: 2/3;
-
               }
             }
             .instrument-item-total {
@@ -647,16 +627,7 @@ export default function Test() {
 
               width: 40px;
               height: 40px;
-              .minussign::before {
-                content: '\x91';
-                color: #000;
-                /* sidebar-font */
-                font-family: 'Noto Sans TC';
-                font-size: 16px;
-                font-style: normal;
-                font-weight: 700;
-                line-height: normal;
-              }
+
               @media screen and (max-width: 576px) {
                 width: 32px;
                 height: 32px;
@@ -666,20 +637,10 @@ export default function Test() {
             .quantity-right-plus {
               width: 40px;
               height: 40px;
-              .plussign::before {
-                content: '\x17';
-                color: var(--white, #fff);
-                /* sidebar-font */
-                font-family: 'Noto Sans TC';
-                font-size: 12px;
-                font-style: normal;
-                font-weight: 700;
-                line-height: normal;
-              }
               @media screen and (max-width: 576px) {
                 width: 32px;
                 height: 32px;
-                padding:0;
+                padding: 0;
               }
             }
             .input-number {
@@ -693,12 +654,13 @@ export default function Test() {
               font-weight: 700;
               line-height: normal;
               @media screen and (max-width: 576px) {
-                padding:0;
+                padding: 0;
                 text-align: center;
               }
             }
           }
         }
+
         .cart-coupon {
           display: flex;
           padding: 0 12px;
@@ -707,9 +669,9 @@ export default function Test() {
             align-items: center;
             gap: 20px;
             @media screen and (max-width: 576px) {
-              gap:0;
-              width:200px;
-              }
+              gap: 0;
+              width: 200px;
+            }
           }
           .cart-coupon-text {
             color: black;
@@ -720,8 +682,8 @@ export default function Test() {
             line-height: 24px; /* 120% */
             @media screen and (max-width: 576px) {
               font-size: 18px;
-              width:100px;
-              }
+              width: 100px;
+            }
           }
           .cart-discount {
             color: var(--primary, #1581cc);
@@ -757,6 +719,18 @@ export default function Test() {
           gap: 6px;
           padding: 5px 10px;
           vertical-align: center;
+        }
+        .flow-cart-mb {
+          display: none;
+          @media screen and (max-width: 576px) {
+            display: block;
+            position: sticky;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            background-color: #FFF;
+            padding: 20px 30px;
+            }
         }
       `}</style>
     </>
