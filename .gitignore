@@ -1,5 +1,5 @@
 .DS_Store
-
+package-lock.json
 /client-test
 /server-test
 server/.vscode/settings.json
