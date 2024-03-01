@@ -1,10 +1,15 @@
-import {createError} from 'http-errors';
+import createError from 'http-errors';
 import express from 'express';
-import path from 'path';
+import path, { dirname } from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan'
+import { fileURLToPath } from 'url';
 // import router 匯入路由
 import indexRouter from './routes/index.js'
+import jamRouter from './routes/jam.js'
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 
@@ -32,6 +37,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 // 使用路由
 app.use('/', indexRouter);
+app.use('/api/jam', jamRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -48,9 +54,5 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
-app.listen(3005, () => {
-  console.log('server is running at http://localhost:3005');
-})
 
 export default app;

@@ -3,16 +3,18 @@
 /**
  * Module dependencies.
  */
-
-var app = require('../app');
-var debug = require('debug')('server-test:server');
-var http = require('http');
+import app from '../app.js'
+import http from 'http';
+import Debug from "debug";
+const debug = Debug('server-test:server');
+import dotenv from 'dotenv';
+dotenv.config();
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || '6005');
 app.set('port', port);
 
 /**
