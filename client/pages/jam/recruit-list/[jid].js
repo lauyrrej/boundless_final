@@ -5,7 +5,6 @@ import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
 //data
-import CityCountyData from '@/data/CityCountyData.json'
 import playerData from '@/data/player.json'
 import genereData from '@/data/genere.json'
 import jamData from '@/data/jam/jam.json'
@@ -13,7 +12,6 @@ import jamData from '@/data/jam/jam.json'
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
 import { ImExit } from 'react-icons/im'
-import { FaCirclePlus } from 'react-icons/fa6'
 // scss
 import styles from '@/pages/jam/jam.module.scss'
 
@@ -42,7 +40,21 @@ export default function Info() {
     const matchedPlayer = playerData.find((pd) => pd.id === p) // 物件
     return matchedPlayer.name
   })
-  console.log(jam.member)
+  // 累加重複的樂器種類 吉他變成吉他*2
+  const countPlayer = playerName.reduce((accumulator, count) => {
+    if (!accumulator[count]) {
+      accumulator[count] = 1
+    } else {
+      accumulator[count]++
+    }
+    return accumulator
+  }, {})
+  //   console.log(countPlayer)
+  const playerResult = Object.entries(countPlayer).map(([player, count]) => {
+    return count > 1 ? `${player}*${count}` : player
+  })
+  //   console.log(playerResult)
+
   // 預計人數
   const nowNumber = jam.member.length + 1
   const totalNumber = jam.member.length + jam.player.length + 1
@@ -59,7 +71,7 @@ export default function Info() {
     const data = jamData.find((v) => {
       return v.id == jid
     })
-    console.log(data)
+    // console.log(data)
     setJam(data)
 
     // try {
@@ -224,7 +236,7 @@ export default function Info() {
                     className="d-flex flex-wrap"
                     style={{ gap: '8px', flex: '1 0 0' }}
                   >
-                    {playerName.map((v, i) => {
+                    {playerResult.map((v, i) => {
                       return (
                         <div
                           key={i}

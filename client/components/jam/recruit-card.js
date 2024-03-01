@@ -17,9 +17,23 @@ export default function RecruitCard({
 }) {
   // 讓player代碼對應樂器種類
   const playerName = player.map((p) => {
-    const matchedPlayer = playerData.find((pd) => pd.id === p) // 物件
+    const matchedPlayer = playerData.find((pd) => pd.id === p) // {id, name}
     return matchedPlayer.name
   })
+  // 累加重複的樂器種類 吉他變成吉他*2
+  const countPlayer = playerName.reduce((accumulator, count) => {
+    if (!accumulator[count]) {
+      accumulator[count] = 1
+    } else {
+      accumulator[count]++
+    }
+    return accumulator
+  }, {})
+  //   console.log(countPlayer)
+  const playerResult = Object.entries(countPlayer).map(([player, count]) => {
+    return count > 1 ? `${player}*${count}` : player
+  })
+
   // 合併種類相同的樂器，並加上其徵求人數
   const playerCombine = playerName.reduce((accumulator, singlePlayer) => {
     if (!accumulator[singlePlayer]) {
@@ -96,7 +110,7 @@ export default function RecruitCard({
             className="d-flex flex-wrap"
             style={{ gap: '8px', flex: '1 0 0' }}
           >
-            {playerName.map((v, i) => {
+            {playerResult.map((v, i) => {
               return (
                 <div key={i} className={`${styles.cardBadge} ${styles.player}`}>
                   {v}
