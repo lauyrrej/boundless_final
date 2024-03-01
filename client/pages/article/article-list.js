@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
@@ -33,6 +34,15 @@ export default function ArticleList() {
 
   // Article-card
   const cardData = { ArticleJson }
+  console.log(cardData)
+
+  const [data, setData] = useState(ArticleJson);
+  console.log(data);
+
+  const handleSearch = () => {
+    const newData = data.filter((v, i) => { return v.title.includes('本') });
+    setData(newData);
+  }
 
   // ----------------------假資料  ----------------------
 
@@ -84,6 +94,13 @@ export default function ArticleList() {
     setScore('all')
     setSales(false)
   }
+
+  // ------------------------- 搜尋/篩選
+  const router = useRouter()
+  // 全部的篩選條件
+  const allCondition = ''
+  const [condition, setCondition] = useState(allCondition)
+  useEffect(() => { }, [allCondition])
 
   return (
     <>
@@ -202,7 +219,10 @@ export default function ArticleList() {
                       className="form-control"
                       placeholder="請輸入關鍵字..."
                     />
-                    <div className="search-btn btn d-flex justify-content-center align-items-center p-0">
+                    <div
+                      // 搜尋按鈕
+                      onClick={handleSearch}
+                      className="search-btn btn d-flex justify-content-center align-items-center p-0">
                       <IoIosSearch size={25} />
                     </div>
                   </div>
@@ -403,7 +423,6 @@ export default function ArticleList() {
                     <ArticleCard key={id} id={id} title={title} content={content} img={img} author={author} publish_time={publish_time.split(" ")[0]} />
                   )
                 })}
-
               </div>
               {/* 分頁按鈕 */}
               <Pagination
