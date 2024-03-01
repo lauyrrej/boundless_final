@@ -3,6 +3,7 @@ import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
+import Head from 'next/head'
 import jamHero from '@/assets/jam-hero.png'
 // data
 import CityCountyData from '@/data/CityCountyData.json'
@@ -80,6 +81,9 @@ export default function RecruitList() {
 
   return (
     <>
+      <Head>
+        <title>團員募集</title>
+      </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       <div className="page-hero d-none d-sm-block">
         <Image

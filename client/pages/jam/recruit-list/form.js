@@ -3,6 +3,7 @@ import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
+import Head from 'next/head'
 //data
 import CityCountyData from '@/data/CityCountyData.json'
 import playerData from '@/data/player.json'
@@ -66,6 +67,9 @@ export default function Form() {
   const [description, setDescription] = useState('')
   return (
     <>
+      <Head>
+        <title>發起JAM</title>
+      </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       <div
         className="container position-relative"
@@ -124,7 +128,7 @@ export default function Form() {
               </Link>
 
               <FaChevronRight />
-              <li style={{ marginLeft: '10px' }}>發起 JAM</li>
+              <li style={{ marginLeft: '10px' }}>發起JAM</li>
             </ul>
           </div>
           <div className="col-12 col-sm-8" style={{ padding: 0 }}>
@@ -390,7 +394,7 @@ export default function Form() {
                 </li>
                 <li>
                   發起後，若 <span className={`${styles.point}`}>30 天內</span>
-                  無法成團，視為發起失敗，將解散JAM。
+                  無法成團，視為發起失敗，將解散 JAM。
                 </li>
                 <li>發起人得視招募情況解散或以當下成員成團。</li>
               </ol>
