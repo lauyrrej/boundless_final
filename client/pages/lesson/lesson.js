@@ -4,6 +4,7 @@ import Footer from '@/components/common/footer'
 //試抓資料區
 import Card from '@/components/lesson/lesson-card-data'
 import Cardrwd from '@/components/lesson/lesson-card-rwd-data'
+import Lesson from '@/data/Lesson.json'
 
 import Link from 'next/link'
 import Image from 'next/image'
@@ -93,6 +94,47 @@ export default function Test() {
   }
 
   let arr = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+
+    //------------試跑卡片回圈
+  // 注意1: 初始值至少要給空陣列
+  // 注意2: 應用程式執行期間，要保持狀態的資料類型一致
+  // 建議在開發時，使用陣列樣貌的範例資料，或使用註解
+  const [products, setProducts] = useState([])
+
+  const [isLoading, setIsLoading] = useState(true)
+
+  // 向伺服器要求資料，設定到狀態中用的函式
+
+  const getProducts = async () => {
+    try {
+      const data = Lesson
+
+      console.log(data)
+
+      // 設定到state中，觸發重新渲染(re-render)，會進入到update階段
+      // 進入狀態前檢查資料類型為陣列，以避免錯誤
+      //如果不是陣列就不進入狀態
+      if (Array.isArray(data)) {
+        setProducts(data)
+
+        // 關閉載入動畫
+        // 因載入時間太短所以看不到動畫，至少撥放2秒再關閉
+        setTimeout(() => {
+          setIsLoading(false)
+        }, 2000)
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  // 初次渲染"之後(After)"，向伺服器要求資料，設定到狀態中
+
+  useEffect(() => {
+    getProducts()
+  }, [])
+
+  console.log('render')
 
   return (
     <>
@@ -376,12 +418,34 @@ export default function Test() {
               </div>
             </div>
             {/* 主內容 */}
-            <div className="content">
+            {/* <div className="content">
               <div className="lesson-card-group">
                 {arr.map((i, index) => {
                   return (
                     <div key={index} className="mb-4">
                       {isSmallScreen ? <Cardrwd /> : <Card />}
+                    </div>
+                  )
+                })}
+              </div>
+            </div> */}
+            <div className="content">
+              <div className="lesson-card-group">
+                              {Lesson.map((v, i) => {
+                    const { id,name, price,teacher_id,img} = v
+                  return (
+                    <div className="mb-4 ">
+                      {isSmallScreen ? (
+                        <Cardrwd />
+                      ) : (
+                        <Card
+                          id={id}
+                          name={name}
+                          price={price}
+                          teacher_id={teacher_id}
+                          img={img}
+                        />
+                      )}
                     </div>
                   )
                 })}

@@ -902,7 +902,7 @@ display:block;
                         font-size: 16px;
                         color: var(--white, #fff);
                         font-weight: 700;
-                         position: sticky-bottom;
+                       
                          bottom: 0;
                         left: 0;
                         width: 100%;
