@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
-import Card from '@/components/instrument/card'
+import Card from '@/components/lesson/lesson-card'
+import Cardrwd from '@/components/lesson/lesson-card-rwd'
 import Link from 'next/link'
 import Image from 'next/image'
-import productlistHero from '@/assets/product-list-hero.jpg'
+import lessonHero from '@/assets/lesson-hero.jpg'
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
@@ -15,6 +16,22 @@ import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 
 export default function Test() {
+  // 在電腦版或手機版時，決定card的樣式，電腦版是直的，手機板是橫的
+  const [isSmallScreen, setIsSmallScreen] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth <= 576)
+    }
+
+    handleResize()
+
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -43,57 +60,43 @@ export default function Test() {
     stopPropagation(e)
     setFilterVisible(!filterVisible)
   }
-
   // ----------------------假資料  ----------------------
   // 資料排序
   const [dataSort, setDataSort] = useState('upToDate')
   // sidebar假資料
   const sidebarData = [
-    { id: 1, parent_id: null, name: '吉他' },
-    { id: 2, parent_id: null, name: '貝斯' },
-    { id: 3, parent_id: null, name: '鍵盤樂器' },
-    { id: 4, parent_id: null, name: '打擊樂器' },
-    { id: 5, parent_id: null, name: '弓弦樂器' },
-    { id: 6, parent_id: null, name: '管樂器' },
-    { id: 7, parent_id: null, name: '音響設備' },
-    { id: 8, parent_id: 1, name: '電吉他' },
-    { id: 9, parent_id: 1, name: '木吉他' },
+    '歌唱技巧',
+    '樂器演奏',
+    '音樂理論',
+    '詞曲創作',
+    '軟體操作',
+    '活動專區',
   ]
-  // filter假資料
-  const brandData = [
-    { id: 1, name: 'YAMAHA' },
-    { id: 2, name: 'Roland' },
-    { id: 3, name: 'Fender' },
-    { id: 4, name: 'Gibson' },
-  ]
-  const [brandSelect, setBrandSelect] = useState('all')
-
   const [priceLow, setPriceLow] = useState('')
   const [priceHigh, setPriceHigh] = useState('')
-  // 商品評價
+  // 課程評價
   const scoreState = ['all', '5', '4', '3']
   const [score, setScore] = useState('all')
 
-  // 促銷商品
+  // 促銷課程
   const [sales, setSales] = useState(false)
 
   // 清除表單內容
   const cleanFilter = () => {
-    setBrandSelect('all')
     setPriceLow('')
     setPriceHigh('')
     setScore('all')
     setSales(false)
   }
 
-  let arr = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+  let arr = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
       <div className="hero d-none d-sm-block">
         <Image
-          src={productlistHero}
+          src={lessonHero}
           className="object-fit-cover w-100"
           alt="cover"
         />
@@ -147,44 +150,20 @@ export default function Test() {
             <div className="sidebar">
               <ul className="d-flex flex-column">
                 <li>
-                  <Link href={'/instrument/all'} className="active">
-                    全部
-                  </Link>
+                  <Link href={'/lesson/all'}>全部</Link>
                 </li>
                 {sidebarData.map((item, index) => {
-                  if (!item.parent_id) {
-                    return (
-                      <li
-                        key={index}
-                        className="d-flex align-items-center justify-content-between"
-                      >
-                        <div>{item.name}</div>
-                        <FaChevronRight size={16} />
-                      </li>
-                    )
-                  }
+                  return (
+                    <li key={index}>
+                      <Link href={`#`}>{item}</Link>
+                    </li>
+                  )
                 })}
-
-                {/* <div>
-            {recipes.map((recipe) => {
-                return <div key={recipe.id}>
-                    <h1>{recipe.title}</h1>
-                    <img src={recipe.image} alt="recipe image" />
-                    {recipe.dishTypes.map((type, index) => {
-                        return <span key={index}>{type}</span>
-                    })}
-                </div>
-            })}
-        </div> */}
-
-                <li>
-                  <Link href={'/instrument/event'}>活動專區</Link>
-                </li>
               </ul>
             </div>
           </div>
 
-          {/*   ----------------------頁面內容  ---------------------- */}
+          {/* 頁面內容 */}
           <div className="col-12 col-sm-10 page-control">
             {/* 手機版sidebar */}
             <div
@@ -204,37 +183,34 @@ export default function Test() {
                 全部
               </Link>
               <Link href={`/instrument/instrument`} className="sm-item">
-                吉他
+                歌唱技巧
               </Link>
               <Link href={`/instrument/instrument`} className="sm-item">
-                貝斯
+                樂器演奏
               </Link>
               <Link href={`/instrument/instrument`} className="sm-item">
-                鍵盤樂器
+                音樂理論
               </Link>
               <Link href={`/instrument/instrument`} className="sm-item">
-                打擊樂器
+                詞曲創作
               </Link>
               <Link href={`/instrument/instrument`} className="sm-item">
-                弓弦樂器
-              </Link>
-              <Link href={`/instrument/instrument`} className="sm-item">
-                管樂器
-              </Link>
-              <Link href={`/instrument/instrument`} className="sm-item">
-                音響設備
+                軟體操作
               </Link>
               <Link href={`/instrument/instrument`} className="sm-item">
                 活動專區
               </Link>
             </div>
-            {/*  ---------------------- 頂部功能列  ---------------------- */}
+
+            {/* 頂部功能列 */}
             <div className="top-function-container">
-              {/*  ---------------------- 麵包屑  ---------------------- */}
+              {/* 麵包屑 */}
               <div className="breadcrumb-wrapper">
                 <ul className="d-flex align-items-center p-0 m-0">
                   <IoHome size={20} />
-                  <li style={{ marginLeft: '8px' }}>樂器商域</li>
+                  <li style={{ marginLeft: '8px' }}>探索課程</li>
+                  <FaChevronRight />
+                  <li style={{ marginLeft: '10px' }}>線上課程</li>
                 </ul>
               </div>
 
@@ -272,13 +248,14 @@ export default function Test() {
                       }}
                     >
                       <option selected value="upToDate">
-                        最熱銷
+                        最熱門
                       </option>
-                      <option value="recent">最高價</option>
-                      <option value="recent">最低價</option>
+                      <option value="recent">依評價</option>
+                      <option value="recent">依時數</option>
                     </select>
                   </div>
-                  {/*  ---------------------- 條件篩選  ---------------------- */}
+
+                  {/* 條件篩選 */}
                   <form className="d-flex align-items-center  position-relative">
                     <div
                       className="filter-text d-flex align-items-center me-sm-4"
@@ -294,30 +271,6 @@ export default function Test() {
                         onClick={stopPropagation}
                         role="presentation"
                       >
-                        {/* 品牌 */}
-                        <div className="filter-item">
-                          <div className="filter-title">選擇品牌</div>
-                          <select
-                            className="form-select"
-                            aria-label="Default select example"
-                            value={brandSelect}
-                            name="brand"
-                            onChange={(e) => {
-                              setBrandSelect(e.target.value)
-                            }}
-                          >
-                            <option selected value="all">
-                              全部
-                            </option>
-                            {brandData.map((v) => {
-                              return (
-                                <option key={v.id} value={v.id}>
-                                  {v.name}
-                                </option>
-                              )
-                            })}
-                          </select>
-                        </div>
                         {/* 價格區間 */}
                         <div className="filter-item">
                           <div className="filter-title">價格區間</div>
@@ -405,7 +358,6 @@ export default function Test() {
                       </div>
                     </div>
                   </form>
-
                   {/* 資料排序 */}
                   <div className="sort d-none d-sm-flex justify-content-between align-items-center">
                     <div className="d-flex align-items-center">
@@ -413,19 +365,18 @@ export default function Test() {
                       <FaSortAmountDown size={14} />
                     </div>
 
-                    <div className="sort-item active">最熱銷</div>
-                    <div className="sort-item">最高價</div>
-                    <div className="sort-item">最低價</div>
+                    <div className="sort-item active">最熱門</div>
+                    <div className="sort-item">依評價</div>
+                    <div className="sort-item">依實數</div>
                   </div>
                 </div>
               </div>
             </div>
-
             {/* 主內容 */}
-            <main className="content">
-              <div className="hot-instrument">
-                <h4 className="text-primary ms-4">熱銷商品</h4>
-                <div className="hot-instrument-card">
+            <div className="content">
+              <div className="hot-lesson">
+                <h4 className="text-primary">熱門課程</h4>
+                <div className="hot-lesson-card">
                   <Card />
                   <Card />
                   <Card />
@@ -433,48 +384,44 @@ export default function Test() {
                 </div>
               </div>
               <hr />
-              <div className="instrument-card-group">
+
+              <div className="lesson-card-group">
                 {arr.map((i, index) => {
                   return (
                     <div key={index} className="">
-                      <Card />
+                      {isSmallScreen ? <Cardrwd /> : <Card />}
                     </div>
                   )
                 })}
               </div>
-            </main>
+            </div>
           </div>
         </div>
       </div>
-
       <Footer />
 
       <style jsx>{`
         .content {
-          display: block;
+          padding-inline: 22px;
         }
-        .instrument-card-group {
+        .lesson-card-group {
           display: flex;
-          justify-content: space-between;
           margin-block: 30px;
-          gap: 10px;
+          gap: 20px;
           flex-wrap: wrap;
         }
-
-        .hot-instrument-card {
+        .hot-lesson-card {
           margin-block: 30px;
           gap: 10px;
           display: flex;
           justify-content: space-between;
         }
         @media screen and (max-width: 576px) {
-          .hot-instrument-card {
-            flex-wrap: wrap;
+          .content {
+            padding-inline: 0;
           }
-          .hot-instrument-card > :global(div) {
-            flex-basis: calc(
-              40% - 40px
-            ); /* Two cards in a row with a 10px gap */
+          .hot-lesson-card {
+            display: none;
           }
         }
       `}</style>

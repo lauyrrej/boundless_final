@@ -1,23 +1,16 @@
 import React from 'react'
+import Image from 'next/image'
 
 export default function CourseCard() {
   return (
     <>
       <article className="course-card">
-        <section className="course-image-wrapper">
-          <img
-            loading="lazy"
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/a7714ac15cb7337bab3fdd53e00644245f4a840747cf1ecc2bc44e48164d588a?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&"
-            alt="Course Preview"
-            className="course-image"
-          />
-          <img
-            loading="lazy"
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/f63b958d31f22ceac9729085dc4ee70e1cc6d5a2dab24fdc0543dd3b1c72eac0?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&"
-            alt=""
-            className="icon-image"
-          />
-        </section>
+        <Image
+          loading="lazy"
+          src="https://cdn.builder.io/api/v1/image/assets/TEMP/a7714ac15cb7337bab3fdd53e00644245f4a840747cf1ecc2bc44e48164d588a?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&"
+          alt="Course Preview"
+        />
+        {/* <section className="course-image-wrapper"></section> */}
         <section className="course-details">
           <div className="course-title">樂理指法一把抓 - 鋼琴基礎從零開始</div>
           <div className="course-instructor">by XX老師</div>
@@ -67,11 +60,11 @@ export default function CourseCard() {
           padding: 8px;
         }
         .course-image-wrapper {
-          display: flex;
+          {/* display: flex;
           flex-direction: column;
           align-items: center;
           overflow: hidden;
-          position: relative;
+          position: relative; */}
           aspect-ratio: 1.33;
           width: 100%;
         }

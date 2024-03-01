@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
-import Card from '@/components/lesson/lesson-card'
-import Cardrwd from '@/components/lesson/lesson-card-rwd'
+import Card from '@/components/instrument/card.js'
 import Link from 'next/link'
 import Image from 'next/image'
-import lessonHero from '@/assets/lesson-hero.jpg'
+import productlistHero from '@/assets/product-list-hero.jpg'
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
@@ -14,24 +13,11 @@ import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
+import Data from '@/data/instrument/instrument.json'
 
 export default function Test() {
-  // 在電腦版或手機版時，決定card的樣式，電腦版是直的，手機板是橫的
-  const [isSmallScreen, setIsSmallScreen] = useState(false)
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsSmallScreen(window.innerWidth <= 576)
-    }
-
-    handleResize()
-
-    window.addEventListener('resize', handleResize)
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [])
+  //a
+  // console.log(Data)
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -60,43 +46,57 @@ export default function Test() {
     stopPropagation(e)
     setFilterVisible(!filterVisible)
   }
+
   // ----------------------假資料  ----------------------
   // 資料排序
   const [dataSort, setDataSort] = useState('upToDate')
   // sidebar假資料
   const sidebarData = [
-    '歌唱技巧',
-    '樂器演奏',
-    '音樂理論',
-    '詞曲創作',
-    '軟體操作',
-    '活動專區',
+    { id: 1, parent_id: null, name: '吉他' },
+    { id: 2, parent_id: null, name: '貝斯' },
+    { id: 3, parent_id: null, name: '鍵盤樂器' },
+    { id: 4, parent_id: null, name: '打擊樂器' },
+    { id: 5, parent_id: null, name: '弓弦樂器' },
+    { id: 6, parent_id: null, name: '管樂器' },
+    { id: 7, parent_id: null, name: '音響設備' },
+    { id: 8, parent_id: 1, name: '電吉他' },
+    { id: 9, parent_id: 1, name: '木吉他' },
   ]
+  // filter假資料
+  const brandData = [
+    { id: 1, name: 'YAMAHA' },
+    { id: 2, name: 'Roland' },
+    { id: 3, name: 'Fender' },
+    { id: 4, name: 'Gibson' },
+  ]
+  const [brandSelect, setBrandSelect] = useState('all')
+
   const [priceLow, setPriceLow] = useState('')
   const [priceHigh, setPriceHigh] = useState('')
-  // 課程評價
+  // 商品評價
   const scoreState = ['all', '5', '4', '3']
   const [score, setScore] = useState('all')
 
-  // 促銷課程
+  // 促銷商品
   const [sales, setSales] = useState(false)
 
   // 清除表單內容
   const cleanFilter = () => {
+    setBrandSelect('all')
     setPriceLow('')
     setPriceHigh('')
     setScore('all')
     setSales(false)
   }
 
-  let arr = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+  // const hotSales = Data.sort
 
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
       <div className="hero d-none d-sm-block">
         <Image
-          src={lessonHero}
+          src={productlistHero}
           className="object-fit-cover w-100"
           alt="cover"
         />
@@ -150,20 +150,94 @@ export default function Test() {
             <div className="sidebar">
               <ul className="d-flex flex-column">
                 <li>
-                  <Link href={'/lesson/all'}>全部</Link>
+                  <Link href={'/instrument/all'} className="active">
+                    全部
+                  </Link>
                 </li>
                 {sidebarData.map((item, index) => {
-                  return (
-                    <li key={index}>
-                      <Link href={`#`}>{item}</Link>
-                    </li>
-                  )
+                  if (!item.parent_id) {
+                    return (
+                      <div
+                        key={index}
+                        className="accordion accordion-flush"
+                        id={`accordion-${index}`}
+                      >
+                        <div className="accordion-item">
+                          <h2 className="accordion-header">
+                            <button
+                              className="accordion-button collapsed"
+                              type="button"
+                              data-bs-toggle="collapse"
+                              aria-expanded="false"
+                              data-bs-target={`#collapse-${index}`}
+                              aria-controls={`collapse-${index}`}
+                            >
+                              {item.name}
+                            </button>
+                          </h2>
+                          <div
+                            id={`collapse-${index}`}
+                            className="accordion-collapse collapse"
+                          >
+                            <div className="accordion-body px-1">
+                              {/* 這裡放入你的 checkbox 內容 */}
+                              <div className="form-check">
+                                <input
+                                  className="form-check-input"
+                                  type="checkbox"
+                                  value=""
+                                  id={`checkbox-${index}`}
+                                />
+                                <label
+                                  className="form-check-label"
+                                  htmlFor={`checkbox-${index}`}
+                                >
+                                  木吉他
+                                </label>
+                              </div>
+                              {/* 重複以上的結構，加入其他 checkbox */}
+                              <div className="form-check">
+                                <input
+                                  className="form-check-input"
+                                  type="checkbox"
+                                  value=""
+                                  id={`checkbox-${index}`}
+                                />
+                                <label
+                                  className="form-check-label"
+                                  htmlFor={`checkbox-${index}`}
+                                >
+                                  電吉他
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  }
                 })}
+
+                {/* <div>
+            {recipes.map((recipe) => {
+                return <div key={recipe.id}>
+                    <h1>{recipe.title}</h1>
+                    <img src={recipe.image} alt="recipe image" />
+                    {recipe.dishTypes.map((type, index) => {
+                        return <span key={index}>{type}</span>
+                    })}
+                </div>
+            })}
+        </div> */}
+
+                <li>
+                  <Link href={'/instrument/event'}>活動專區</Link>
+                </li>
               </ul>
             </div>
           </div>
 
-          {/* 頁面內容 */}
+          {/*   ----------------------頁面內容  ---------------------- */}
           <div className="col-12 col-sm-10 page-control">
             {/* 手機版sidebar */}
             <div
@@ -183,34 +257,37 @@ export default function Test() {
                 全部
               </Link>
               <Link href={`/instrument/instrument`} className="sm-item">
-                歌唱技巧
+                吉他
               </Link>
               <Link href={`/instrument/instrument`} className="sm-item">
-                樂器演奏
+                貝斯
               </Link>
               <Link href={`/instrument/instrument`} className="sm-item">
-                音樂理論
+                鍵盤樂器
               </Link>
               <Link href={`/instrument/instrument`} className="sm-item">
-                詞曲創作
+                打擊樂器
               </Link>
               <Link href={`/instrument/instrument`} className="sm-item">
-                軟體操作
+                弓弦樂器
+              </Link>
+              <Link href={`/instrument/instrument`} className="sm-item">
+                管樂器
+              </Link>
+              <Link href={`/instrument/instrument`} className="sm-item">
+                音響設備
               </Link>
               <Link href={`/instrument/instrument`} className="sm-item">
                 活動專區
               </Link>
             </div>
-
-            {/* 頂部功能列 */}
+            {/*  ---------------------- 頂部功能列  ---------------------- */}
             <div className="top-function-container">
-              {/* 麵包屑 */}
+              {/*  ---------------------- 麵包屑  ---------------------- */}
               <div className="breadcrumb-wrapper">
                 <ul className="d-flex align-items-center p-0 m-0">
                   <IoHome size={20} />
-                  <li style={{ marginLeft: '8px' }}>探索課程</li>
-                  <FaChevronRight />
-                  <li style={{ marginLeft: '10px' }}>線上課程</li>
+                  <li style={{ marginLeft: '8px' }}>樂器商域</li>
                 </ul>
               </div>
 
@@ -248,14 +325,13 @@ export default function Test() {
                       }}
                     >
                       <option selected value="upToDate">
-                        最熱門
+                        最熱銷
                       </option>
-                      <option value="recent">依評價</option>
-                      <option value="recent">依時數</option>
+                      <option value="recent">最高價</option>
+                      <option value="recent">最低價</option>
                     </select>
                   </div>
-
-                  {/* 條件篩選 */}
+                  {/*  ---------------------- 條件篩選  ---------------------- */}
                   <form className="d-flex align-items-center  position-relative">
                     <div
                       className="filter-text d-flex align-items-center me-sm-4"
@@ -271,6 +347,30 @@ export default function Test() {
                         onClick={stopPropagation}
                         role="presentation"
                       >
+                        {/* 品牌 */}
+                        <div className="filter-item">
+                          <div className="filter-title">選擇品牌</div>
+                          <select
+                            className="form-select"
+                            aria-label="Default select example"
+                            value={brandSelect}
+                            name="brand"
+                            onChange={(e) => {
+                              setBrandSelect(e.target.value)
+                            }}
+                          >
+                            <option selected value="all">
+                              全部
+                            </option>
+                            {brandData.map((v) => {
+                              return (
+                                <option key={v.id} value={v.id}>
+                                  {v.name}
+                                </option>
+                              )
+                            })}
+                          </select>
+                        </div>
                         {/* 價格區間 */}
                         <div className="filter-item">
                           <div className="filter-title">價格區間</div>
@@ -358,6 +458,7 @@ export default function Test() {
                       </div>
                     </div>
                   </form>
+
                   {/* 資料排序 */}
                   <div className="sort d-none d-sm-flex justify-content-between align-items-center">
                     <div className="d-flex align-items-center">
@@ -365,43 +466,83 @@ export default function Test() {
                       <FaSortAmountDown size={14} />
                     </div>
 
-                    <div className="sort-item active">最熱門</div>
-                    <div className="sort-item">依評價</div>
-                    <div className="sort-item">依實數</div>
+                    <div className="sort-item active">最熱銷</div>
+                    <div className="sort-item">最高價</div>
+                    <div className="sort-item">最低價</div>
                   </div>
                 </div>
               </div>
             </div>
+
             {/* 主內容 */}
-            <div className="content">
-              <div className="lesson-card-group">
-                {arr.map((i, index) => {
+            <main className="content">
+              <div className="hot-instrument">
+                <h4 className="text-primary">熱銷商品</h4>
+                <div className="hot-instrument-card"></div>
+              </div>
+              <hr />
+
+              <div className="instrument-card-group">
+                {Data.map((v, i) => {
+                  const {
+                    id,
+                    name,
+                    price,
+                    discount,
+                    category_id,
+                    img_small,
+                    sales,
+                  } = v
                   return (
-                    <div key={index} className="col mb-4">
-                      {isSmallScreen ? <Cardrwd /> : <Card />}
+                    <div key={id} className="">
+                      {/* 寫discount的判斷式 */}
+                      <Card
+                        id={id}
+                        pname={name}
+                        price={price}
+                        discount={discount}
+                        categoryID={category_id}
+                        img_small={img_small}
+                        sales={sales}
+                      />
                     </div>
                   )
                 })}
               </div>
-            </div>
+            </main>
           </div>
         </div>
       </div>
+
       <Footer />
 
       <style jsx>{`
         .content {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 20px;
-          align-items: flex-start;
-          align-content: flex-start;
-          align-self: 'stretch';
+          display: block;
         }
-        .lesson-card-group {
+        .instrument-card-group {
+          display: flex;
           justify-content: space-between;
           margin-block: 30px;
           gap: 10px;
+          flex-wrap: wrap;
+        }
+
+        .hot-instrument-card {
+          margin-block: 30px;
+          gap: 10px;
+          display: flex;
+          justify-content: space-between;
+        }
+        @media screen and (max-width: 576px) {
+          .hot-instrument-card {
+            flex-wrap: wrap;
+          }
+          .hot-instrument-card > :global(div) {
+            flex-basis: calc(
+              40% - 40px
+            ); /* Two cards in a row with a 10px gap */
+          }
         }
       `}</style>
     </>
