@@ -252,30 +252,21 @@ export default function Test() {
                     </div>
                   </div> */}
                   {/* 分頁 */}
-                  <div className="d-none d-sm-block">
+                  <div className="d-none d-sm-block pt-4">
                     <nav aria-label="breadcrumb sort d-flex justify-content-between align-items-center">
-                      <ol className="breadcrumb  breadcrumb-line">
-                        <li className="h5 breadcrumb-item coupon-breadcrumb couponBTN">
+                      <ol className="breadcrumb">
+                        <li className="h6 breadcrumb-item">
                           <a href="#" className="active">
                             全部
                           </a>
                         </li>
-                        <li
-                          className="h5 breadcrumb-item coupon-breadcrumb coupon-breadcrumb-item"
-                          aria-current="page"
-                        >
+                        <li className="h6 breadcrumb-item" aria-current="page">
                           <a href="#">樂器</a>
                         </li>
-                        <li
-                          className="h5 breadcrumb-item coupon-breadcrumb coupon-breadcrumb-item"
-                          aria-current="page"
-                        >
+                        <li className="h6 breadcrumb-item" aria-current="page">
                           <a href="#">課程</a>
                         </li>
-                        <li
-                          className="h5 breadcrumb-item coupon-breadcrumb coupon-breadcrumb-item"
-                          aria-current="page"
-                        >
+                        <li className="h6 breadcrumb-item" aria-current="page">
                           <a href="#">已使用</a>
                         </li>
                       </ol>
@@ -407,12 +398,12 @@ export default function Test() {
                       backgroundColor: 'rgb(255, 255, 255)',
                     }}
                   >
-                    <div className="user-content col-12">
-                      <div className="user-content-top">
+                    <div className="coupon-content col-12">
+                      <div className="coupon-content-top">
                         <div className="user-title-userInfo">我的優惠券</div>
                       </div>
                       {/* components */}
-                      <div className={styles['couponImage']}>
+                      <div className="couponImage">
                         {arr.map((v, i) => {
                           return (
                             <Coupon
@@ -500,7 +491,6 @@ export default function Test() {
             gap: 6px;
             color: var(--dark, #1d1d1d);
             text-align: center;
-
             /* h5 */
             font-family: 'Noto Sans TC';
             font-size: 20px;
@@ -520,33 +510,10 @@ export default function Test() {
             fill: var(--light-gray, #cfcfcf);
           }
         }
-        /* -------------------user sidebar-------------------- */
-        /* --------------- user-contect-acticle--------------- */
-
+        /* --------------- contect--------------- */
         .custom-container {
           padding: 0;
           color: #000;
-
-          & p {
-            font-family: 'Noto Sans TC';
-            font-style: normal;
-            font-weight: 400;
-            line-height: normal;
-            overflow: hidden;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 2;
-            color: #000;
-            text-overflow: ellipsis;
-          }
-          & h5 {
-            font-family: 'Noto Sans TC';
-            font-size: 20px;
-            font-style: normal;
-            font-weight: 400;
-            line-height: normal;
-            color: var(--primary-deep, #124365);
-          }
-
           .coupon-pagination {
             display: flex;
             justify-content: center;
@@ -555,8 +522,7 @@ export default function Test() {
             align-self: stretch;
           }
         }
-
-        .user-content {
+        .coupon-content {
           display: flex;
           width: 1070px;
           padding: 20px 10px;
@@ -565,8 +531,7 @@ export default function Test() {
           gap: 20px;
           border-radius: 5px;
           background: var(--gray-30, rgba(185, 185, 185, 0.3));
-
-          .user-content-top {
+          .coupon-content-top {
             display: flex;
             align-items: flex-start;
             align-self: stretch;
@@ -579,201 +544,24 @@ export default function Test() {
             font-style: normal;
             font-weight: 700;
             line-height: normal;
-
-            .user-acticle-newBtn {
-              display: none;
-            }
-          }
-          /*----------------------acticle css----------------------- */
-          .user-acticleList {
-            width: 100%;
-          }
-
-          .user-acticleList-item {
-            align-items: center;
-            padding-left: 25px;
-            margin-inline: auto;
-            /*height: 60px; */
-
-            .user-acticleList-item-acticleCheck {
-            }
-            .user-acticleList-item-acticleLabel {
-              display: -webkit-box;
-              -webkit-box-orient: vertical;
-              -webkit-line-clamp: 1;
-              overflow: hidden;
-            }
-
-            .user-acticleList-item-btnGroup {
-              /* width: 200px; */
-              gap: 10px;
-              align-items: center;
-              justify-content: end;
-
-              .user-acticleList-item-text {
-                color: var(--primary-deep, #124365);
-                font-weight: bold;
-                font-size: 20px;
-              }
-              .user-acticleList-item-btn {
-                align-items: self-end;
-              }
-            }
-          }
-
-          .user-acticleList-item-title {
-            align-items: center;
-            margin-inline: auto;
-            padding-left: 25px;
-            .user-acticleList-item-title-acticleCheck {
-            }
-            .user-acticleList-item-title-acticleLabel {
-              display: -webkit-box;
-              -webkit-box-orient: vertical;
-              -webkit-line-clamp: 1;
-              overflow: hidden;
-            }
-
-            .user-acticleList-item-title-btnGroup {
-              /* width: 200px; */
-              gap: 10px;
-              justify-content: end;
-
-              .user-acticleList-item-title-text {
-                color: var(--primary-deep, #124365);
-                font-weight: bold;
-              }
-              .user-acticleList-item-title-btn {
-                align-items: self-end;
-              }
-            }
-          }
-
-           {
-            /*coupon*/
-          }
-          .breadcrumb-line {
-            border-bottom: 1px solid #fff;
-          }
-          .couponBTN {
-            border-radius: 10px 10px 0 0;
-            background-color: #fff;
-          }
-          .coupon-breadcrumb {
-            color: #5a5a5a;
-            font-weight: 600;
-            font-size: h6;
-            padding-inline: 10px;
-            gap: 8px;
-            padding: 5px 10px;
-            margin: 5px 0 0 0;
-            .coupon-breadcrumb-item {
-              padding-inline: 4px;
-              cursor: pointer;
-              transition: 0.3s;
-              &:hover {
-                color: #1581cc;
-              }
-            }
-            .active {
-              color: #124365;
-              cursor: default;
-              &:hover {
-                color: #124365;
-              }
-            }
-          }
-
-          /*----------------------acticle css----------------------- */
-          .user-orderList-pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            align-self: stretch;
           }
         }
-
-        /* RWD未生效 */
-
-        /* RWD讓SIDEBAR消失 測試用記得刪 */
+        .couponImage {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          margin-left: 16px;
+          @media screen and (max-width: 576px) {
+            padding: 0;
+          }
+        }
         @media screen and (max-width: 576px) {
-          body {
-            padding-inline: 20px;
-          }
-
-          .custom-container {
+          .coupon-content {
+            width: 390px;
+            padding: 10px;
             overflow: hidden;
-
-            .user-content {
-              width: 390px;
-              padding: 10px;
-              overflow: hidden;
-
-              .user-acticle-newBtn {
-                display: flex;
-                margin-right: 25px;
-              }
-            }
-          }
-
-          .user-content {
-            .user-acticleList-item-title {
-              padding-left: 15px;
-              .user-acticleList-item-title-acticleCheck {
-              }
-              .user-acticleList-item-title-acticleLabel {
-                -webkit-line-clamp: 2;
-              }
-
-              .user-acticleList-item-title-btnGroup {
-                justify-content: flex-end;
-                font-size: 12px;
-
-                .user-acticleList-item-title-newBtn {
-                  display: none;
-                }
-                .user-acticleList-item-title-text {
-                  text-align: right;
-                  font-size: 12px;
-                  padding: 3px;
-                }
-
-                .user-acticleList-item-title-btn {
-                  font-size: 12px;
-                  padding: 3px;
-                }
-              }
-            }
-
-            .user-acticleList-item {
-              padding-left: 15px;
-              .user-acticleList-item-acticleCheck {
-                margin-top: 15px;
-              }
-              .user-acticleList-item-acticleLabel {
-                -webkit-line-clamp: 2;
-              }
-
-              .user-acticleList-item-btnGroup {
-                justify-content: flex-end;
-                font-size: 12px;
-
-                .user-acticleList-item-text {
-                  text-align: right;
-                  font-size: 20px;
-                  padding: 3px;
-                }
-
-                .user-acticleList-item-btn {
-                  font-size: 12px;
-                  padding: 3px;
-                }
-              }
-            }
           }
         }
-        /* RWD讓SIDEBAR消失 測試用記得刪 */
       `}</style>
     </>
   )

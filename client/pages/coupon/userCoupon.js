@@ -27,7 +27,7 @@ const sidebarData = [
   '我的課程',
   '我的訊息',
 ]
-let arr = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+let arr = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
 export default function Test() {
   console.log(Data)
@@ -107,13 +107,13 @@ export default function Test() {
                 <div className="d-none d-sm-block">
                   <nav aria-label="breadcrumb sort d-flex justify-content-between align-items-center">
                     <ol className="breadcrumb  breadcrumb-line">
-                      <li className="h6 coupon-breadcrumb breadcrumb-item couponBTN">
+                      <li className="breadcrumb-item coupon-breadcrumb couponBTN">
                         <a href="#" className="active">
                           全部
                         </a>
                       </li>
                       <li
-                        className="h6 coupon-breadcrumb coupon-breadcrumb-item breadcrumb-item"
+                        className="coupon-breadcrumb coupon-breadcrumb-item breadcrumb-item"
                         aria-current="page"
                       >
                         <a
@@ -124,7 +124,7 @@ export default function Test() {
                         </a>
                       </li>
                       <li
-                        className="h6 coupon-breadcrumb coupon-breadcrumb-item breadcrumb-item"
+                        className="coupon-breadcrumb coupon-breadcrumb-item breadcrumb-item"
                         aria-current="page"
                       >
                         <a
@@ -135,7 +135,7 @@ export default function Test() {
                         </a>
                       </li>
                       <li
-                        className="h6 coupon-breadcrumb coupon-breadcrumb-item breadcrumb-item"
+                        className="breadcrumb-item coupon-breadcrumb coupon-breadcrumb-item "
                         aria-current="page"
                       >
                         <a
@@ -265,7 +265,6 @@ export default function Test() {
         }
 
         /* -------------------user sidebar-------------------- */
-
          {
           /* // 全站配色 colors
           $primary: #1581cc;
