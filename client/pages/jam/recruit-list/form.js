@@ -129,8 +129,8 @@ export default function Form() {
           </div>
           <div className="col-12 col-sm-8" style={{ padding: 0 }}>
             {/* 主內容 */}
-            <div className={`${styles.jamForm}`}>
-              <div className={`${styles.formTitle}`}>發起表單</div>
+            <div className={`${styles.jamLeft}`}>
+              <div className={`${styles.jamTitle}`}>發起表單</div>
               {/* -------------------------- 標題 -------------------------- */}
               <div className={`${styles.formItem} row`}>
                 <div className={`${styles.itemTitle} col-12 col-sm-2`}>
@@ -370,9 +370,9 @@ export default function Form() {
           </div>
 
           {/*   ---------------------- 發起須知  ---------------------- */}
-          <div className={`${styles.formRulesWrapper} col-12 col-sm-4`}>
-            <div className={`${styles.formRules}`}>
-              <div className={`${styles.formTitle}`}>發起須知</div>
+          <div className={`${styles.jamRightWrapper} col-12 col-sm-4`}>
+            <div className={`${styles.jamRight}`}>
+              <div className={`${styles.jamTitle}`}>發起須知</div>
               <ol className={`${styles.rules}`}>
                 <li>社群互動，請注意禮節。</li>
                 <li>

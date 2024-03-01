@@ -9,12 +9,12 @@
   --red: #ec3f3f;
   --back: rgba(185, 185, 185, 0.3);
 }
-.formTitle {
+.jamTitle {
   color: var(--deep-primary);
   font-size: 24px;
   font-weight: bold;
 }
-.jamForm {
+.jamLeft {
   background-color: var(--back);
   padding: 16px;
   border-radius: 10px;
@@ -71,14 +71,14 @@
     }
 }
 // ----------------- 發起須知 -----------------
-.formRulesWrapper {
+.jamRightWrapper {
   padding-inline: 20px 0;
   padding-bottom: 30px;
   @media screen and (max-width: 576px) {
     padding-inline: 0;
   }
 }
-.formRules {
+.jamRight {
   background-color: var(--back);
   padding: 16px;
   border-radius: 10px;
@@ -97,4 +97,30 @@
 .point {
     color: var(--primary);
     font-weight: 500;
+}
+
+// ----------------------------- 資訊頁面
+.cardBadge {
+  color: #fff;
+  padding-inline: 10px;
+  padding-block: 4px;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 600;
+  user-select: none;
+  display: flex;
+  align-items: center;
+}
+.degree {
+  background-color: #5a5a5a;
+}
+.player {
+  background-color: #18a1ff;
+}
+.genere {
+  background-color: #faad14;
+}
+.infoText {
+  padding: 0;
+  color: var(--dark);
 }

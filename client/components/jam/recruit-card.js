@@ -6,6 +6,7 @@ import playerData from '@/data/player.json'
 import genereData from '@/data/genere.json'
 
 export default function RecruitCard({
+  id,
   former,
   title,
   degree,
@@ -19,6 +20,16 @@ export default function RecruitCard({
     const matchedPlayer = playerData.find((pd) => pd.id === p) // 物件
     return matchedPlayer.name
   })
+  // 合併種類相同的樂器，並加上其徵求人數
+  const playerCombine = playerName.reduce((accumulator, singlePlayer) => {
+    if (!accumulator[singlePlayer]) {
+      accumulator[singlePlayer] = 1
+    } else {
+      accumulator[singlePlayer]++
+    }
+    return accumulator
+  }, {})
+  console.log(playerCombine)
   // genere對應
   const genereName = genere.map((g) => {
     const matchedGenere = genereData.find((gd) => gd.id === g)
@@ -38,7 +49,10 @@ export default function RecruitCard({
   // console.log(currentTime)
   return (
     <>
-      <Link href="#" className={`${styles.recruitCard}`}>
+      <Link
+        href={`/jam/recruit-list/${id}`}
+        className={`${styles.recruitCard}`}
+      >
         {/* card-header */}
         <div
           className="d-flex justify-content-between align-items-center flex-wrap"

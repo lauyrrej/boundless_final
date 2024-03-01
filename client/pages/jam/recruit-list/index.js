@@ -196,7 +196,7 @@ export default function Test() {
                   >
                     選單
                   </div>
-                  <Link href="/jam/form">
+                  <Link href="/jam/recruit-list/form">
                     <div className="b-btn b-btn-primary px-3">發起JAM</div>
                   </Link>
                 </div>
@@ -398,6 +398,7 @@ export default function Test() {
                 return (
                   <RecruitCard
                     key={id}
+                    id={id}
                     former={former}
                     member={member}
                     title={title}
