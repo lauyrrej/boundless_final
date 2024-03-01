@@ -19,7 +19,7 @@ import { IoClose } from 'react-icons/io5'
 // 自製元件
 import RecruitCard from '@/components/jam/recruit-card'
 
-export default function Test() {
+export default function RecruitList() {
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)

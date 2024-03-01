@@ -1,192 +1,131 @@
 import React from 'react'
 
-    
-export default function LessonCard({
-
-}) {
-    return (
-      <>
-        <div className="col-sm-6 Right sticky-top">
-          <div className="prodBriefing sticky-top">
-            <div className="prodMainName">Logic Pro X 從零開始</div>
-            <div className="Rating">
-              <div className="star">
-                <img
-                  loading="lazy"
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/84522f0e347edba7963eb335fd5301feca031f8d880bba21dd9760a01286c3a5?"
-                  className="starImg"
-                />
-                <div className="ratingNumber">4.9</div>
-                <div className="commentNumber">(10)</div>
-              </div>
-              <div className="sales">購買人數 50</div>
-            </div>
-            <div className="productPrice">
-              <div className="price">NT$ 1,800</div>
+export default function CourseCard() {
+  return (
+    <>
+      <article className="course-card">
+        <section className="course-image-wrapper">
+          <img
+            loading="lazy"
+            src="https://cdn.builder.io/api/v1/image/assets/TEMP/a7714ac15cb7337bab3fdd53e00644245f4a840747cf1ecc2bc44e48164d588a?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&"
+            alt="Course Preview"
+            className="course-image"
+          />
+          <img
+            loading="lazy"
+            src="https://cdn.builder.io/api/v1/image/assets/TEMP/f63b958d31f22ceac9729085dc4ee70e1cc6d5a2dab24fdc0543dd3b1c72eac0?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&"
+            alt=""
+            className="icon-image"
+          />
+        </section>
+        <section className="courset-details">
+          <h3 className="course-title">樂理指法一把抓 - 鋼琴基礎從零開始</h3>
+          <p className="course-instructor">by XX老師</p>
+          <div className="course-info">
+            <div className="rating">
               <img
                 loading="lazy"
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/5ed2e715f1421a33de89ac321d6dcc6d56fbac40a7d43dfe2cf0ecb15054bd3f?"
-                className="likesIcon"
+                src="https://cdn.builder.io/api/v1/image/assets/TEMP/b8287886cc0f8e59d93376690dc57f4af99a9e899badb88e0d2ed47fdb08d035?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&"
+                alt="Rating stars"
+                className="rating-stars"
               />
+              <span className="rating-value">4.9</span>
+              <span className="review-count">(3)</span>
             </div>
-            <div className="lengthHomeworkArea">
-              <div className="lengthhomework">
+            <div>
+              <span className="duration-time">
                 <img
                   loading="lazy"
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/81a1d10e78e821775737fe4938ae726e8de4a80804b01bdda9876d9f86f9b1bb?"
-                  className="lengthIcon"
+                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/8df3a2bdde335108c6d04c0849bce7699504c28286258ab16838e6cce714455f?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&"
+                  alt="Clock icon"
+                  className="duration-icon"
                 />
-                <div className="lengthHomeworkWord">5小時</div>
-              </div>
-              <div className="lengthhomework">
-                <img
-                  loading="lazy"
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/4552b4fc37047176a87577807414005cf8e8466b4ef23329066c1c39e5dad447?"
-                  className="img-10"
-                />
-                <div className="lengthHomeworkWord">1份作業</div>
-              </div>
-            </div>
-            <div className="lessonIntro">
-              Logic Pro
-              為數位音樂編曲入門的必學軟體，從錄音、編曲到混音一次包辦，帶你認識錄音介面、多重效果器，以及豐富的內建素材庫，是對音樂創作有興趣的你不可錯過的專業音樂編曲課程。
-            </div>
-            <div className="shoppingBtn">
-              <div className="cartBtn">
-                <img
-                  loading="lazy"
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
-                  className="cartIcon"
-                />
-                <div className="cart">加入購物車</div>
-              </div>
-              <div className="buyBtn">
-                <div className="buy">立即購買</div>
-              </div>
+                5小時
+              </span>
             </div>
           </div>
-        </div>
-        <style jsx>
-          {`
-            .prodBriefing {
-              /* background-color: #ff9595; */
-              margin-left: 20px;
-              top: 120px;
-            }
-            .prodMainName {
-              color: var(--dark, #1d1d1d);
-              /* font: 700 40px Noto Sans TC, sans-serif; */
-              font-weight: 700;
-              font-size: 40px;
-            }
-            /*  */
-            .font-family {
-              font-family: Noto Sans TC, sans-serif;
-            }
-            /*  */
+          <div className="course-price">NT$ 4,000</div>
+          <div className="enrolled-students">
+            <img
+              loading="lazy"
+              src="https://cdn.builder.io/api/v1/image/assets/TEMP/6d3076872f8f7cffe3e64f324e5f3c6851c51802240e5b7749e95a5dcbb6ab69?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&"
+              alt="User icon"
+              className="user-icon"
+            />
+            <span className="enrollment-count">50</span>
+          </div>
+        </section>
+      </article>
+      <style jsx>{`
+        .course-card {
+          max-width: 240px;
+          border-radius: 5px;
+          border: 1px solid #b9b9b9;
+          background-color: #fff;
+          display: flex;
+          flex-direction: column;
+          padding: 8px;
+        }
+        .course-image-wrapper {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          overflow: hidden;
+          position: relative;
+          aspect-ratio: 1.33;
+          width: 100%;
+        }
+        .course-image,
+        .icon-image {
+          width: 100%;
+          object-fit: cover;
+          object-position: center;
+        }
+        .icon-image {
+          position: absolute;
+          width: 20px;
+          bottom: 12px;
+          right: 12px;
+        }
+        .course-info {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .rating {
+          display: flex;
+          align-items: center;
+        }
 
-            .Rating {
-              justify-content: space-between;
-              display: flex;
-              margin-top: 10px;
-              width: 100%;
-              gap: 20px;
-              font-weight: 400;
-            }
+        .course-details {
+          display: flex;
+          flex-direction: column;
+          color: #1d1d1d;
+          font-weight: 400;
+          padding: 14px 12px;
+        }
+        .course-title {
+          font-size: 16px;
+          font-family: Noto Sans TC, sans-serif;
+          margin: 0;
+        }
 
-            .star {
-              justify-content: center;
-              align-items: center;
-              display: flex;
-              gap: 10px;
-              white-space: nowrap;
-            }
-
-            .ratingNumber {
-              color: var(--yellow, #faad14);
-              align-self: stretch;
-              font: 24px Noto Sans TC, sans-serif;
-            }
-
-            .commentNumber {
-              color: var(--body, #b9b9b9);
-              align-self: stretch;
-              flex-grow: 1;
-              margin: auto 0;
-              font: 16px Noto Sans TC, sans-serif;
-            }
-            .sales {
-              color: var(--secondary, #5a5a5a);
-              margin: auto 0;
-              font: 16px Noto Sans TC, sans-serif;
-            }
-            .productPrice {
-              justify-content: space-between;
-              display: flex;
-              margin-top: 10px;
-              gap: 20px;
-            }
-            .price {
-              color: var(--dark, #1d1d1d);
-              white-space: nowrap;
-              padding: 9px 21px 2px 0;
-              font: 700 28px Noto Sans TC, sans-serif;
-            }
-            .likesIcon {
-              justify-content: center;
-              align-items: center;
-              border-radius: 5px;
-              border: 1px solid var(--body, #b9b9b9);
-              display: flex;
-              aspect-ratio: 1;
-              width: 34px;
-              height: 34px;
-              margin: auto 0;
-              padding: 0 7px;
-            }
-            .lengthHomeworkArea {
-              display: flex;
-            }
-            .lengthhomework {
-              justify-content: space-between;
-              display: flex;
-              gap: 5px;
-            }
-
-            .lengthHomeworkWord {
-              font-family: Noto Sans TC, sans-serif;
-              flex-grow: 1;
-            }
-            .lessonIntro {
-            }
-            .shoppingBtn {
-              display: flex;
-              margin-top: 20px;
-              justify-content: space-evenly;
-              gap: 12px;
-              font-size: 16px;
-              color: var(--white, #fff);
-              font-weight: 700;
-            }
-            .cartBtn {
-              display: flex;
-              justify-content: space-between;
-              border-radius: 5px;
-              background-color: var(--body, #b9b9b9);
-              gap: 12px;
-              padding: 8px 78px;
-            }
-            .buyBtn {
-              display: flex;
-              justify-content: space-between;
-              border-radius: 5px;
-              background-color: #18a1ff;
-              gap: 12px;
-              padding: 8px 78px;
-            }
-          `}
-        </style>
-      </>
-    )
+        .course-price {
+          font-size: 18px;
+          font-family: Noto Sans TC, sans-serif;
+          font-weight: 700;
+          margin-top: 11px;
+        }
+        .enrolled-students {
+          text-align: right;
+          color: #5a5a5a;
+          font-size: 14px;
+          font-family: Noto Sans TC, sans-serif;
+          margin-top: 46px;
+        }
+        /* Add your existing styles here */
+      `}</style>
+    </>
+  )
 }
-        
+

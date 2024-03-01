@@ -1,6 +1,6 @@
 import React from 'react'
 
-function CourseCard() {
+export default function CourseCard() {
   return (
     <>
       <article className="course-card">
@@ -18,7 +18,7 @@ function CourseCard() {
             className="icon-image"
           />
         </section>
-        <section className="courset-details">
+        <section className="course-details">
           <h3 className="course-title">樂理指法一把抓 - 鋼琴基礎從零開始</h3>
           <p className="course-instructor">by XX老師</p>
           <div className="course-info">
@@ -128,5 +128,3 @@ function CourseCard() {
     </>
   )
 }
-
-export default CourseCard
