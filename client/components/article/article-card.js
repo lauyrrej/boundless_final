@@ -91,6 +91,13 @@ export default function Articlecard({
         {/* background-color: rgb(239, 184, 184); */}
         padding: 10px;
       }
+      @media screen and (max-width: 576px) {
+        .article-card {
+          width: 100%;
+          height: 100px;
+          padding-bottom: 250px;
+        }
+      }
       .article-info {
         width: 180px;
       }
@@ -124,6 +131,11 @@ export default function Articlecard({
         height: 102px;
         border-radius: 5%;
         object-fit: cover;
+      }
+      @media screen and (max-width: 576px) {
+        .article-img {
+          width: 30px;
+        }
       }
       .views-like p {
         font-size: small;

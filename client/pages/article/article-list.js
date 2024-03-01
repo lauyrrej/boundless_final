@@ -386,7 +386,7 @@ export default function ArticleList() {
             {/* 主內容 */}
             <main className="content me-2">
               <h4 className='text-primary pt-2'>熱門文章</h4>
-              <div className="content-pop d-flex flex-wrap justify-content-between pe-2">
+              <div className="content-pop d-flex flex-wrap">
                 {ArticleJson.slice(0, 4).map((v, i) => {
                   {/* 熱門文章的分類目前是抓前4筆 */ }
                   const { id, title, content, img, author, publish_time } = v
@@ -396,7 +396,7 @@ export default function ArticleList() {
                 })}
               </div>
               <hr />
-              <div className="content-pop d-flex flex-wrap justify-content-between pb-3">
+              <div className="content-pop d-flex flex-wrap">
                 {ArticleJson.map((v, i) => {
                   const { id, title, content, img, author, publish_time } = v
                   return (
@@ -445,7 +445,8 @@ export default function ArticleList() {
       </div>
       <Footer />
 
-      <style jsx>{``}</style>
+      <style jsx>{`
+      `}</style>
     </>
   )
 }
