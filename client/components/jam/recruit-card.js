@@ -43,7 +43,7 @@ export default function RecruitCard({
     }
     return accumulator
   }, {})
-  console.log(playerCombine)
+  // console.log(playerCombine)
   // genere對應
   const genereName = genere.map((g) => {
     const matchedGenere = genereData.find((gd) => gd.id === g)
@@ -52,14 +52,16 @@ export default function RecruitCard({
 
   // 組合日期
   const createdYear = new Date(created_time).getFullYear()
-  const createdMonth = new Date(created_time).getMonth()
+  const createdMonth = new Date(created_time).getMonth() + 1
   const createdDate = new Date(created_time).getDate()
   const combineDate = `${createdYear}-${createdMonth}-${createdDate}`
   // 計算剩餘天數
   const createdTime = new Date(created_time).getTime()
   const currentTime = new Date().getTime()
   // 取得毫秒後，轉換成天數
-  const countDown = Math.ceil((createdTime - currentTime) / (1000 * 3600 * 24))
+  const countDown = Math.ceil(
+    (createdTime + 30 * 24 * 60 * 60 * 1000 - currentTime) / (1000 * 3600 * 24)
+  )
   // console.log(currentTime)
   return (
     <>
@@ -149,7 +151,7 @@ export default function RecruitCard({
             </span>
             <span
               style={
-                countDown <= 3 ? { color: '#ec3f3f' } : { color: '#1d1d1d' }
+                countDown <= 5 ? { color: '#ec3f3f' } : { color: '#1d1d1d' }
               }
             >
               {countDown == 0 ? '今天' : countDown + ' 天'}

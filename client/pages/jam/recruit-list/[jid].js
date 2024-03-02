@@ -14,6 +14,7 @@ import { FaChevronRight } from 'react-icons/fa6'
 import { ImExit } from 'react-icons/im'
 // scss
 import styles from '@/pages/jam/jam.module.scss'
+import Head from 'next/head'
 
 export default function Info() {
   // 執行(呼叫)useRouter，把回傳的路由器儲存在變數router
@@ -64,14 +65,62 @@ export default function Info() {
     return matchedGenere.name
   })
 
+  // 創立時間資料中，單獨取出日期
   const createdDate = jam.created_time.split(' ')[0]
+  // ------------------------------------------------------- 計算倒數時間
+  function calcTimeLeft() {
+    let countDownObj = {}
+    const now = Date.now()
+    // 創立日期 + 30天 - 目前時間 = 剩餘時間
+    const createdTime = new Date(jam.created_time).getTime()
+    const interval = createdTime + 30 * 24 * 60 * 60 * 1000 - now
+    const cdDay = Math.floor(interval / (1000 * 60 * 60 * 24))
+    const cdHour = Math.floor(
+      (interval % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    )
+    const cdMinute = Math.floor((interval % (1000 * 60 * 60)) / (1000 * 60))
+    const cdSecond = Math.floor((interval % (1000 * 60)) / 1000)
+    countDownObj = {
+      day: cdDay,
+      hour: cdHour,
+      minute: cdMinute,
+      second: cdSecond,
+    }
+    return countDownObj
+  }
+  const [countDown, setCountDown] = useState({
+    day: 0,
+    hour: 0,
+    minute: 0,
+    second: 0,
+  })
+  // 剩餘時間是否小於5天
+  const timeWarningState =
+    (Date.now() - new Date(jam.created_time).getTime()) /
+      (1000 * 60 * 60 * 24) >
+    5
+      ? true
+      : false
+  const [timeWarning, setTimeWarning] = useState(timeWarningState)
+
+  useEffect(() => {
+    setCountDown(calcTimeLeft())
+
+    // 每秒更新一次倒數計時
+    const timer = setInterval(() => {
+      setCountDown(calcTimeLeft())
+    }, 1000)
+
+    // 清除計時器
+    return () => clearInterval(timer)
+  }, [jam.created_time])
 
   // 向伺服器要求資料，設定到狀態中用的函式
   const getJam = (jid) => {
     const data = jamData.find((v) => {
       return v.id == jid
+      // console.log(data)
     })
-    // console.log(data)
     setJam(data)
 
     // try {
@@ -96,11 +145,11 @@ export default function Info() {
 
   // 初次渲染後，向伺服器要求資料，設定到狀態中
   useEffect(() => {
-    console.log(router.query)
+    // console.log(router.query)
     // 如果isReady是true，確保能得到query的值
     if (router.isReady) {
       const { jid } = router.query
-      console.log(jid)
+      // console.log(jid)
       getJam(jid)
     }
   }, [router.isReady])
@@ -114,6 +163,7 @@ export default function Info() {
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
+      <Head>JAM資訊</Head>
       <div
         className="container position-relative"
         style={{ minHeight: '95svh' }}
@@ -171,7 +221,7 @@ export default function Info() {
               </Link>
 
               <FaChevronRight />
-              <li style={{ marginLeft: '10px' }}>發起 JAM</li>
+              <li style={{ marginLeft: '10px' }}>JAM資訊</li>
             </ul>
           </div>
           <div className="col-12 col-sm-8" style={{ padding: 0 }}>
@@ -180,7 +230,7 @@ export default function Info() {
               <div
                 className={`${styles.jamTitle} d-flex justify-content-between align-items-center`}
               >
-                <div>JAM 資訊</div>
+                <div>JAM資訊</div>
                 <div className={`${styles.cardBadge} ${styles.degree}`}>
                   {jam.degree == '1' ? '新手練功' : '老手同樂'}
                 </div>
@@ -303,28 +353,10 @@ export default function Info() {
           {/*   ---------------------- 成員名單  ---------------------- */}
           <div className={`${styles.jamRightWrapper} col-12 col-sm-4`}>
             <div className={`${styles.jamRight}`}>
-              <div className={`${styles.jamTitle}`}>發起須知</div>
-              <ol className={`${styles.rules}`}>
-                <li>社群互動，請注意禮節。</li>
-                <li>
-                  發起的 JAM{' '}
-                  <span className={`${styles.point}`}>以一個為限</span>
-                  ，且發起期間<span className={`${styles.point}`}>不得</span>
-                  申請他人的 JAM。
-                </li>
-                <li>
-                  為避免頻繁改變樂團方向，造成和參與者間的協調糾紛，發起後
-                  <span className={`${styles.point}`}>
-                    僅能修改標題、其他條件及描述內容
-                  </span>
-                  ，請送出前再三確認。
-                </li>
-                <li>
-                  發起後，若 <span className={`${styles.point}`}>30 天內</span>
-                  無法成團，視為發起失敗，將解散JAM。
-                </li>
-                <li>發起人得視招募情況解散或以當下成員成團。</li>
-              </ol>
+              <div className={`${styles.jamTitle}`}>期限倒數</div>
+              <div style={{ color: timeWarning ? '#ec3f3f' : '#1d1d1d' }}>
+                {`${countDown.day} 天 ${countDown.hour} 小時 ${countDown.minute} 分 ${countDown.second} 秒`}
+              </div>
             </div>
           </div>
         </div>
