@@ -66,7 +66,11 @@ export default function Info() {
   })
 
   // 創立時間資料中，單獨取出日期
-  const createdDate = jam.created_time.split(' ')[0]
+  // 調出的時間是ISO格式，顯示時需要轉換成本地時區
+  const createdDate = new Date(jam.created_time)
+    .toLocaleString()
+    .split(' ')[0]
+    .replace(/\//g, '-')
   // ------------------------------------------------------- 計算倒數時間
   function calcTimeLeft() {
     let countDownObj = {}
@@ -116,40 +120,29 @@ export default function Info() {
   }, [jam.created_time])
 
   // 向伺服器要求資料，設定到狀態中用的函式
-  const getJam = (jid) => {
-    const data = jamData.find((v) => {
-      return v.id == jid
+  const getJam = async (jid) => {
+    try {
+      const res = await fetch(`http://localhost:3005/api/jam/${jid}`)
+
+      // res.json()是解析res的body的json格式資料，得到JS的資料格式
+      const data = await res.json()
+
+      // 設定到state中，觸發重新渲染(re-render)，會進入到update階段
+      // 進入狀態前檢查資料類型為陣列，以避免錯誤
       // console.log(data)
-    })
-    setJam(data)
-
-    // try {
-    //   const res = await fetch(
-    //     `https://my-json-server.typicode.com/eyesofkids/json-fake-data/products/${pid}`
-    //   )
-
-    //   // res.json()是解析res的body的json格式資料，得到JS的資料格式
-    //   const data = await res.json()
-
-    //   console.log(data)
-
-    //   // 設定到state中，觸發重新渲染(re-render)，會進入到update階段
-    //   // 進入狀態前檢查資料類型為陣列，以避免錯誤
-    //   if (data.name) {
-    //     setJam(data)
-    //   }
-    // } catch (e) {
-    //   console.error(e)
-    // }
+      if (data) {
+        setJam(data)
+      }
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   // 初次渲染後，向伺服器要求資料，設定到狀態中
   useEffect(() => {
-    // console.log(router.query)
     // 如果isReady是true，確保能得到query的值
     if (router.isReady) {
       const { jid } = router.query
-      // console.log(jid)
       getJam(jid)
     }
   }, [router.isReady])
@@ -159,11 +152,12 @@ export default function Info() {
   const menuMbToggle = () => {
     setShowMenu(!showMenu)
   }
-
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
-      <Head>JAM資訊</Head>
+      <Head>
+        <title>JAM資訊</title>
+      </Head>
       <div
         className="container position-relative"
         style={{ minHeight: '95svh' }}
@@ -324,7 +318,7 @@ export default function Info() {
                   其他條件
                 </div>
                 <div className={`${styles.infoText} col-12 col-sm-10`}>
-                  {jam.condition == '' ? '無' : jam.condition}
+                  {jam.band_condition == '' ? '無' : jam.band_condition}
                 </div>
               </div>
               {/* -------------------------- 描述 -------------------------- */}

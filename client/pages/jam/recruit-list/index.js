@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
@@ -21,6 +22,7 @@ import { IoClose } from 'react-icons/io5'
 import RecruitCard from '@/components/jam/recruit-card'
 
 export default function RecruitList() {
+  const router = useRouter()
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -73,11 +75,30 @@ export default function RecruitList() {
     setDegree('all')
     setRegion('all')
   }
+  // ---------------------- JAM 資料  ----------------------
+  const [jams, setJams] = useState([])
+  // 向伺服器要求資料，設定到狀態中用的函式
+  const getJams = async () => {
+    try {
+      const res = await fetch(`http://localhost:3005/api/jam`)
 
-  // ---------------------- jam 假資料  ----------------------
-  const recruitData = jamData.filter((v) => {
-    return v.formed_time === ''
-  })
+      // res.json()是解析res的body的json格式資料，得到JS的資料格式
+      const data = await res.json()
+
+      // 設定到state中，觸發重新渲染(re-render)，會進入到update階段
+      // 進入狀態前檢查資料類型為陣列，以避免錯誤
+      console.log(data)
+      if (data) {
+        setJams(data)
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  useEffect(() => {
+    getJams()
+  }, [router.isReady, router.query])
 
   return (
     <>
@@ -346,9 +367,12 @@ export default function RecruitList() {
                           >
                             清除
                           </div>
-                          <div className="filter-btn confirm-btn w-100 d-flex justify-content-center">
+                          <Link
+                            href={`/jam/recruit-list/?degree=${degree}&player=${player}&genere=${genere}&region=${region}`}
+                            className="filter-btn confirm-btn w-100 d-flex justify-content-center"
+                          >
                             確認
-                          </div>
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -387,7 +411,7 @@ export default function RecruitList() {
             </div>
             {/* 主內容 */}
             <main className="content">
-              {recruitData.map((v, i) => {
+              {jams.map((v, i) => {
                 const {
                   id,
                   former,
