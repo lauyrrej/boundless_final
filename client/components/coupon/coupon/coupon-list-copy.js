@@ -90,6 +90,21 @@ export default function Test() {
     setSales(false)
   }
 
+  // 顯示分頁
+  // const [selectedCategory, setSelectedCategory] = useState([])
+  // console.log(selectedCategory)
+  // const filterCoupons = (category) => {
+  //   if (category === 'All') {
+  //     setCoupons(couponsData)
+  //   } else {
+  //     const filteredCoupons = couponsData.filter(
+  //       (coupon) => coupon.kind === category
+  //     )
+  //     setCoupons(filteredCoupons)
+  //   }
+  //   setSelectedKind(category) // 更新选中的分类
+  // }
+
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
@@ -254,20 +269,47 @@ export default function Test() {
                   <div className="d-none d-sm-block pt-4">
                     <nav aria-label="breadcrumb sort d-flex justify-content-between align-items-center">
                       <ol className="breadcrumb">
-                        <li className="h6 breadcrumb-item">
-                          <a href="#" className="active">
-                            全部
-                          </a>
-                        </li>
-                        <li className="h6 breadcrumb-item" aria-current="page">
-                          <a href="#">樂器</a>
-                        </li>
-                        <li className="h6 breadcrumb-item" aria-current="page">
-                          <a href="#">課程</a>
-                        </li>
+                        <div
+                          role="presentation"
+                          // btn不會跑紅色警告的role
+                          className="btn breadcrumb-item"
+                          aria-current="page"
+                          onClick={() => filterCoupons('All')}
+                        >
+                          全部
+                        </div>
+                        <div
+                          role="presentation"
+                          // btn不會跑紅色警告的role
+                          className="btn breadcrumb-item"
+                          aria-current="page"
+                          onClick={() => filterCoupons('All')}
+                        >
+                          樂器
+                        </div>
+
+                        <div
+                          role="presentation"
+                          // btn不會跑紅色警告的role
+                          className="btn breadcrumb-item"
+                          aria-current="page"
+                          onClick={() => filterCoupons('All')}
+                        >
+                          課程
+                        </div>
                         {/* <li className="h6 breadcrumb-item" aria-current="page">
                           <a href="#">已使用</a>
                         </li> */}
+
+                        {/* <ul>
+                          {coupons.map((coupon) => (
+                            <li key={coupon.id}>
+                              <div>Name: {coupon.name}</div>
+                              <div>Discount: {coupon.discount}</div>
+                              <div>Kind: {coupon.kind}</div>
+                            </li>
+                          ))}
+                        </ul> */}
                       </ol>
                     </nav>
                   </div>

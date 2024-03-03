@@ -89,6 +89,8 @@ export default function Test() {
     setScore('all')
     setSales(false)
   }
+  // 分頁
+  const [category, setCategory] = useState('全部')
 
   return (
     <>
@@ -255,15 +257,19 @@ export default function Test() {
                     <nav aria-label="breadcrumb sort d-flex justify-content-between align-items-center">
                       <ol className="breadcrumb">
                         <li className="h6 breadcrumb-item">
-                          <a href="#" className="active">
+                          <a href="#" onClick={() => setCategory('全部')}>
                             全部
                           </a>
                         </li>
                         <li className="h6 breadcrumb-item" aria-current="page">
-                          <a href="#">樂器</a>
+                          <a href="#" onClick={() => setCategory('樂器')}>
+                            樂器
+                          </a>
                         </li>
                         <li className="h6 breadcrumb-item" aria-current="page">
-                          <a href="#">課程</a>
+                          <a href="#" onClick={() => setCategory('課程')}>
+                            課程
+                          </a>
                         </li>
                         {/* <li className="h6 breadcrumb-item" aria-current="page">
                           <a href="#">已使用</a>
@@ -403,7 +409,11 @@ export default function Test() {
                       </div>
                       {/* components */}
                       <div className="couponImage">
-                        {Data.map((v, i) => {
+                        {Data.filter((item) =>
+                          category === '全部'
+                            ? true
+                            : item.category === category
+                        ).map((v, i) => {
                           const { id, name, discount, kind, limit_time } = v
                           return (
                             <Coupon
