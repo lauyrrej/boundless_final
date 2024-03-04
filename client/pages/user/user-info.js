@@ -6,6 +6,9 @@ import Image from 'next/image'
 import jamHero from '@/assets/jam-hero.png'
 import avatar from '@/public/user/Meiyuyu.jpg'
 
+// 會員認證hook
+import { useAuth } from '@/hooks/user/use-auth'
+
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
@@ -16,6 +19,10 @@ import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 
 export default function Test() {
+  // ----------------------會員登入  ----------------------
+
+  const { auth, login, logout } = useAuth()
+
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -245,6 +252,24 @@ export default function Test() {
                       backgroundColor: 'rgb(255, 255, 255)',
                     }}
                   >
+                    {/* ---------------------測試登入------------------- */}
+
+                    <p>目前登入狀態: {auth.isAuth ? '會員已登入' : '未登入'}</p>
+                    <p>
+                      <button
+                        onClick={() => {
+                          if (auth.isAuth) logout()
+                          else login()
+                        }}
+                      >
+                        {auth.isAuth ? '登出' : '登入'}
+                      </button>
+                    </p>
+                    <p>ID: {auth.userData.id}</p>
+                    <p>帳號: {auth.userData.name}</p>
+                    <p>電子信箱: {auth.userData.email}</p>
+                    <hr />
+                    {/* ---------------------------------------- */}
                     <div className="user-content col-12">
                       <div className="user-content-top">
                         <div className="user-title-userInfo">會員資訊</div>
