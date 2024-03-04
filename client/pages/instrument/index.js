@@ -90,7 +90,34 @@ export default function Test() {
   }
 
   // const hotSales = Data.sort
+  //-------------------連資料庫
 
+  const [instrument, setInstrument] = useState([])
+  function getInstrument() {
+    return new Promise((resolve, reject) => {
+      let url = 'http://localhost:3005/api/instrument'
+      fetch(url, {
+        method: 'GET',
+        credentials: 'include',
+      })
+        .then((response) => {
+          return response.json()
+        })
+        .then((result) => {
+          resolve(result)
+          console.log(result)
+          setInstrument(result)
+        })
+        .catch((error) => {
+          console.log(error)
+          reject()
+        })
+    })
+  }
+
+  useEffect(() => {
+    getInstrument()
+  }, [])
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
@@ -483,6 +510,7 @@ export default function Test() {
               <hr />
 
               <div className="instrument-card-group">
+                {/* 用json套資料 */}
                 {Data.map((v, i) => {
                   const {
                     id,
