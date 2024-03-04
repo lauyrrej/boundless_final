@@ -3,6 +3,8 @@ import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
+
+//圖片
 import jamHero from '@/assets/jam-hero.png'
 import avatar from '@/public/user/Meiyuyu.jpg'
 
@@ -440,8 +442,6 @@ export default function Test() {
             width: 100px;
             height: 100px;
             border-radius: 100px;
-            background: url(<path-to-image>),
-              lightgray -26.448px -3.114px / 132.653% 100% no-repeat;
 
             /* react Image 要加上這兩條參數 家在外層容器的css , Image本身要fill */
 
