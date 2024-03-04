@@ -34,13 +34,16 @@ export default function ArticleList() {
 
   // Article-card
   const cardData = { ArticleJson }
-  console.log(cardData)
+  // console.log(cardData)
 
   const [data, setData] = useState(ArticleJson);
-  console.log(data);
+  // console.log(data);
+
+  const [search, setSearch] = useState('');
 
   const handleSearch = () => {
-    const newData = data.filter((v, i) => { return v.title.includes('本') });
+    console.log('按鈕被典籍了');
+    const newData = data.filter((v, i) => { return v.title.includes(search) });
     setData(newData);
   }
 
@@ -218,6 +221,8 @@ export default function ArticleList() {
                       type="text"
                       className="form-control"
                       placeholder="請輸入關鍵字..."
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
                     />
                     <div
                       // 搜尋按鈕
@@ -407,7 +412,7 @@ export default function ArticleList() {
             <main className="content me-2">
               <h4 className='text-primary pt-2'>熱門文章</h4>
               <div className="content-pop d-flex flex-wrap">
-                {ArticleJson.slice(0, 4).map((v, i) => {
+                {data.slice(0, 4).map((v, i) => {
                   {/* 熱門文章的分類目前是抓前4筆 */ }
                   const { id, title, content, img, author, publish_time } = v
                   return (
@@ -417,7 +422,7 @@ export default function ArticleList() {
               </div>
               <hr />
               <div className="content-pop d-flex flex-wrap">
-                {ArticleJson.map((v, i) => {
+                {data.map((v, i) => {
                   const { id, title, content, img, author, publish_time } = v
                   return (
                     <ArticleCard key={id} id={id} title={title} content={content} img={img} author={author} publish_time={publish_time.split(" ")[0]} />
