@@ -4,7 +4,7 @@ import Footer from '@/components/common/footer'
 //試抓資料區
 import Card from '@/components/lesson/lesson-card-data'
 import Cardrwd from '@/components/lesson/lesson-card-rwd-data'
-import Lesson from '@/data/Lesson.json'
+// import Lesson from '@/data/Lesson.json'
 
 
 import Link from 'next/link'
@@ -95,7 +95,9 @@ export default function Test({ onSearch }) {
     setSales(false)
   }
     //-------------------連資料庫
-     function getData() {
+
+    const [Lesson, setLesson] = useState([])
+     function getLesson() {
        return new Promise((resolve, reject) => {
          let url = 'http://localhost:3005/api/lesson'
          fetch(url, {
@@ -106,7 +108,9 @@ export default function Test({ onSearch }) {
              return response.json()
            })
            .then((result) => {
-             resolve(result)
+               resolve(result)
+               console.log(result)
+                setLesson(result)
            })
            .catch((error) => {
              console.log(error)
@@ -116,20 +120,63 @@ export default function Test({ onSearch }) {
      }
 
      useEffect(() => {
-       getData()
+       getLesson()
      }, [])
     
-  //-------------------分類功能
-  const [selectedCategory, setSelectedCategory] = useState(null)
+    //-------------------分類功能
+      const [LessonCategory, setLessonCategory] = useState([])
+  function getLessonCategory() {
+    return new Promise((resolve, reject) => {
+      let url = 'http://localhost:3005/api/lesson/categories'
+      fetch(url, {
+        method: 'GET',
+        credentials: 'include',
+      })
+        .then((response) => {
+          return response.json()
+        })
+        .then((result) => {
+          resolve(result)
+           console.log(result)
+            setLessonCategory(result)
+           
+        })
+        .catch((error) => {
+          console.log(error)
+          reject()
+        })
+    })
+  }
 
-  const categories = [
-    { id: 1, name: 'Category A' },
-    { id: 2, name: 'Category B' },
-  ]
-  // 根據所選分類過濾商品
-  const filteredProducts = selectedCategory
-    ? Lesson.filter((product) => Lesson.category === selectedCategory)
-    : Lesson
+  useEffect(() => {
+    getLessonCategory()
+  }, [])
+
+
+  const [products, setProducts] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(''); // 用于存储用户选择的分类
+
+  useEffect(() => {
+    // 定义一个函数用于获取商品数据
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(`/api/products/${selectedCategory}`)
+        const data = await response.json()
+        setProducts(data)
+      } catch (error) {
+        console.error('Error fetching products:', error)
+      }
+    }
+
+    // 当selectedCategory变化时重新获取商品数据
+    if (selectedCategory !== '') {
+      fetchProducts()
+    }
+  }, [selectedCategory])
+
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category)
+  }
 
   //-------------------搜尋功能
   //更新搜索欄狀態
@@ -212,15 +259,8 @@ export default function Test({ onSearch }) {
                   <Link href={'/lesson/all'}>全部</Link>
                 </li>
                 {/* 分類功能 */}
-                {sidebarData.map((item, index) => {
-                  return (
-                    <li
-                      key={index}
-                      onClick={() => onSelectCategory(category.id)}
-                    >
-                      <Link href={`#`}>{item}</Link>
-                    </li>
-                  )
+                {LessonCategory.map((v, index) => {
+                  return <li key={index}>{v.name}</li>
                 })}
               </ul>
             </div>
@@ -443,19 +483,27 @@ export default function Test({ onSearch }) {
               {/*-------- 列表頁卡片迴圈------- */}
               <div className="lesson-card-group">
                 {/* 更改為搜尋過後篩選出來的課程 */}
-                {searchProducts.map((v, i) => {
-                  const { id, name, price, teacher_id, img } = v
+                {products.map((v, i) => {
                   return (
-                    <div className="mb-4 ">
+                    <div className="mb-4 " key={v.id}>
                       {isSmallScreen ? (
-                        <Cardrwd />
+                        <Cardrwd
+                          id={v.id}
+                          name={v.name}
+                          price={v.price}
+                          teacher_id={v.teacher_id}
+                          img={v.img}
+                          sales={v.sales}
+                        />
                       ) : (
                         <Card
-                          id={id}
-                          name={name}
-                          price={price}
-                          teacher_id={teacher_id}
-                          img={img}
+                          id={v.id}
+                          name={v.name}
+                          price={v.price}
+                          teacher_id={v.teacher_id}
+                          img={v.img}
+                          length={v.length}
+                          sales={v.sales}
                         />
                       )}
                     </div>

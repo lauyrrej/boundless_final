@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import Lesson from '@/data/Lesson.json'
+// import Lesson from '@/data/Lesson.json'
 
-export default function CourseCard({ id, name, price, teacher_id, img }) {
+export default function CourseCard({ id, name, price, teacher_id, img,length, sales }) {
   return (
     <>
       <article className="course-card">
@@ -42,11 +42,11 @@ export default function CourseCard({ id, name, price, teacher_id, img }) {
                   alt="Clock icon"
                   className="duration-icon"
                 />
-                5小時
+                {length}5小時
               </span>
             </div>
           </div>
-          <div className="course-price">{price}</div>
+          <div className="course-price">${price}</div>
           <div className="enrolled-students">
             <img
               loading="lazy"
@@ -54,7 +54,7 @@ export default function CourseCard({ id, name, price, teacher_id, img }) {
               alt="User icon"
               className="user-icon"
             />
-            <span className="enrollment-count">50</span>
+            <span className="enrollment-count">{sales}50</span>
           </div>
         </section>
       </article>
