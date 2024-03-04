@@ -79,9 +79,7 @@ export default function ProductBriefCard({}) {
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/81a1d10e78e821775737fe4938ae726e8de4a80804b01bdda9876d9f86f9b1bb?"
                 className="lengthIcon"
               />
-              <div className="lengthHomeworkWord">
-                {Lesson[0].length}分鐘
-              </div>
+              <div className="lengthHomeworkWord">{Lesson[0].length}分鐘</div>
             </div>
             <div className="lengthhomework">
               <img
@@ -114,7 +112,7 @@ export default function ProductBriefCard({}) {
             </div>
           </div>
         </div>
-        <Toaster className="toaster" />
+        <Toaster position="bottom-center" reverseOrder={false} />
       </div>
       <style jsx>
         {`
@@ -261,11 +259,7 @@ export default function ProductBriefCard({}) {
               background-color: #000000;
             }
           }
-          .toaster {
-            position: fixed;
-            top: 500px; /* 距離頂部的距離 */
-            z-index: 100000; /* 設置較高的 z-index */
-          }
+       
         `}
       </style>
     </>

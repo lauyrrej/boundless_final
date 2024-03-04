@@ -14,7 +14,7 @@
     "@babel/preset-react": "^7.23.3",
     "@ckeditor/ckeditor5-build-classic": "^41.1.0",
     "@ckeditor/ckeditor5-react": "^6.2.0",
-    "axios": "^1.4.0",
+    "axios": "^1.6.7",
     "bootstrap": "^5.3.3",
     "lodash": "^4.17.21",
     "next": "^14.1.0",
@@ -28,7 +28,6 @@
     "sweetalert2": "^11.10.5",
     "sweetalert2-react-content": "^5.0.7",
     "validator": "^13.9.0"
- 
   },
   "devDependencies": {
     "eslint": "^8",

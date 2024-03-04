@@ -27,7 +27,7 @@ export default function CourseCard({ id, name, price, teacher_id, img }) {
             <div className="rating">
               <img
                 loading="lazy"
-                src=""
+                src="https://cdn.builder.io/api/v1/image/assets/TEMP/b8287886cc0f8e59d93376690dc57f4af99a9e899badb88e0d2ed47fdb08d035?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&"
                 alt="Rating stars"
                 className="rating-stars"
               />

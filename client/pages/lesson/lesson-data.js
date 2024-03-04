@@ -6,6 +6,7 @@ import Card from '@/components/lesson/lesson-card-data'
 import Cardrwd from '@/components/lesson/lesson-card-rwd-data'
 import Lesson from '@/data/Lesson.json'
 
+
 import Link from 'next/link'
 import Image from 'next/image'
 import lessonHero from '@/assets/lesson-hero.jpg'
@@ -19,7 +20,7 @@ import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 
 
-export default function Test() {
+export default function Test({ onSearch }) {
   // 在電腦版或手機版時
   const [isSmallScreen, setIsSmallScreen] = useState(false)
 
@@ -93,16 +94,62 @@ export default function Test() {
     setScore('all')
     setSales(false)
   }
+    //-------------------連資料庫
+     function getData() {
+       return new Promise((resolve, reject) => {
+         let url = 'http://localhost:3005/api/lesson'
+         fetch(url, {
+           method: 'GET',
+           credentials: 'include',
+         })
+           .then((response) => {
+             return response.json()
+           })
+           .then((result) => {
+             resolve(result)
+           })
+           .catch((error) => {
+             console.log(error)
+             reject()
+           })
+       })
+     }
 
-    //分類功能
-
-const handleItemClick = (categoryId) => {
-  // 处理点击事件的逻辑
-  console.log('Category ID clicked:')
-}
-  // 根據所選分類過濾商品
-
+     useEffect(() => {
+       getData()
+     }, [])
     
+  //-------------------分類功能
+  const [selectedCategory, setSelectedCategory] = useState(null)
+
+  const categories = [
+    { id: 1, name: 'Category A' },
+    { id: 2, name: 'Category B' },
+  ]
+  // 根據所選分類過濾商品
+  const filteredProducts = selectedCategory
+    ? Lesson.filter((product) => Lesson.category === selectedCategory)
+    : Lesson
+
+  //-------------------搜尋功能
+  //更新搜索欄狀態
+  const [searchKeyword, setSearchKeyword] = useState('')
+  const handleSearch = (keyword) => {
+    setSearchKeyword(keyword)
+  }
+
+  //過濾商品列表
+  const searchProducts = Lesson.filter((product) =>
+    product.name.toLowerCase().includes(searchKeyword.toLowerCase())
+  )
+  // 搜索欄组件
+  const [keyword, setKeyword] = useState('')
+
+  const handleChange = (event) => {
+    setKeyword(event.target.value)
+    onSearch(event.target.value)
+  }
+
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
@@ -169,7 +216,7 @@ const handleItemClick = (categoryId) => {
                   return (
                     <li
                       key={index}
-                      onClick={() => handleItemClick()}
+                      onClick={() => onSelectCategory(category.id)}
                     >
                       <Link href={`#`}>{item}</Link>
                     </li>
@@ -232,7 +279,8 @@ const handleItemClick = (categoryId) => {
 
               <div className="top-function-flex">
                 {/*  ---------------------- 搜尋欄  ---------------------- */}
-                <div className="search-sidebarBtn">
+                <div className="search-sidebarBtn" onSearch={handleSearch}>
+                  {/* ?? */}
                   <div
                     className="d-flex d-sm-none b-btn b-btn-body"
                     role="presentation"
@@ -246,6 +294,8 @@ const handleItemClick = (categoryId) => {
                       type="text"
                       className="form-control"
                       placeholder="請輸入關鍵字..."
+                      value={keyword}
+                      onChange={handleChange}
                     />
                     <div className="search-btn btn d-flex justify-content-center align-items-center p-0">
                       <IoIosSearch size={25} />
@@ -392,7 +442,8 @@ const handleItemClick = (categoryId) => {
             <div className="content">
               {/*-------- 列表頁卡片迴圈------- */}
               <div className="lesson-card-group">
-                {Lesson.map((v, i) => {
+                {/* 更改為搜尋過後篩選出來的課程 */}
+                {searchProducts.map((v, i) => {
                   const { id, name, price, teacher_id, img } = v
                   return (
                     <div className="mb-4 ">
@@ -416,7 +467,6 @@ const handleItemClick = (categoryId) => {
         </div>
       </div>
       <Footer />
-
       <style jsx>{`
         .lesson-card-group {
           display: flex;

@@ -12,11 +12,8 @@ export default function CourseCard() {
             className="course-image"
           />
         </section>
-        {/* 試跑迴圈抓資料 */}
-
-        {products.map((v, i) => {
-          return (
-            <section className="courset-details" key={i}>
+        {/* 試跑迴圈抓資料 */}     
+            <section className="courset-details">
               <h3 className="course-title">
                 樂理指法一把抓 - 鋼琴基礎從零開始
               </h3>
@@ -63,8 +60,6 @@ export default function CourseCard() {
                 />
               </div>
             </section>
-          )
-        })}
       </article>
       <style jsx>{`
         .course-card {
