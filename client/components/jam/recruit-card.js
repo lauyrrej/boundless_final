@@ -2,23 +2,22 @@ import styles from '@/components/jam/recruit-card.module.scss'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import playerData from '@/data/player.json'
-import genereData from '@/data/genere.json'
-
 export default function RecruitCard({
   id,
   former,
   title,
   degree,
-  genere,
+  genre,
   player,
   region,
   created_time,
+  genreData,
+  playerData,
 }) {
   // 讓player代碼對應樂器種類
   const playerName = player.map((p) => {
-    const matchedPlayer = playerData.find((pd) => pd.id === p) // {id, name}
-    return matchedPlayer.name
+    const matchedPlayer = playerData.find((pd) => pd.id === p).name // {id, name}
+    return matchedPlayer
   })
   // 累加重複的樂器種類 吉他變成吉他*2
   const countPlayer = playerName.reduce((accumulator, count) => {
@@ -44,10 +43,10 @@ export default function RecruitCard({
     return accumulator
   }, {})
   // console.log(playerCombine)
-  // genere對應
-  const genereName = genere.map((g) => {
-    const matchedGenere = genereData.find((gd) => gd.id === g)
-    return matchedGenere.name
+  // genre對應
+  const genreName = genre.map((g) => {
+    const matchedgenre = genreData.find((gd) => gd.id === g)
+    return matchedgenre.name
   })
 
   // 組合日期
@@ -121,7 +120,7 @@ export default function RecruitCard({
             })}
           </div>
         </div>
-        {/* genere */}
+        {/* genre */}
         <div className="d-flex align-items-start" style={{ gap: '8px' }}>
           <span style={{ color: '#124365', fontWeight: 'bold' }}>
             音樂風格：
@@ -130,7 +129,7 @@ export default function RecruitCard({
             className="d-flex flex-wrap"
             style={{ gap: '8px', flex: '1 0 0' }}
           >
-            {genereName.map((v, i) => {
+            {genreName.map((v, i) => {
               return (
                 <div key={i} className={`${styles.cardBadge} ${styles.genere}`}>
                   {v}
@@ -154,7 +153,7 @@ export default function RecruitCard({
                 countDown <= 5 ? { color: '#ec3f3f' } : { color: '#1d1d1d' }
               }
             >
-              {countDown == 0 ? '今天' : countDown + ' 天'}
+              {countDown == 0 ? '今天' : countDown - 1 + ' 天'}
             </span>
           </div>
         </div>

@@ -4,10 +4,6 @@ import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
-//data
-import playerData from '@/data/player.json'
-import genereData from '@/data/genere.json'
-import jamData from '@/data/jam/jam.json'
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
@@ -22,12 +18,14 @@ export default function Info() {
   // router.isReady(布林值)，true代表本元件已完成水合作用(hydration)，可以取得router.query的值
   const router = useRouter()
 
+  const [genre, setGenre] = useState([])
+  const [player, setPlayer] = useState([])
   const [jam, setJam] = useState({
     id: 0,
     title: '',
     degree: 0,
     created_time: '',
-    genere: [],
+    genre: [],
     player: [],
     region: '',
     condition: '',
@@ -38,7 +36,7 @@ export default function Info() {
 
   // 讓player代碼對應樂器種類
   const playerName = jam.player.map((p) => {
-    const matchedPlayer = playerData.find((pd) => pd.id === p) // 物件
+    const matchedPlayer = player.find((pd) => pd.id === p) // 物件
     return matchedPlayer.name
   })
   // 累加重複的樂器種類 吉他變成吉他*2
@@ -59,10 +57,10 @@ export default function Info() {
   // 預計人數
   const nowNumber = jam.member.length + 1
   const totalNumber = jam.member.length + jam.player.length + 1
-  // genere對應
-  const genereName = jam.genere.map((g) => {
-    const matchedGenere = genereData.find((gd) => gd.id === g)
-    return matchedGenere.name
+  // genre對應
+  const genreName = jam.genre.map((g) => {
+    const matchedgenre = genre.find((gd) => gd.id === g)
+    return matchedgenre.name
   })
 
   // 創立時間資料中，單獨取出日期
@@ -120,7 +118,7 @@ export default function Info() {
   }, [jam.created_time])
 
   // 向伺服器要求資料，設定到狀態中用的函式
-  const getJam = async (jid) => {
+  const getAllData = async (jid) => {
     try {
       const res = await fetch(`http://localhost:3005/api/jam/${jid}`)
 
@@ -131,7 +129,9 @@ export default function Info() {
       // 進入狀態前檢查資料類型為陣列，以避免錯誤
       // console.log(data)
       if (data) {
-        setJam(data)
+        setPlayer(data.playerData)
+        setGenre(data.genreData)
+        setJam(data.jamData)
       }
     } catch (e) {
       console.error(e)
@@ -143,7 +143,7 @@ export default function Info() {
     // 如果isReady是true，確保能得到query的值
     if (router.isReady) {
       const { jid } = router.query
-      getJam(jid)
+      getAllData(jid)
     }
   }, [router.isReady])
   // ---------------------- 手機版本  ----------------------
@@ -257,7 +257,7 @@ export default function Info() {
                     className="d-flex flex-wrap"
                     style={{ gap: '8px', flex: '1 0 0' }}
                   >
-                    {genereName.map((v, i) => {
+                    {genreName.map((v, i) => {
                       return (
                         <div
                           key={i}
@@ -348,7 +348,12 @@ export default function Info() {
           <div className={`${styles.jamRightWrapper} col-12 col-sm-4`}>
             <div className={`${styles.jamRight}`}>
               <div className={`${styles.jamTitle}`}>期限倒數</div>
-              <div style={{ color: timeWarning ? '#ec3f3f' : '#1d1d1d' }}>
+              <div
+                style={{
+                  color: timeWarning ? '#ec3f3f' : '#1d1d1d',
+                  fontSize: '20px',
+                }}
+              >
                 {`${countDown.day} 天 ${countDown.hour} 小時 ${countDown.minute} 分 ${countDown.second} 秒`}
               </div>
             </div>

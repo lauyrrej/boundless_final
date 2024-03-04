@@ -8,9 +8,6 @@ import Head from 'next/head'
 import jamHero from '@/assets/jam-hero.png'
 // data
 import CityCountyData from '@/data/CityCountyData.json'
-import jamData from '@/data/jam/jam.json'
-import playerData from '@/data/player.json'
-import genereData from '@/data/genere.json'
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
@@ -20,6 +17,7 @@ import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 // 自製元件
 import RecruitCard from '@/components/jam/recruit-card'
+import BS5Pagination from '@/components/common/pagination'
 
 export default function RecruitList() {
   const router = useRouter()
@@ -52,44 +50,109 @@ export default function RecruitList() {
     setFilterVisible(!filterVisible)
   }
   // ---------------------- filter 假資料  ----------------------
-  // 資料排序
-  const [dataSort, setDataSort] = useState('upToDate')
   // filter假資料
-  const [player, setPlayer] = useState('all')
+  const [player, setPlayer] = useState('')
 
-  const [genere, setGenere] = useState('all')
+  const [genre, setgenre] = useState('')
 
-  const [degree, setDegree] = useState('all')
+  const [degree, setDegree] = useState('')
   // 篩選城市用的資料
   const cityData = CityCountyData.map((v, i) => {
     return v.CityName
   }).filter((v) => {
     return v !== '釣魚臺' && v !== '南海島'
   })
-  const [region, setRegion] = useState('all')
+  const [region, setRegion] = useState('')
 
   // 清除表單內容
   const cleanFilter = () => {
     setPlayer('all')
-    setGenere('all')
+    setgenre('all')
     setDegree('all')
     setRegion('all')
   }
   // ---------------------- JAM 資料  ----------------------
+  // ------------------------------------------------------- 製作分頁
+  const [page, setPage] = useState(1)
+  const [pageTotal, setPageTotal] = useState(0)
+  // 資料排序
+  const [order, setOrder] = useState('ASC')
+  // 點按分頁時，要送至伺服器的query string參數
+  const handlePageClick = (event) => {
+    router.push({
+      pathname: router.pathname,
+
+      query: {
+        ...router.query,
+        page: event.selected + 1,
+      },
+    })
+  }
+
+  const handleLoadData = () => {
+    // 要送至伺服器的query string參數
+    // 註: 重新載入資料需要跳至第一頁
+    const params = {
+      page: 1, // 跳至第一頁
+      order: order,
+      genre: genre,
+      player: player,
+      degree: degree,
+      region: region,
+    }
+
+    // console.log(params)
+
+    router.push({
+      pathname: router.pathname,
+      query: params,
+    })
+  }
+  const handleOrder = (order) => {
+    setOrder(order)
+    const params = {
+      page: page,
+      order: order,
+      genre: genre,
+      player: player,
+      degree: degree,
+      region: region,
+    }
+
+    router.push({
+      pathname: router.pathname,
+      query: params,
+    })
+  }
+
   const [jams, setJams] = useState([])
+  const [genreData, setGenreData] = useState([])
+  const [playerData, setPlayerData] = useState([])
   // 向伺服器要求資料，設定到狀態中用的函式
-  const getJams = async () => {
+  // params 中儲存所有可能的query篩選條件
+  const getDatas = async (params) => {
+    // 用URLSearchParams產生查詢字串
+    const searchParams = new URLSearchParams(params)
+
     try {
-      const res = await fetch(`http://localhost:3005/api/jam`)
+      const res = await fetch(
+        `http://localhost:3005/api/jam?${searchParams.toString()}`
+      )
 
       // res.json()是解析res的body的json格式資料，得到JS的資料格式
-      const data = await res.json()
+      const datas = await res.json()
 
       // 設定到state中，觸發重新渲染(re-render)，會進入到update階段
       // 進入狀態前檢查資料類型為陣列，以避免錯誤
-      console.log(data)
-      if (data) {
-        setJams(data)
+      console.log(datas)
+      if (datas) {
+        // 設定獲取頁數總合
+        setPageTotal(datas.pageTotal)
+        // 設定獲取項目
+        setPage(datas.page)
+        setJams(datas.jamData)
+        setGenreData(datas.genreData)
+        setPlayerData(datas.playerData)
       }
     } catch (e) {
       console.error(e)
@@ -97,8 +160,27 @@ export default function RecruitList() {
   }
 
   useEffect(() => {
-    getJams()
-  }, [router.isReady, router.query])
+    if (router.isReady) {
+      // 從router.query得到所有查詢字串參數
+      const { order, page, genre, player, degree, region } = router.query
+      // 要送至伺服器的query string參數
+
+      console.log(router.query)
+
+      // 設定回所有狀態(注意所有從查詢字串來都是字串類型)，都要給預設值
+      setPage(Number(page) || 1)
+      setOrder(order || 'ASC')
+      setgenre(genre || 'all')
+      setPlayer(player || 'all')
+      setDegree(degree || 'all')
+      setRegion(region || 'all')
+
+      // 載入資料
+      getDatas(router.query)
+    }
+
+    // eslint-disable-next-line
+  }, [router.query, router.isReady])
 
   return (
     <>
@@ -230,14 +312,14 @@ export default function RecruitList() {
                   <div className="sort-mb d-block d-sm-none">
                     <select
                       className="form-select"
-                      value={dataSort}
-                      name="dataSort"
+                      value={order}
+                      name="order"
                       onChange={(e) => {
-                        setDataSort(e.target.value)
+                        setOrder(e.target.value)
                       }}
                     >
-                      <option defaultValue="upToDate">即將到期</option>
-                      <option value="recent">最近發起</option>
+                      <option defaultValue="ASC">即將到期</option>
+                      <option value="DESC">最近發起</option>
                     </select>
                   </div>
                   {/*  ---------------------- 條件篩選  ---------------------- */}
@@ -272,7 +354,7 @@ export default function RecruitList() {
                               setDegree(e.target.value)
                             }}
                           >
-                            <option defaultValue="all">全部</option>
+                            <option value="all">全部</option>
                             <option value="1">新手練功</option>
                             <option value="2">老手同樂</option>
                           </select>
@@ -293,7 +375,7 @@ export default function RecruitList() {
                               setPlayer(e.target.value)
                             }}
                           >
-                            <option defaultValue="all">全部</option>
+                            <option value="all">全部</option>
                             {playerData.map((v) => {
                               return (
                                 <option key={v.id} value={v.id}>
@@ -313,14 +395,14 @@ export default function RecruitList() {
                           </div>
                           <select
                             className="form-select"
-                            value={genere}
-                            name="genere"
+                            value={genre}
+                            name="genre"
                             onChange={(e) => {
-                              setGenere(e.target.value)
+                              setgenre(e.target.value)
                             }}
                           >
-                            <option defaultValue="all">全部</option>
-                            {genereData.map((v) => {
+                            <option value="all">全部</option>
+                            {genreData.map((v) => {
                               return (
                                 <option key={v.id} value={v.id}>
                                   {v.name}
@@ -346,7 +428,7 @@ export default function RecruitList() {
                               setRegion(e.target.value)
                             }}
                           >
-                            <option defaultValue="all">全部</option>
+                            <option value="all">全部</option>
                             {cityData.map((v, i) => {
                               return (
                                 <option key={i} value={v}>
@@ -367,12 +449,13 @@ export default function RecruitList() {
                           >
                             清除
                           </div>
-                          <Link
-                            href={`/jam/recruit-list/?degree=${degree}&player=${player}&genere=${genere}&region=${region}`}
+                          <div
+                            role="presentation"
                             className="filter-btn confirm-btn w-100 d-flex justify-content-center"
+                            onClick={handleLoadData}
                           >
                             確認
-                          </Link>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -384,23 +467,21 @@ export default function RecruitList() {
                       <FaSortAmountDown size={14} />
                     </div>
                     <div
-                      className={`sort-item ${
-                        dataSort === 'upToDate' ? 'active' : ''
-                      }`}
+                      className={`sort-item ${order === 'ASC' ? 'active' : ''}`}
                       role="presentation"
                       onClick={(e) => {
-                        setDataSort('upToDate')
+                        handleOrder('ASC')
                       }}
                     >
                       即將到期
                     </div>
                     <div
                       className={`sort-item ${
-                        dataSort === 'recent' ? 'active' : ''
+                        order === 'DESC' ? 'active' : ''
                       }`}
                       role="presentation"
                       onClick={(e) => {
-                        setDataSort('recent')
+                        handleOrder('DESC')
                       }}
                     >
                       最近發起
@@ -418,7 +499,7 @@ export default function RecruitList() {
                   member,
                   title,
                   degree,
-                  genere,
+                  genre,
                   player,
                   region,
                   created_time,
@@ -431,14 +512,23 @@ export default function RecruitList() {
                     member={member}
                     title={title}
                     degree={degree}
-                    genere={genere}
+                    genre={genre}
                     player={player}
                     region={region}
                     created_time={created_time}
+                    genreData={genreData}
+                    playerData={playerData}
                   />
                 )
               })}
             </main>
+            <div className="d-flex justify-content-center">
+              <BS5Pagination
+                forcePage={page - 1}
+                onPageChange={handlePageClick}
+                pageCount={pageTotal}
+              />
+            </div>
           </div>
         </div>
       </div>
