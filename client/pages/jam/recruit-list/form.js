@@ -7,7 +7,7 @@ import Head from 'next/head'
 //data
 import CityCountyData from '@/data/CityCountyData.json'
 import playerData from '@/data/player.json'
-import genereData from '@/data/genere.json'
+import genereData from '@/data/genre.json'
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
