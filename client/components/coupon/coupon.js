@@ -1,8 +1,8 @@
 import React from 'react'
 import styles from '@/components/coupon/coupon.module.scss'
-import Data from '@/data/Coupon.json'
+import Data from '@/data/coupon.json'
 
-export default function Coupon() {
+export default function Coupon({ id, name, kind, discount, limit_time }) {
   console.log(Data)
   return (
     <>
@@ -17,23 +17,23 @@ export default function Coupon() {
             />
           </div>
           <div className="col-9">
-            <div className="card-body d-flex justify-content-between py-2">
+            <div className="mx-2 card-body d-flex justify-content-between">
               <div>
-                <h5
-                  className="p-1
+                <div
+                  className="h4 p-1
                   card-title fw-bold"
                 >
-                  {Data[6].name}
-                  {/* 註冊禮XX */}
-                </h5>
-                <h4 className="px-3 py-2">
-                  {Data[6].kind}
+                  {name}
+                  {/* 註冊禮即時領取 */}
+                </div>
+                <div className="h4 px-3 py-2">
+                  {kind}
                   {/* 課程 */}
-                </h4>
+                </div>
               </div>
               <div className="card-text d-flex justify-content-center align-items-center">
                 <div className="fs-2 fw-bold salesType">
-                  {Data[6].discount}
+                  {discount}
                   {/* 95折 */}
                 </div>
               </div>
@@ -41,7 +41,7 @@ export default function Coupon() {
             {/* 下 */}
             <div>
               <p className="card-text px-4 py-1">
-                <small className="text-muted ">到期日：2024/12/31</small>
+                <small className="text-muted ">到期日{limit_time}</small>
               </p>
             </div>
           </div>
