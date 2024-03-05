@@ -66,16 +66,16 @@ router.get("/", async (req, res) => {
         : "";
     const player =
       req.query.player !== "all"
-        ? " AND (`player` LIKE '%," +
+        ? " AND (`players` LIKE '%," +
           req.query.player +
           "]'" +
-          " OR `player` LIKE '[" +
+          " OR `players` LIKE '[" +
           req.query.player +
           ",%'" +
-          " OR `player` LIKE '%," +
+          " OR `players` LIKE '%," +
           req.query.player +
           ",%'" +
-          " OR `player` = '[" +
+          " OR `players` = '[" +
           req.query.player +
           "]')"
         : "";
@@ -133,7 +133,7 @@ router.get("/", async (req, res) => {
         ...v,
         former: JSON.parse(v.former),
         member: setMember,
-        player: JSON.parse(v.player),
+        player: JSON.parse(v.players),
         genre: JSON.parse(v.genre),
       };
     });
@@ -180,7 +180,7 @@ router.get("/:juid", async (req, res) => {
       ...trueData,
       member: setMember,
       former: JSON.parse(trueData.former),
-      player: JSON.parse(trueData.player),
+      player: JSON.parse(trueData.players),
       genre: JSON.parse(trueData.genre),
     };
     // console.log(jam);
@@ -196,16 +196,61 @@ router.get("/:juid", async (req, res) => {
 
 // 發起JAM表單
 router.post("/form", upload.none(), async (req, res) => {
-  const {title, degree, genre, former, players, region, condition, descripition} = req.body;
-	const tureDegree = parseInt(degree)
-    await db.execute(
-        "INSERT INTO `jam` (`id`, `title`, `degree`, `genre`, `former`, `players`, `region`, `condition`, `descripition`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)",
-        [title, tureDegree, genre, former, players, region, condition, descripition]
-    ).then(() => {
-        res.send("新增成功");
-    }).catch(() => {
-        res.status(409).send("發生錯誤");
+  const {
+    title,
+    degree,
+    genre,
+    former,
+    players,
+    region,
+    condition,
+    descripition,
+  } = req.body;
+  const tureDegree = parseInt(degree);
+  const juid = generateUid();
+  await db
+    .execute(
+      "INSERT INTO `jam` (`id`, `juid`, `title`, `degree`, `genre`, `former`, `players`, `region`, `band_condition`, `description`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      [
+        juid,
+        title,
+        tureDegree,
+        genre,
+        former,
+        players,
+        region,
+        condition,
+        descripition,
+      ]
+    )
+    .then(() => {
+      res.send("新增成功");
+    })
+    .catch((error) => {
+      res.status(409).send("發生錯誤: " + error);
     });
 });
+
+function generateUid() {
+  let characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let codeLength = 12;
+  let createdCodes = [];
+  let createCodes = "";
+
+  let Code = "";
+  do {
+    Code = "";
+    for (let i = 0; i < codeLength; i++) {
+      let randomIndex = Math.floor(Math.random() * characters.length);
+      //   回傳characters當中的隨機一值
+      Code += characters.charAt(randomIndex);
+    }
+  } while (createdCodes.includes(Code));
+
+  createdCodes.push(Code);
+  createCodes += Code;
+  return createCodes;
+}
 
 export default router;

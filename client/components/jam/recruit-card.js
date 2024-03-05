@@ -154,7 +154,7 @@ export default function RecruitCard({
                 countDown <= 5 ? { color: '#ec3f3f' } : { color: '#1d1d1d' }
               }
             >
-              {countDown == 0 ? '今天' : countDown - 1 + ' 天'}
+              {countDown == 0 ? '今天' : countDown + ' 天'}
             </span>
           </div>
         </div>

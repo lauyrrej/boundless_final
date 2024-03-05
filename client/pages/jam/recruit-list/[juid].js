@@ -96,12 +96,10 @@ export default function Info() {
   // ----------------------------- 剩餘時間是否小於5天 -----------------------------
   const timeWarningState =
     (Date.now() - new Date(jam.created_time).getTime()) /
-      (1000 * 60 * 60 * 24) >
-    5
+      (1000 * 60 * 60 * 24) >=
+    25
       ? true
       : false
-  const [timeWarning, setTimeWarning] = useState(timeWarningState)
-
   // ----------------------------- useEffect -----------------------------
   useEffect(() => {
     setCountDown(calcTimeLeft())
@@ -343,7 +341,7 @@ export default function Info() {
               <div className={`${styles.jamTitle}`}>期限倒數</div>
               <div
                 style={{
-                  color: timeWarning ? '#ec3f3f' : '#1d1d1d',
+                  color: timeWarningState ? '#ec3f3f' : '#1d1d1d',
                   fontSize: '20px',
                 }}
               >

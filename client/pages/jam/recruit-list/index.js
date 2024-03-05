@@ -83,7 +83,7 @@ export default function RecruitList() {
       pathname: router.pathname,
 
       query: {
-        page: event.selected + 1, // 跳至第一頁
+        page: event.selected + 1,
         order: order,
         genre: genre,
         player: player,
