@@ -300,8 +300,6 @@ export default function Test() {
                   height: 150px;
                   flex-shrink: 0;
                   border-radius: 150px;
-                  background: url(<path-to-image>),
-                    lightgray 50% / cover no-repeat;
                 }
               }
 
