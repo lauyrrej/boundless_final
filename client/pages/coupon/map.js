@@ -1,25 +1,26 @@
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
 import jamHero from '@/assets/jam-hero.png'
+import avatar from '@/public/user/Meiyuyu.jpg'
+
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
 import { IoIosSearch } from 'react-icons/io'
 import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
-import bookmarkIconFill from '@/assets/fillbookmark.svg'
-import bookmarkIcon from '@/assets/emptybookmark.svg'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
-import ArticleCard from '@/components/article/article-card'
-import Pagination from '@/components/article/pagination'
-import ArticleJson from 'data/article/article.json'
 
-export default function ArticleList() {
+// coupon
+import styles from '@/pages/coupon/userCoupon.module.scss'
+import Coupon from '@/components/coupon/coupon.js'
+import Data from '@/data/Coupon.json'
+
+export default function Test() {
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -31,61 +32,19 @@ export default function ArticleList() {
   const sidebarToggle = () => {
     setShowSidebar(!showSidebar)
   }
-
-  // ----------------------功能  ----------------------
-  // const cardData = { ArticleJson }
-  // const [data, setData] = useState(ArticleJson);
-
-  // 擴充收藏功能
-  // 每個Json增加虛構的fav值
-  const initState = ArticleJson.map((v, i) => {
-    return { ...v, fav: false }
-  })
-  // 擴充後的物件陣列作為初始值
-  const [data, setData] = useState(initState)
-  const [search, setSearch] = useState('')
-
-  // 搜尋功能
-  const handleSearch = () => {
-    console.log('按鈕被典籍了')
-    let newData
-    if (search.trim() === '') {
-      newData = ArticleJson
-    } else {
-      newData = data.filter((v, i) => {
-        return v.title.includes(search)
-      })
-    }
-    setData(newData)
-  }
-
-  const categorySearch = () => {
-    let newData
-    if (category === 'all') {
-      newData = ArticleJson
-    } else {
-      newData = data.filter((v, i) => {
-        return v.category_id === category
-      })
-    }
-    setData(newData)
-  }
-
-  // ----------------------分類功能  ----------------------
-
-  // 純func
-  const handleToggleFav = (id) => {
-    const newArticles = data.map((v, i) => {
-      if (v.id === id) return { ...v, fav: !v.fav }
-      else return v
-    })
-    setData(newArticles)
-  }
   // ----------------------假資料  ----------------------
-
   // sidebar假資料
-  const sidebarData = ['全部', '技術分享', '音樂評論']
-
+  const sidebarData = [
+    '會員資訊',
+    '我的樂團',
+    '我的訂單',
+    '我的文章',
+    '我的收藏',
+    '我的優惠券 ',
+    '我的課程',
+    '我的訊息',
+  ]
+  let arr = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
   // 資料排序
   const [dataSort, setDataSort] = useState('latest')
   // ----------------------條件篩選  ----------------------
@@ -132,19 +91,16 @@ export default function ArticleList() {
     setSales(false)
   }
 
-  // ------------------------- 搜尋/篩選
-  const router = useRouter()
-  // 全部的篩選條件
-  const allCondition = ''
-  const [condition, setCondition] = useState(allCondition)
-  useEffect(() => {}, [allCondition])
-
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
-      <div className="page-shero d-none d-sm-block">
+      {/* 先把HEROSECTION隱藏 */}
+      {/* <div
+        className="page-shero d-none d-sm-block"
+        style={{ paddingTop: '60px' }}
+      >
         <Image src={jamHero} className="object-fit-cover w-100" alt="cover" />
-      </div>
+      </div> */}
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
         <div
@@ -191,6 +147,23 @@ export default function ArticleList() {
           {/* sidebar */}
           <div className="sidebar-wrapper d-none d-sm-block col-sm-2">
             <div className="sidebar">
+              <div className="sidebar-user-info">
+                <div className="sidebar-user-info-imgBox">
+                  <Image
+                    style={{ width: 100, height: 100, resizeMode: 'cover' }}
+                    src={avatar}
+                    alt="user photo mb"
+                  ></Image>
+                </div>
+                <div className="sidebar-user-info-text">
+                  <div className="sidebar-user-info-name">棉悠悠</div>
+                  <div className="sidebar-user-info-band">幻獸帕魯</div>
+                </div>
+                {/* 更換大頭貼的功能暫定併回會員資訊 故不再sidebar顯示 */}
+                {/* <div className="sidebar-user-info-Camera-img">
+                  <Image src={avatar} alt="user photo mb" fill></Image>
+                </div> */}
+              </div>
               <ul className="d-flex flex-column">
                 {sidebarData.map((item, index) => {
                   return (
@@ -219,28 +192,43 @@ export default function ArticleList() {
                   }}
                 />
               </div>
-              <Link href={`/jam/recruit-list`} className="sm-item active">
-                團員募集
+              <Link href={``} className="sm-item">
+                會員資訊
               </Link>
-              <Link href={`/jam/jam-list`} className="sm-item">
-                活動中的JAM
+              <Link href={``} className="sm-item">
+                我的樂團
               </Link>
-              <Link href={`/jam/Q&A`} className="sm-item">
-                什麼是JAM？
+              <Link href={``} className="sm-item">
+                我的訂單
+              </Link>
+              <Link href={``} className="sm-item">
+                我的文章
+              </Link>
+              <Link href={``} className="sm-item">
+                我的收藏
+              </Link>
+              <Link href={``} className="sm-item active">
+                我的優惠券
+              </Link>
+              <Link href={``} className="sm-item">
+                我的課程
+              </Link>
+              <Link href={``} className="sm-item">
+                我的訊息
               </Link>
             </div>
             {/*  ---------------------- 頂部功能列  ---------------------- */}
             <div className="top-function-container">
               {/*  ---------------------- 麵包屑  ---------------------- */}
-              <div className="breadcrumb-wrapper">
+              <div className="breadcrumb-wrapper-ns">
                 <ul className="d-flex align-items-center p-0 m-0">
                   <IoHome size={20} />
-                  <li style={{ marginLeft: '8px' }}>Let&apos;s JAM!</li>
+                  <li style={{ marginLeft: '8px' }}>會員中心</li>
                   <FaChevronRight />
-                  <li style={{ marginLeft: '10px' }}>團員募集</li>
+                  <li style={{ marginLeft: '10px' }}>我的優惠券</li>
                 </ul>
               </div>
-
+              {/* 篩選列 */}
               <div className="top-function-flex">
                 {/*  ---------------------- 搜尋欄  ---------------------- */}
                 <div className="search-sidebarBtn">
@@ -252,24 +240,40 @@ export default function ArticleList() {
                   >
                     選單
                   </div>
-                  <div className="search input-group">
+                  {/*搜尋欄*/}
+                  {/* <div className="search input-group">
                     <input
                       type="text"
                       className="form-control"
                       placeholder="請輸入關鍵字..."
-                      value={search}
-                      onChange={(e) => setSearch(e.target.value)}
                     />
-                    <div
-                      // 搜尋按鈕
-                      onClick={handleSearch}
-                      className="search-btn btn d-flex justify-content-center align-items-center p-0"
-                    >
+                    <div className="search-btn btn d-flex justify-content-center align-items-center p-0">
                       <IoIosSearch size={25} />
                     </div>
+                  </div> */}
+                  {/* 分頁 */}
+                  <div className="d-none d-sm-block">
+                    <nav aria-label="breadcrumb sort d-flex justify-content-between align-items-center">
+                      <ol className="breadcrumb">
+                        <li className="h5 breadcrumb-item">
+                          <a href="#" className="active">
+                            全部
+                          </a>
+                        </li>
+                        <li className="h5 breadcrumb-item" aria-current="page">
+                          <a href="#">樂器</a>
+                        </li>
+                        <li className="h5 breadcrumb-item" aria-current="page">
+                          <a href="#">課程</a>
+                        </li>
+                        <li className="h5 breadcrumb-item" aria-current="page">
+                          <a href="#">已使用</a>
+                        </li>
+                      </ol>
+                    </nav>
                   </div>
                 </div>
-
+                {/* 分頁RWD */}
                 <div className="filter-sort d-flex justify-content-between">
                   <div className="sort-mb d-block d-sm-none">
                     <select
@@ -281,13 +285,15 @@ export default function ArticleList() {
                       }}
                     >
                       <option selected value="latest">
-                        新到舊
+                        全部
                       </option>
-                      <option value="oldest">舊到新</option>
+                      <option value="oldest">樂器</option>
+                      <option value="oldest">課程</option>
+                      <option value="oldest">已使用</option>
                     </select>
                   </div>
-                  {/*  ---------------------- 條件篩選  ---------------------- */}
-                  <form className="d-flex align-items-center  position-relative">
+                  {/*篩選*/}
+                  <form className="d-flex align-items-center position-relative">
                     <div
                       className="filter-text d-flex align-items-center me-sm-4"
                       role="presentation"
@@ -302,6 +308,11 @@ export default function ArticleList() {
                         onClick={stopPropagation}
                         role="presentation"
                       >
+                        {/*條件篩選 無法d-none d-sm-block */}
+                        <div className="filter-item">
+                          <div className="filter-title">折扣幅度</div>
+                          <div className=" filter-title">選擇品牌</div>
+                        </div>
                         {/* 品牌 */}
                         <div className="filter-item">
                           <div className="filter-title">選擇品牌</div>
@@ -326,78 +337,7 @@ export default function ArticleList() {
                             })}
                           </select>
                         </div>
-                        {/* 價格區間 */}
-                        <div className="filter-item">
-                          <div className="filter-title">價格區間</div>
-                          <input
-                            type="number"
-                            className="form-control mb-2"
-                            placeholder="最低價"
-                            name="priceLow"
-                            value={priceLow}
-                            min={0}
-                            max={priceHigh - 1}
-                            onChange={(e) => {
-                              setPriceLow(e.target.value)
-                            }}
-                          />
-                          <input
-                            type="number"
-                            className="form-control"
-                            placeholder="最高價"
-                            name="priceHigh"
-                            value={priceHigh}
-                            min={priceLow + 1}
-                            onChange={(e) => {
-                              setPriceHigh(e.target.value)
-                            }}
-                          />
-                        </div>
-                        {/* 商品評價 */}
-                        <div className="filter-item m-0">
-                          <div className="filter-title">商品評價</div>
-                          <div className="filter-radio-group d-flex flex-wrap justify-content-between">
-                            {scoreState.map((v, i) => {
-                              return (
-                                <div
-                                  className="filter-radio-item form-check p-0 mb-3"
-                                  key={i}
-                                >
-                                  <label className="form-check-label">
-                                    <input
-                                      classname="form-check-input"
-                                      type="radio"
-                                      name="score"
-                                      value={v}
-                                      checked={v === score}
-                                      onChange={(e) => {
-                                        setScore(e.target.value)
-                                      }}
-                                    />
-                                    &nbsp;{v === 'all' ? '全部' : v + '星'}
-                                  </label>
-                                </div>
-                              )
-                            })}
-                          </div>
-                        </div>
-                        {/* 促銷商品 */}
-                        <div className="filter-item">
-                          <div className="form-check">
-                            <label className="form-check-label filter-title mb-0">
-                              <input
-                                className="form-check-input"
-                                type="checkbox"
-                                value={sales}
-                                name="sales"
-                                onChange={() => {
-                                  setSales(!sales)
-                                }}
-                              />{' '}
-                              促銷商品
-                            </label>
-                          </div>
-                        </div>
+                        {/* 區間~促銷Delete */}
                         <div
                           className="d-flex justify-content-between gap-2 mt-2"
                           style={{ paddingInline: '10px' }}
@@ -431,7 +371,7 @@ export default function ArticleList() {
                         setDataSort('latest')
                       }}
                     >
-                      新到舊
+                      折扣幅度
                     </div>
                     <div
                       className={`sort-item ${
@@ -442,115 +382,178 @@ export default function ArticleList() {
                         setDataSort('oldest')
                       }}
                     >
-                      舊到新
+                      即將到期
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             {/* 主內容 */}
-            <main className="content me-2">
-              <h4 className="text-primary pt-2">熱門文章</h4>
-              <div className="content-pop d-flex flex-wrap">
-                {data.slice(0, 4).map((v, i) => {
-                  {
-                    /* 熱門文章的分類目前是抓前4筆 */
-                  }
-                  const {
-                    id,
-                    title,
-                    content,
-                    img,
-                    author,
-                    publish_time,
-                    articles,
-                    fav,
-                  } = v
-                  return (
-                    <ArticleCard
-                      key={id}
-                      id={id}
-                      title={title}
-                      content={content}
-                      img={img}
-                      author={author}
-                      publish_time={publish_time.split(' ')[0]}
-                      articles={articles}
-                      handleToggleFav={handleToggleFav}
-                      fav={fav}
-                    />
-                  )
-                })}
+            <main className="content">
+              <div className="container custom-container">
+                <div className="row">
+                  <div
+                    className="col-sm-10 col-12"
+                    style={{
+                      backgroundColor: 'rgb(255, 255, 255)',
+                    }}
+                  >
+                    <div className="coupon-content col-12">
+                      <div className="coupon-content-top">
+                        <div className="user-title-userInfo">我的優惠券</div>
+                      </div>
+                      {/* components */}
+                      <div className={styles['couponImage']}>
+                        {arr.map((v, i) => {
+                          return (
+                            <Coupon
+                              key={i}
+                              className={`${styles.couponItem} `}
+                            />
+                          )
+                        })}
+                      </div>
+
+                      {/*pagination*/}
+                      <div className="coupon-pagination">
+                        <div className="d-flex justify-content-center pages d-none d-sm-block">
+                          <nav aria-label="Page navigation example">
+                            <ul className="pagination">
+                              <li className="page-item">
+                                <a
+                                  className="page-link"
+                                  href="#"
+                                  aria-label="Previous"
+                                >
+                                  <span aria-hidden="true">«</span>
+                                </a>
+                              </li>
+                              <li className="page-item">
+                                <a className="page-link" href="#">
+                                  1
+                                </a>
+                              </li>
+                              <li className="page-item">
+                                <a className="page-link" href="#">
+                                  2
+                                </a>
+                              </li>
+                              <li className="page-item">
+                                <a className="page-link" href="#">
+                                  3
+                                </a>
+                              </li>
+                              <li className="page-item">
+                                <a
+                                  className="page-link"
+                                  href="#"
+                                  aria-label="Next"
+                                >
+                                  <span aria-hidden="true">»</span>
+                                </a>
+                              </li>
+                            </ul>
+                          </nav>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <hr />
-              <div className="content-pop d-flex flex-wrap">
-                {data.map((v, i) => {
-                  const {
-                    id,
-                    title,
-                    content,
-                    img,
-                    author,
-                    publish_time,
-                    articles,
-                    fav,
-                  } = v
-                  return (
-                    <ArticleCard
-                      key={id}
-                      id={id}
-                      title={title}
-                      content={content}
-                      img={img}
-                      author={author}
-                      publish_time={publish_time.split(' ')[0]}
-                      articles={articles}
-                      handleToggleFav={handleToggleFav}
-                      fav={fav}
-                    />
-                  )
-                })}
-              </div>
-              {/* 分頁按鈕 */}
-              <Pagination />
-              {/* <div className='d-flex justify-content-center pb-3'>
-                <nav aria-label="Page navigation example">
-                  <ul className="pagination">
-                    <li className="page-item">
-                      <a className="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">«</span>
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        1
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        2
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        3
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">»</span>
-                      </a>
-                    </li>
-                  </ul>
-                </nav>
-              </div> */}
             </main>
           </div>
         </div>
       </div>
       <Footer />
 
-      <style jsx>{``}</style>
+      <style jsx>{`
+        /* -------------------user sidebar-------------------- */
+        .sidebar-user-info {
+          display: flex;
+          padding: 0px 12px;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+          align-self: stretch;
+          /* position: relative; */
+          .sidebar-user-info-imgBox {
+            width: 100px;
+            height: 100px;
+            border-radius: 100px;
+            background: url(<path-to-image>),
+              lightgray -26.448px -3.114px / 132.653% 100% no-repeat;
+          }
+          .sidebar-user-info-text {
+            display: flex;
+            width: 100px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+            color: var(--dark, #1d1d1d);
+            text-align: center;
+            /* h5 */
+            font-family: 'Noto Sans TC';
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            .sidebar-user-info-band {
+              margin-bottom: 20px;
+            }
+          }
+          .sidebar-user-info-Camera-img {
+            width: 30px;
+            height: 30px;
+            position: absolute;
+            left: 85px;
+            top: 70px;
+            fill: var(--light-gray, #cfcfcf);
+          }
+        }
+        /* --------------- contect--------------- */
+        .custom-container {
+          padding: 0;
+          color: #000;
+          .coupon-pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            align-self: stretch;
+          }
+        }
+        .coupon-content {
+          display: flex;
+          width: 1070px;
+          padding: 20px 10px;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 20px;
+          border-radius: 5px;
+          background: var(--gray-30, rgba(185, 185, 185, 0.3));
+          .coupon-content-top {
+            display: flex;
+            align-items: flex-start;
+            align-self: stretch;
+            color: var(--primary-deep, #124365);
+            text-align: center;
+            justify-content: space-between;
+            /* h3 */
+            font-family: 'Noto Sans TC';
+            font-size: 28px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: normal;
+          }
+        }
+        @media screen and (max-width: 576px) {
+          .coupon-content {
+            width: 390px;
+            padding: 10px;
+            overflow: hidden;
+          }
+        }
+      `}</style>
     </>
   )
 }
