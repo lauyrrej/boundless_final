@@ -13,9 +13,6 @@ import styles from '@/pages/jam/jam.module.scss'
 import Head from 'next/head'
 
 export default function Info() {
-  // 執行(呼叫)useRouter，把回傳的路由器儲存在變數router
-  // router.query中會包含pid屬性，藉此獲得動態路由的值
-  // router.isReady(布林值)，true代表本元件已完成水合作用(hydration)，可以取得router.query的值
   const router = useRouter()
 
   const [genre, setGenre] = useState([])
@@ -34,7 +31,7 @@ export default function Info() {
     member: {},
   })
 
-  // 讓player代碼對應樂器種類
+  // ----------------------------- 讓player代碼對應樂器種類 -----------------------------
   const playerName = jam.player.map((p) => {
     const matchedPlayer = player.find((pd) => pd.id === p) // 物件
     return matchedPlayer.name
@@ -54,22 +51,22 @@ export default function Info() {
   })
   //   console.log(playerResult)
 
-  // 預計人數
+  // ----------------------------- 預計人數 -----------------------------
   const nowNumber = jam.member.length + 1
   const totalNumber = jam.member.length + jam.player.length + 1
-  // genre對應
+  // ----------------------------- genre對應 -----------------------------
   const genreName = jam.genre.map((g) => {
     const matchedgenre = genre.find((gd) => gd.id === g)
     return matchedgenre.name
   })
 
-  // 創立時間資料中，單獨取出日期
+  // ----------------------------- 創立時間資料中，單獨取出日期 -----------------------------
   // 調出的時間是ISO格式，顯示時需要轉換成本地時區
   const createdDate = new Date(jam.created_time)
     .toLocaleString()
     .split(' ')[0]
     .replace(/\//g, '-')
-  // ------------------------------------------------------- 計算倒數時間
+  // ----------------------------- 計算倒數時間 -----------------------------
   function calcTimeLeft() {
     let countDownObj = {}
     const now = Date.now()
@@ -96,7 +93,7 @@ export default function Info() {
     minute: 0,
     second: 0,
   })
-  // 剩餘時間是否小於5天
+  // ----------------------------- 剩餘時間是否小於5天 -----------------------------
   const timeWarningState =
     (Date.now() - new Date(jam.created_time).getTime()) /
       (1000 * 60 * 60 * 24) >
@@ -105,6 +102,7 @@ export default function Info() {
       : false
   const [timeWarning, setTimeWarning] = useState(timeWarningState)
 
+  // ----------------------------- useEffect -----------------------------
   useEffect(() => {
     setCountDown(calcTimeLeft())
 
@@ -118,16 +116,12 @@ export default function Info() {
   }, [jam.created_time])
 
   // 向伺服器要求資料，設定到狀態中用的函式
-  const getAllData = async (jid) => {
+  const getSingleData = async (juid) => {
     try {
-      const res = await fetch(`http://localhost:3005/api/jam/${jid}`)
-
+      const res = await fetch(`http://localhost:3005/api/jam/${juid}`)
       // res.json()是解析res的body的json格式資料，得到JS的資料格式
       const data = await res.json()
 
-      // 設定到state中，觸發重新渲染(re-render)，會進入到update階段
-      // 進入狀態前檢查資料類型為陣列，以避免錯誤
-      // console.log(data)
       if (data) {
         setPlayer(data.playerData)
         setGenre(data.genreData)
@@ -140,10 +134,9 @@ export default function Info() {
 
   // 初次渲染後，向伺服器要求資料，設定到狀態中
   useEffect(() => {
-    // 如果isReady是true，確保能得到query的值
     if (router.isReady) {
-      const { jid } = router.query
-      getAllData(jid)
+      const { juid } = router.query
+      getSingleData(juid)
     }
   }, [router.isReady])
   // ---------------------- 手機版本  ----------------------

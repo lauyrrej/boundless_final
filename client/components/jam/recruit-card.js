@@ -4,6 +4,7 @@ import Link from 'next/link'
 
 export default function RecruitCard({
   id,
+  juid,
   former,
   title,
   degree,
@@ -65,7 +66,7 @@ export default function RecruitCard({
   return (
     <>
       <Link
-        href={`/jam/recruit-list/${id}`}
+        href={`/jam/recruit-list/${juid}`}
         className={`${styles.recruitCard}`}
       >
         {/* card-header */}

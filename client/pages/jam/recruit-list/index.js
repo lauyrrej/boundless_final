@@ -83,14 +83,19 @@ export default function RecruitList() {
       pathname: router.pathname,
 
       query: {
-        ...router.query,
-        page: event.selected + 1,
+        page: event.selected + 1, // 跳至第一頁
+        order: order,
+        genre: genre,
+        player: player,
+        degree: degree,
+        region: region,
       },
     })
   }
 
   const handleLoadData = () => {
     // 要送至伺服器的query string參數
+
     // 註: 重新載入資料需要跳至第一頁
     const params = {
       page: 1, // 跳至第一頁
@@ -111,7 +116,7 @@ export default function RecruitList() {
   const handleOrder = (order) => {
     setOrder(order)
     const params = {
-      page: page,
+      page: 1,
       order: order,
       genre: genre,
       player: player,
@@ -315,10 +320,10 @@ export default function RecruitList() {
                       value={order}
                       name="order"
                       onChange={(e) => {
-                        setOrder(e.target.value)
+                        handleOrder(e.target.value)
                       }}
                     >
-                      <option defaultValue="ASC">即將到期</option>
+                      <option value="ASC">即將到期</option>
                       <option value="DESC">最近發起</option>
                     </select>
                   </div>
@@ -495,6 +500,7 @@ export default function RecruitList() {
               {jams.map((v, i) => {
                 const {
                   id,
+                  juid,
                   former,
                   member,
                   title,
@@ -508,6 +514,7 @@ export default function RecruitList() {
                   <RecruitCard
                     key={id}
                     id={id}
+                    juid={juid}
                     former={former}
                     member={member}
                     title={title}

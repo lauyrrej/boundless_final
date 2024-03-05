@@ -6,7 +6,7 @@ const router = express.Router();
 const upload = multer();
 
 // 取得所有組團資料
-router.get("/", async (req, res, next) => {
+router.get("/", async (req, res) => {
   // 取得組團資訊中所需的曲風、樂手資料
   let [genreData] = await db.execute("SELECT * FROM `genre`").catch(() => {
     return undefined;
@@ -103,11 +103,11 @@ router.get("/", async (req, res, next) => {
     pageString = " LIMIT " + offset + "," + dataPerpage;
 
     sqlString += pageString;
-    console.log(sqlString);
+    // console.log(sqlString);
     [data] = await db.execute(sqlString).catch(() => {
       return undefined;
     });
-    console.log(data);
+    // console.log(data);
   } else {
     // 沒有篩選條件
     [data] = await db
@@ -118,7 +118,7 @@ router.get("/", async (req, res, next) => {
       .catch(() => {
         return undefined;
       });
-    console.log(data);
+    // console.log(data);
   }
 
   if (data && data != undefined) {
@@ -151,7 +151,7 @@ router.get("/", async (req, res, next) => {
 });
 
 // 組團資訊頁，獲得單筆資料
-router.get("/:id", async (req, res, next) => {
+router.get("/:juid", async (req, res) => {
   // 取得組團資訊中所需的曲風、樂手資料
   let [genreData] = await db.execute("SELECT * FROM `genre`").catch(() => {
     return undefined;
@@ -160,18 +160,20 @@ router.get("/:id", async (req, res, next) => {
     return undefined;
   });
 
-  let id = req.params.id;
+  let juid = req.params.juid;
+  console.log(juid);
   // console.log(id);
   let [data] = await db
-    .execute("SELECT * FROM `jam` WHERE `id` = ? ", [id])
+    .execute("SELECT * FROM `jam` WHERE `juid` = ? ", [juid])
     .catch(() => {
       return undefined;
     });
 
   if (data) {
     const trueData = data[0];
+    console.log(data);
     let setMember = [];
-    if (trueData.member) {
+    if (trueData.member !== "[]" || trueData.member) {
       setMember = JSON.parse(trueData.member);
     }
     const jamData = {
@@ -190,6 +192,20 @@ router.get("/:id", async (req, res, next) => {
   } else {
     res.status(400).send("發生錯誤");
   }
+});
+
+// 發起JAM表單
+router.post("/form", upload.none(), async (req, res) => {
+  const {title, degree, genre, former, players, region, condition, descripition} = req.body;
+	const tureDegree = parseInt(degree)
+    await db.execute(
+        "INSERT INTO `jam` (`id`, `title`, `degree`, `genre`, `former`, `players`, `region`, `condition`, `descripition`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [title, tureDegree, genre, former, players, region, condition, descripition]
+    ).then(() => {
+        res.send("新增成功");
+    }).catch(() => {
+        res.status(409).send("發生錯誤");
+    });
 });
 
 export default router;
