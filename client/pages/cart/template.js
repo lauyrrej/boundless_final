@@ -20,6 +20,13 @@ import { FaTrash } from 'react-icons/fa6'
 import Lesson from '@/pages/cart/lesson-item.module.scss'
 import Instrument from '@/pages/cart/instrument-item.module.scss'
 
+//cart-list
+import LessonList from '@/components/cart/lesson-cart-list.js'
+import InstrumentList from '@/components/cart/instrument-cart-list.js'
+
+//cart-data
+import CartData from '@/data/cart/cart.json'
+
 export default function Test() {
   // ----------------------手機版本  ----------------------
   // 主選單
@@ -44,6 +51,87 @@ export default function Test() {
   const onshow = (e) => {
     stopPropagation(e)
     setFilterVisible(!filterVisible)
+  }
+
+  // --------------------- 購物車 -----------------------
+
+  //加入到購物車的項目
+  let [items, setItems] = useState([])
+
+  useEffect(() => {
+    setItems(CartData)
+  }, [])
+
+  const exItems = items.map((item,i)=>{
+    const newItem = { ...item, qty: 1 }
+    return newItem
+  })
+
+  items = exItems
+
+  console.log(items);
+
+  const addItem = (item) => {
+    //擴充item的屬性多一個qty
+    const newItem = { ...item, qty: 1 }
+    const newItems = [...items, newItem]
+
+    setItems(newItems)
+  }
+
+  
+
+  //在購物車中，移除某商品的id
+
+  const remove = (items, id) => {
+    const newItems = items.filter((v, i) => {
+      return v.id !== id
+    })
+
+    setItems(newItems)
+  }
+
+  //遞增某商品id數量
+  const increment = (items, id) => {
+    const newItems = items.map((v, i) => {
+      if (v.id === id) return { ...v, qty: v.qty + 1 }
+      else return v
+    })
+
+    setItems(newItems)
+  }
+
+  //遞減某商品id數量
+  const decrement = (items, id) => {
+    const newItems = items.map((v, i) => {
+      if (v.id === id) return { ...v, qty: v.qty - 1 }
+      else return v
+    })
+
+    setItems(newItems)
+  }
+
+  //增加一個商品到購物車中
+  const addItems = (item) => {
+    //檢查商品的id是否已在購物車中
+    const foundIndex = items.findIndex((v, i) => {
+      return v.id === item.id
+    })
+
+    //如果有找到，做數量遞增
+    if (foundIndex > -1) {
+      increment(items, item.id)
+    } else {
+      const newItem = { ...item, qty: 1 }
+      const newItems = [...items, newItem]
+      setItems(newItems)
+    }
+
+    //擴充item屬性
+    const newItem = { ...item, qty: 1 }
+    const newItems = [...items, newItem]
+
+    setItems(newItems)
   }
 
   return (
@@ -132,42 +220,7 @@ export default function Test() {
                   <div className="lesson-product">商品</div>
                   <div className="lesson-price">售價</div>
                 </div>
-                <div className="cart-item-group">
-                  <div className={`${Lesson.lessonItem}`}>
-                    <div className={`${Lesson.lesson_item_pic}`}>
-                      <Image className={`${Lesson.lesson_item_pic_div}`} src="/jam/amazingshow.jpg" fill />
-                    </div>
-                    <div className={`${Lesson.lesson_item_name} h6`}>
-                      Logic Pro X 從零開始
-                    </div>
-                    <div className={`${Lesson.lesson_item_price} h6`}>$26000</div>
-                    <div className={`${Lesson.lesson_button} h6`}>
-                      <button type="button" className="btn delete-btn">
-                        <div>
-                          <FaTrash />
-                        </div>
-                        <div>刪除</div>
-                      </button>
-                    </div>
-                  </div>
-                  <div className={`${Lesson.lessonItem}`}>
-                    <div className={`${Lesson.lesson_item_pic}`}>
-                      <Image className={`${Lesson.lesson_item_pic_div}`} src="/jam/amazingshow.jpg" fill />
-                    </div>
-                    <div className={`${Lesson.lesson_item_name} h6`}>
-                      Logic Pro X 從零開始
-                    </div>
-                    <div className={`${Lesson.lesson_item_price} h6`}>$26000</div>
-                    <div className={`${Lesson.lesson_button} h6`}>
-                      <button type="button" className="btn delete-btn">
-                        <div>
-                          <FaTrash />
-                        </div>
-                        <div>刪除</div>
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                <LessonList items={items} remove={remove} />
                 <div className="cart-subtotal h6">原價 NT$ 999999</div>
                 <div className="cart-coupon">
                   <div className="coupon-selector">
@@ -201,82 +254,12 @@ export default function Test() {
                   <div className="instrument-quantity">數量</div>
                   <div className="instrument-total">總價</div>
                 </div>
-                <div className="cart-item-group">
-                  <div className={`${Instrument.instrumentItem}`}>
-                    <div className={`${Instrument.instrument_item_pic}`}>
-                      <Image className={`${Instrument.instrument_item_pic_div}`} src="/jam/amazingshow.jpg" fill />
-                    </div>
-                    <div className={`${Instrument.instrument_item_name} h6`}>
-                      Logic Pro X 從零開始
-                    </div>
-                    <div className={`${Instrument.instrument_item_price} h6`}>$26000</div>
-                    <div className={`${Instrument.instrument_item_quantity} h6`}>
-                      <div className="input-group">
-                        <button className={`${Instrument.quantity_left_minus} btn btn-light`}>
-                          <FaMinus />
-                        </button>
-                        <input
-                          type="text"
-                          className={`${Instrument.input_number} form-control`}
-                          id="quantity"
-                          name="quantity"
-                          defaultValue={10}
-                          min={1}
-                          max={100}
-                        />
-                        <button className={`${Instrument.quantity_right_plus} btn btn-primary`}>
-                          <FaPlus />
-                        </button>
-                      </div>
-                    </div>
-                    <div className={`${Instrument.instrument_item_total} h6`}>$26000</div>
-                    <div className={`${Instrument.instrument_button}`}>
-                      <button type="button" className="btn delete-btn">
-                        <div>
-                          <FaTrash />
-                        </div>
-                        <div>刪除</div>
-                      </button>
-                    </div>
-                  </div>
-                  <div className={`${Instrument.instrumentItem}`}>
-                    <div className={`${Instrument.instrument_item_pic}`}>
-                      <Image className={`${Instrument.instrument_item_pic_div}`} src="/jam/amazingshow.jpg" fill />
-                    </div>
-                    <div className={`${Instrument.instrument_item_name} h6`}>
-                      Logic Pro X 從零開始
-                    </div>
-                    <div className={`${Instrument.instrument_item_price} h6`}>$26000</div>
-                    <div className={`${Instrument.instrument_item_quantity} h6`}>
-                      <div className="input-group">
-                        <button className={`${Instrument.quantity_left_minus} btn btn-light`}>
-                          <FaMinus />
-                        </button>
-                        <input
-                          type="text"
-                          className={`${Instrument.input_number} form-control`}
-                          id="quantity"
-                          name="quantity"
-                          defaultValue={10}
-                          min={1}
-                          max={100}
-                        />
-                        <button className={`${Instrument.quantity_right_plus} btn btn-primary`}>
-                          <FaPlus />
-                        </button>
-                      </div>
-                    </div>
-                    <div className={`${Instrument.instrument_item_total} h6`}>$26000</div>
-                    <div className={`${Instrument.instrument_button}`}>
-                      <button type="button" className="btn delete-btn">
-                        <div>
-                          <FaTrash />
-                        </div>
-                        <div>刪除</div>
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                <InstrumentList
+                  items={items}
+                  increment={increment}
+                  decrement={decrement}
+                  remove={remove}
+                />
                 <div className="cart-subtotal h6">原價 NT$ 999999</div>
                 <div className="cart-coupon">
                   <div className="coupon-selector">
@@ -330,7 +313,12 @@ export default function Test() {
                   </div>
                 </div>
                 <div className="cart-btn">
-                  <div className="b-btn b-btn-primary d-flex w-100 h-100 justify-content-center" style={{padding: '14px 0'}}>結帳</div>
+                  <div
+                    className="b-btn b-btn-primary d-flex w-100 h-100 justify-content-center"
+                    style={{ padding: '14px 0' }}
+                  >
+                    結帳
+                  </div>
                 </div>
               </div>
             </div>
@@ -361,7 +349,12 @@ export default function Test() {
             </div>
           </div>
           <div className="cart-btn">
-            <div className="b-btn b-btn-primary d-flex w-100 h-100 justify-content-center" style={{padding: '14px 0'}}>結帳</div>
+            <div
+              className="b-btn b-btn-primary d-flex w-100 h-100 justify-content-center"
+              style={{ padding: '14px 0' }}
+            >
+              結帳
+            </div>
           </div>
         </div>
       </div>
@@ -728,9 +721,9 @@ export default function Test() {
             bottom: 0;
             left: 0;
             z-index: 100;
-            background-color: #FFF;
+            background-color: #fff;
             padding: 20px 30px;
-            }
+          }
         }
       `}</style>
     </>
