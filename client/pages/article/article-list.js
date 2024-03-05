@@ -33,8 +33,16 @@ export default function ArticleList() {
   }
 
   // ----------------------功能  ----------------------
-  const cardData = { ArticleJson }
-  const [data, setData] = useState(ArticleJson);
+  // const cardData = { ArticleJson }
+  // const [data, setData] = useState(ArticleJson);
+
+  // 擴充收藏功能
+  // 每個Json增加虛構的fav值
+  const initState = ArticleJson.map((v, i) => {
+    return { ...v, fav: false }
+  })
+  // 擴充後的物件陣列作為初始值
+  const [data, setData] = useState(initState)
   const [search, setSearch] = useState('');
 
   // 搜尋功能
@@ -61,23 +69,13 @@ export default function ArticleList() {
 
   // ----------------------分類功能  ----------------------
 
-
-  // 標籤功能
-  // 擴充收藏功能
-  // 每個Json增加虛構的fav值
-  const initState = ArticleJson.map((v, i) => {
-    return { ...v, fav: false }
-  })
-  // 擴充後的物件陣列作為初始值
-  const [articles, setArticles] = useState(initState)
-
   // 純func
   const handleToggleFav = (id) => {
-    const newArticles = articles.map((v, i) => {
+    const newArticles = data.map((v, i) => {
       if (v.id === id) return { ...v, fav: !v.fav }
       else return v
     })
-    setArticles(newArticles)
+    setData(newArticles)
   }
   // ----------------------假資料  ----------------------
 
@@ -444,7 +442,7 @@ export default function ArticleList() {
             <main className="content me-2">
               <h4 className='text-primary pt-2'>熱門文章</h4>
               <div className="content-pop d-flex flex-wrap">
-                {articles.slice(0, 4).map((v, i) => {
+                {data.slice(0, 4).map((v, i) => {
                   {/* 熱門文章的分類目前是抓前4筆 */ }
                   const { id, title, content, img, author, publish_time, articles, fav } = v
                   return (
@@ -455,7 +453,7 @@ export default function ArticleList() {
               </div>
               <hr />
               <div className="content-pop d-flex flex-wrap">
-                {articles.map((v, i) => {
+                {data.map((v, i) => {
                   const { id, title, content, img, author, publish_time, articles, fav } = v
                   return (
                     <ArticleCard key={id} id={id} title={title} content={content} img={img} author={author} publish_time={publish_time.split(" ")[0]} articles={articles}

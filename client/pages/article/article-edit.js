@@ -17,6 +17,11 @@ export default function Test() {
   const [editorLoaded, setEditorLoaded] = useState(false)
   const [data, setData] = useState('')
   const initContent = 'JSON text 段落與標題需要分開編輯'
+  // 隱藏CKeditor
+  const [editorVisible, setEditorVisible] = useState(false);
+  const handleToggleEditor = () => {
+    setEditorVisible(!editorVisible);
+  };
 
   useEffect(() => {
     setEditorLoaded(true)
@@ -108,15 +113,17 @@ export default function Test() {
           </div>
           <div className="">
             {/* 主內容 */}
-            <main>
-              <Editor
-                name="description"
-                onChange={(data) => {
-                  setData(data)
-                }}
-                editorLoaded={editorLoaded}
-                value={initContent}
-              />
+            <main onClick={handleToggleEditor}>
+              {editorVisible && (
+                <Editor
+                  name="description"
+                  onChange={(data) => {
+                    setData(data)
+                  }}
+                  editorLoaded={editorLoaded}
+                  value={initContent}
+                />
+              )}
             </main>
           </div>
         </div>
