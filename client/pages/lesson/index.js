@@ -1,11 +1,8 @@
 import { useEffect, useState } from 'react'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
-//試抓資料區
-import Card from '@/components/lesson/lesson-card-data'
-import Cardrwd from '@/components/lesson/lesson-card-rwd-data'
-import Lesson from '@/data/Lesson.json'
-
+import Card from '@/components/lesson/lesson-card'
+import Cardrwd from '@/components/lesson/lesson-card-rwd'
 import Link from 'next/link'
 import Image from 'next/image'
 import lessonHero from '@/assets/lesson-hero.jpg'
@@ -18,9 +15,8 @@ import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 
-
 export default function Test() {
-  // 在電腦版或手機版時
+  // 在電腦版或手機版時，決定card的樣式，電腦版是直的，手機板是橫的
   const [isSmallScreen, setIsSmallScreen] = useState(false)
 
   useEffect(() => {
@@ -50,13 +46,12 @@ export default function Test() {
 
   // ----------------------條件篩選  ----------------------
   const [filterVisible, setFilterVisible] = useState(false)
-
   useEffect(() => {
     document.addEventListener('click', () => {
       setFilterVisible(false)
-    }) //鉤子在組件渲染完成後註冊了一個點擊事件監聽器。當點擊事件發生時，會調用一個函數來將 filterVisible 設置為 false，從而隱藏篩選表單。
-  }, []) //這個事件監聽器只會在組件首次渲染時被註冊，並且在組件卸載時被清理。
-  // 阻止事件冒泡造成篩選表單關閉//防止觸發組件外部的點擊事件，進而導致篩選表單被關閉。
+    })
+  }, [])
+  // 阻止事件冒泡造成篩選表單關閉
   const stopPropagation = (e) => {
     e.stopPropagation()
   }
@@ -94,15 +89,8 @@ export default function Test() {
     setSales(false)
   }
 
-    //分類功能
+  let arr = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
-const handleItemClick = (categoryId) => {
-  // 处理点击事件的逻辑
-  console.log('Category ID clicked:')
-}
-  // 根據所選分類過濾商品
-
-    
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
@@ -164,13 +152,9 @@ const handleItemClick = (categoryId) => {
                 <li>
                   <Link href={'/lesson/all'}>全部</Link>
                 </li>
-                {/* 分類功能 */}
                 {sidebarData.map((item, index) => {
                   return (
-                    <li
-                      key={index}
-                      onClick={() => handleItemClick()}
-                    >
+                    <li key={index}>
                       <Link href={`#`}>{item}</Link>
                     </li>
                   )
@@ -390,23 +374,22 @@ const handleItemClick = (categoryId) => {
             </div>
             {/* 主內容 */}
             <div className="content">
-              {/*-------- 列表頁卡片迴圈------- */}
+              <div className="hot-lesson">
+                <h4 className="text-primary">熱門課程</h4>
+                <div className="hot-lesson-card">
+                  <Card />
+                  <Card />
+                  <Card />
+                  <Card />
+                </div>
+              </div>
+              <hr />
+
               <div className="lesson-card-group">
-                {Lesson.map((v, i) => {
-                  const { id, name, price, teacher_id, img } = v
+                {arr.map((i, index) => {
                   return (
-                    <div className="mb-4 ">
-                      {isSmallScreen ? (
-                        <Cardrwd />
-                      ) : (
-                        <Card
-                          id={id}
-                          name={name}
-                          price={price}
-                          teacher_id={teacher_id}
-                          img={img}
-                        />
-                      )}
+                    <div key={index} className="">
+                      {isSmallScreen ? <Cardrwd /> : <Card />}
                     </div>
                   )
                 })}
@@ -418,13 +401,28 @@ const handleItemClick = (categoryId) => {
       <Footer />
 
       <style jsx>{`
+        .content {
+          padding-inline: 22px;
+        }
         .lesson-card-group {
           display: flex;
-          flex-wrap: wrap;
+          margin-block: 30px;
           gap: 20px;
-          align-items: flex-start;
-          align-content: flex-start;
-          align-self: 'stretch';
+          flex-wrap: wrap;
+        }
+        .hot-lesson-card {
+          margin-block: 30px;
+          gap: 10px;
+          display: flex;
+          justify-content: space-between;
+        }
+        @media screen and (max-width: 576px) {
+          .content {
+            padding-inline: 0;
+          }
+          .hot-lesson-card {
+            display: none;
+          }
         }
       `}</style>
     </>

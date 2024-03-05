@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
-import Card from '@/components/instrument/card'
+import Card from '@/components/instrument/card.js'
 import Link from 'next/link'
 import Image from 'next/image'
 import productlistHero from '@/assets/product-list-hero.jpg'
@@ -13,8 +13,11 @@ import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
+import Data from '@/data/instrument/instrument.json'
 
 export default function Test() {
+  //a
+  // console.log(Data)
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -43,6 +46,7 @@ export default function Test() {
     stopPropagation(e)
     setFilterVisible(!filterVisible)
   }
+
   // ----------------------假資料  ----------------------
   // 資料排序
   const [dataSort, setDataSort] = useState('upToDate')
@@ -85,8 +89,39 @@ export default function Test() {
     setSales(false)
   }
 
-  let arr = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+  // const hotSales = Data.sort
+  //-------------------連資料庫
 
+  const [instrument, setInstrument] = useState([])
+  function getInstrument() {
+    return new Promise((resolve, reject) => {
+      let url = 'http://localhost:3005/api/instrument'
+      fetch(url, {
+        method: 'GET',
+        credentials: 'include',
+      })
+        .then((response) => {
+          return response.json()
+        })
+        .then((result) => {
+          resolve(result)
+          console.log(result)
+          setInstrument(result)
+        })
+        .catch((error) => {
+          console.log(error)
+          reject()
+        })
+    })
+  }
+  const [openAccordion, setOpenAccordion] = useState(null)
+
+  const handleAccordionToggle = (index) => {
+    setOpenAccordion(openAccordion === index ? null : index)
+  }
+  useEffect(() => {
+    getInstrument()
+  }, [])
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
@@ -153,13 +188,64 @@ export default function Test() {
                 {sidebarData.map((item, index) => {
                   if (!item.parent_id) {
                     return (
-                      <li
+                      <div
                         key={index}
-                        className="d-flex align-items-center justify-content-between"
+                        className="accordion accordion-flush"
+                        id={`accordion-${index}`}
                       >
-                        <div>{item.name}</div>
-                        <FaChevronRight size={16} />
-                      </li>
+                        <div className="accordion-item">
+                          <h2 className="accordion-header">
+                            <button
+                              className={`accordion-button collapsed ${
+                                openAccordion === index ? 'active' : ''
+                              }`}
+                              type="button"
+                              onClick={() => handleAccordionToggle(index)}
+                            >
+                              {item.name}
+                            </button>
+                          </h2>
+                          <div
+                            id={`collapse-${index}`}
+                            className={`accordion-collapse collapse ${
+                              openAccordion === index ? 'show' : ''
+                            }`}
+                          >
+                            <div className="accordion-body px-1">
+                              {/* 這裡放入你的 checkbox 內容 */}
+                              <div className="form-check">
+                                <input
+                                  className="form-check-input"
+                                  type="checkbox"
+                                  value=""
+                                  id={`checkbox-${index}`}
+                                />
+                                <label
+                                  className="form-check-label"
+                                  htmlFor={`checkbox-${index}`}
+                                >
+                                  木吉他
+                                </label>
+                              </div>
+                              {/* 重複以上的結構，加入其他 checkbox */}
+                              <div className="form-check">
+                                <input
+                                  className="form-check-input"
+                                  type="checkbox"
+                                  value=""
+                                  id={`checkbox-${index}`}
+                                />
+                                <label
+                                  className="form-check-label"
+                                  htmlFor={`checkbox-${index}`}
+                                >
+                                  電吉他
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     )
                   }
                 })}
@@ -421,17 +507,42 @@ export default function Test() {
             </div>
 
             {/* 主內容 */}
-            <div className="content">
-              <div className="instrument-card row row-cols-1 row-cols-md-4">
-                {arr.map((i, index) => {
+            <main className="content">
+              <div className="hot-instrument">
+                <h4 className="text-primary">熱銷商品</h4>
+                <div className="hot-instrument-card"></div>
+              </div>
+              <hr />
+
+              <div className="instrument-card-group">
+                {/* 用json套資料 */}
+                {Data.map((v, i) => {
+                  const {
+                    id,
+                    name,
+                    price,
+                    discount,
+                    category_id,
+                    img_small,
+                    sales,
+                  } = v
                   return (
-                    <div key={index} className="col mb-4">
-                      <Card />
+                    <div key={id} className="">
+                      {/* 寫discount的判斷式 */}
+                      <Card
+                        id={id}
+                        pname={name}
+                        price={price}
+                        discount={discount}
+                        categoryID={category_id}
+                        img_small={img_small}
+                        sales={sales}
+                      />
                     </div>
                   )
                 })}
               </div>
-            </div>
+            </main>
           </div>
         </div>
       </div>
@@ -440,14 +551,30 @@ export default function Test() {
 
       <style jsx>{`
         .content {
-          display: flex;
+          display: block;
         }
-        .instrument-card {
-          background-color: #ffcccc;
+        .instrument-card-group {
+          display: flex;
+          justify-content: space-between;
+          margin-block: 30px;
+          gap: 10px;
+          flex-wrap: wrap;
+        }
+
+        .hot-instrument-card {
+          margin-block: 30px;
+          gap: 10px;
+          display: flex;
+          justify-content: space-between;
         }
         @media screen and (max-width: 576px) {
-          .instrument-card .col {
-            flex: 0 0 50%; /* 使用 flexbox 將每一列的寬度設為 50% */
+          .hot-instrument-card {
+            flex-wrap: wrap;
+          }
+          .hot-instrument-card > :global(div) {
+            flex-basis: calc(
+              40% - 40px
+            ); /* Two cards in a row with a 10px gap */
           }
         }
       `}</style>
