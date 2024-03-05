@@ -114,7 +114,11 @@ export default function Test() {
         })
     })
   }
+  const [openAccordion, setOpenAccordion] = useState(null)
 
+  const handleAccordionToggle = (index) => {
+    setOpenAccordion(openAccordion === index ? null : index)
+  }
   useEffect(() => {
     getInstrument()
   }, [])
@@ -192,19 +196,20 @@ export default function Test() {
                         <div className="accordion-item">
                           <h2 className="accordion-header">
                             <button
-                              className="accordion-button collapsed"
+                              className={`accordion-button collapsed ${
+                                openAccordion === index ? 'active' : ''
+                              }`}
                               type="button"
-                              data-bs-toggle="collapse"
-                              aria-expanded="false"
-                              data-bs-target={`#collapse-${index}`}
-                              aria-controls={`collapse-${index}`}
+                              onClick={() => handleAccordionToggle(index)}
                             >
                               {item.name}
                             </button>
                           </h2>
                           <div
                             id={`collapse-${index}`}
-                            className="accordion-collapse collapse"
+                            className={`accordion-collapse collapse ${
+                              openAccordion === index ? 'show' : ''
+                            }`}
                           >
                             <div className="accordion-body px-1">
                               {/* 這裡放入你的 checkbox 內容 */}
