@@ -16,8 +16,10 @@ import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 // 自製元件
 import ArticleCard from '@/components/article/article-card'
+import { useRouter } from 'next/router'
 
 export default function Test() {
+  const router = useRouter()
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -96,6 +98,9 @@ export default function Test() {
 
   return (
     <>
+      <div onClick={() => { router.push("product", "Joeisgood") }}>Product</div>
+      <div onClick={() => { router.replace("product", "Joeisgood") }}>Product2</div>
+
       <Navbar menuMbToggle={menuMbToggle} />
       <div className="page-shero d-none d-sm-block">
         <Image src={jamHero} className="object-fit-cover w-100" alt="cover" />

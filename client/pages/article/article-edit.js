@@ -1,109 +1,139 @@
-import React, { useState, useEffect } from 'react'
-import Editor from './editor-component'
+import { useEffect, useState } from 'react'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
-import ArticleCard from '@/components/article/article-card'
 import Link from 'next/link'
 import Image from 'next/image'
 import jamHero from '@/assets/jam-hero.png'
+import Editor from './editor-component'
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
 import { IoIosSearch } from 'react-icons/io'
 import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
-import { IoIosArrowForward } from 'react-icons/io'
-import { IoMdHome } from 'react-icons/io'
+import { ImExit } from 'react-icons/im'
+import { IoClose } from 'react-icons/io5'
 
-// sidebar假資料
-const sidebarData = ['全部', '技術分享', '音樂評論']
-
-export default function ArticleEdit() {
+export default function Test() {
   const [editorLoaded, setEditorLoaded] = useState(false)
   const [data, setData] = useState('')
   const initContent = 'JSON text 段落與標題需要分開編輯'
+  // 隱藏CKeditor
+  const [editorVisible, setEditorVisible] = useState(false);
+  const handleToggleEditor = () => {
+    setEditorVisible(!editorVisible);
+  };
 
   useEffect(() => {
     setEditorLoaded(true)
   }, [])
 
+  // ----------------------手機版本  ----------------------
+  // 主選單
+  const [showMenu, setShowMenu] = useState(false)
+  const menuMbToggle = () => {
+    setShowMenu(!showMenu)
+  }
+
+  // ----------------------假資料  ----------------------
+
+  const [filterVisible, setFilterVisible] = useState(false)
+  useEffect(() => {
+    document.addEventListener('click', (e) => {
+      setFilterVisible(false)
+    })
+  }, [])
+  // 阻止事件冒泡造成篩選表單關閉
+  const stopPropagation = (e) => {
+    e.stopPropagation()
+  }
+  // 顯示表單
+  const onshow = (e) => {
+    stopPropagation(e)
+    setFilterVisible(!filterVisible)
+  }
+
   return (
     <>
-      <Navbar />
-      {/* wrapper */}
-      <div className="wrapper pt-5">
-        {/* 麵包屑 */}
-        <div className="breadcrumb-wrapper">
-          <ul className="d-flex align-items-center p-0 m-0">
-            <IoMdHome />
-            <li style={{ marginLeft: '8px' }}>樂友論壇</li>
-            <IoIosArrowForward />
-            <li style={{ marginLeft: '8px' }}>文章內文</li>
-          </ul>
-        </div>
-        {/* site map */}
-        <div className="article-content container pt-3 pb-5">
-          {/* nav-category */}
-          <div className="nav-category">
-            <div className="navLeft" />
-            <div className="navRight d-flex">
-              <div className="dropdown">
-                <button
-                  className="btn btn-secondary dropdown-toggle"
-                  type="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  文章種類
-                </button>
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      技術
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      樂評
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      公告
-                    </a>
-                  </li>
-                </ul>
-              </div>
-              <button type="button" className="btn">
-                最新文章
-              </button>
-              <button type="button" className="btn">
-                熱門文章
-              </button>
-              <button type="button" className="btn">
-                留言評論
-              </button>
-              <button type="button" className="btn">
-                QA問答
-              </button>
+      <Navbar menuMbToggle={menuMbToggle} />
+      <div className="container position-relative">
+        {/* 手機版主選單/navbar */}
+        <div
+          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${showMenu ? 'menu-mb-show' : ''
+            }`}
+        >
+          {/* 用戶資訊 */}
+          <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
+            <div className="mb-photo-wrapper mb-2">
+              <Image
+                src="/jam/amazingshow.jpg"
+                alt="user photo mb"
+                fill
+              ></Image>
             </div>
+            <div>用戶名稱</div>
           </div>
-          {/* main */}
-          <Editor
-            name="description"
-            onChange={(data) => {
-              setData(data)
-            }}
-            editorLoaded={editorLoaded}
-            value={initContent}
-          />
+          <Link
+            className="mm-item"
+            href="/user"
+            style={{ borderTop: '1px solid #b9b9b9' }}
+          >
+            會員中心
+          </Link>
+          <Link className="mm-item" href="/lesson/lesson-list">
+            探索課程
+          </Link>
+          <Link className="mm-item" href="/instrument/instrument-list">
+            樂器商城
+          </Link>
+          <Link className="mm-item" href="/jam/recruit-list">
+            Let &apos;s JAM!
+          </Link>
+          <Link className="mm-item" href="/article/article-list">
+            樂友論壇
+          </Link>
+          <div className="mm-item" style={{ color: '#1581cc' }}>
+            登出
+            <ImExit size={20} className="ms-2" />
+          </div>
+        </div>
+        <div className="row">
+          {/* 麵包屑 */}
+          <div className="breadcrumb-wrapper-ns">
+            <ul className="d-flex align-items-center p-0 m-0">
+              <IoHome size={20} />
+              <li style={{ marginLeft: '8px' }}>Let&apos;s JAM!</li>
+              <FaChevronRight />
+              <Link href="/jam/recruit-list">
+                <li style={{ marginLeft: '10px' }}>團員募集</li>
+              </Link>
+
+              <FaChevronRight />
+              <li style={{ marginLeft: '10px' }}>JAM 資訊</li>
+            </ul>
+          </div>
+          <div className="">
+            {/* 主內容 */}
+            <main onClick={handleToggleEditor}>
+              {editorVisible && (
+                <Editor
+                  name="description"
+                  onChange={(data) => {
+                    setData(data)
+                  }}
+                  editorLoaded={editorLoaded}
+                  value={initContent}
+                />
+              )}
+            </main>
+          </div>
         </div>
       </div>
-      {/* End content */}
-
-      {/* footer */}
       <Footer />
 
       <style jsx>{`
+      main{
+          min-height: 100svh;
+        }
         .nav-category {
           display: flex;
           justify-content: between;
@@ -146,8 +176,7 @@ export default function ArticleEdit() {
             weight: 576px;
             height: 300px;
           }
-        }
-      `}</style>
+        }`}</style>
     </>
   )
 }
