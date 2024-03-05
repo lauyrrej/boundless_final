@@ -4,7 +4,8 @@ import Footer from '@/components/common/footer'
 //試抓資料區
 import Card from '@/components/lesson/lesson-card-data'
 import Cardrwd from '@/components/lesson/lesson-card-rwd-data'
-import Lesson from '@/data/Lesson.json'
+// import Lesson from '@/data/Lesson.json'
+
 
 import Link from 'next/link'
 import Image from 'next/image'
@@ -19,7 +20,7 @@ import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 
 
-export default function Test() {
+export default function Test({ onSearch }) {
   // 在電腦版或手機版時
   const [isSmallScreen, setIsSmallScreen] = useState(false)
 
@@ -93,16 +94,109 @@ export default function Test() {
     setScore('all')
     setSales(false)
   }
+    //-------------------連資料庫
 
-    //分類功能
+    const [Lesson, setLesson] = useState([])
+     function getLesson() {
+       return new Promise((resolve, reject) => {
+         let url = 'http://localhost:3005/api/lesson'
+         fetch(url, {
+           method: 'GET',
+           credentials: 'include',
+         })
+           .then((response) => {
+             return response.json()
+           })
+           .then((result) => {
+               resolve(result)
+               console.log(result)
+                setLesson(result)
+           })
+           .catch((error) => {
+             console.log(error)
+             reject()
+           })
+       })
+     }
 
-const handleItemClick = (categoryId) => {
-  // 处理点击事件的逻辑
-  console.log('Category ID clicked:')
-}
-  // 根據所選分類過濾商品
-
+     useEffect(() => {
+       getLesson()
+     }, [])
     
+    //-------------------分類功能
+      const [LessonCategory, setLessonCategory] = useState([])
+  function getLessonCategory() {
+    return new Promise((resolve, reject) => {
+      let url = 'http://localhost:3005/api/lesson/categories'
+      fetch(url, {
+        method: 'GET',
+        credentials: 'include',
+      })
+        .then((response) => {
+          return response.json()
+        })
+        .then((result) => {
+          resolve(result)
+           console.log(result)
+            setLessonCategory(result)
+           
+        })
+        .catch((error) => {
+          console.log(error)
+          reject()
+        })
+    })
+  }
+
+  useEffect(() => {
+    getLessonCategory()
+  }, [])
+
+
+  const [products, setProducts] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(''); // 用于存储用户选择的分类
+
+  useEffect(() => {
+    // 定义一个函数用于获取商品数据
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(`/api/products/${selectedCategory}`)
+        const data = await response.json()
+        setProducts(data)
+      } catch (error) {
+        console.error('Error fetching products:', error)
+      }
+    }
+
+    // 当selectedCategory变化时重新获取商品数据
+    if (selectedCategory !== '') {
+      fetchProducts()
+    }
+  }, [selectedCategory])
+
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category)
+  }
+
+  //-------------------搜尋功能
+  //更新搜索欄狀態
+  const [searchKeyword, setSearchKeyword] = useState('')
+  const handleSearch = (keyword) => {
+    setSearchKeyword(keyword)
+  }
+
+  //過濾商品列表
+  const searchProducts = Lesson.filter((product) =>
+    product.name.toLowerCase().includes(searchKeyword.toLowerCase())
+  )
+  // 搜索欄组件
+  const [keyword, setKeyword] = useState('')
+
+  const handleChange = (event) => {
+    setKeyword(event.target.value)
+    onSearch(event.target.value)
+  }
+
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
@@ -165,15 +259,8 @@ const handleItemClick = (categoryId) => {
                   <Link href={'/lesson/all'}>全部</Link>
                 </li>
                 {/* 分類功能 */}
-                {sidebarData.map((item, index) => {
-                  return (
-                    <li
-                      key={index}
-                      onClick={() => handleItemClick()}
-                    >
-                      <Link href={`#`}>{item}</Link>
-                    </li>
-                  )
+                {LessonCategory.map((v, index) => {
+                  return <li key={index}>{v.name}</li>
                 })}
               </ul>
             </div>
@@ -232,7 +319,8 @@ const handleItemClick = (categoryId) => {
 
               <div className="top-function-flex">
                 {/*  ---------------------- 搜尋欄  ---------------------- */}
-                <div className="search-sidebarBtn">
+                <div className="search-sidebarBtn" onSearch={handleSearch}>
+                  {/* ?? */}
                   <div
                     className="d-flex d-sm-none b-btn b-btn-body"
                     role="presentation"
@@ -246,6 +334,8 @@ const handleItemClick = (categoryId) => {
                       type="text"
                       className="form-control"
                       placeholder="請輸入關鍵字..."
+                      value={keyword}
+                      onChange={handleChange}
                     />
                     <div className="search-btn btn d-flex justify-content-center align-items-center p-0">
                       <IoIosSearch size={25} />
@@ -392,19 +482,28 @@ const handleItemClick = (categoryId) => {
             <div className="content">
               {/*-------- 列表頁卡片迴圈------- */}
               <div className="lesson-card-group">
-                {Lesson.map((v, i) => {
-                  const { id, name, price, teacher_id, img } = v
+                {/* 更改為搜尋過後篩選出來的課程 */}
+                {products.map((v, i) => {
                   return (
-                    <div className="mb-4 ">
+                    <div className="mb-4 " key={v.id}>
                       {isSmallScreen ? (
-                        <Cardrwd />
+                        <Cardrwd
+                          id={v.id}
+                          name={v.name}
+                          price={v.price}
+                          teacher_id={v.teacher_id}
+                          img={v.img}
+                          sales={v.sales}
+                        />
                       ) : (
                         <Card
-                          id={id}
-                          name={name}
-                          price={price}
-                          teacher_id={teacher_id}
-                          img={img}
+                          id={v.id}
+                          name={v.name}
+                          price={v.price}
+                          teacher_id={v.teacher_id}
+                          img={v.img}
+                          length={v.length}
+                          sales={v.sales}
                         />
                       )}
                     </div>
@@ -416,7 +515,6 @@ const handleItemClick = (categoryId) => {
         </div>
       </div>
       <Footer />
-
       <style jsx>{`
         .lesson-card-group {
           display: flex;

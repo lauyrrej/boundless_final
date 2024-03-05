@@ -1,13 +1,14 @@
-import React from 'react'
+import { useEffect, useState } from 'react'
+// import Lesson from '@/data/Lesson.json'
 
-function CourseCard() {
+export default function CourseCard({ id, name, price, teacher_id, img,length, sales }) {
   return (
     <>
       <article className="course-card">
         <section className="course-image-wrapper">
           <img
             loading="lazy"
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/a7714ac15cb7337bab3fdd53e00644245f4a840747cf1ecc2bc44e48164d588a?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&"
+            src={`/課程與師資/lesson_img/${img}`}
             alt="Course Preview"
             className="course-image"
           />
@@ -18,9 +19,10 @@ function CourseCard() {
             className="icon-image"
           />
         </section>
-        <section className="courset-details">
-          <h3 className="course-title">樂理指法一把抓 - 鋼琴基礎從零開始</h3>
-          <p className="course-instructor">by XX老師</p>
+
+        <section className="course-details">
+          <h3 className="course-title">{name}</h3>
+          <p className="course-instructor">by {teacher_id}老師</p>
           <div className="course-info">
             <div className="rating">
               <img
@@ -40,11 +42,11 @@ function CourseCard() {
                   alt="Clock icon"
                   className="duration-icon"
                 />
-                5小時
+                {length}5小時
               </span>
             </div>
           </div>
-          <div className="course-price">NT$ 4,000</div>
+          <div className="course-price">${price}</div>
           <div className="enrolled-students">
             <img
               loading="lazy"
@@ -52,10 +54,11 @@ function CourseCard() {
               alt="User icon"
               className="user-icon"
             />
-            <span className="enrollment-count">50</span>
+            <span className="enrollment-count">{sales}50</span>
           </div>
         </section>
       </article>
+
       <style jsx>{`
         .course-card {
           max-width: 240px;
@@ -128,5 +131,3 @@ function CourseCard() {
     </>
   )
 }
-
-export default CourseCard

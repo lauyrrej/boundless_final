@@ -28,7 +28,7 @@ export default function ProductBriefCard({}) {
       setCartItems([...cartItems, newItem])
     }
     setCartCount(cartCount + 1)
-    toast(`${Lesson.lesson[0].name}已加入購物車中`)
+    toast(`${Lesson[0].name}已加入購物車中`)
   }
 
   //跳轉頁面
@@ -38,7 +38,7 @@ export default function ProductBriefCard({}) {
     <>
       <div className=" Right sticky-top ">
         <div className="prodBriefing sticky-top ">
-          <div className="prodMainName">{Lesson.lesson[0].name}</div>
+          <div className="prodMainName">{Lesson[0].name}</div>
           <div className="Rating">
             <div className="star">
               <img
@@ -52,7 +52,7 @@ export default function ProductBriefCard({}) {
             <div className="sales">購買人數 50</div>
           </div>
           <div className="productPrice">
-            <div className="price">NT$ {Lesson.lesson[0].price}</div>
+            <div className="price">NT$ {Lesson[0].price}</div>
             {/* 收藏功能 */}
             {/* 做好的 onClick*/}
             <div className="likesIcon icon-container ">
@@ -79,9 +79,7 @@ export default function ProductBriefCard({}) {
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/81a1d10e78e821775737fe4938ae726e8de4a80804b01bdda9876d9f86f9b1bb?"
                 className="lengthIcon"
               />
-              <div className="lengthHomeworkWord">
-                {Lesson.lesson[0].length}分鐘
-              </div>
+              <div className="lengthHomeworkWord">{Lesson[0].length}分鐘</div>
             </div>
             <div className="lengthhomework">
               <img
@@ -90,11 +88,11 @@ export default function ProductBriefCard({}) {
                 className="img-10"
               />
               <div className="lengthHomeworkWord">
-                {Lesson.lesson[0].homework}份作業
+                {Lesson[0].homework}份作業
               </div>
             </div>
           </div>
-          <div className="lessonIntro">{Lesson.lesson[0].info}</div>
+          <div className="lessonIntro">{Lesson[0].info}</div>
           <div className="shoppingBtn">
             <div
               className="cartBtn"
@@ -114,7 +112,7 @@ export default function ProductBriefCard({}) {
             </div>
           </div>
         </div>
-        <Toaster className="toaster" />
+        <Toaster position="bottom-center" reverseOrder={false} />
       </div>
       <style jsx>
         {`
@@ -261,11 +259,7 @@ export default function ProductBriefCard({}) {
               background-color: #000000;
             }
           }
-          .toaster {
-            position: fixed;
-            top: 500px; /* 距離頂部的距離 */
-            z-index: 100000; /* 設置較高的 z-index */
-          }
+       
         `}
       </style>
     </>

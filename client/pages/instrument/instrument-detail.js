@@ -15,8 +15,7 @@ import { IoClose } from 'react-icons/io5'
 import { FaHeart } from 'react-icons/fa'
 
 import CardIns from '@/components/instrument/card'
-import HoriCard from '@/components/lesson/lesson-card-hori'
-import ProductCardIns from '@/components/lesson/instrument-productbrief-card'
+import ProductCardIns from '@/components/instrument/instrument-productbrief-card'
 
 //試抓資料區
 import Lesson from '@/data/Lesson.json'
