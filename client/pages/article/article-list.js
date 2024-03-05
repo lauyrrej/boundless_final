@@ -30,22 +30,35 @@ export default function ArticleList() {
     setShowSidebar(!showSidebar)
   }
 
-  // ----------------------真資料  ----------------------
-
-  // Article-card
+  // ----------------------功能  ----------------------
   const cardData = { ArticleJson }
-  // console.log(cardData)
-
   const [data, setData] = useState(ArticleJson);
-  // console.log(data);
-
   const [search, setSearch] = useState('');
 
+  // 搜尋功能
   const handleSearch = () => {
-    console.log('按鈕被典籍了');
-    const newData = data.filter((v, i) => { return v.title.includes(search) });
+    // console.log('按鈕被典籍了');
+    let newData;
+    if (search.trim() === '') { newData = ArticleJson; }
+    else {
+      newData = data.filter((v, i) => { return v.title.includes(search) })
+    }
     setData(newData);
   }
+
+  const categorySearch = () => {
+    let newData;
+    if (category === 'all') {
+      newData = ArticleJson
+    }
+    else {
+      newData = data.filter((v, i) => { return v.category_id === category })
+    }
+    setData(newData)
+  }
+
+  // ----------------------分類功能  ----------------------
+
 
   // ----------------------假資料  ----------------------
 
