@@ -1,24 +1,62 @@
 import { useEffect, useState } from 'react'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
-import Card from '@/components/lesson/lesson-list-card'
+//試抓資料區
+import Card from '@/components/lesson/lesson-card-data'
+import Cardrwd from '@/components/lesson/lesson-card-rwd-data'
+import Lesson from '@/data/Lesson.json'
+
 import Link from 'next/link'
 import Image from 'next/image'
 import lessonHero from '@/assets/lesson-hero.jpg'
+// icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
 import { IoIosSearch } from 'react-icons/io'
 import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
+import { ImExit } from 'react-icons/im'
+import { IoClose } from 'react-icons/io5'
+
 
 export default function Test() {
-  const [filterVisible, setFilterVisible] = useState(false)
+  // 在電腦版或手機版時
+  const [isSmallScreen, setIsSmallScreen] = useState(false)
+
   useEffect(() => {
-    document.addEventListener('click', (e) => {
-      setFilterVisible(false)
-    })
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth <= 576)
+    }
+
+    handleResize()
+
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
   }, [])
-  // 阻止事件冒泡造成篩選表單關閉
+  // ----------------------手機版本  ----------------------
+  // 主選單
+  const [showMenu, setShowMenu] = useState(false)
+  const menuMbToggle = () => {
+    setShowMenu(!showMenu)
+  }
+  // sidebar
+  const [showSidebar, setShowSidebar] = useState(false)
+  const sidebarToggle = () => {
+    setShowSidebar(!showSidebar)
+  }
+
+  // ----------------------條件篩選  ----------------------
+  const [filterVisible, setFilterVisible] = useState(false)
+
+  useEffect(() => {
+    document.addEventListener('click', () => {
+      setFilterVisible(false)
+    }) //鉤子在組件渲染完成後註冊了一個點擊事件監聽器。當點擊事件發生時，會調用一個函數來將 filterVisible 設置為 false，從而隱藏篩選表單。
+  }, []) //這個事件監聽器只會在組件首次渲染時被註冊，並且在組件卸載時被清理。
+  // 阻止事件冒泡造成篩選表單關閉//防止觸發組件外部的點擊事件，進而導致篩選表單被關閉。
   const stopPropagation = (e) => {
     e.stopPropagation()
   }
@@ -27,7 +65,9 @@ export default function Test() {
     stopPropagation(e)
     setFilterVisible(!filterVisible)
   }
-
+  // ----------------------假資料  ----------------------
+  // 資料排序
+  const [dataSort, setDataSort] = useState('upToDate')
   // sidebar假資料
   const sidebarData = [
     '歌唱技巧',
@@ -54,19 +94,68 @@ export default function Test() {
     setSales(false)
   }
 
-  let arr = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    //分類功能
 
+const handleItemClick = (categoryId) => {
+  // 处理点击事件的逻辑
+  console.log('Category ID clicked:')
+}
+  // 根據所選分類過濾商品
+
+    
   return (
     <>
-      <Navbar />
-      <div className="hero d-none d-sm-block" style={{ paddingTop: '60px' }}>
+      <Navbar menuMbToggle={menuMbToggle} />
+      <div className="hero d-none d-sm-block">
         <Image
           src={lessonHero}
           className="object-fit-cover w-100"
           alt="cover"
         />
       </div>
-      <div className="container">
+      <div className="container position-relative">
+        {/* 手機版主選單/navbar */}
+        <div
+          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${
+            showMenu ? 'menu-mb-show' : ''
+          }`}
+        >
+          {/* 用戶資訊 */}
+          <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
+            <div className="mb-photo-wrapper mb-2">
+              <Image
+                src="/jam/amazingshow.jpg"
+                alt="user photo mb"
+                fill
+              ></Image>
+            </div>
+            <div>用戶名稱</div>
+          </div>
+          <Link
+            className="mm-item"
+            href="/user"
+            style={{ borderTop: '1px solid #b9b9b9' }}
+          >
+            會員中心
+          </Link>
+          <Link className="mm-item" href="/lesson/lesson-list">
+            探索課程
+          </Link>
+          <Link className="mm-item" href="/instrument/instrument-list">
+            樂器商城
+          </Link>
+          <Link className="mm-item" href="/jam/recruit-list">
+            Let &apos;s JAM!
+          </Link>
+          <Link className="mm-item" href="/article/article-list">
+            樂友論壇
+          </Link>
+          <div className="mm-item" style={{ color: '#1581cc' }}>
+            登出
+            <ImExit size={20} className="ms-2" />
+          </div>
+        </div>
+
         <div className="row">
           {/* sidebar */}
           <div className="sidebar-wrapper d-none d-sm-block  col-sm-2">
@@ -75,9 +164,13 @@ export default function Test() {
                 <li>
                   <Link href={'/lesson/all'}>全部</Link>
                 </li>
+                {/* 分類功能 */}
                 {sidebarData.map((item, index) => {
                   return (
-                    <li key={index}>
+                    <li
+                      key={index}
+                      onClick={() => handleItemClick()}
+                    >
                       <Link href={`#`}>{item}</Link>
                     </li>
                   )
@@ -87,12 +180,44 @@ export default function Test() {
           </div>
 
           {/* 頁面內容 */}
-          <main
-            className="col-12 col-sm-10 pe-0"
-            style={{
-              paddingLeft: '30px',
-            }}
-          >
+          <div className="col-12 col-sm-10 page-control">
+            {/* 手機版sidebar */}
+            <div
+              className={`sidebar-mb d-sm-none ${
+                showSidebar ? 'sidebar-mb-show' : ''
+              }`}
+            >
+              <div className="sm-close">
+                <IoClose
+                  size={32}
+                  onClick={() => {
+                    setShowSidebar(false)
+                  }}
+                />
+              </div>
+              <Link href={`/instrument/instrument`} className="sm-item active">
+                全部
+              </Link>
+              <Link href={`/instrument/instrument`} className="sm-item">
+                歌唱技巧
+              </Link>
+              <Link href={`/instrument/instrument`} className="sm-item">
+                樂器演奏
+              </Link>
+              <Link href={`/instrument/instrument`} className="sm-item">
+                音樂理論
+              </Link>
+              <Link href={`/instrument/instrument`} className="sm-item">
+                詞曲創作
+              </Link>
+              <Link href={`/instrument/instrument`} className="sm-item">
+                軟體操作
+              </Link>
+              <Link href={`/instrument/instrument`} className="sm-item">
+                活動專區
+              </Link>
+            </div>
+
             {/* 頂部功能列 */}
             <div className="top-function-container">
               {/* 麵包屑 */}
@@ -105,27 +230,51 @@ export default function Test() {
                 </ul>
               </div>
 
-              <div className="d-flex justify-content-between">
-                {/* 搜尋欄 */}
-                <div className="search input-group">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="請輸入關鍵字..."
-                  />
-                  <div className="search-btn btn d-flex justify-content-center align-items-center p-0">
-                    <IoIosSearch size={25} />
+              <div className="top-function-flex">
+                {/*  ---------------------- 搜尋欄  ---------------------- */}
+                <div className="search-sidebarBtn">
+                  <div
+                    className="d-flex d-sm-none b-btn b-btn-body"
+                    role="presentation"
+                    style={{ paddingInline: '16px' }}
+                    onClick={sidebarToggle}
+                  >
+                    選單
+                  </div>
+                  <div className="search input-group">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="請輸入關鍵字..."
+                    />
+                    <div className="search-btn btn d-flex justify-content-center align-items-center p-0">
+                      <IoIosSearch size={25} />
+                    </div>
                   </div>
                 </div>
+
                 <div className="filter-sort d-flex justify-content-between">
+                  <div className="sort-mb d-block d-sm-none">
+                    <select
+                      className="form-select"
+                      value={dataSort}
+                      name="dataSort"
+                      onChange={(e) => {
+                        setDataSort(e.target.value)
+                      }}
+                    >
+                      <option selected value="upToDate">
+                        最熱門
+                      </option>
+                      <option value="recent">依評價</option>
+                      <option value="recent">依時數</option>
+                    </select>
+                  </div>
+
                   {/* 條件篩選 */}
-                  <form
-                    action="/template-with-sidebar"
-                    method="get"
-                    className="d-flex aligh-items-center  position-relative"
-                  >
+                  <form className="d-flex align-items-center  position-relative">
                     <div
-                      className="filter-text d-flex align-items-center me-3"
+                      className="filter-text d-flex align-items-center me-sm-4"
                       role="presentation"
                       onClick={onshow}
                     >
@@ -226,11 +375,12 @@ export default function Test() {
                     </div>
                   </form>
                   {/* 資料排序 */}
-                  <div className="sort d-flex justify-content-between align-items-center">
+                  <div className="sort d-none d-sm-flex justify-content-between align-items-center">
                     <div className="d-flex align-items-center">
                       排序
-                      <FaSortAmountDown size={13} />
+                      <FaSortAmountDown size={14} />
                     </div>
+
                     <div className="sort-item active">最熱門</div>
                     <div className="sort-item">依評價</div>
                     <div className="sort-item">依實數</div>
@@ -240,22 +390,43 @@ export default function Test() {
             </div>
             {/* 主內容 */}
             <div className="content">
-              <div className="row row-cols-1 row-cols-md-4">
-                {arr.map((i, index) => {
+              {/*-------- 列表頁卡片迴圈------- */}
+              <div className="lesson-card-group">
+                {Lesson.map((v, i) => {
+                  const { id, name, price, teacher_id, img } = v
                   return (
-                    <div key={index} className="col mb-4">
-                      <Card />
+                    <div className="mb-4 ">
+                      {isSmallScreen ? (
+                        <Cardrwd />
+                      ) : (
+                        <Card
+                          id={id}
+                          name={name}
+                          price={price}
+                          teacher_id={teacher_id}
+                          img={img}
+                        />
+                      )}
                     </div>
                   )
                 })}
               </div>
             </div>
-          </main>
+          </div>
         </div>
       </div>
       <Footer />
 
-      <style jsx>{``}</style>
+      <style jsx>{`
+        .lesson-card-group {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 20px;
+          align-items: flex-start;
+          align-content: flex-start;
+          align-self: 'stretch';
+        }
+      `}</style>
     </>
   )
 }
