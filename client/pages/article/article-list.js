@@ -39,7 +39,7 @@ export default function ArticleList() {
 
   // 搜尋功能
   const handleSearch = () => {
-    // console.log('按鈕被典籍了');
+    console.log('按鈕被典籍了');
     let newData;
     if (search.trim() === '') { newData = ArticleJson; }
     else {
@@ -456,7 +456,6 @@ export default function ArticleList() {
               <hr />
               <div className="content-pop d-flex flex-wrap">
                 {articles.map((v, i) => {
-                  {/* 熱門文章的分類目前是抓前4筆 */ }
                   const { id, title, content, img, author, publish_time, articles, fav } = v
                   return (
                     <ArticleCard key={id} id={id} title={title} content={content} img={img} author={author} publish_time={publish_time.split(" ")[0]} articles={articles}
