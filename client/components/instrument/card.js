@@ -12,16 +12,16 @@ export default function InstrumentCard({
   img_small,
   sales,
 }) {
-  const categoryName = category.find((v, i) => {
-    return categoryID === v.id
-  })
-  // console.log(categoryName.name)
-  // console.log('categoryName:', categoryName)
-  // console.log(
-  //   'categoryName.name:',
-  //   categoryName ? categoryName.name : 'Category not found'
-  // )
-  console.log(categoryName.name)
+//   const categoryName = category.find((v, i) => {
+//     return categoryID === v.id
+//   })
+//   // console.log(categoryName.name)
+//   // console.log('categoryName:', categoryName)
+//   // console.log(
+//   //   'categoryName.name:',
+//   //   categoryName ? categoryName.name : 'Category not found'
+//   // )
+//   console.log(categoryName.name)
 
   return (
     <>

@@ -70,14 +70,14 @@ export default function Test({ onSearch }) {
   // 資料排序
   const [dataSort, setDataSort] = useState('upToDate')
   // sidebar假資料
-  const sidebarData = [
-    '歌唱技巧',
-    '樂器演奏',
-    '音樂理論',
-    '詞曲創作',
-    '軟體操作',
-    '活動專區',
-  ]
+//   const sidebarData = [
+//     '歌唱技巧',
+//     '樂器演奏',
+//     '音樂理論',
+//     '詞曲創作',
+//     '軟體操作',
+//     '活動專區',
+//   ]
   const [priceLow, setPriceLow] = useState('')
   const [priceHigh, setPriceHigh] = useState('')
   // 課程評價
@@ -94,37 +94,37 @@ export default function Test({ onSearch }) {
     setScore('all')
     setSales(false)
   }
-    //-------------------連資料庫
+  //-------------------連資料庫
 
-    const [Lesson, setLesson] = useState([])
-     function getLesson() {
-       return new Promise((resolve, reject) => {
-         let url = 'http://localhost:3005/api/lesson'
-         fetch(url, {
-           method: 'GET',
-           credentials: 'include',
-         })
-           .then((response) => {
-             return response.json()
-           })
-           .then((result) => {
-               resolve(result)
-               console.log(result)
-                setLesson(result)
-           })
-           .catch((error) => {
-             console.log(error)
-             reject()
-           })
-       })
-     }
+  const [Lesson, setLesson] = useState([])
+  function getLesson() {
+    return new Promise((resolve, reject) => {
+      let url = 'http://localhost:3005/api/lesson'
+      fetch(url, {
+        method: 'GET',
+        credentials: 'include',
+      })
+        .then((response) => {
+          return response.json()
+        })
+        .then((result) => {
+          resolve(result)
+          console.log(result)
+          setLesson(result)
+        })
+        .catch((error) => {
+          console.log(error)
+          reject()
+        })
+    })
+  }
 
-     useEffect(() => {
-       getLesson()
-     }, [])
-    
-    //-------------------分類功能
-      const [LessonCategory, setLessonCategory] = useState([])
+  useEffect(() => {
+    getLesson()
+  }, [])
+
+  //-------------------分類功能
+  const [LessonCategory, setLessonCategory] = useState([])
   function getLessonCategory() {
     return new Promise((resolve, reject) => {
       let url = 'http://localhost:3005/api/lesson/categories'
@@ -137,9 +137,8 @@ export default function Test({ onSearch }) {
         })
         .then((result) => {
           resolve(result)
-           console.log(result)
-            setLessonCategory(result)
-           
+          console.log(result)
+          setLessonCategory(result)
         })
         .catch((error) => {
           console.log(error)
@@ -152,49 +151,51 @@ export default function Test({ onSearch }) {
     getLessonCategory()
   }, [])
 
+  //-------------------分類改變
+//   const [products, setProducts] = useState([])
+//   const [selectedCategory, setSelectedCategory] = useState('') // 用于存储用户选择的分类
 
-  const [products, setProducts] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(''); // 用于存储用户选择的分类
-
-  useEffect(() => {
-    // 定义一个函数用于获取商品数据
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch(`/api/products/${selectedCategory}`)
-        const data = await response.json()
-        setProducts(data)
-      } catch (error) {
-        console.error('Error fetching products:', error)
-      }
-    }
+//   useEffect(() => {
+//     // 定义一个函数用于获取商品数据
+//     const fetchProducts = async () => {
+//       try {
+//         const response = await fetch(`/api/products/${selectedCategory}`)
+//         const data = await response.json()
+//         setProducts(data)
+//       } catch (error) {
+//         console.error('Error fetching products:', error)
+//       }
+//     }
 
     // 当selectedCategory变化时重新获取商品数据
-    if (selectedCategory !== '') {
-      fetchProducts()
-    }
-  }, [selectedCategory])
+//     if (selectedCategory !== '') {
+//       fetchProducts()
+//     }
+//   }, [selectedCategory])
 
-  const handleCategoryChange = (category) => {
-    setSelectedCategory(category)
-  }
+//   const handleCategoryChange = (category) => {
+//     setSelectedCategory(category)
+//   }
 
   //-------------------搜尋功能
-  //更新搜索欄狀態
-  const [searchKeyword, setSearchKeyword] = useState('')
-  const handleSearch = (keyword) => {
-    setSearchKeyword(keyword)
-  }
+  // 擴充後的物件陣列作為初始值
+  const [data, setData] = useState(Lesson)
+  const [search, setSearch] = useState('')
 
-  //過濾商品列表
-  const searchProducts = Lesson.filter((product) =>
-    product.name.toLowerCase().includes(searchKeyword.toLowerCase())
-  )
-  // 搜索欄组件
-  const [keyword, setKeyword] = useState('')
-
-  const handleChange = (event) => {
-    setKeyword(event.target.value)
-    onSearch(event.target.value)
+  // 搜尋功能
+  const handleSearch = () => {
+    console.log('按鈕被點擊了')
+    let newData
+    if (search.trim() === '') {
+        newData = Lesson
+        console.log(newData)
+        //FIXME 沒辦法在為搜尋的情況下顯示完整資料
+    } else {
+      newData = Lesson.filter((v, i) => {
+        return v.name.includes(search)
+      })
+    }
+    setData(newData)
   }
 
   return (
@@ -319,7 +320,7 @@ export default function Test({ onSearch }) {
 
               <div className="top-function-flex">
                 {/*  ---------------------- 搜尋欄  ---------------------- */}
-                <div className="search-sidebarBtn" onSearch={handleSearch}>
+                <div className="search-sidebarBtn">
                   {/* ?? */}
                   <div
                     className="d-flex d-sm-none b-btn b-btn-body"
@@ -334,10 +335,14 @@ export default function Test({ onSearch }) {
                       type="text"
                       className="form-control"
                       placeholder="請輸入關鍵字..."
-                      value={keyword}
-                      onChange={handleChange}
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
                     />
-                    <div className="search-btn btn d-flex justify-content-center align-items-center p-0">
+                    <div
+                      // 搜尋按鈕
+                      onClick={handleSearch}
+                      className="search-btn btn d-flex justify-content-center align-items-center p-0"
+                    >
                       <IoIosSearch size={25} />
                     </div>
                   </div>
@@ -483,7 +488,7 @@ export default function Test({ onSearch }) {
               {/*-------- 列表頁卡片迴圈------- */}
               <div className="lesson-card-group">
                 {/* 更改為搜尋過後篩選出來的課程 */}
-                {products.map((v, i) => {
+                {data.map((v, i) => {
                   return (
                     <div className="mb-4 " key={v.id}>
                       {isSmallScreen ? (

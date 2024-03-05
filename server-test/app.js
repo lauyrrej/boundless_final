@@ -8,6 +8,7 @@ import cors from "cors";
 // import router 匯入路由
 import indexRouter from "./routes/index.js";
 import jamRouter from "./routes/jam.js";
+import lessonRouter from "./routes/lesson.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -36,6 +37,8 @@ app.use(express.static(path.join(__dirname, "public")));
 // 使用路由
 app.use("/", indexRouter);
 app.use("/api/jam", jamRouter);
+app.use("/api/lesson", lessonRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
