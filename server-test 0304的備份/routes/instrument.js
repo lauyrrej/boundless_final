@@ -2,7 +2,6 @@ import express, { json } from "express";
 import db from "../db.js";
 import multer from "multer";
 
-
 const router = express.Router();
 const upload = multer();
 
