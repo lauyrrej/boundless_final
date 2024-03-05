@@ -3,31 +3,30 @@ import { FaEye } from "react-icons/fa";
 import bookmarkIconFill from '@/assets/fillbookmark.svg'
 import bookmarkIcon from '@/assets/emptybookmark.svg'
 import { FaBookmark } from "react-icons/fa";
-import data from '@/data/article.json'
 import Image from 'next/image';
 
 
 export default function Articlecard({
-  id, title, content, img, author, publish_time
+  id, title, content, img, author, publish_time, fav, handleToggleFav
 }) {
   const [discount, setDiscount] = useState('1')
   // console.log(products)
 
-  // 擴充收藏功能
-  const initState = data.map((v, i) => {
-    return { ...v, fav: false }
-  })
-  // 擴充後的物件陣列作為初始值
-  const [articles, setArticles] = useState(initState)
+  // // 擴充收藏功能
+  // const initState = data.map((v, i) => {
+  //   return { ...v, fav: false }
+  // })
+  // // 擴充後的物件陣列作為初始值
+  // const [articles, setArticles] = useState(initState)
 
-  // 純func
-  const handleToggleFav = (id) => {
-    const newArticles = articles.map((v, i) => {
-      if (v.id === id) return { ...v, fav: !v.fav }
-      else return v
-    })
-    setArticles(newArticles)
-  }
+  // // 純func
+  // const handleToggleFav = (id) => {
+  //   const newArticles = articles.map((v, i) => {
+  //     if (v.id === id) return { ...v, fav: !v.fav }
+  //     else return v
+  //   })
+  //   setArticles(newArticles)
+  // }
 
   return (
     <>
@@ -68,19 +67,13 @@ export default function Articlecard({
         <div className="kind-bookmark d-flex justify-content-between align-items-center">
           <div className="article-kind text-black bg-body px-2 pt-1 pb-1">技術</div>
           <div className="bookmark">
-            {articles.map((v, i) => {
-              return (
-                <Image
-                  src={v.fav ? bookmarkIconFill : bookmarkIcon}
-                  alt=""
-                  width={25}
-                  height={25}
-                  onClick={() => {
-                    handleToggleFav(v.id)
-                  }}
-                />
-              )
-            })}
+            <Image
+              src={fav ? bookmarkIconFill : bookmarkIcon}
+              alt=""
+              width={25}
+              height={25}
+              onClick={() => { handleToggleFav(id) }}
+            />
           </div>
         </div>
       </div>

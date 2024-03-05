@@ -11,6 +11,8 @@ import { FaChevronRight } from 'react-icons/fa6'
 import { IoIosSearch } from 'react-icons/io'
 import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
+import bookmarkIconFill from '@/assets/fillbookmark.svg'
+import bookmarkIcon from '@/assets/emptybookmark.svg'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 import ArticleCard from '@/components/article/article-card'
@@ -60,6 +62,23 @@ export default function ArticleList() {
   // ----------------------分類功能  ----------------------
 
 
+  // 標籤功能
+  // 擴充收藏功能
+  // 每個Json增加虛構的fav值
+  const initState = ArticleJson.map((v, i) => {
+    return { ...v, fav: false }
+  })
+  // 擴充後的物件陣列作為初始值
+  const [articles, setArticles] = useState(initState)
+
+  // 純func
+  const handleToggleFav = (id) => {
+    const newArticles = articles.map((v, i) => {
+      if (v.id === id) return { ...v, fav: !v.fav }
+      else return v
+    })
+    setArticles(newArticles)
+  }
   // ----------------------假資料  ----------------------
 
   // sidebar假資料
@@ -425,20 +444,23 @@ export default function ArticleList() {
             <main className="content me-2">
               <h4 className='text-primary pt-2'>熱門文章</h4>
               <div className="content-pop d-flex flex-wrap">
-                {data.slice(0, 4).map((v, i) => {
+                {articles.slice(0, 4).map((v, i) => {
                   {/* 熱門文章的分類目前是抓前4筆 */ }
-                  const { id, title, content, img, author, publish_time } = v
+                  const { id, title, content, img, author, publish_time, articles, fav } = v
                   return (
-                    <ArticleCard key={id} id={id} title={title} content={content} img={img} author={author} publish_time={publish_time.split(" ")[0]} />
+                    <ArticleCard key={id} id={id} title={title} content={content} img={img} author={author} publish_time={publish_time.split(" ")[0]} articles={articles}
+                      handleToggleFav={handleToggleFav} fav={fav} />
                   )
                 })}
               </div>
               <hr />
               <div className="content-pop d-flex flex-wrap">
-                {data.map((v, i) => {
-                  const { id, title, content, img, author, publish_time } = v
+                {articles.map((v, i) => {
+                  {/* 熱門文章的分類目前是抓前4筆 */ }
+                  const { id, title, content, img, author, publish_time, articles, fav } = v
                   return (
-                    <ArticleCard key={id} id={id} title={title} content={content} img={img} author={author} publish_time={publish_time.split(" ")[0]} />
+                    <ArticleCard key={id} id={id} title={title} content={content} img={img} author={author} publish_time={publish_time.split(" ")[0]} articles={articles}
+                      handleToggleFav={handleToggleFav} fav={fav} />
                   )
                 })}
               </div>
