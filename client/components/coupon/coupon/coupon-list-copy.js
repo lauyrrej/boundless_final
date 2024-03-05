@@ -4,6 +4,8 @@ import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
 import jamHero from '@/assets/jam-hero.png'
+import avatar from '@/public/user/Meiyuyu.jpg'
+
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
@@ -12,6 +14,11 @@ import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
+
+// coupon
+import styles from '@/pages/coupon/userCoupon.module.scss'
+import Coupon from '@/components/coupon/coupon.js'
+import Data from '@/data/coupon.json'
 
 export default function Test() {
   // ----------------------手機版本  ----------------------
@@ -27,8 +34,16 @@ export default function Test() {
   }
   // ----------------------假資料  ----------------------
   // sidebar假資料
-  const sidebarData = ['吉他', '貝斯', '鍵盤樂器', '打擊樂器']
-
+  const sidebarData = [
+    '會員資訊',
+    '我的樂團',
+    '我的訂單',
+    '我的文章',
+    '我的收藏',
+    '我的優惠券 ',
+    '我的課程',
+    '我的訊息',
+  ]
   // 資料排序
   const [dataSort, setDataSort] = useState('latest')
   // ----------------------條件篩選  ----------------------
@@ -75,15 +90,31 @@ export default function Test() {
     setSales(false)
   }
 
+  // 顯示分頁
+  // const [selectedCategory, setSelectedCategory] = useState([])
+  // console.log(selectedCategory)
+  // const filterCoupons = (category) => {
+  //   if (category === 'All') {
+  //     setCoupons(couponsData)
+  //   } else {
+  //     const filteredCoupons = couponsData.filter(
+  //       (coupon) => coupon.kind === category
+  //     )
+  //     setCoupons(filteredCoupons)
+  //   }
+  //   setSelectedKind(category) // 更新选中的分类
+  // }
+
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
-      <div
+      {/* 先把HEROSECTION隱藏 */}
+      {/* <div
         className="page-shero d-none d-sm-block"
         style={{ paddingTop: '60px' }}
       >
         <Image src={jamHero} className="object-fit-cover w-100" alt="cover" />
-      </div>
+      </div> */}
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
         <div
@@ -130,6 +161,23 @@ export default function Test() {
           {/* sidebar */}
           <div className="sidebar-wrapper d-none d-sm-block col-sm-2">
             <div className="sidebar">
+              <div className="sidebar-user-info">
+                <div className="sidebar-user-info-imgBox">
+                  <Image
+                    style={{ width: 100, height: 100, resizeMode: 'cover' }}
+                    src={avatar}
+                    alt="user photo mb"
+                  ></Image>
+                </div>
+                <div className="sidebar-user-info-text">
+                  <div className="sidebar-user-info-name">棉悠悠</div>
+                  <div className="sidebar-user-info-band">幻獸帕魯</div>
+                </div>
+                {/* 更換大頭貼的功能暫定併回會員資訊 故不再sidebar顯示 */}
+                {/* <div className="sidebar-user-info-Camera-img">
+                  <Image src={avatar} alt="user photo mb" fill></Image>
+                </div> */}
+              </div>
               <ul className="d-flex flex-column">
                 {sidebarData.map((item, index) => {
                   return (
@@ -158,28 +206,43 @@ export default function Test() {
                   }}
                 />
               </div>
-              <Link href={`/jam/recruit-list`} className="sm-item active">
-                團員募集
+              <Link href={``} className="sm-item">
+                會員資訊
               </Link>
-              <Link href={`/jam/jam-list`} className="sm-item">
-                活動中的JAM
+              <Link href={``} className="sm-item">
+                我的樂團
               </Link>
-              <Link href={`/jam/Q&A`} className="sm-item">
-                什麼是JAM？
+              <Link href={``} className="sm-item">
+                我的訂單
+              </Link>
+              <Link href={``} className="sm-item">
+                我的文章
+              </Link>
+              <Link href={``} className="sm-item">
+                我的收藏
+              </Link>
+              <Link href={``} className="sm-item active">
+                我的優惠券
+              </Link>
+              <Link href={``} className="sm-item">
+                我的課程
+              </Link>
+              <Link href={``} className="sm-item">
+                我的訊息
               </Link>
             </div>
             {/*  ---------------------- 頂部功能列  ---------------------- */}
             <div className="top-function-container">
               {/*  ---------------------- 麵包屑  ---------------------- */}
-              <div className="breadcrumb-wrapper">
+              <div className="breadcrumb-wrapper-ns">
                 <ul className="d-flex align-items-center p-0 m-0">
                   <IoHome size={20} />
                   <li style={{ marginLeft: '8px' }}>會員中心</li>
                   <FaChevronRight />
-                  <li style={{ marginLeft: '10px' }}>我的文章</li>
+                  <li style={{ marginLeft: '10px' }}>我的優惠券</li>
                 </ul>
               </div>
-
+              {/* 篩選列 */}
               <div className="top-function-flex">
                 {/*  ---------------------- 搜尋欄  ---------------------- */}
                 <div className="search-sidebarBtn">
@@ -191,7 +254,8 @@ export default function Test() {
                   >
                     選單
                   </div>
-                  <div className="search input-group">
+                  {/*搜尋欄*/}
+                  {/* <div className="search input-group">
                     <input
                       type="text"
                       className="form-control"
@@ -200,9 +264,57 @@ export default function Test() {
                     <div className="search-btn btn d-flex justify-content-center align-items-center p-0">
                       <IoIosSearch size={25} />
                     </div>
+                  </div> */}
+                  {/* 分頁 */}
+                  <div className="d-none d-sm-block pt-4">
+                    <nav aria-label="breadcrumb sort d-flex justify-content-between align-items-center">
+                      <ol className="breadcrumb">
+                        <div
+                          role="presentation"
+                          // btn不會跑紅色警告的role
+                          className="btn breadcrumb-item"
+                          aria-current="page"
+                          onClick={() => filterCoupons('All')}
+                        >
+                          全部
+                        </div>
+                        <div
+                          role="presentation"
+                          // btn不會跑紅色警告的role
+                          className="btn breadcrumb-item"
+                          aria-current="page"
+                          onClick={() => filterCoupons('All')}
+                        >
+                          樂器
+                        </div>
+
+                        <div
+                          role="presentation"
+                          // btn不會跑紅色警告的role
+                          className="btn breadcrumb-item"
+                          aria-current="page"
+                          onClick={() => filterCoupons('All')}
+                        >
+                          課程
+                        </div>
+                        {/* <li className="h6 breadcrumb-item" aria-current="page">
+                          <a href="#">已使用</a>
+                        </li> */}
+
+                        {/* <ul>
+                          {coupons.map((coupon) => (
+                            <li key={coupon.id}>
+                              <div>Name: {coupon.name}</div>
+                              <div>Discount: {coupon.discount}</div>
+                              <div>Kind: {coupon.kind}</div>
+                            </li>
+                          ))}
+                        </ul> */}
+                      </ol>
+                    </nav>
                   </div>
                 </div>
-
+                {/* 分頁RWD */}
                 <div className="filter-sort d-flex justify-content-between">
                   <div className="sort-mb d-block d-sm-none">
                     <select
@@ -214,12 +326,14 @@ export default function Test() {
                       }}
                     >
                       <option selected value="latest">
-                        新到舊
+                        全部
                       </option>
-                      <option value="oldest">舊到新</option>
+                      <option value="oldest">樂器</option>
+                      <option value="oldest">課程</option>
+                      {/* <option value="oldest">已使用</option> */}
                     </select>
                   </div>
-                  {/*  ---------------------- 條件篩選  ---------------------- */}
+                  {/*篩選*/}
                   <form className="d-flex align-items-center position-relative">
                     <div
                       className="filter-text d-flex align-items-center me-sm-4"
@@ -235,6 +349,11 @@ export default function Test() {
                         onClick={stopPropagation}
                         role="presentation"
                       >
+                        {/*條件篩選 無法d-none d-sm-block */}
+                        <div className="filter-item">
+                          <div className="filter-title">折扣幅度</div>
+                          <div className=" filter-title">選擇品牌</div>
+                        </div>
                         {/* 品牌 */}
                         <div className="filter-item">
                           <div className="filter-title">選擇品牌</div>
@@ -259,78 +378,7 @@ export default function Test() {
                             })}
                           </select>
                         </div>
-                        {/* 價格區間 */}
-                        <div className="filter-item">
-                          <div className="filter-title">價格區間</div>
-                          <input
-                            type="number"
-                            className="form-control mb-2"
-                            placeholder="最低價"
-                            name="priceLow"
-                            value={priceLow}
-                            min={0}
-                            max={priceHigh - 1}
-                            onChange={(e) => {
-                              setPriceLow(e.target.value)
-                            }}
-                          />
-                          <input
-                            type="number"
-                            className="form-control"
-                            placeholder="最高價"
-                            name="priceHigh"
-                            value={priceHigh}
-                            min={priceLow + 1}
-                            onChange={(e) => {
-                              setPriceHigh(e.target.value)
-                            }}
-                          />
-                        </div>
-                        {/* 商品評價 */}
-                        <div className="filter-item m-0">
-                          <div className="filter-title">商品評價</div>
-                          <div className="filter-radio-group d-flex flex-wrap justify-content-between">
-                            {scoreState.map((v, i) => {
-                              return (
-                                <div
-                                  className="filter-radio-item form-check p-0 mb-3"
-                                  key={i}
-                                >
-                                  <label className="form-check-label">
-                                    <input
-                                      classname="form-check-input"
-                                      type="radio"
-                                      name="score"
-                                      value={v}
-                                      checked={v === score}
-                                      onChange={(e) => {
-                                        setScore(e.target.value)
-                                      }}
-                                    />
-                                    &nbsp;{v === 'all' ? '全部' : v + '星'}
-                                  </label>
-                                </div>
-                              )
-                            })}
-                          </div>
-                        </div>
-                        {/* 促銷商品 */}
-                        <div className="filter-item">
-                          <div className="form-check">
-                            <label className="form-check-label filter-title mb-0">
-                              <input
-                                className="form-check-input"
-                                type="checkbox"
-                                value={sales}
-                                name="sales"
-                                onChange={() => {
-                                  setSales(!sales)
-                                }}
-                              />{' '}
-                              促銷商品
-                            </label>
-                          </div>
-                        </div>
+                        {/* 區間~促銷Delete */}
                         <div
                           className="d-flex justify-content-between gap-2 mt-2"
                           style={{ paddingInline: '10px' }}
@@ -364,7 +412,7 @@ export default function Test() {
                         setDataSort('latest')
                       }}
                     >
-                      新到舊
+                      折扣幅度
                     </div>
                     <div
                       className={`sort-item ${
@@ -375,7 +423,7 @@ export default function Test() {
                         setDataSort('oldest')
                       }}
                     >
-                      舊到新
+                      即將到期
                     </div>
                   </div>
                 </div>
@@ -391,13 +439,68 @@ export default function Test() {
                       backgroundColor: 'rgb(255, 255, 255)',
                     }}
                   >
-                    <div className="user-content col-12">
-                      <div className="user-content-top">
-                        <div className="user-title-userInfo">我的訂單</div>
+                    <div className="coupon-content col-12">
+                      <div className="coupon-content-top">
+                        <div className="user-title-userInfo">我的優惠券</div>
+                      </div>
+                      {/* components */}
+                      <div className="couponImage">
+                        {Data.map((v, i) => {
+                          const { id, name, discount, kind, limit_time } = v
+                          return (
+                            <Coupon
+                              key={id}
+                              name={name}
+                              discount={discount}
+                              kind={kind}
+                              limit_time={limit_time}
+                              className={`${styles.couponItem} `}
+                            />
+                          )
+                        })}
                       </div>
 
-                      <div className="user-orderList-pagination">
-                        <p>待放分頁元件 注意class</p>
+                      {/*pagination*/}
+                      <div className="coupon-pagination">
+                        <div className="d-flex justify-content-center pages d-none d-sm-block">
+                          <nav aria-label="Page navigation example">
+                            <ul className="pagination">
+                              <li className="page-item">
+                                <a
+                                  className="page-link"
+                                  href="#"
+                                  aria-label="Previous"
+                                >
+                                  <span aria-hidden="true">«</span>
+                                </a>
+                              </li>
+                              <li className="page-item">
+                                <a className="page-link" href="#">
+                                  1
+                                </a>
+                              </li>
+                              <li className="page-item">
+                                <a className="page-link" href="#">
+                                  2
+                                </a>
+                              </li>
+                              <li className="page-item">
+                                <a className="page-link" href="#">
+                                  3
+                                </a>
+                              </li>
+                              <li className="page-item">
+                                <a
+                                  className="page-link"
+                                  href="#"
+                                  aria-label="Next"
+                                >
+                                  <span aria-hidden="true">»</span>
+                                </a>
+                              </li>
+                            </ul>
+                          </nav>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -410,58 +513,54 @@ export default function Test() {
       <Footer />
 
       <style jsx>{`
-        /* --------------- user-contect-acticle--------------- */
-
-        .custom-container {
-          padding: 0;
-
-          & p {
-            font-family: 'Noto Sans TC';
-            font-style: normal;
-            font-weight: 400;
-            line-height: normal;
-            overflow: hidden;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 2;
-            color: #000;
-            text-overflow: ellipsis;
+        /* -------------------user sidebar-------------------- */
+        .sidebar-user-info {
+          display: flex;
+          padding: 0px 12px;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+          align-self: stretch;
+          /* position: relative; */
+          .sidebar-user-info-imgBox {
+            width: 100px;
+            height: 100px;
+            border-radius: 100px;
+            background: url(<path-to-image>),
+              lightgray -26.448px -3.114px / 132.653% 100% no-repeat;
           }
-          & h5 {
+          .sidebar-user-info-text {
+            display: flex;
+            width: 100px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+            color: var(--dark, #1d1d1d);
+            text-align: center;
+            /* h5 */
             font-family: 'Noto Sans TC';
             font-size: 20px;
             font-style: normal;
             font-weight: 400;
             line-height: normal;
-            color: var(--primary-deep, #124365);
+            .sidebar-user-info-band {
+              margin-bottom: 20px;
+            }
           }
-
-          .user-content {
-            display: flex;
-            width: 1070px;
-            padding: 20px 10px;
-            margin: 0;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 20px;
-            border-radius: 5px;
-            background: var(--gray-30, rgba(185, 185, 185, 0.3));
+          .sidebar-user-info-Camera-img {
+            width: 30px;
+            height: 30px;
+            position: absolute;
+            left: 85px;
+            top: 70px;
+            fill: var(--light-gray, #cfcfcf);
           }
-
-          .user-content-top {
-            display: flex;
-            align-items: flex-start;
-            align-self: stretch;
-            color: var(--primary-deep, #124365);
-            text-align: center;
-            /* h3 */
-            font-family: 'Noto Sans TC';
-            font-size: 28px;
-            font-style: normal;
-            font-weight: 700;
-            line-height: normal;
-          }
-
-          .user-orderList-pagination {
+        }
+        /* --------------- contect--------------- */
+        .custom-container {
+          padding: 0;
+          color: #000;
+          .coupon-pagination {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -469,24 +568,47 @@ export default function Test() {
             align-self: stretch;
           }
         }
-
-        /*------------- RWD1  ----------- */
-        @media screen and (max-width: 576px) {
-          body {
-            padding-inline: 20px;
-          }
-
-          .custom-container {
-            overflow: hidden;
-
-            .user-content {
-              width: 390px;
-              padding: 10px;
-              overflow: hidden;
-            }
+        .coupon-content {
+          display: flex;
+          width: 1070px;
+          padding: 20px 10px;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 20px;
+          border-radius: 5px;
+          background: var(--gray-30, rgba(185, 185, 185, 0.3));
+          .coupon-content-top {
+            display: flex;
+            align-items: flex-start;
+            align-self: stretch;
+            color: var(--primary-deep, #124365);
+            text-align: center;
+            justify-content: space-between;
+            /* h3 */
+            font-family: 'Noto Sans TC';
+            font-size: 28px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: normal;
           }
         }
-        /*------------- RWD  ----------- */
+        .couponImage {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+
+          @media screen and (max-width: 576px) {
+            padding: 0;
+            margin-left: 12px;
+          }
+        }
+        @media screen and (max-width: 576px) {
+          .coupon-content {
+            width: 390px;
+            padding: 10px;
+            overflow: hidden;
+          }
+        }
       `}</style>
     </>
   )
