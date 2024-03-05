@@ -144,11 +144,7 @@ export default function Test() {
             <div className="sidebar">
               <div className="sidebar-user-info">
                 <div className="sidebar-user-info-imgBox">
-                  <Image
-                    style={{ width: 100, height: 100, resizeMode: 'cover' }}
-                    src={avatar}
-                    alt="user photo mb"
-                  ></Image>
+                  <Image src={avatar} alt="user photo mb" fill></Image>
                 </div>
                 <div className="sidebar-user-info-text">
                   <div className="sidebar-user-info-name">棉悠悠</div>
@@ -423,7 +419,7 @@ export default function Test() {
                     <div className="user-content col-12">
                       <div className="user-content-top">
                         <div className="user-title-userInfo">我的文章</div>
-                        <div className="user-acticle-newBtn btn btn-primary">
+                        <div className="user-acticle-newBtn btn  btn-primary">
                           <div>新文章</div>
                         </div>
                       </div>
@@ -527,8 +523,11 @@ export default function Test() {
             width: 100px;
             height: 100px;
             border-radius: 100px;
-            background: url(<path-to-image>),
-              lightgray -26.448px -3.114px / 132.653% 100% no-repeat;
+
+            /* react Image 要加上這兩條參數 家在外層容器的css , Image本身要fill */
+
+            position: relative;
+            overflow: hidden;
           }
           .sidebar-user-info-text {
             display: flex;
@@ -564,6 +563,10 @@ export default function Test() {
         /* --------------- user-contect-acticle--------------- */
         hr {
           margin: 10px;
+        }
+
+        .btn-primary {
+          background-color: #18a1ff;
         }
         .custom-container {
           padding: 0;

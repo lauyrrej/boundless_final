@@ -43,7 +43,6 @@ export default function Test() {
     setFilterVisible(!filterVisible)
   }
 
-
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
@@ -90,23 +89,32 @@ export default function Test() {
           </div>
         </div>
         <>
-          <div className='cart'>
+          <div className="cart">
             <h2>購物車</h2>
           </div>
           <div className="d-flex justify-content-between cart-process">
-            <div className="d-flex align-items-center ballbox" style={{ gap: 10 }}>
+            <div
+              className="d-flex align-items-center ballbox"
+              style={{ gap: 10 }}
+            >
               <div className="ball d-flex align-items-center justify-content-center inactive">
                 1
               </div>
               <div className="h5 cart-process-text">確認/修改訂單</div>
             </div>
-            <div className="d-flex align-items-center ballbox" style={{ gap: 10 }}>
+            <div
+              className="d-flex align-items-center ballbox"
+              style={{ gap: 10 }}
+            >
               <div className="ball d-flex align-items-center justify-content-center active">
                 2
               </div>
               <div className="h5 cart-process-text">填寫訂單資料</div>
             </div>
-            <div className="d-flex align-items-center ballbox" style={{ gap: 10 }}>
+            <div
+              className="d-flex align-items-center ballbox"
+              style={{ gap: 10 }}
+            >
               <div className="ball d-flex align-items-center justify-content-center inactive">
                 3
               </div>
@@ -114,7 +122,7 @@ export default function Test() {
             </div>
           </div>
           <div className="d-flex">
-            <div className="w-100 p-0 cart-main" style={{ height: '100vh' }}>
+            <div className="w-100 p-0 cart-main" style={{ height: '' }}>
               <div className="consumer-info">
                 <div className="cart-title">寄送資訊</div>
                 <div className="consumer-info-group">
@@ -125,7 +133,7 @@ export default function Test() {
                     >
                       購買者姓名
                     </label>
-                    <div className="col-sm-3 col-6">
+                    <div className="col-sm-3 col-6 consumer-info-input">
                       <input type="text" className="form-control" id="name" />
                     </div>
                   </div>
@@ -136,7 +144,7 @@ export default function Test() {
                     >
                       電話號碼
                     </label>
-                    <div className="col-sm-3 col-6">
+                    <div className="col-sm-3 col-6 consumer-info-input">
                       <input type="text" className="form-control" id="phone" />
                     </div>
                   </div>
@@ -147,7 +155,7 @@ export default function Test() {
                     >
                       電子信箱
                     </label>
-                    <div className="col-sm-5 col-10">
+                    <div className="col-sm-5 col-10 consumer-info-input">
                       <input type="text" className="form-control" id="email" />
                     </div>
                   </div>
@@ -160,7 +168,7 @@ export default function Test() {
                     </label>
                     <div className="address-location col-sm-10">
                       <div className="col-sm-3">
-                        <label htmlfor="country" className="form-label">
+                        <label htmlFor="country" className="form-label">
                           縣/市
                         </label>
                         <select
@@ -174,7 +182,7 @@ export default function Test() {
                         </select>
                       </div>
                       <div className="col-sm-3">
-                        <label htmlfor="district" className="form-label">
+                        <label htmlFor="district" className="form-label">
                           區/鎮/鄉
                         </label>
                         <select
@@ -188,7 +196,7 @@ export default function Test() {
                         </select>
                       </div>
                       <div className="col-sm-7">
-                        <label htmlfor="addressinfo" className="form-label">
+                        <label htmlFor="addressinfo" className="form-label">
                           詳細地址
                         </label>
                         <input
@@ -203,12 +211,53 @@ export default function Test() {
               </div>
               <div className="cart-instrument credit-card-info">
                 <div className="cart-title">付款資訊</div>
-                <div className="consumer-info-group">
-                  <div>
-                    <label>轉帳匯款</label>
-                    <input
-                      type='radio'
-                    />
+                <div className="payment-info-group">
+                  <div className="paymethods">
+                    <div className="paymethod-item">
+                      <input
+                        type="radio"
+                        id="transfer"
+                        value={'transfer'}
+                        name="paymethods"
+                      />
+                      <label htmlFor="transfer">轉帳匯款</label>
+                    </div>
+
+                    <div className="paymethod-item">
+                      <input
+                        type="radio"
+                        id="credit-card"
+                        value={'credit-card'}
+                        name="paymethods"
+                      />
+                      <label htmlFor="credit-card">信用卡</label>
+                      <div className="credit-card-pic">
+                        <div className="credit-card-pic-item mastercard">
+                          <Image src="/cart/mastercard.svg" fill />
+                        </div>
+                        <div className="credit-card-pic-item mnp">
+                          <Image src="/cart/mnp.svg" fill />
+                        </div>
+                        <div className="credit-card-pic-item visa">
+                          <Image src="/cart/visa.svg" fill />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="paymethod-item">
+                      <input
+                        type="radio"
+                        id="mobliepayment"
+                        value={'mobliepayment'}
+                        name="paymethods"
+                      />
+                      <label htmlFor="mobliepayment">Line Pay</label>
+                      <div className="credit-card-pic">
+                        <div className="mobilepayment-pic-item">
+                          <Image src="/cart/linepay.svg" fill />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <div>
                     <hr />
@@ -216,14 +265,14 @@ export default function Test() {
                   <div className="row g-3 align-items-center">
                     <label
                       htmlFor="name"
-                      className="col-form-label col-sm-2 h6"
+                      className="col-form-label col-sm-2 col-3 h6"
                     >
                       持卡人姓名
                     </label>
-                    <div className="col-sm-6">
+                    <div className="col-sm-6 col-7">
                       <input
                         type="text"
-                        className="form-control"
+                        className="form-control credit-card-input"
                         id="name"
                         placeholder="Ex:HSIANG-AN, YANG"
                       />
@@ -232,14 +281,14 @@ export default function Test() {
                   <div className="row g-3 align-items-center">
                     <label
                       htmlFor="credit-card-number"
-                      className="col-form-label col-sm-2 h6"
+                      className="col-form-label col-sm-2 col-3 h6"
                     >
                       信用卡卡號
                     </label>
                     <div className="creditcard" style={{ width: '5rem' }}>
                       <input
                         type="text"
-                        className="form-control"
+                        className="form-control credit-card-input"
                         id="credit-card-number"
                         maxLength={4}
                         style={{ textAlign: 'center' }}
@@ -251,7 +300,19 @@ export default function Test() {
                     <div className="creditcard" style={{ width: '5rem' }}>
                       <input
                         type="text"
-                        className="form-control"
+                        className="form-control credit-card-input"
+                        id="credit-card-number"
+                        maxLength={4}
+                        style={{ textAlign: 'center' }}
+                      />
+                    </div>
+                    <div className="w-auto minussign">
+                      <FiMinus />
+                    </div>
+                    <div className="creditcard " style={{ width: '5rem' }}>
+                      <input
+                        type="text"
+                        className="form-control credit-card-input"
                         id="credit-card-number"
                         maxLength={4}
                         style={{ textAlign: 'center' }}
@@ -263,19 +324,7 @@ export default function Test() {
                     <div className="creditcard" style={{ width: '5rem' }}>
                       <input
                         type="text"
-                        className="form-control"
-                        id="credit-card-number"
-                        maxLength={4}
-                        style={{ textAlign: 'center' }}
-                      />
-                    </div>
-                    <div className="w-auto minussign">
-                      <FiMinus />
-                    </div>
-                    <div className="creditcard" style={{ width: '5rem' }}>
-                      <input
-                        type="text"
-                        className="form-control"
+                        className="form-control credit-card-input"
                         id="credit-card-number"
                         maxLength={4}
                         style={{ textAlign: 'center' }}
@@ -285,14 +334,14 @@ export default function Test() {
                   <div className="row g-3 align-items-center">
                     <label
                       htmlFor="email"
-                      className="col-form-label col-sm-2 h6"
+                      className="col-form-label col-sm-2 col-3 h6"
                     >
                       有效期限
                     </label>
-                    <div className="" style={{ width: '5rem' }}>
+                    <div className="creditcard" style={{ width: '5rem' }}>
                       <input
                         type="text"
-                        className="form-control"
+                        className="form-control credit-card-input"
                         id="expiration-date"
                         placeholder="MM"
                         maxLength={2}
@@ -304,10 +353,10 @@ export default function Test() {
                     <div className="w-auto minussign">
                       <FiMinus />
                     </div>
-                    <div className="" style={{ width: '5rem' }}>
+                    <div className="creditcard" style={{ width: '5rem' }}>
                       <input
                         type="text"
-                        className="form-control"
+                        className="form-control credit-card-input"
                         id="expiration-date"
                         placeholder="YY"
                         maxLength={2}
@@ -318,14 +367,14 @@ export default function Test() {
                   <div className="row g-3 align-items-center">
                     <label
                       htmlFor="3-number"
-                      className="col-form-label col-sm-2 h6"
+                      className="col-form-label col-sm-2 col-3 h6"
                     >
                       背面末三碼
                     </label>
-                    <div className="" style={{ width: '5rem' }}>
+                    <div className="creditcard" style={{ width: '5rem' }}>
                       <input
                         type="text"
-                        className="form-control"
+                        className="form-control credit-card-input"
                         style={{ textAlign: 'center' }}
                         id="3-number"
                         maxLength={3}
@@ -362,13 +411,62 @@ export default function Test() {
                   </div>
                 </div>
                 <div className="cart-btn">
-                  <div className="btn btn-prev btn-secondary">回上一步</div>
-                  <div className="btn btn-next btn-primary">確認付款</div>
+                  <div
+                    className="b-btn b-btn-body d-flex w-100 h-100 justify-content-center"
+                    style={{ padding: '14px 0' }}
+                  >
+                    回上一步
+                  </div>
+                  <div
+                    className="b-btn b-btn-primary d-flex w-100 h-100 justify-content-center"
+                    style={{ padding: '14px 0' }}
+                  >
+                    確認付款
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </>
+      </div>
+      <div className="flow-cart-mb" style={{}}>
+        <div
+          className="d-flex flex-column position-sticky"
+          style={{ gap: 20, top: 110 }}
+        >
+          <div className="total d-flex flex-column" style={{ gap: 20 }}>
+            <div className="d-flex justify-content-between carttext">
+              <div>商品數量</div>
+              <div>樂器*3 課程*2</div>
+            </div>
+            <div className="d-flex justify-content-between carttext">
+              <div>原價合計</div>
+              <div>NT $864000</div>
+            </div>
+            <div className="d-flex justify-content-between carttext discount">
+              <div>折扣合計</div>
+              <div>-NT $3400</div>
+            </div>
+            <div className="d-flex justify-content-between h3">
+              <div>合計</div>
+              <div>NT $790000</div>
+            </div>
+          </div>
+          <div className="cart-btn">
+            <div
+              className="b-btn b-btn-body d-flex w-100 h-100 justify-content-center"
+              style={{ padding: '14px 0' }}
+            >
+              回上一步
+            </div>
+            <div
+              className="b-btn b-btn-primary d-flex w-100 h-100 justify-content-center"
+              style={{ padding: '14px 0' }}
+            >
+              確認付款
+            </div>
+          </div>
+        </div>
       </div>
       <Footer />
 
@@ -466,6 +564,11 @@ export default function Test() {
           border: 1px solid var(--primary, #1581cc);
           padding: 20px;
           align-self: stretch;
+          @media screen and (max-width: 576px) {
+            border: 0;
+            padding: 0;
+            gap: 10px !important;
+          }
         }
         .cart-btn {
           width: 100%;
@@ -522,17 +625,11 @@ export default function Test() {
           background-color: var(--body, #b9b9b9);
           padding: 5px 12px;
         }
-
-        .input-number {
-          text-align: center;
-          color: #000;
-
-          /* sidebar-font */
-          font-family: 'Noto Sans TC';
-          font-size: 16px;
-          font-style: normal;
-          font-weight: 700;
-          line-height: normal;
+        .credit-card-input{
+          @media screen and (max-width: 576px) {
+            font-size: 14px;
+            padding:3px 3px;
+          }
         }
           .cart-discount {
             color: var(--primary, #1581cc);
@@ -555,15 +652,15 @@ export default function Test() {
           justify-content: flex-end;
           align-items: center;
           align-self: stretch;
-          .cart-total-text {
+        }
+        .cart-total-text {
             font-family: 'Noto Sans TC';
             font-size: 24px;
             font-style: normal;
             font-weight: 700;
             line-height: normal;
           }
-        }
-        .consumer-info-group {
+      .consumer-info-group {
         display: flex;
         flex-direction: column;
         gap: 10px;
@@ -576,19 +673,116 @@ export default function Test() {
         align-content: flex-start;
         gap: 12px 45px;
         flex-wrap: wrap;
+        padding: 7px 8px;
+        & label{
+          color: var(--Text-Secondary---Grey2, #6F7482);
+        }
+        @media screen and (max-width: 576px) {
+          margin-top:0;
+        }
+      }
+      .consumer-info-input{
+        & input{
+          @media screen and (max-width: 576px) {
+            font-size: 14px;
+            padding:3px 3px;
+          }
+        }
+        @media screen and (max-width: 576px) {
+          margin-top:0;
+        }
+      }
+      .payment-info-group{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 12px;
       }
       .credit-card-info{
         color: black;
         .minussign{
-          width:12px;
           @media screen and (max-width: 576px) {
-            padding:0 4px
+            padding:0 2px
+          }
+        }
+      }
+      
+      .credit-card-pic{
+        display: flex;
+        .credit-card-pic-item{
+          width:28px;
+          height:20px;
+          position:relative;
+          overflow: hidden;
+          margin: 4px;
+        }
+        .visa{
+          background: linear-gradient(#222357, #254AA5);
+          border-width: 3px;
+          border-style: solid;
+          border-image: linear-gradient(to bottom, #222357, #254AA5) 1;
+        }
+        .mnp{
+          background-color: #D7FFD8;
+          border: 3px solid #D7FFD8;
+        }
+        .mastercard{
+          background-color: #01326F;
+          border: 4px solid #01326F;
+        }
+      }
+      .mobilepayment-pic-item{
+        width: 65px;
+        height: 23px;
+        position:relative;
+        overflow: hidden;
+      }
+      .paymethods{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+        @media screen and (max-width: 576px) {
+          padding:0 0 0 0;
+          gap:20px 40px;
+        }
+        .paymethod-item{
+          width: fit-content;
+          display: flex;
+          gap: 20px;
+        }
+      }
+      .creditcard{
+        @media screen and (max-width: 576px) {
+          padding: 0px 3px;
+          width: fit-content !important;
+        }
+        & input{
+          @media screen and (max-width: 576px) {
+            width: 50px;
           }
         }
       }
       .consumer-info{
         color: black;
       }
+      .col-form-label{
+        @media screen and (max-width: 576px) {
+          font-size: 16px;
+          padding-right:2px;
+        }
+      }
+      .flow-cart-mb {
+          display: none;
+          @media screen and (max-width: 576px) {
+            display: block;
+            position: sticky;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            background-color: #FFF;
+            padding: 20px 30px;
+            }
+        }
       `}</style>
     </>
   )
