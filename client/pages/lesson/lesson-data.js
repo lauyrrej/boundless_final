@@ -111,7 +111,7 @@ export default function Test({ onSearch }) {
         })
         .then((result) => {
           resolve(result)
-          console.log(result)
+        //   console.log(result)
           setLesson(result)
         })
         .catch((error) => {
@@ -133,7 +133,7 @@ export default function Test({ onSearch }) {
   const [data, setData] = useState(Lesson)
   const [search, setSearch] = useState('')
   const handleSearch = () => {
-    console.log('按鈕被點擊了')
+    // console.log('按鈕被點擊了')
     let newData
     if (search.trim() === '') {
       newData = Lesson
@@ -183,7 +183,7 @@ export default function Test({ onSearch }) {
         })
         .then((result) => {
           resolve(result)
-          console.log(result)
+        //   console.log(result)
           setLessonCategory(result)
         })
         .catch((error) => {
