@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import { useLocation } from 'react-router-dom'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
@@ -14,6 +15,15 @@ import Head from 'next/head'
 
 export default function Info() {
   const router = useRouter()
+  // 接收成團表單送來的資料
+  const location = useLocation()
+
+  // ---------------------- 手機版本  ----------------------
+  // 主選單
+  const [showMenu, setShowMenu] = useState(false)
+  const menuMbToggle = () => {
+    setShowMenu(!showMenu)
+  }
 
   const [genre, setGenre] = useState([])
   const [player, setPlayer] = useState([])
@@ -101,17 +111,12 @@ export default function Info() {
       ? true
       : false
   // ----------------------------- useEffect -----------------------------
-  useEffect(() => {
-    setCountDown(calcTimeLeft())
-
-    // 每秒更新一次倒數計時
-    const timer = setInterval(() => {
-      setCountDown(calcTimeLeft())
-    }, 1000)
-
-    // 清除計時器
-    return () => clearInterval(timer)
-  }, [jam.created_time])
+  // 檢查是否從發起頁面跳轉進入，表示發起成功，需顯示成功訊息
+  // useEffect(() => {
+  //   if (location.state.status) {
+  //     console.log('發起成功')
+  //   }
+  // }, [])
 
   // 向伺服器要求資料，設定到狀態中用的函式
   const getSingleData = async (juid) => {
@@ -137,12 +142,18 @@ export default function Info() {
       getSingleData(juid)
     }
   }, [router.isReady])
-  // ---------------------- 手機版本  ----------------------
-  // 主選單
-  const [showMenu, setShowMenu] = useState(false)
-  const menuMbToggle = () => {
-    setShowMenu(!showMenu)
-  }
+
+  useEffect(() => {
+    setCountDown(calcTimeLeft())
+
+    // 每秒更新一次倒數計時
+    const timer = setInterval(() => {
+      setCountDown(calcTimeLeft())
+    }, 1000)
+
+    // 清除計時器
+    return () => clearInterval(timer)
+  }, [jam.created_time])
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
@@ -220,10 +231,10 @@ export default function Info() {
                   {jam.degree == '1' ? '新手練功' : '老手同樂'}
                 </div>
               </div>
-              {/* -------------------------- 標題 -------------------------- */}
+              {/* -------------------------- 主旨 -------------------------- */}
               <div className={`${styles.formItem} row`}>
                 <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                  標題
+                  主旨
                 </div>
                 <div className={`${styles.infoText} col-12 col-sm-10`}>
                   {jam.title}

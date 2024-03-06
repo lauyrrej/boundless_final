@@ -356,6 +356,7 @@ header {
   justify-content: center;
   user-select: none;
   cursor: pointer;
+  transition: 0.25s;
 }
 .b-btn-primary {
   background-color: $light-primary;

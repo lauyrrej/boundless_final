@@ -10,15 +10,15 @@ export default function Navbar({ menuMbToggle }) {
   return (
     <>
       <header className="w-100 d-flex justify-content-between align-items-center">
-        <a href="#">
-          <Image src={logo} alt="logo" className="d-none d-sm-block logo" />
-        </a>
-        <a href="">
-          <Image src={logoMb} alt="logo-mobile" className="d-sm-none logo-mb" />
-        </a>
+        <Link href="#" className="d-none d-lg-block ">
+          <Image src={logo} alt="logo" className="logo" />
+        </Link>
+        <Link href="" className="d-lg-none">
+          <Image src={logoMb} alt="logo-mobile" className=" logo-mb" />
+        </Link>
 
         <nav className="navbar-wrapper">
-          <ul className="navbar d-none d-sm-flex justify-content-between flex-row">
+          <ul className="navbar d-none d-lg-flex justify-content-between flex-row">
             <li>
               <Link href="/lesson">探索課程</Link>
             </li>
@@ -51,7 +51,7 @@ export default function Navbar({ menuMbToggle }) {
             </li>
           </ul>
           {/* 手機版 navbar */}
-          <div className="navbar-mb d-sm-none d-flex justify-content-end align-items-center">
+          <div className="navbar-mb d-lg-none d-flex justify-content-end align-items-center">
             <Link href="/cart" className="p-0 me-3">
               <IoCart size={30} />
             </Link>

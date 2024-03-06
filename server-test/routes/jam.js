@@ -196,6 +196,7 @@ router.get("/:juid", async (req, res) => {
 
 // 發起JAM表單
 router.post("/form", upload.none(), async (req, res) => {
+  // console.log(req.body);
   const {
     title,
     degree,
@@ -204,7 +205,7 @@ router.post("/form", upload.none(), async (req, res) => {
     players,
     region,
     condition,
-    descripition,
+    description,
   } = req.body;
   const tureDegree = parseInt(degree);
   const juid = generateUid();
@@ -220,14 +221,14 @@ router.post("/form", upload.none(), async (req, res) => {
         players,
         region,
         condition,
-        descripition,
+        description,
       ]
     )
     .then(() => {
-      res.send("新增成功");
+      res.status(200).json({ status: "success", juid });
     })
     .catch((error) => {
-      res.status(409).send("發生錯誤: " + error);
+      res.status(409).json({ status: "error", error });
     });
 });
 
