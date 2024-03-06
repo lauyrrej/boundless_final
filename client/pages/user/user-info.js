@@ -10,6 +10,7 @@ import avatar from '@/public/user/Meiyuyu.jpg'
 
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
+import { jwtDecode } from 'jwt-decode'
 
 // icons
 import { IoHome } from 'react-icons/io5'
@@ -33,10 +34,127 @@ export default function Test() {
       console.error('There was a problem with the fetch operation:', error)
     }
   }
-  // ----------------------會員登入  ----------------------
+  // ----------------------會員登入狀態  ----------------------
 
-  const { auth, login, logout } = useAuth()
+  // const { handleLoginStatus, getLoginUserData } = useAuth()
+  const { handleLoginStatus } = useAuth()
+  const [userData, setUserData] = useState()
+  useEffect(() => {
+    handleLoginStatus()
+  }, [handleLoginStatus])
 
+  // useEffect(() => {
+  //   getLoginUserData()
+  // }, [getLoginUserData])
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await getLoginUserData()
+  //       const userData = await response.json()
+  //       setUserData(userData)
+  //     } catch (error) {
+  //       console.error('Error fetching user data:', error)
+  //     }
+  //   }
+  //   fetchData()
+  // }, [getLoginUserData])
+
+  // console.log(userData)
+
+  //以下為觀察錯誤訊息
+  // Uncaught (in promise) Error: A listener indicated an asynchronous response by returning true, but the message channel closed before a response was received
+  // useEffect(() => {
+  //   let isMounted = true // 判斷組件是否還在掛載
+
+  //   handleLoginStatus() // 做一些同步的操作
+
+  //   if (isMounted) {
+  //     getLoginUserData() // 異步操作
+  //   }
+
+  //   return () => {
+  //     isMounted = false // 組件卸載時更新狀態
+  //   }
+  // }, [handleLoginStatus, getLoginUserData])
+  // ----------------------會員登入狀態  ----------------------
+
+  // ----------------------登入會員資料獲取 暫不用hook  ----------------------
+  const [userName, setuserName] = useState([])
+  const [userNickname, setuserNickname] = useState([])
+  const [userGender, setuserGender] = useState([])
+  const [userGenreLike, setuserGenreLike] = useState([])
+  const [userPlayInstrument, setuserPlayInstrument] = useState([])
+  const [userPrivacy, setuserPrivacy] = useState([])
+  const [userBirthday, setuserBirthday] = useState([])
+  const [userPhone, setuserPhone] = useState([])
+  const [userEmail, setuserEmail] = useState([])
+  const [userPostcode, setuserPostcode] = useState([])
+  const [userCountry, setuserCountry] = useState([])
+  const [userTownship, setuserTownship] = useState([])
+  const [userAddress, setuserAddress] = useState([])
+  const [userInfo, setuserInfo] = useState([])
+
+  const [userImg, setuserImg] = useState([])
+  const avatarImage = `/user/${userImg}`
+
+  const appKey = 'userToken'
+  const [token, setToken] = useState('')
+  const getLoginUserData = async (e) => {
+    // 拿取Token回傳後端驗證狀態
+    const Loginusertoken = localStorage.getItem(appKey)
+
+    if (!Loginusertoken) {
+      console.error('沒有登入的token 故無法取得使用者資料。')
+      return null
+    }
+    const userID = jwtDecode(Loginusertoken)
+    const id = userID.id
+
+    try {
+      const response = await fetch(`http://localhost:3005/api/user/${id}`, {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Loginusertoken}`,
+        },
+        body: JSON.stringify(),
+      })
+
+      const LoginUserData = await response.json()
+      console.log('Response from server:', LoginUserData)
+
+      // setUserData(LoginUserData)
+      // console.log(LoginUserData)
+
+      // 在這裡處理後端返回的資料
+      setuserName(LoginUserData.name)
+      setuserNickname(LoginUserData.nickname)
+      setuserGender(LoginUserData.gender)
+      setuserGenreLike(LoginUserData.genre_like)
+      setuserPlayInstrument(LoginUserData.play_instrument)
+      setuserPrivacy(LoginUserData.privacy)
+      setuserBirthday(LoginUserData.birthday)
+      setuserPhone(LoginUserData.phone)
+      setuserEmail(LoginUserData.email)
+      setuserPostcode(LoginUserData.postcode)
+      setuserCountry(LoginUserData.country)
+      setuserTownship(LoginUserData.township)
+      setuserAddress(LoginUserData.address)
+      setuserInfo(LoginUserData.info)
+      setuserImg(LoginUserData.img)
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error)
+    }
+  }
+
+  useEffect(() => {
+    // 在這裡呼叫 handleLoginStatus，確保 token 已經有值
+
+    getLoginUserData()
+  }, [])
+
+  // ----------------------登入會員資料獲取 暫不用hook  ----------------------
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -165,11 +283,17 @@ export default function Test() {
             <div className="sidebar">
               <div className="sidebar-user-info">
                 <div className="sidebar-user-info-imgBox">
-                  <Image src={avatar} alt="user photo mb" fill></Image>
+                  <Image
+                    src={avatarImage}
+                    alt="user photo mb"
+                    fill
+                    priority="default" //不加的話Next 會問是否要加優先級
+                    sizes="(max-width: 150px) 150px, 50vw"
+                  ></Image>
                 </div>
                 <div className="sidebar-user-info-text">
-                  <div className="sidebar-user-info-name">棉悠悠</div>
-                  <div className="sidebar-user-info-band">幻獸帕魯</div>
+                  <div className="sidebar-user-info-name">{userNickname}</div>
+                  <div className="sidebar-user-info-band">樂團名稱</div>
                 </div>
                 {/* 更換大頭貼的功能暫定併回會員資訊 故不再sidebar顯示 */}
                 {/* <div className="sidebar-user-info-Camera-img">
@@ -268,7 +392,7 @@ export default function Test() {
                   >
                     {/* ---------------------測試登入------------------- */}
 
-                    <p>目前登入狀態: {auth.isAuth ? '會員已登入' : '未登入'}</p>
+                    {/* <p>目前登入狀態: {auth.isAuth ? '會員已登入' : '未登入'}</p>
                     <p>
                       <button
                         onClick={() => {
@@ -283,7 +407,7 @@ export default function Test() {
                     <p>ID: {auth.userData.id}</p>
                     <p>帳號: {auth.userData.name}</p>
                     <p>電子信箱: {auth.userData.email}</p>
-                    <hr />
+                    <hr /> */}
                     {/* ---------------------------------------- */}
                     <div className="user-content col-12">
                       <div className="user-content-top">
@@ -301,34 +425,40 @@ export default function Test() {
                         <div className="user-info-item-titleText">真實姓名</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            鍾傑元
+                            {userName}
                           </div>
                         </div>
                       </div>
                       <div className="user-info-item">
                         <div className="user-info-item-titleText">暱稱</div>
                         <div className="user-info-item-Content">
-                          <div className="user-info-item-contentText">阿傑</div>
+                          <div className="user-info-item-contentText">
+                            {userNickname}
+                          </div>
                         </div>
                       </div>
                       <div className="user-info-item">
                         <div className="user-info-item-titleText">性別</div>
                         <div className="user-info-item-Content">
-                          <div className="user-info-item-contentText">男</div>
+                          <div className="user-info-item-contentText">
+                            {userGender}
+                          </div>
                         </div>
                       </div>
                       <div className="user-info-item">
                         <div className="user-info-item-titleText">喜歡曲風</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            金屬、搖滾
+                            {userGenreLike}
                           </div>
                         </div>
                       </div>
                       <div className="user-info-item">
                         <div className="user-info-item-titleText">演奏樂器</div>
                         <div className="user-info-item-Content">
-                          <div className="user-info-item-contentText">貝斯</div>
+                          <div className="user-info-item-contentText">
+                            {userPlayInstrument}
+                          </div>
                         </div>
                       </div>
                       <div className="user-info-item">
@@ -385,7 +515,7 @@ export default function Test() {
                         <div className="user-info-item-titleText">生日</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            1985-01-19
+                            {userBirthday}
                           </div>
                         </div>
                       </div>
@@ -393,7 +523,7 @@ export default function Test() {
                         <div className="user-info-item-titleText">手機</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            0910047354
+                            {userPhone}
                           </div>
                         </div>
                       </div>
@@ -401,7 +531,7 @@ export default function Test() {
                         <div className="user-info-item-titleText">信箱</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            harmon4652@gmail.com
+                            {userEmail}
                           </div>
                         </div>
                       </div>
@@ -409,7 +539,10 @@ export default function Test() {
                         <div className="user-info-item-titleText">地址</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            臺東縣臺東市同樂街87號6樓
+                            {userPostcode}
+                            {userCountry}
+                            {userTownship}
+                            {userAddress}
                           </div>
                         </div>
                       </div>
@@ -419,13 +552,7 @@ export default function Test() {
                         </div>
                         <div className="user-info-item-info2">
                           <div className="user-info-item-info-contentText">
-                            嗨，大家好，我是阿傑！我的音樂旅程始於青少年時期，當時我對貝斯的低沉與穩定的音色深感著迷。這把強而有力的樂器成為我表達情感的媒介，並啟發我不斷追求音樂創作的腳步。
-                            <br />
-                            我的演奏風格融合了多種音樂元素，從爵士樂的靈活性到搖滾樂的澎湃力道，我喜歡在音符之間探索各種可能性。音樂對我而言不僅僅是一種技能，更是一種生活的態度，一種能夠連結人心的語言。
-                            <br />
-                            在這支樂團中，我將負責打造穩固的節奏底層，並以創意豐富的貝斯線條為樂曲增色。我相信每一個音符都有其特殊的故事，而我將竭盡所能，透過貝斯的振奏，向大家傳達那些動人的音樂故事。
-                            <br />
-                            不論是舞台上的熱情演奏還是幕後的音樂創作，我都全心全意地致力於音樂之中。期待與你們一同創造出充滿魔力的音樂體驗，讓每一位聽眾都能沉浸在音樂的海洋中，一同感受音符的力量！
+                            {userInfo}
                           </div>
                         </div>
                       </div>

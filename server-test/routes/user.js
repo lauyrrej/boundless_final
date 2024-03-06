@@ -6,6 +6,7 @@ import moment from 'moment'
 //token相關
 import jwt from 'jsonwebtoken'
 import 'dotenv/config.js'
+
 // 從環境檔抓取secretKey(token加密用)
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
 
@@ -42,6 +43,7 @@ router.post('/login', upload.none(), (req, res) => {
     const token = jwt.sign(
       {
         // account: user.account, 沒用到帳號先註解測試
+        id:user.id,
         name: user.name,
         email: user.email,
         avatar: user.avatar,
@@ -68,6 +70,7 @@ router.post('/logout', checkToken, (req, res) => {
   if (user) {
     const token = jwt.sign(
       {
+        id:user.id,
         name: user.name,
         email: user.email,
         avatar: user.avatar,
@@ -92,6 +95,7 @@ router.post('/status', checkToken, (req, res) => {
   if (user) {
     const token = jwt.sign(
       {
+        id:user.id,
         name: user.name,
         mail: user.mail,
         head: user.head,
@@ -110,6 +114,32 @@ router.post('/status', checkToken, (req, res) => {
     })
   }
 })
+
+// GET - 得到單筆會員資料資料(注意，有動態參數時要寫在GET區段最後面)
+router.get('/:id', checkToken, async function (req, res) {
+  
+  const id = req.params.id;
+  //沒用 後端抓不到localStorage
+  // const token = localStorage.getItem(appKey)
+  // userData = jwtDecode(token)
+  // const id = userData.id
+
+  // 檢查是否為授權會員，只有授權會員可以存取自己的資料
+  // if (req.user.id !== id) {
+  //   return res.json({ status: 'error', message: '存取會員資料失敗' })
+  // }
+
+  //所有資料
+  // const [singerUser] =  await db.execute(`SELECT * FROM \`user\` WHERE \`id\` = ? AND \`valid\` = 1`, [id]);
+
+  // 不回傳密碼跟創建時間的版本
+  const [singerUser] =  await db.execute(`SELECT \`id\` ,\`name\` ,\`email\`,\`phone\`,\`postcode\`,\`country\`,\`township\`,\`address\`,\`birthday\`,\`genre_like\`,\`play_instrument\`,\`info\`,\`img\`,\`gender\`,\`nickname\`,\`google_uid\`,\`photo_url\`,\`privacy\`,\`my_lesson\` FROM \`user\` WHERE \`id\` = ? AND \`valid\` = 1`, [id]);
+  
+  const resUser = singerUser[0];
+
+  return res.json( resUser )
+})
+
 
 //檢查token 當作中介使用
 function checkToken(req, res, next) {
@@ -133,6 +163,7 @@ function checkToken(req, res, next) {
       .json({ status: "error", message: "無登入驗證資料，請重新登入。" });
   }
 }
+
 
 
 
