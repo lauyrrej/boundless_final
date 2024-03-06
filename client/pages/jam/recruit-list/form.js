@@ -25,6 +25,7 @@ export default function Form() {
   }
   // ---------------------- 標題
   const [title, setTitle] = useState('')
+  const [titleCheck, setTitleCheck] = useState(true)
   // ---------------------- 技術程度
   const [degree, setDegree] = useState('')
 
@@ -35,10 +36,6 @@ export default function Form() {
   const [genreSelect, setgenreSelect] = useState([1])
   // 實際使用的曲風陣列，避免使用者未照順序新增樂手
   const [finalgenre, setFinalgenre] = useState('')
-  useEffect(() => {
-    const fgArr = genre.filter((v) => v != (null || undefined))
-    setFinalgenre(`[${fgArr.toString()}]`)
-  }, [genre])
 
   // ---------------------- 擔任職位
   const [myPlayer, setMyPlayer] = useState('')
@@ -49,10 +46,6 @@ export default function Form() {
   const [playersSelect, setPlayersSelect] = useState([1])
   // 實際使用的樂手陣列，避免使用者未照順序新增樂手
   const [finalPlayers, setFinalPlayers] = useState([])
-  useEffect(() => {
-    const fpArr = players.filter((v) => v != (null || undefined))
-    setFinalPlayers(`[${fpArr.toString()}]`)
-  }, [players])
 
   // 篩選城市用的資料
   const cityData = CityCountyData.map((v, i) => {
@@ -66,6 +59,46 @@ export default function Form() {
   const [condition, setCondition] = useState('')
   // ---------------------- 描述
   const [description, setDescription] = useState('')
+
+  const checkForm = (
+    title,
+    degree,
+    finalgenre,
+    myPlayer,
+    finalPlayers,
+    region,
+    description
+  ) => {}
+
+  const sendForm = () => {
+    let formData = new FormData()
+    // title === '' ?
+    // formData.append('userID', document.querySelector('[name=userID]').value)
+
+    // for (let [key, value] of formData.entries()) {
+    //   console.log(`${key}: ${value}`)
+    // }
+  }
+  useEffect(() => {
+    // 檢查不雅字詞
+    if (title.includes('幹' || '屎' || '糞' || '尿' || '屁')) {
+      setTitleCheck(false)
+    }
+    // 把曲風&徵求樂手轉換成表單實際接收的字串格式
+    const fgArr = genre.filter((v) => v != (null || undefined))
+    setFinalgenre(`[${fgArr.toString()}]`)
+    const fpArr = players.filter((v) => v != (null || undefined))
+    setFinalPlayers(`[${fpArr.toString()}]`)
+    checkForm(
+      title,
+      degree,
+      finalgenre,
+      myPlayer,
+      finalPlayers,
+      region,
+      description
+    )
+  }, [title, degree, genre, myPlayer, players, region, description])
   return (
     <>
       <Head>
@@ -151,6 +184,7 @@ export default function Form() {
                       setTitle(e.target.value)
                     }}
                   />
+                  {titleCheck ? '' : <div>偵測到不雅字詞，請重新輸入</div>}
                 </div>
               </div>
               {/* -------------------------- 技術程度 -------------------------- */}
@@ -367,6 +401,8 @@ export default function Form() {
                 <div
                   className="b-btn b-btn-primary"
                   style={{ paddingInline: '38px' }}
+                  role="presentation"
+                  onClick={sendForm}
                 >
                   提交
                 </div>

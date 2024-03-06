@@ -59,7 +59,7 @@ export default function RecruitCard({
   const createdTime = new Date(created_time).getTime()
   const currentTime = new Date().getTime()
   // 取得毫秒後，轉換成天數
-  const countDown = Math.ceil(
+  const countDown = Math.floor(
     (createdTime + 30 * 24 * 60 * 60 * 1000 - currentTime) / (1000 * 3600 * 24)
   )
   // console.log(currentTime)

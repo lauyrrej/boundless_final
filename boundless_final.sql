@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2024-03-05 14:32:05
--- 伺服器版本： 10.4.28-MariaDB
--- PHP 版本： 8.0.28
+-- 產生時間： 2024-03-06 12:40:35
+-- 伺服器版本： 10.4.32-MariaDB
+-- PHP 版本： 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -337,7 +337,7 @@ CREATE TABLE `jam` (
   `id` int(6) NOT NULL,
   `juid` varchar(16) NOT NULL,
   `former` varchar(30) NOT NULL,
-  `member` varchar(200) DEFAULT NULL,
+  `member` varchar(200) DEFAULT '[]',
   `name` varchar(100) DEFAULT NULL,
   `cover_img` varchar(60) DEFAULT NULL,
   `introduce` text DEFAULT NULL,
@@ -346,7 +346,7 @@ CREATE TABLE `jam` (
   `description` text NOT NULL,
   `degree` tinyint(1) NOT NULL,
   `genre` varchar(12) NOT NULL,
-  `player` varchar(12) NOT NULL,
+  `players` varchar(20) NOT NULL,
   `region` varchar(12) NOT NULL,
   `band_condition` text DEFAULT NULL,
   `created_time` datetime NOT NULL DEFAULT current_timestamp(),
@@ -359,7 +359,7 @@ CREATE TABLE `jam` (
 -- 傾印資料表的資料 `jam`
 --
 
-INSERT INTO `jam` (`id`, `juid`, `former`, `member`, `name`, `cover_img`, `introduce`, `works_link`, `title`, `description`, `degree`, `genre`, `player`, `region`, `band_condition`, `created_time`, `updated_time`, `formed_time`, `valid`) VALUES
+INSERT INTO `jam` (`id`, `juid`, `former`, `member`, `name`, `cover_img`, `introduce`, `works_link`, `title`, `description`, `degree`, `genre`, `players`, `region`, `band_condition`, `created_time`, `updated_time`, `formed_time`, `valid`) VALUES
 (1, 'N500ef48IbaT', '{\"id\": 1, \"play\": 18}', '[{\"id\": 2, \"play\": 3}, {\"id\": 3, \"play\": 8}]', '', '', '', '', '雙北徵吉他、bass', '目前有吉他*1、鼓*1、合成器*1\n聽的類型也很多\nD.A.N, Yot Club, The Cardigans, baby chair, CHS, Men I trust等等\n關於練團都在搖滾巷居多,希望未來能跑音樂祭或是演出看看🙏', 2, '[2]', '[3,4]', '新北市', '', '2024-03-04 04:39:29', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1),
 (2, '0uS4EzqKHXJH', '{\"id\": 4, \"play\": 3}', '[{\"id\": 5, \"play\": 5}]', '', '', '', '', '高雄創作團 徵 電吉他手、鼓手！', '希望條件：\n能討論編曲且會使用DAW或願意學習者\n有創作、組團和表演經驗者\n目前練團時間：平日晚上 或 假日', 2, '[3,7,12]', '[3,8]', '高雄市', '社會人士尤佳', '2024-03-14 23:15:27', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1),
 (3, 'icNrYCOPoJLh', '{\"id\": 6, \"play\": 2}', '[]', '', '', '', '', '高雄徵創作、編曲夥伴', '本身會詞、曲、編曲還有一點混音\n主要彈吉他跟一點鋼琴\n希望可以找有鋼琴底子、擅長用DAW、懂合成器的夥伴', 2, '[1,11]', '[6]', '高雄市', '', '2024-03-05 19:08:33', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1),
@@ -381,7 +381,8 @@ INSERT INTO `jam` (`id`, `juid`, `former`, `member`, `name`, `cover_img`, `intro
 (19, 'BPXRvCHQQVdm', '{\"id\": 45, \"play\": 8}', '[]', '', '', '', '', '業餘創作團徵人-誠徵：貝斯手', '我們是一群熱愛音樂的上班族，目前已有：吉他手x1、鍵盤手、鼓手、主唱。\n就差一名貝斯手了！🙏🏼\n喜歡的歌手樂團：五月天、spicyjesus 、ken sato experience、八三夭、大象體操、麋先生、Queen、陳奕迅、林志炫、落日飛車', 1, '[1,3,5]', '[5]', '台北市', '', '2024-03-13 19:12:10', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1),
 (20, '8BgBgtJkv5f7', '{\"id\": 46, \"play\": 3}', '[{\"id\": 47, \"play\": 1},{\"id\": 48, \"play\": 5}]', '', '', '', '', '高雄創作團徵求鼓手', '性別不拘，目前週末練團', 2, '[1,6]', '[8]', '高雄市', '能討論編曲創作且會使用DAW或願意學習', '2024-02-26 12:26:51', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1),
 (21, 'F1ZL0gOGhhwU', '{\"id\": 49, \"play\": 1}', '[]', '', '', '', '', '徵吉他手跟鍵盤手', '大家好～\n我們是一群還有著音樂夢的上班族\n目前樂手有主唱.吉他.Bass.鼓手\n希望能找到一位吉他手\n補足音樂性上的空缺\n只有木吉他路線的人也可以來試試\n如果有可遇不可求的鍵盤手更好\n我們目前以cover 流行樂.搖滾樂為主\n樂手們會注意任何表演機會\n登台表演，磨練舞台經驗\n往後希望能往創作方向前進\n別怕你能力不足，只怕你不想來', 2, '[3]', '[2,3,6]', '基隆市', '', '2024-02-26 06:17:35', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1),
-(22, 'Xbuf7mvjeDWs', '{\"id\": 50, \"play\": 3}', '[{\"id\": 51, \"play\": 1},{\"id\": 52, \"play\": 3},{\"id\": 53, \"play\": 5}]', '', '', '', '', '新手練功團徵夥伴！', '不特別限制技術高手、新手皆可，也可以試團後再決定  ', 1, '[1]', '[6]', '桃園市', '希望你有基本經濟能力，好溝通、別突然消失', '2024-03-06 14:04:57', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1);
+(22, 'Xbuf7mvjeDWs', '{\"id\": 50, \"play\": 3}', '[{\"id\": 51, \"play\": 1},{\"id\": 52, \"play\": 3},{\"id\": 53, \"play\": 5}]', '', '', '', '', '新手練功團徵夥伴！', '不特別限制技術高手、新手皆可，也可以試團後再決定  ', 1, '[1]', '[6]', '桃園市', '希望你有基本經濟能力，好溝通、別突然消失', '2024-03-06 14:04:57', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1),
+(23, 'H7awmst3mbH1', '\"{\\\"id\\\": 1, \\\"play\\\": 3}\"', '[]', NULL, NULL, NULL, NULL, '測試', '測試測試測試', 1, '[2,4]', '[3,5,7]', '台北市', '認真向上', '2024-02-07 00:57:48', NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -1359,7 +1360,7 @@ ALTER TABLE `instrument_category`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `jam`
 --
 ALTER TABLE `jam`
-  MODIFY `id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `lesson_category`
