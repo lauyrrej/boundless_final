@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 
 function App() {
-  const [result, setResult] = useState(null)
-  function getTodos() {
+  const [instrument, setInstrument] = useState([])
+  function getInstrument() {
     return new Promise((resolve, reject) => {
-      let url = 'http://localhost:3005/api/lesson'
+      let url = 'http://localhost:3005/api/instrument'
       fetch(url, {
         method: 'GET',
         credentials: 'include',
@@ -14,7 +14,9 @@ function App() {
         })
         .then((result) => {
           resolve(result)
-          setResult(result)
+
+          setInstrument(result)
+          console.log(result)
         })
         .catch((error) => {
           console.log(error)
@@ -24,12 +26,13 @@ function App() {
   }
 
   useEffect(() => {
-    getTodos()
+    getInstrument()
   }, [])
+
   return (
     <div>
       <h1>Data from Express API:</h1>
-      <p>{result ? JSON.stringify(result) : 'Loading...'}</p>
+      <p>{instrument ? JSON.stringify(instrument) : 'Loading...'}</p>
     </div>
   )
 }

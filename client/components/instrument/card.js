@@ -21,7 +21,8 @@ export default function InstrumentCard({
   //   'categoryName.name:',
   //   categoryName ? categoryName.name : 'Category not found'
   // )
-  console.log(categoryName.name)
+  // console.log(categoryName.name)
+  console.log(img_small)
 
   return (
     <>
@@ -29,12 +30,13 @@ export default function InstrumentCard({
         <div className="product-image-wrapper">
           <Image
             loading="lazy"
-            // srcSet={productImage}
+            srcSet={img_small}
             alt={pname}
             className="product-image"
             fill
           />
           <FaHeart />
+          <img src={`/instrument/${category}/small/${img_small}`} alt="123" />
         </div>
         <div className="product-details">
           <h3 className="product-title">{pname}</h3>

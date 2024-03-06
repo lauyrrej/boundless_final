@@ -93,6 +93,10 @@ export default function Test() {
   //-------------------連資料庫
 
   const [instrument, setInstrument] = useState([])
+  console.log(instrument)
+  useEffect(async () => {
+    await getInstrument()
+  }, [])
   function getInstrument() {
     return new Promise((resolve, reject) => {
       let url = 'http://localhost:3005/api/instrument'
@@ -119,9 +123,7 @@ export default function Test() {
   const handleAccordionToggle = (index) => {
     setOpenAccordion(openAccordion === index ? null : index)
   }
-  useEffect(() => {
-    getInstrument()
-  }, [])
+
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
@@ -442,7 +444,7 @@ export default function Test() {
                                 >
                                   <label className="form-check-label">
                                     <input
-                                      classname="form-check-input"
+                                      className="form-check-input"
                                       type="radio"
                                       name="score"
                                       value={v}
@@ -516,13 +518,13 @@ export default function Test() {
 
               <div className="instrument-card-group">
                 {/* 用json套資料 */}
-                {Data.map((v, i) => {
+                {instrument.map((v, i) => {
                   const {
                     id,
                     name,
                     price,
                     discount,
-                    category_id,
+
                     img_small,
                     sales,
                   } = v
@@ -534,7 +536,6 @@ export default function Test() {
                         pname={name}
                         price={price}
                         discount={discount}
-                        categoryID={category_id}
                         img_small={img_small}
                         sales={sales}
                       />
