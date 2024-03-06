@@ -199,35 +199,35 @@ export default function Test({ onSearch }) {
 
   //-------------------分類改變
    
-    const [selectedCategory, setSelectedCategory] = useState('') // 用于存储用户选择的分类
+//     const [selectedCategory, setSelectedCategory] = useState('') // 用于存储用户选择的分类
 
- function handleCategoryChange(id) {
-   console.log('Clicked on category with ID:', id)
-     // 在這裡執行你的其他邏輯，比如更新狀態
-     setSelectedCategory(id)
- }
+//  function handleCategoryChange(id) {
+//    console.log('Clicked on category with ID:', id)
+//      // 在這裡執行你的其他邏輯，比如更新狀態
+//      setSelectedCategory(id)
+//  }
 
-    useEffect(() => {
-      // 定义一个函数用于获取商品数据
-      const fetchProducts = async () => {
-        try {
-          const response = await fetch(
-            `http://localhost:3005/api/Lesson/${selectedCategory}`
-          )
-            const data = await response.json()
-            console.log(data)
+//     useEffect(() => {
+//       // 定义一个函数用于获取商品数据
+//       const fetchProducts = async () => {
+//         try {
+//           const response = await fetch(
+//             `http://localhost:3005/api/Lesson/${selectedCategory}`
+//           )
+//             const data = await response.json()
+//             console.log(data)
             
-          setData(data)
-        } catch (error) {
-          console.error('Error fetching products:', error)
-        }
-      }
+//           setData(data)
+//         } catch (error) {
+//           console.error('Error fetching products:', error)
+//         }
+//       }
 
- //当selectedCategory变化时重新获取商品数据
-      if (selectedCategory !== '') {
-        fetchProducts()
-      }
-    }, [selectedCategory])
+//  //当selectedCategory变化时重新获取商品数据
+//       if (selectedCategory !== '') {
+//         fetchProducts()
+//       }
+//     }, [selectedCategory])
 
   
 
@@ -547,6 +547,7 @@ export default function Test({ onSearch }) {
                       ) : (
                         <Card
                           id={v.id}
+                          course-card
                           name={v.name}
                           price={v.price}
                           teacher_id={v.teacher_id}

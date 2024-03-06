@@ -74,6 +74,47 @@ export default function LessonDetailPage() {
   //   </React.StrictMode>,
   //   document.getElementById('root')
   // )
+
+  //-----------------------動態路由
+  //  由router中獲得動態路由(屬性名稱pid，即檔案[pid].js)的值，router.query中會包含pid屬性
+  // 1. 執行(呼叫)useRouter，會回傳一個路由器
+  // 2. router.isReady(布林值)，true代表本元件已完成水合作用(hydration)，可以取得router.query的值
+  const router = useRouter()
+
+  const [LessonDetail, setLessonDetail] = useState()
+
+  // 向伺服器要求資料，設定到狀態中用的函式
+  const getProduct = async (lid) => {
+    try {
+      const res = await fetch(`http://localhost:3005/api/lesson/${lid}`)
+
+      // res.json()是解析res的body的json格式資料，得到JS的資料格式
+      const data = await res.json()
+
+      console.log(data)
+
+      // 設定到state中，觸發重新渲染(re-render)，會進入到update階段
+      // 進入狀態前檢查資料類型有值，以避免錯誤
+      if (data) {
+        setLessonDetail(data)
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  // 初次渲染"之後(After)"+router.isReady改變時，執行其中程式碼
+  useEffect(() => {
+    // 如果isReady是true，確保能得到query的值
+    if (router.isReady) {
+      const { lid } = router.query
+      console.log(lid)
+      getProduct(lid)
+    }
+  }, [router.isReady])
+
+  console.log('render')
+    console.log(router.query, ' isReady=', router.isReady)
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
