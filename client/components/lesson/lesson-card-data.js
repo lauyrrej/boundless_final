@@ -42,7 +42,7 @@ export default function CourseCard({ id, name, price, teacher_id, img,length, sa
                   alt="Clock icon"
                   className="duration-icon"
                 />
-                {length}5小時
+                {length}小時
               </span>
             </div>
           </div>
@@ -54,7 +54,7 @@ export default function CourseCard({ id, name, price, teacher_id, img,length, sa
               alt="User icon"
               className="user-icon"
             />
-            <span className="enrollment-count">{sales}50</span>
+            <span className="enrollment-count">{sales}</span>
           </div>
         </section>
       </article>

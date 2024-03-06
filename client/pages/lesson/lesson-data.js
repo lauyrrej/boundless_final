@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 //試抓資料區
 import Card from '@/components/lesson/lesson-card-data'
 import Cardrwd from '@/components/lesson/lesson-card-rwd-data'
 // import Lesson from '@/data/Lesson.json'
-
 
 import Link from 'next/link'
 import Image from 'next/image'
@@ -19,6 +19,7 @@ import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 
+import BS5Pagination from '@/components/common/pagination.js'
 
 export default function Test({ onSearch }) {
   // 在電腦版或手機版時
@@ -70,14 +71,14 @@ export default function Test({ onSearch }) {
   // 資料排序
   const [dataSort, setDataSort] = useState('upToDate')
   // sidebar假資料
-//   const sidebarData = [
-//     '歌唱技巧',
-//     '樂器演奏',
-//     '音樂理論',
-//     '詞曲創作',
-//     '軟體操作',
-//     '活動專區',
-//   ]
+  //   const sidebarData = [
+  //     '歌唱技巧',
+  //     '樂器演奏',
+  //     '音樂理論',
+  //     '詞曲創作',
+  //     '軟體操作',
+  //     '活動專區',
+  //   ]
   const [priceLow, setPriceLow] = useState('')
   const [priceHigh, setPriceHigh] = useState('')
   // 課程評價
@@ -97,6 +98,7 @@ export default function Test({ onSearch }) {
   //-------------------連資料庫
 
   const [Lesson, setLesson] = useState([])
+
   function getLesson() {
     return new Promise((resolve, reject) => {
       let url = 'http://localhost:3005/api/lesson'
@@ -123,7 +125,51 @@ export default function Test({ onSearch }) {
     getLesson()
   }, [])
 
-  //-------------------分類功能
+  useEffect(() => {
+    setData(Lesson) // 当 Lesson 状态更新时，同时更新 data 状态
+  }, [Lesson])
+
+  //-------------------搜尋功能
+  const [data, setData] = useState(Lesson)
+  const [search, setSearch] = useState('')
+  const handleSearch = () => {
+    console.log('按鈕被點擊了')
+    let newData
+    if (search.trim() === '') {
+      newData = Lesson
+    //   console.log(newData)
+    } else {
+      newData = Lesson.filter((v, i) => {
+        return v.name.includes(search)
+      })
+    }
+    setData(newData)
+  }
+  useEffect(() => {
+    getLesson()
+  }, []) //FIXME不太懂這裡加這個的意思 少加了這個所以沒辦法在未搜尋狀態下顯示完整列表
+
+  //-------------------排序功能
+//FIXME升冪降冪
+  //最熱門
+  const sortBySales = () => {
+    const sortedProducts = [...Lesson].sort((a, b) => b.sales - a.sales)
+    setData(sortedProducts)
+  }
+  useEffect(() => {
+    getLesson()
+  }, [])
+    //依評價
+    //FIXME沒有資料？
+  //依時數
+ const sortBylength = () => {
+   const sortedProducts = [...Lesson].sort((a, b) => b.length - a.length)
+   setData(sortedProducts)
+ }
+ useEffect(() => {
+   getLesson()
+ }, [])
+  //-------------------渲染分類功能li
   const [LessonCategory, setLessonCategory] = useState([])
   function getLessonCategory() {
     return new Promise((resolve, reject) => {
@@ -152,51 +198,38 @@ export default function Test({ onSearch }) {
   }, [])
 
   //-------------------分類改變
-//   const [products, setProducts] = useState([])
-//   const [selectedCategory, setSelectedCategory] = useState('') // 用于存储用户选择的分类
+   
+    const [selectedCategory, setSelectedCategory] = useState('') // 用于存储用户选择的分类
 
-//   useEffect(() => {
-//     // 定义一个函数用于获取商品数据
-//     const fetchProducts = async () => {
-//       try {
-//         const response = await fetch(`/api/products/${selectedCategory}`)
-//         const data = await response.json()
-//         setProducts(data)
-//       } catch (error) {
-//         console.error('Error fetching products:', error)
-//       }
-//     }
+ function handleCategoryChange(id) {
+   console.log('Clicked on category with ID:', id)
+     // 在這裡執行你的其他邏輯，比如更新狀態
+     setSelectedCategory(id)
+ }
 
-    // 当selectedCategory变化时重新获取商品数据
-//     if (selectedCategory !== '') {
-//       fetchProducts()
-//     }
-//   }, [selectedCategory])
+    useEffect(() => {
+      // 定义一个函数用于获取商品数据
+      const fetchProducts = async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:3005/api/Lesson/${selectedCategory}`
+          )
+            const data = await response.json()
+            console.log(data)
+            
+          setData(data)
+        } catch (error) {
+          console.error('Error fetching products:', error)
+        }
+      }
 
-//   const handleCategoryChange = (category) => {
-//     setSelectedCategory(category)
-//   }
+ //当selectedCategory变化时重新获取商品数据
+      if (selectedCategory !== '') {
+        fetchProducts()
+      }
+    }, [selectedCategory])
 
-  //-------------------搜尋功能
-  // 擴充後的物件陣列作為初始值
-  const [data, setData] = useState(Lesson)
-  const [search, setSearch] = useState('')
-
-  // 搜尋功能
-  const handleSearch = () => {
-    console.log('按鈕被點擊了')
-    let newData
-    if (search.trim() === '') {
-        newData = Lesson
-        console.log(newData)
-        //FIXME 沒辦法在為搜尋的情況下顯示完整資料
-    } else {
-      newData = Lesson.filter((v, i) => {
-        return v.name.includes(search)
-      })
-    }
-    setData(newData)
-  }
+  
 
   return (
     <>
@@ -261,7 +294,11 @@ export default function Test({ onSearch }) {
                 </li>
                 {/* 分類功能 */}
                 {LessonCategory.map((v, index) => {
-                  return <li key={index}>{v.name}</li>
+                  return (
+                    <li key={index} onClick={() => handleCategoryChange(v.id)}>
+                      {v.name}
+                    </li>
+                  )
                 })}
               </ul>
             </div>
@@ -331,6 +368,7 @@ export default function Test({ onSearch }) {
                     選單
                   </div>
                   <div className="search input-group">
+                    {/* 輸入欄位 */}
                     <input
                       type="text"
                       className="form-control"
@@ -347,7 +385,7 @@ export default function Test({ onSearch }) {
                     </div>
                   </div>
                 </div>
-
+                {/* 手機版排序 */}
                 <div className="filter-sort d-flex justify-content-between">
                   <div className="sort-mb d-block d-sm-none">
                     <select
@@ -361,8 +399,8 @@ export default function Test({ onSearch }) {
                       <option selected value="upToDate">
                         最熱門
                       </option>
-                      <option value="recent">依評價</option>
-                      <option value="recent">依時數</option>
+                      <option value="review">依評價</option>
+                      <option value="classLength">依時數</option>
                     </select>
                   </div>
 
@@ -469,16 +507,22 @@ export default function Test({ onSearch }) {
                       </div>
                     </div>
                   </form>
-                  {/* 資料排序 */}
+                  {/* web版資料排序 */}
                   <div className="sort d-none d-sm-flex justify-content-between align-items-center">
                     <div className="d-flex align-items-center">
                       排序
                       <FaSortAmountDown size={14} />
                     </div>
 
-                    <div className="sort-item active">最熱門</div>
-                    <div className="sort-item">依評價</div>
-                    <div className="sort-item">依實數</div>
+                    <div className="sort-item active" onClick={sortBySales}>
+                      最熱門
+                    </div>
+                    <div className="sort-item" >
+                      依評價
+                    </div>
+                    <div className="sort-item" onClick={sortBylength}>
+                      依時數
+                    </div>
                   </div>
                 </div>
               </div>
@@ -511,6 +555,7 @@ export default function Test({ onSearch }) {
                           sales={v.sales}
                         />
                       )}
+                      <Link href={`/lesson/${v.id}`}></Link>
                     </div>
                   )
                 })}
@@ -518,6 +563,10 @@ export default function Test({ onSearch }) {
             </div>
           </div>
         </div>
+      </div>
+      <div className="d-flex justify-content-center">
+        <BS5Pagination />
+        //FIXME 沒有頁碼細節
       </div>
       <Footer />
       <style jsx>{`
