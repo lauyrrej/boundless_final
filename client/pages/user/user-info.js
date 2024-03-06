@@ -21,6 +21,18 @@ import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 
 export default function Test() {
+  // ----------------------測試用 獲得所有使用者清單 ----------------------
+  const getUser = async () => {
+    try {
+      const res = await fetch('http://localhost:3005/api/user')
+
+      // 使用 res.json() 來解析 response 的 JSON 格式資料
+      const usersData = await res.json()
+      console.log(usersData)
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error)
+    }
+  }
   // ----------------------會員登入  ----------------------
 
   const { auth, login, logout } = useAuth()
@@ -266,6 +278,7 @@ export default function Test() {
                       >
                         {auth.isAuth ? '登出' : '登入'}
                       </button>
+                      <button onClick={getUser}>取得使用者清單JSON</button>
                     </p>
                     <p>ID: {auth.userData.id}</p>
                     <p>帳號: {auth.userData.name}</p>
