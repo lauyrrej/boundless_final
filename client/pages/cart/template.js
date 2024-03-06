@@ -16,6 +16,17 @@ import { FaPlus } from 'react-icons/fa'
 import { FaMinus } from 'react-icons/fa'
 import { FaTrash } from 'react-icons/fa6'
 
+//css module
+import Lesson from '@/pages/cart/lesson-item.module.scss'
+import Instrument from '@/pages/cart/instrument-item.module.scss'
+
+//cart-list
+import LessonList from '@/components/cart/lesson-cart-list.js'
+import InstrumentList from '@/components/cart/instrument-cart-list.js'
+
+//cart-data
+import CartData from '@/data/cart/cart.json'
+
 export default function Test() {
   // ----------------------手機版本  ----------------------
   // 主選單
@@ -40,6 +51,87 @@ export default function Test() {
   const onshow = (e) => {
     stopPropagation(e)
     setFilterVisible(!filterVisible)
+  }
+
+  // --------------------- 購物車 -----------------------
+
+  //加入到購物車的項目
+  let [items, setItems] = useState([])
+
+  useEffect(() => {
+    setItems(CartData)
+  }, [])
+
+  const exItems = items.map((item,i)=>{
+    const newItem = { ...item, qty: 1 }
+    return newItem
+  })
+
+  items = exItems
+
+  console.log(items);
+
+  const addItem = (item) => {
+    //擴充item的屬性多一個qty
+    const newItem = { ...item, qty: 1 }
+    const newItems = [...items, newItem]
+
+    setItems(newItems)
+  }
+
+  
+
+  //在購物車中，移除某商品的id
+
+  const remove = (items, id) => {
+    const newItems = items.filter((v, i) => {
+      return v.id !== id
+    })
+
+    setItems(newItems)
+  }
+
+  //遞增某商品id數量
+  const increment = (items, id) => {
+    const newItems = items.map((v, i) => {
+      if (v.id === id) return { ...v, qty: v.qty + 1 }
+      else return v
+    })
+
+    setItems(newItems)
+  }
+
+  //遞減某商品id數量
+  const decrement = (items, id) => {
+    const newItems = items.map((v, i) => {
+      if (v.id === id) return { ...v, qty: v.qty - 1 }
+      else return v
+    })
+
+    setItems(newItems)
+  }
+
+  //增加一個商品到購物車中
+  const addItems = (item) => {
+    //檢查商品的id是否已在購物車中
+    const foundIndex = items.findIndex((v, i) => {
+      return v.id === item.id
+    })
+
+    //如果有找到，做數量遞增
+    if (foundIndex > -1) {
+      increment(items, item.id)
+    } else {
+      const newItem = { ...item, qty: 1 }
+      const newItems = [...items, newItem]
+      setItems(newItems)
+    }
+
+    //擴充item屬性
+    const newItem = { ...item, qty: 1 }
+    const newItems = [...items, newItem]
+
+    setItems(newItems)
   }
 
   return (
@@ -88,23 +180,32 @@ export default function Test() {
           </div>
         </div>
         <>
-          <div className='cart'>
+          <div className="cart">
             <h2>購物車</h2>
           </div>
           <div className="d-flex justify-content-between cart-process">
-            <div className="d-flex align-items-center ballbox step1" style={{ gap: 10 }}>
+            <div
+              className="d-flex align-items-center ballbox step1"
+              style={{ gap: 10 }}
+            >
               <div className="ball d-flex align-items-center justify-content-center active">
                 1
               </div>
               <div className="h5 cart-process-text">確認/修改訂單</div>
             </div>
-            <div className="d-flex align-items-center ballbox step2" style={{ gap: 10 }}>
+            <div
+              className="d-flex align-items-center ballbox step2"
+              style={{ gap: 10 }}
+            >
               <div className="ball d-flex align-items-center justify-content-center inactive">
                 2
               </div>
               <div className="h5 cart-process-text">填寫訂單資料</div>
             </div>
-            <div className="d-flex align-items-center ballbox step3" style={{ gap: 10 }}>
+            <div
+              className="d-flex align-items-center ballbox step3"
+              style={{ gap: 10 }}
+            >
               <div className="ball d-flex align-items-center justify-content-center inactive">
                 3
               </div>
@@ -112,49 +213,14 @@ export default function Test() {
             </div>
           </div>
           <div className="d-flex">
-            <div className="w-100 p-0 cart-main" style={{ height: '100vh' }}>
+            <div className="w-100 p-0 cart-main" style={{ height: '' }}>
               <div className="cart-lesson">
                 <div className="cart-title">課程</div>
                 <div className="cart-thead">
                   <div className="lesson-product">商品</div>
                   <div className="lesson-price">售價</div>
                 </div>
-                <div className="cart-item-group">
-                  <div className="lesson-item">
-                    <div className="lesson-item-pic">
-                      <Image src="/jam/amazingshow.jpg" fill />
-                    </div>
-                    <div className="lesson-item-name h6">
-                      Logic Pro X 從零開始
-                    </div>
-                    <div className="lesson-item-price h6">$26000</div>
-                    <div className="lesson-button">
-                      <button type="button" className="btn delete-btn">
-                        <div>
-                          <FaTrash />
-                        </div>
-                        <div>刪除</div>
-                      </button>
-                    </div>
-                  </div>
-                  <div className="lesson-item">
-                    <div className="lesson-item-pic">
-                      <Image src="/jam/amazingshow.jpg" fill />
-                    </div>
-                    <div className="lesson-item-name h6">
-                      Logic Pro X 從零開始
-                    </div>
-                    <div className="lesson-item-price h6">$26000</div>
-                    <div className="lesson-button">
-                      <button type="button" className="btn delete-btn">
-                        <div>
-                          <FaTrash />
-                        </div>
-                        <div>刪除</div>
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                <LessonList items={items} remove={remove} />
                 <div className="cart-subtotal h6">原價 NT$ 999999</div>
                 <div className="cart-coupon">
                   <div className="coupon-selector">
@@ -188,82 +254,12 @@ export default function Test() {
                   <div className="instrument-quantity">數量</div>
                   <div className="instrument-total">總價</div>
                 </div>
-                <div className="cart-item-group">
-                  <div className="instrument-item">
-                    <div className="instrument-item-pic">
-                      <Image src="/jam/amazingshow.jpg" fill />
-                    </div>
-                    <div className="instrument-item-name h6">
-                      Logic Pro X 從零開始
-                    </div>
-                    <div className="instrument-item-price h6">$26000</div>
-                    <div className="instrument-item-quantity h6">
-                      <div className="input-group">
-                        <button className="btn btn-light quantity-left-minus">
-                          <FaMinus />
-                        </button>
-                        <input
-                          type="text"
-                          className="form-control input-number"
-                          id="quantity"
-                          name="quantity"
-                          defaultValue={10}
-                          min={1}
-                          max={100}
-                        />
-                        <button className="btn btn-primary quantity-right-plus">
-                          <FaPlus />
-                        </button>
-                      </div>
-                    </div>
-                    <div className="instrument-item-total h6">$26000</div>
-                    <div className="instrument-button">
-                      <button type="button" className="btn delete-btn">
-                        <div>
-                          <FaTrash />
-                        </div>
-                        <div>刪除</div>
-                      </button>
-                    </div>
-                  </div>
-                  <div className="instrument-item">
-                    <div className="instrument-item-pic">
-                      <Image src="/jam/amazingshow.jpg" fill />
-                    </div>
-                    <div className="instrument-item-name h6">
-                      Logic Pro X 從零開始
-                    </div>
-                    <div className="instrument-item-price h6">$26000</div>
-                    <div className="instrument-item-quantity h6">
-                      <div className="input-group">
-                        <button className="btn btn-light quantity-left-minus">
-                          <FaMinus />
-                        </button>
-                        <input
-                          type="text"
-                          className="form-control input-number"
-                          id="quantity"
-                          name="quantity"
-                          defaultValue={10}
-                          min={1}
-                          max={100}
-                        />
-                        <button className="btn btn-primary quantity-right-plus">
-                          <FaPlus />
-                        </button>
-                      </div>
-                    </div>
-                    <div className="instrument-item-total h6">$26000</div>
-                    <div className="instrument-button">
-                      <button type="button" className="btn delete-btn">
-                        <div>
-                          <FaTrash />
-                        </div>
-                        <div>刪除</div>
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                <InstrumentList
+                  items={items}
+                  increment={increment}
+                  decrement={decrement}
+                  remove={remove}
+                />
                 <div className="cart-subtotal h6">原價 NT$ 999999</div>
                 <div className="cart-coupon">
                   <div className="coupon-selector">
@@ -317,17 +313,55 @@ export default function Test() {
                   </div>
                 </div>
                 <div className="cart-btn">
-                  <div className="btn btn-primary">結帳</div>
+                  <div
+                    className="b-btn b-btn-primary d-flex w-100 h-100 justify-content-center"
+                    style={{ padding: '14px 0' }}
+                  >
+                    結帳
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </>
       </div>
+      <div className="flow-cart-mb" style={{}}>
+        <div
+          className="d-flex flex-column position-sticky"
+          style={{ gap: 20, top: 110 }}
+        >
+          <div className="total d-flex flex-column" style={{ gap: 20 }}>
+            <div className="d-flex justify-content-between carttext">
+              <div>商品數量</div>
+              <div>樂器*3 課程*2</div>
+            </div>
+            <div className="d-flex justify-content-between carttext">
+              <div>原價合計</div>
+              <div>NT $864000</div>
+            </div>
+            <div className="d-flex justify-content-between carttext discount">
+              <div>折扣合計</div>
+              <div>-NT $3400</div>
+            </div>
+            <div className="d-flex justify-content-between h3">
+              <div>合計</div>
+              <div>NT $790000</div>
+            </div>
+          </div>
+          <div className="cart-btn">
+            <div
+              className="b-btn b-btn-primary d-flex w-100 h-100 justify-content-center"
+              style={{ padding: '14px 0' }}
+            >
+              結帳
+            </div>
+          </div>
+        </div>
+      </div>
       <Footer />
 
       <style jsx>{`
-        .cart{
+        .cart {
           color: black;
           padding: 20px 0;
         }
@@ -336,7 +370,7 @@ export default function Test() {
             display: none;
           }
         }
-        .ballbox{
+        .ballbox {
           @media screen and (max-width: 576px) {
             flex-wrap: wrap;
             justify-content: center;
@@ -346,15 +380,15 @@ export default function Test() {
           padding: 8px 40px;
           margin-bottom: 20px;
           @media screen and (max-width: 576px) {
-            padding:0 0 0 0;
-            gap:25px;
+            padding: 0 0 0 0;
+            gap: 25px;
           }
-          .cart-process-text{
-            font-size:20px;
+          .cart-process-text {
+            font-size: 20px;
             text-align: center;
             @media screen and (max-width: 576px) {
-              font-size:14px;
-              width:100px;
+              font-size: 14px;
+              width: 100px;
             }
           }
         }
@@ -381,10 +415,10 @@ export default function Test() {
           font-weight: 700;
           line-height: normal;
           @media screen and (max-width: 576px) {
-            height:40px;
-            width:40px;
+            height: 40px;
+            width: 40px;
             font-size: 18px;
-              }
+          }
         }
         .h5 {
           color: #000;
@@ -425,19 +459,16 @@ export default function Test() {
           border: 1px solid var(--primary, #1581cc);
           padding: 20px;
           align-self: stretch;
+          @media screen and (max-width: 576px) {
+            border: 0;
+            padding: 0;
+            gap: 10px !important;
+          }
         }
         .cart-btn {
           width: 100%;
           display: flex;
-
           justify-content: center;
-          align-items: center;
-          align-self: stretch;
-          border-radius: 5px;
-          .btn {
-            width: 100%;
-            padding: 14px 0px !important;
-          }
         }
         .cart-lesson {
           display: flex;
@@ -504,69 +535,12 @@ export default function Test() {
           }
         }
         .cart-item-group {
-          display:flex;
+          display: flex;
           flex-wrap: wrap;
           gap: 20px;
           padding: 12px;
           color: black;
-          .lesson-item {
-            display: grid;
-            place-content: center;
-            grid-template-columns: repeat(8, 110px);
-            @media screen and (max-width: 576px) {
-              grid-template-columns: repeat(3, 132px);
-              grid-template-rows: repeat(3, 44px);
-            }
-            .lesson-item-pic {
-              width: 110px;
-              height: 110px;
-              grid-column: 1/2;
-              overflow: hidden;
-              position: relative;
-              & img {
-                object-fit: cover;
-              }
-              @media screen and (max-width: 576px) {
-                width: 132px;
-                height: 132px;
-                grid-row: 1/3;
-                grid-column: 1/2;
-              }
-            }
-            .lesson-item-name {
-              grid-row: 1/2;
-              grid-column: 2/4;
-              margin-block: auto;
-              padding-left: 10px;
-              @media screen and (max-width: 576px) {
-                grid-row: 1/2;
-                grid-column: 2/4;
-                margin-block: auto;
-                padding-left: 10px;
-              }
-            }
-            .lesson-item-price {
-              grid-row: 1/2;
-              grid-column: 4/5;
-              margin-block: auto;
-              @media screen and (max-width: 576px) {
-                grid-row: 2/3;
-                grid-column: 2/4;
-                margin-block: auto;
-                padding-left: 10px;
-              }
-            }
-            .lesson-button {
-              grid-row: 1/2;
-              grid-column: 8/9;
-              margin: auto;
-              @media screen and (max-width: 576px) {
-                grid-row: 3/4;
-                grid-column: 3/4;
-                margin-right: 0;
-              }
-            }
-          }
+
           .instrument-item {
             display: grid;
             place-content: center;
@@ -621,7 +595,6 @@ export default function Test() {
                 padding-right: 0;
                 grid-row: 3/4;
                 grid-column: 2/3;
-
               }
             }
             .instrument-item-total {
@@ -647,16 +620,7 @@ export default function Test() {
 
               width: 40px;
               height: 40px;
-              .minussign::before {
-                content: '\x91';
-                color: #000;
-                /* sidebar-font */
-                font-family: 'Noto Sans TC';
-                font-size: 16px;
-                font-style: normal;
-                font-weight: 700;
-                line-height: normal;
-              }
+
               @media screen and (max-width: 576px) {
                 width: 32px;
                 height: 32px;
@@ -666,20 +630,10 @@ export default function Test() {
             .quantity-right-plus {
               width: 40px;
               height: 40px;
-              .plussign::before {
-                content: '\x17';
-                color: var(--white, #fff);
-                /* sidebar-font */
-                font-family: 'Noto Sans TC';
-                font-size: 12px;
-                font-style: normal;
-                font-weight: 700;
-                line-height: normal;
-              }
               @media screen and (max-width: 576px) {
                 width: 32px;
                 height: 32px;
-                padding:0;
+                padding: 0;
               }
             }
             .input-number {
@@ -693,12 +647,13 @@ export default function Test() {
               font-weight: 700;
               line-height: normal;
               @media screen and (max-width: 576px) {
-                padding:0;
+                padding: 0;
                 text-align: center;
               }
             }
           }
         }
+
         .cart-coupon {
           display: flex;
           padding: 0 12px;
@@ -707,9 +662,9 @@ export default function Test() {
             align-items: center;
             gap: 20px;
             @media screen and (max-width: 576px) {
-              gap:0;
-              width:200px;
-              }
+              gap: 0;
+              width: 200px;
+            }
           }
           .cart-coupon-text {
             color: black;
@@ -720,8 +675,8 @@ export default function Test() {
             line-height: 24px; /* 120% */
             @media screen and (max-width: 576px) {
               font-size: 18px;
-              width:100px;
-              }
+              width: 100px;
+            }
           }
           .cart-discount {
             color: var(--primary, #1581cc);
@@ -757,6 +712,18 @@ export default function Test() {
           gap: 6px;
           padding: 5px 10px;
           vertical-align: center;
+        }
+        .flow-cart-mb {
+          display: none;
+          @media screen and (max-width: 576px) {
+            display: block;
+            position: sticky;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            background-color: #fff;
+            padding: 20px 30px;
+          }
         }
       `}</style>
     </>

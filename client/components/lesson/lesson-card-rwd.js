@@ -1,4 +1,7 @@
 import React from 'react'
+import Lesson from '@/data/Lesson.json'
+
+
 
 export default function CourseCard() {
   return (
