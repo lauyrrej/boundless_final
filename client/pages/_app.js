@@ -1,5 +1,6 @@
 import '@/styles/globals.scss'
 import '@/styles/template.scss'
+import { CartProvider } from '@/hooks/use-cart'
 import { useEffect } from 'react'
 
 // 會員認證專用的Provider元件 (檢驗是否登入)
@@ -14,5 +15,10 @@ export default function MyApp({ Component, pageProps }) {
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout || ((page) => page)
 
-  return <AuthProvider>{getLayout(<Component {...pageProps} />)}</AuthProvider>
+  return (
+    <CartProvider>
+      <AuthProvider>{getLayout(
+      <Component {...pageProps} />)}</AuthProvider>
+    </CartProvider>
+  )
 }

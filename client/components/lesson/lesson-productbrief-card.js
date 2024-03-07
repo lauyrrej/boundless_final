@@ -7,7 +7,7 @@ import toast, { Toaster } from 'react-hot-toast'
 //跳轉頁面
 import Link from 'next/link'
 
-export default function ProductBriefCard({}) {
+export default function ProductBriefCard({ name, homework, sales, price, length, info }) {
   //收藏按鍵的功能
   const [colorChange, setcolorChange] = useState(false)
   const colorToggle = () => {
@@ -33,12 +33,11 @@ export default function ProductBriefCard({}) {
 
   //跳轉頁面
 
-
   return (
     <>
       <div className=" Right sticky-top ">
         <div className="prodBriefing sticky-top ">
-          <div className="prodMainName">{Lesson[0].name}</div>
+          <div className="prodMainName">{name}</div>
           <div className="Rating">
             <div className="star">
               <img
@@ -49,10 +48,10 @@ export default function ProductBriefCard({}) {
               <div className="ratingNumber">4.9</div>
               <div className="commentNumber">(10)</div>
             </div>
-            <div className="sales">購買人數 50</div>
+            <div className="sales">購買人數 {sales}</div>
           </div>
           <div className="productPrice">
-            <div className="price">NT$ {Lesson[0].price}</div>
+            <div className="price">NT$ {price}</div>
             {/* 收藏功能 */}
             {/* 做好的 onClick*/}
             <div className="likesIcon icon-container ">
@@ -79,7 +78,7 @@ export default function ProductBriefCard({}) {
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/81a1d10e78e821775737fe4938ae726e8de4a80804b01bdda9876d9f86f9b1bb?"
                 className="lengthIcon"
               />
-              <div className="lengthHomeworkWord">{Lesson[0].length}分鐘</div>
+              <div className="lengthHomeworkWord">{length}分鐘</div>
             </div>
             <div className="lengthhomework">
               <img
@@ -87,12 +86,10 @@ export default function ProductBriefCard({}) {
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/4552b4fc37047176a87577807414005cf8e8466b4ef23329066c1c39e5dad447?"
                 className="img-10"
               />
-              <div className="lengthHomeworkWord">
-                {Lesson[0].homework}份作業
-              </div>
+              <div className="lengthHomeworkWord">{homework}份作業</div>
             </div>
           </div>
-          <div className="lessonIntro">{Lesson[0].info}</div>
+          <div className="lessonIntro">{info}</div>
           <div className="shoppingBtn">
             <div
               className="cartBtn"
@@ -259,7 +256,6 @@ export default function ProductBriefCard({}) {
               background-color: #000000;
             }
           }
-       
         `}
       </style>
     </>

@@ -2,7 +2,7 @@ import styles from '@/components/jam/recruit-card.module.scss'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import genereData from '@/data/genere.json'
+import genereData from '@/data/genre.json'
 
 export default function JamCard({
   name,

@@ -16,7 +16,7 @@ export default function CourseCard() {
           className="course-image"
         />
               {/* 試跑迴圈抓資料 */}
-              <div className="course-details"  key={i}>
+              <div className="course-details">
                 <h2 className="course-title">
                   樂理指法一把抓 - 鋼琴基礎從零開始
                 </h2>
