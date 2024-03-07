@@ -122,6 +122,9 @@ export default function Test() {
   const appKey = 'userToken'
   let userData
 
+  // 登入後設定全域的會員資料用
+  // const { setAuth } = useAuth()
+
   // 輸入帳號 密碼用
   const handleFieldChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value })
@@ -162,42 +165,47 @@ export default function Test() {
     }
   }
   // 登出
-  // const handleLogout = async (e) => {
-  //   //取消表單預設submit跳頁
-  //   e.preventDefault()
-  //   // console.log(token)
-  //   const usertoken = token
-  //   console.log(token)
-  //   try {
-  //     const response = await fetch('http://localhost:3005/api/user/logout', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         Authorization: `Bearer ${usertoken}`,
-  //       },
-  //       body: JSON.stringify(),
-  //     })
+  const handleLogout = async (e) => {
+    //取消表單預設submit跳頁
+    e.preventDefault()
+    console.log(token)
+    const usertoken = token
+    try {
+      const response = await fetch('http://localhost:3005/api/user/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${usertoken}`,
+        },
+        body: JSON.stringify(),
+        // 昨天到這
+        // success: (data) => {
+        //   setToken(null)
+        //   userData = undefined
+        //   localStorage.removeItem(appKey)
+        // },
+      })
 
-  //     const logoutData = await response.json()
-  //     console.log('Response from server:', logoutData)
-  //     setToken(null)
-  //     const userData = undefined
-  //     localStorage.removeItem(appKey)
+      const logoutData = await response.json()
+      console.log('Response from server:', logoutData)
+      setToken(null)
+      const userData = undefined
+      localStorage.removeItem(appKey)
 
-  //     // console.log(userData)
+      console.log(userData)
 
-  //     // 在這裡處理後端返回的資料
-  //   } catch (error) {
-  //     console.error('There was a problem with the fetch operation:', error)
-  //   }
-  // }
+      // 在這裡處理後端返回的資料
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error)
+    }
+  }
 
   // 檢查登入狀態
   const handleLoginStatus = async (e) => {
     //取消表單預設submit跳頁
     e.preventDefault()
     console.log(token)
-    const usertoken = localStorage.getItem(appKey)
+    const usertoken = token
     try {
       const response = await fetch('http://localhost:3005/api/user/status', {
         method: 'POST',
@@ -221,7 +229,7 @@ export default function Test() {
 
   // ----------------------會員登入  ----------------------
 
-  const { handleLogout } = useAuth()
+  // const { auth, login, logout } = useAuth()
   // const [redirectToIndex, setRedirectToIndex] = useState(false)
 
   // // 登入後導頁到使用者資訊頁面
@@ -359,6 +367,8 @@ export default function Test() {
                   <a className="forget">忘記密碼?</a>
                 </div>
                 <div className="loginByEmail-submit">
+                  {/* <p>目前登入狀態: {auth.isAuth ? '會員已登入' : '未登入'}</p> */}
+                  <Link href="/user/user-info">會員資訊(Login)</Link>
                   <button type="submit" className="btn">
                     登入
                   </button>

@@ -3,7 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "dev": "nodemon ./bin/www",
+    "start": "nodemon ./bin/www",
+    "seed": "node ./cli/db-init.js",
+    "backup": "node ./cli/db-backup.js",
+    "debug": "DEBUG=express:* node ./bin/www",
+    "debug-win": "set DEBUG=express:* & node ./bin/www"
   },
   "type": "module",
   "dependencies": {

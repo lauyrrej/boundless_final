@@ -6,9 +6,11 @@ import Image from 'next/image'
 
 //圖片
 import jamHero from '@/assets/jam-hero.png'
+import avatar from '@/public/user/Meiyuyu.jpg'
 
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
+import { jwtDecode } from 'jwt-decode'
 
 // icons
 import { IoHome } from 'react-icons/io5'
@@ -27,29 +29,40 @@ export default function Test() {
 
       // 使用 res.json() 來解析 response 的 JSON 格式資料
       const usersData = await res.json()
-      //   console.log(usersData)
+      console.log(usersData)
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error)
     }
   }
-  // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
-  //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
-  const { LoginUserData, handleLoginStatus, getLoginUserData } = useAuth()
+  // ----------------------會員登入狀態  ----------------------
+
+  // const { handleLoginStatus, getLoginUserData } = useAuth()
+  const { handleLoginStatus } = useAuth()
   const [userData, setUserData] = useState()
-  //檢查token
   useEffect(() => {
     handleLoginStatus()
-    //獲得資料
-    getLoginUserData()
-  }, [])
+  }, [handleLoginStatus])
 
-  //檢查是否獲取資料
-  console.log(LoginUserData)
-  //   讀取使用者資料後 定義大頭貼路徑   再觀察一下 大頭貼目前有bad 錯誤訊息
-  const avatarImage = `/user/${LoginUserData.img}`
-  const avatarDefault = `/user/avatar_userDefault.jpg`
+  // useEffect(() => {
+  //   getLoginUserData()
+  // }, [getLoginUserData])
 
-  //以下為觀察錯誤訊息  先註解掉
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await getLoginUserData()
+  //       const userData = await response.json()
+  //       setUserData(userData)
+  //     } catch (error) {
+  //       console.error('Error fetching user data:', error)
+  //     }
+  //   }
+  //   fetchData()
+  // }, [getLoginUserData])
+
+  // console.log(userData)
+
+  //以下為觀察錯誤訊息
   // Uncaught (in promise) Error: A listener indicated an asynchronous response by returning true, but the message channel closed before a response was received
   // useEffect(() => {
   //   let isMounted = true // 判斷組件是否還在掛載
@@ -66,6 +79,82 @@ export default function Test() {
   // }, [handleLoginStatus, getLoginUserData])
   // ----------------------會員登入狀態  ----------------------
 
+  // ----------------------登入會員資料獲取 暫不用hook  ----------------------
+  const [userName, setuserName] = useState([])
+  const [userNickname, setuserNickname] = useState([])
+  const [userGender, setuserGender] = useState([])
+  const [userGenreLike, setuserGenreLike] = useState([])
+  const [userPlayInstrument, setuserPlayInstrument] = useState([])
+  const [userPrivacy, setuserPrivacy] = useState([])
+  const [userBirthday, setuserBirthday] = useState([])
+  const [userPhone, setuserPhone] = useState([])
+  const [userEmail, setuserEmail] = useState([])
+  const [userPostcode, setuserPostcode] = useState([])
+  const [userCountry, setuserCountry] = useState([])
+  const [userTownship, setuserTownship] = useState([])
+  const [userAddress, setuserAddress] = useState([])
+  const [userInfo, setuserInfo] = useState([])
+
+  const [userImg, setuserImg] = useState([])
+  const avatarImage = `/user/${userImg}`
+
+  const appKey = 'userToken'
+  const [token, setToken] = useState('')
+  const getLoginUserData = async (e) => {
+    // 拿取Token回傳後端驗證狀態
+    const Loginusertoken = localStorage.getItem(appKey)
+
+    if (!Loginusertoken) {
+      console.error('沒有登入的token 故無法取得使用者資料。')
+      return null
+    }
+    const userID = jwtDecode(Loginusertoken)
+    const id = userID.id
+
+    try {
+      const response = await fetch(`http://localhost:3005/api/user/${id}`, {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Loginusertoken}`,
+        },
+        body: JSON.stringify(),
+      })
+
+      const LoginUserData = await response.json()
+      console.log('Response from server:', LoginUserData)
+
+      // setUserData(LoginUserData)
+      // console.log(LoginUserData)
+
+      // 在這裡處理後端返回的資料
+      setuserName(LoginUserData.name)
+      setuserNickname(LoginUserData.nickname)
+      setuserGender(LoginUserData.gender)
+      setuserGenreLike(LoginUserData.genre_like)
+      setuserPlayInstrument(LoginUserData.play_instrument)
+      setuserPrivacy(LoginUserData.privacy)
+      setuserBirthday(LoginUserData.birthday)
+      setuserPhone(LoginUserData.phone)
+      setuserEmail(LoginUserData.email)
+      setuserPostcode(LoginUserData.postcode)
+      setuserCountry(LoginUserData.country)
+      setuserTownship(LoginUserData.township)
+      setuserAddress(LoginUserData.address)
+      setuserInfo(LoginUserData.info)
+      setuserImg(LoginUserData.img)
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error)
+    }
+  }
+
+  useEffect(() => {
+    // 在這裡呼叫 handleLoginStatus，確保 token 已經有值
+
+    getLoginUserData()
+  }, [])
+
+  // ----------------------登入會員資料獲取 暫不用hook  ----------------------
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -195,7 +284,7 @@ export default function Test() {
               <div className="sidebar-user-info">
                 <div className="sidebar-user-info-imgBox">
                   <Image
-                    src={avatarImage || avatarDefault}
+                    src={avatarImage}
                     alt="user photo mb"
                     fill
                     priority="default" //不加的話Next 會問是否要加優先級
@@ -203,9 +292,7 @@ export default function Test() {
                   ></Image>
                 </div>
                 <div className="sidebar-user-info-text">
-                  <div className="sidebar-user-info-name">
-                    {LoginUserData.nickname}
-                  </div>
+                  <div className="sidebar-user-info-name">{userNickname}</div>
                   <div className="sidebar-user-info-band">樂團名稱</div>
                 </div>
                 {/* 更換大頭貼的功能暫定併回會員資訊 故不再sidebar顯示 */}
@@ -303,6 +390,25 @@ export default function Test() {
                       backgroundColor: 'rgb(255, 255, 255)',
                     }}
                   >
+                    {/* ---------------------測試登入------------------- */}
+
+                    {/* <p>目前登入狀態: {auth.isAuth ? '會員已登入' : '未登入'}</p>
+                    <p>
+                      <button
+                        onClick={() => {
+                          if (auth.isAuth) logout()
+                          else login()
+                        }}
+                      >
+                        {auth.isAuth ? '登出' : '登入'}
+                      </button>
+                      <button onClick={getUser}>取得使用者清單JSON</button>
+                    </p>
+                    <p>ID: {auth.userData.id}</p>
+                    <p>帳號: {auth.userData.name}</p>
+                    <p>電子信箱: {auth.userData.email}</p>
+                    <hr /> */}
+                    {/* ---------------------------------------- */}
                     <div className="user-content col-12">
                       <div className="user-content-top">
                         <div className="user-title-userInfo">會員資訊</div>
@@ -319,7 +425,7 @@ export default function Test() {
                         <div className="user-info-item-titleText">真實姓名</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            {LoginUserData.name}
+                            {userName}
                           </div>
                         </div>
                       </div>
@@ -327,7 +433,7 @@ export default function Test() {
                         <div className="user-info-item-titleText">暱稱</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            {LoginUserData.nickname}
+                            {userNickname}
                           </div>
                         </div>
                       </div>
@@ -335,7 +441,7 @@ export default function Test() {
                         <div className="user-info-item-titleText">性別</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            {LoginUserData.gender}
+                            {userGender}
                           </div>
                         </div>
                       </div>
@@ -343,7 +449,7 @@ export default function Test() {
                         <div className="user-info-item-titleText">喜歡曲風</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            {LoginUserData.genre_like}
+                            {userGenreLike}
                           </div>
                         </div>
                       </div>
@@ -351,7 +457,7 @@ export default function Test() {
                         <div className="user-info-item-titleText">演奏樂器</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            {LoginUserData.play_instrument}
+                            {userPlayInstrument}
                           </div>
                         </div>
                       </div>
@@ -409,7 +515,7 @@ export default function Test() {
                         <div className="user-info-item-titleText">生日</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            {LoginUserData.birthday}
+                            {userBirthday}
                           </div>
                         </div>
                       </div>
@@ -417,7 +523,7 @@ export default function Test() {
                         <div className="user-info-item-titleText">手機</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            {LoginUserData.phone}
+                            {userPhone}
                           </div>
                         </div>
                       </div>
@@ -425,7 +531,7 @@ export default function Test() {
                         <div className="user-info-item-titleText">信箱</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            {LoginUserData.email}
+                            {userEmail}
                           </div>
                         </div>
                       </div>
@@ -433,10 +539,10 @@ export default function Test() {
                         <div className="user-info-item-titleText">地址</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            {LoginUserData.postcode}
-                            {LoginUserData.country}
-                            {LoginUserData.township}
-                            {LoginUserData.address}
+                            {userPostcode}
+                            {userCountry}
+                            {userTownship}
+                            {userAddress}
                           </div>
                         </div>
                       </div>
@@ -446,7 +552,7 @@ export default function Test() {
                         </div>
                         <div className="user-info-item-info2">
                           <div className="user-info-item-info-contentText">
-                            {LoginUserData.info}
+                            {userInfo}
                           </div>
                         </div>
                       </div>
