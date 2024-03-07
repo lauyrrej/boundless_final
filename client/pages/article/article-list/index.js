@@ -16,10 +16,29 @@ import bookmarkIcon from '@/assets/emptybookmark.svg'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 import ArticleCard from '@/components/article/article-card'
-import ArticleJson from 'data/article/article.json'
 
 export default function ArticleList() {
   // ----------------------手機版本  ----------------------
+  // 後端資料庫
+  const [article, setArticle] = useState([])
+  const [search, setSearch] = useState('')
+
+  useEffect(() => {
+    const getDatas = async () => {
+      try {
+        const res = await fetch(`http://localhost:3005/api/article`)
+        const datas = await res.json()
+        if (datas) {
+          setArticle(datas) // 設定獲取的文章數據到狀態中
+          // console.log(datas)
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    }
+    getDatas() // 在元件渲染後立即獲取文章數據
+  }, []) // 空的依賴陣列表示只在元件第一次渲染時執行一次
+
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
   const menuMbToggle = () => {
@@ -32,32 +51,27 @@ export default function ArticleList() {
   }
 
   // ----------------------功能  ----------------------
-  // const cardData = { ArticleJson }
-  // const [data, setData] = useState(ArticleJson);
-
-  // 擴充收藏功能
-  // 每個Json增加虛構的fav值
-  const initState = ArticleJson.map((v, i) => {
-    return { ...v, fav: false }
-  })
-  // 擴充後的物件陣列作為初始值
-  const [data, setData] = useState(initState)
-  const [search, setSearch] = useState('')
 
   // 搜尋功能
   const handleSearch = () => {
-    console.log('按鈕被典籍了')
     let newData
     if (search.trim() === '') {
-      newData = ArticleJson
+      newData = article
+      // 若搜尋為空，使用原始文章資料
     } else {
-      ArticleJson
-      newData = data.filter((v, i) => {
+      article
+      newData = article.filter((v, i) => {
         return v.title.includes(search)
       })
     }
-    setData(newData)
+    setArticle(newData)
   }
+
+  // 在搜尋條件為空時，顯示所有文章
+  const handleClearSearch = () => {
+    setSearch(''); // 清空搜尋條件
+    setArticle(article); // 設置文章列表為原始的列表
+  };
 
   // const categorySearch = () => {
   //   let newData
@@ -137,7 +151,7 @@ export default function ArticleList() {
   // 全部的篩選條件
   const allCondition = ''
   const [condition, setCondition] = useState(allCondition)
-  useEffect(() => {}, [allCondition])
+  useEffect(() => { }, [allCondition])
 
   return (
     <>
@@ -148,9 +162,8 @@ export default function ArticleList() {
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
         <div
-          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${
-            showMenu ? 'menu-mb-show' : ''
-          }`}
+          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${showMenu ? 'menu-mb-show' : ''
+            }`}
         >
           {/* 用戶資訊 */}
           <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
@@ -207,9 +220,8 @@ export default function ArticleList() {
           <div className="col-12 col-sm-10 page-control">
             {/* 手機版sidebar */}
             <div
-              className={`sidebar-mb d-sm-none ${
-                showSidebar ? 'sidebar-mb-show' : ''
-              }`}
+              className={`sidebar-mb d-sm-none ${showSidebar ? 'sidebar-mb-show' : ''
+                }`}
             >
               <div className="sm-close">
                 <IoClose
@@ -294,9 +306,8 @@ export default function ArticleList() {
                       條件篩選
                       <FaFilter size={13} />
                       <div
-                        className={`filter ${
-                          filterVisible === false ? 'd-none' : 'd-block'
-                        }`}
+                        className={`filter ${filterVisible === false ? 'd-none' : 'd-block'
+                          }`}
                         onClick={stopPropagation}
                         role="presentation"
                       >
@@ -363,7 +374,7 @@ export default function ArticleList() {
                                 >
                                   <label className="form-check-label">
                                     <input
-                                      classname="form-check-input"
+                                      className="form-check-input"
                                       type="radio"
                                       name="score"
                                       value={v}
@@ -421,9 +432,8 @@ export default function ArticleList() {
                       <FaSortAmountDown size={14} />
                     </div>
                     <div
-                      className={`sort-item ${
-                        dataSort === 'latest' ? 'active' : ''
-                      }`}
+                      className={`sort-item ${dataSort === 'latest' ? 'active' : ''
+                        }`}
                       role="presentation"
                       onClick={(e) => {
                         setDataSort('latest')
@@ -432,9 +442,8 @@ export default function ArticleList() {
                       新到舊
                     </div>
                     <div
-                      className={`sort-item ${
-                        dataSort === 'oldest' ? 'active' : ''
-                      }`}
+                      className={`sort-item ${dataSort === 'oldest' ? 'active' : ''
+                        }`}
                       role="presentation"
                       onClick={(e) => {
                         setDataSort('oldest')
@@ -450,7 +459,7 @@ export default function ArticleList() {
             <main className="content me-2">
               <h4 className="text-primary pt-2">熱門文章</h4>
               <div className="content-pop d-flex flex-wrap">
-                {data.slice(0, 4).map((v, i) => {
+                {article.slice(0, 4).map((v, i) => {
                   {
                     /* 熱門文章的分類目前是抓前4筆 */
                   }
@@ -459,8 +468,9 @@ export default function ArticleList() {
                     title,
                     content,
                     img,
+                    user_id,
                     author,
-                    publish_time,
+                    published_time,
                     articles,
                     fav,
                     category_id,
@@ -469,12 +479,13 @@ export default function ArticleList() {
                     <ArticleCard
                       key={id}
                       id={id}
+                      user_id={user_id}
                       title={title}
                       content={content}
                       img={img}
                       author={author}
                       category_id={category_id}
-                      publish_time={publish_time.split(' ')[0]}
+                      published_time={published_time}
                       articles={articles}
                       handleToggleFav={handleToggleFav}
                       fav={fav}
@@ -484,14 +495,15 @@ export default function ArticleList() {
               </div>
               <hr />
               <div className="content-pop d-flex flex-wrap">
-                {data.map((v, i) => {
+                {article.map((v, i) => {
                   const {
                     id,
                     title,
                     content,
                     img,
+                    user_id,
                     author,
-                    publish_time,
+                    published_time,
                     articles,
                     fav,
                     category_id,
@@ -499,13 +511,14 @@ export default function ArticleList() {
                   return (
                     <ArticleCard
                       key={id}
+                      user_id={user_id}
                       id={id}
                       title={title}
                       content={content}
                       img={img}
                       author={author}
                       category_id={category_id}
-                      publish_time={publish_time.split(' ')[0]}
+                      published_time={published_time}
                       articles={articles}
                       handleToggleFav={handleToggleFav}
                       fav={fav}

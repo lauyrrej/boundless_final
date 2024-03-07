@@ -21,7 +21,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// 組團資訊頁，獲得單筆資料
+// 文章資訊頁，獲得單筆資料
 router.get("/:auid", async (req, res) => {
   // 取得組團資訊中所需的曲風、樂手資料
   let [genreData] = await db.execute("SELECT * FROM `genre`").catch(() => {
