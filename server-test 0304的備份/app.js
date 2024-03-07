@@ -8,9 +8,6 @@ import cors from "cors";
 // import router 匯入路由
 import indexRouter from "./routes/index.js";
 import jamRouter from "./routes/jam.js";
-import instrumentRouter from "./routes/instrument.js";
-import lessonRouter from "./routes/lesson.js";
-import couponRouter from "./routes/coupon.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -39,9 +36,6 @@ app.use(express.static(path.join(__dirname, "public")));
 // 使用路由
 app.use("/", indexRouter);
 app.use("/api/jam", jamRouter);
-app.use("/api/instrument", instrumentRouter);
-app.use("/api/lesson", lessonRouter);
-app.use("/api/coupon", couponRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
