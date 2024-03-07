@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { useLocation } from 'react-router-dom'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
@@ -15,8 +14,6 @@ import Head from 'next/head'
 
 export default function Info() {
   const router = useRouter()
-  // 接收成團表單送來的資料
-  const location = useLocation()
 
   // ---------------------- 手機版本  ----------------------
   // 主選單
