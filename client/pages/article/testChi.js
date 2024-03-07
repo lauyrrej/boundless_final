@@ -139,6 +139,44 @@ export default function ArticleList() {
   const [condition, setCondition] = useState(allCondition)
   useEffect(() => {}, [allCondition])
 
+  // Router
+  const demoInfo = [
+    {
+      id: '',
+      auid: '',
+      title: '',
+      content: '',
+      img: '',
+      category_id: '',
+      user_id: '',
+      state: '',
+      created_time: '',
+      valid: '1',
+      updated_time: '',
+      published_time: '',
+    },
+  ]
+  const [shopSite, setShopSite] = useState(demoInfo)
+
+  const getShop = async (shop_site) => {
+    try {
+      const res = await fetch(`http://localhost:3000/api/article/article`)
+      const data1 = await res.json()
+      // console.log(data[0])
+
+      if (data1[0].shop_site) {
+        setShopSite(data1[0])
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+  useEffect(() => {
+    if (router.isReady) {
+      const { shop_site } = router.query
+      getShop(shop_site)
+    }
+  }, [router.isReady])
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
