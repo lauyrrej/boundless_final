@@ -7,7 +7,7 @@ import jamHero from '@/assets/jam-hero.png'
 // data
 import CityCountyData from '@/data/CityCountyData.json'
 import jamData from '@/data/jam/jam.json'
-import genereData from '@/data/genere.json'
+import genereData from '@/data/genre.json'
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
