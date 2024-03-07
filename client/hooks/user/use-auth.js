@@ -25,7 +25,7 @@ export function AuthProvider({ children }) {
   // const [userData, setUserData] = useState()
 
   const appKey = 'userToken'
-
+  const [LoginUserData, setLoginUserData] = useState([])
   // 登入
   // const login = () => {
   //   setAuth({
@@ -47,7 +47,7 @@ export function AuthProvider({ children }) {
   const handleLogout = async (e) => {
     //取消表單預設submit跳頁
     // e.preventDefault()
-    console.log(token)
+    // console.log(token)
     const logouttoken = localStorage.getItem(appKey)
     try {
       const response = await fetch('http://localhost:3005/api/user/logout', {
@@ -135,11 +135,11 @@ export function AuthProvider({ children }) {
       })
 
       const LoginUserData = await response.json()
-      console.log('Response from server:', LoginUserData)
+      // console.log('Response from server:', LoginUserData)
 
       // setUserData(LoginUserData)
       // console.log(LoginUserData)
-
+      setLoginUserData(LoginUserData)
       // 在這裡處理後端返回的資料
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error)
@@ -155,7 +155,12 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ handleLoginStatus, handleLogout, getLoginUserData }} //用value屬性傳入共享用狀態(state)
+      value={{
+        LoginUserData,
+        handleLoginStatus,
+        handleLogout,
+        getLoginUserData,
+      }} //用value屬性傳入共享用狀態(state)
     >
       {children}
     </AuthContext.Provider>
