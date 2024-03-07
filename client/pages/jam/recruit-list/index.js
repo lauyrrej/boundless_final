@@ -149,7 +149,7 @@ export default function RecruitList() {
 
       // 設定到state中，觸發重新渲染(re-render)，會進入到update階段
       // 進入狀態前檢查資料類型為陣列，以避免錯誤
-      console.log(datas)
+      // console.log(datas)
       if (datas) {
         // 設定獲取頁數總合
         setPageTotal(datas.pageTotal)
