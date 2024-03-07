@@ -35,7 +35,7 @@ export default function Info() {
     condition: '',
     description: '',
     former: {},
-    member: {},
+    member: [],
   })
 
   // ----------------------------- 讓player代碼對應樂器種類 -----------------------------

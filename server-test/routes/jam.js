@@ -24,7 +24,8 @@ router.get("/", async (req, res) => {
       "SELECT * FROM `jam` WHERE `valid` = 1 AND DATE_ADD(`created_time`, INTERVAL 30 DAY) > ? AND (`formed_time` IS NULL OR `formed_time` = '0000-00-00 00:00:00')",
       [now]
     )
-    .catch(() => {
+    .catch((error) => {
+      console.log(error);
       return undefined;
     });
 
@@ -52,32 +53,32 @@ router.get("/", async (req, res) => {
     const genre =
       req.query.genre !== "all"
         ? " AND (`genre` LIKE '%," +
-        req.query.genre +
-        "]'" +
-        " OR `genre` LIKE '[" +
-        req.query.genre +
-        ",%'" +
-        " OR `genre` LIKE '%," +
-        req.query.genre +
-        ",%'" +
-        " OR `genre` = '[" +
-        req.query.genre +
-        "]')"
+          req.query.genre +
+          "]'" +
+          " OR `genre` LIKE '[" +
+          req.query.genre +
+          ",%'" +
+          " OR `genre` LIKE '%," +
+          req.query.genre +
+          ",%'" +
+          " OR `genre` = '[" +
+          req.query.genre +
+          "]')"
         : "";
     const player =
       req.query.player !== "all"
-        ? " AND (`player` LIKE '%," +
-        req.query.player +
-        "]'" +
-        " OR `player` LIKE '[" +
-        req.query.player +
-        ",%'" +
-        " OR `player` LIKE '%," +
-        req.query.player +
-        ",%'" +
-        " OR `player` = '[" +
-        req.query.player +
-        "]')"
+        ? " AND (`players` LIKE '%," +
+          req.query.player +
+          "]'" +
+          " OR `players` LIKE '[" +
+          req.query.player +
+          ",%'" +
+          " OR `players` LIKE '%," +
+          req.query.player +
+          ",%'" +
+          " OR `players` = '[" +
+          req.query.player +
+          "]')"
         : "";
     const region =
       req.query.region !== "all"
@@ -190,7 +191,7 @@ router.get("/:juid", async (req, res) => {
       jamData: jamData,
     });
   } else {
-    res.status(400).send("發生錯誤");
+    res.status(400).json({ status: "error", message: "無指定資料" });
   }
 });
 

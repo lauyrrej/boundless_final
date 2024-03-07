@@ -177,6 +177,7 @@ export default function Form() {
       .fire({
         position: 'center',
         icon: 'success',
+        iconColor: '#1581cc',
         title: '發起成功，將為您跳轉到資訊頁',
         showConfirmButton: false,
         timer: 3000,
