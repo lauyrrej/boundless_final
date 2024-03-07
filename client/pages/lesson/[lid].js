@@ -96,9 +96,8 @@ export default function LessonDetailPage() {
       // 設定到state中，觸發重新渲染(re-render)，會進入到update階段
       // 進入狀態前檢查資料類型有值，以避免錯誤
       if (data) {
-          setLessonDetail(data)
-          console.log(LessonDetail[0].name)
-          
+        setLessonDetail(data)
+        console.log(LessonDetail[0].name)
       }
     } catch (e) {
       console.error(e)
@@ -265,7 +264,7 @@ export default function LessonDetailPage() {
                       {LessonDetail && LessonDetail.length > 0 && (
                         <ul>
                           {LessonDetail[0].outline}
-//FIXME做斷行
+                          //FIXME做斷行
                           <li>Logic Pro X 從零開始</li>
                           <li>正式課程開始</li>
                           <li>編曲Arrange</li>
@@ -281,29 +280,35 @@ export default function LessonDetailPage() {
                   <div className="suitable   mt40">
                     <div className="detail-title">適合對象</div>
                     <div className="list">
-                      <ul>
-                        {Lesson[0].suitable}
-                        <li>本身熱愛音樂，但從沒機會學習過。</li>
-                        <li>
-                          會至少一樣樂器，但不會音樂製作，想學錄音編曲和混音。
-                        </li>
-                        <li>本身有接觸過數位音樂，但沒使用過 Logic Pro X。</li>
-                      </ul>
+                      {LessonDetail && LessonDetail.length > 0 && (
+                        <ul>
+                          {LessonDetail[0].suitable}
+                          <li>本身熱愛音樂，但從沒機會學習過。</li>
+                          <li>
+                            會至少一樣樂器，但不會音樂製作，想學錄音編曲和混音。
+                          </li>
+                          <li>
+                            本身有接觸過數位音樂，但沒使用過 Logic Pro X。
+                          </li>
+                        </ul>
+                      )}
                     </div>
                   </div>
                   {/* 你將學到 */}
                   <div className="achievement  -secondary mt40">
                     <div className="detail-title">你將學到</div>
                     <div className="list">
-                      <ol>
-                        {Lesson[0].achievement}
-                        <li>
-                          用Logic Pro X 獨立完成一首或更多首屬於自己的音樂。
-                        </li>
-                        <li>
-                          了解音樂製作完整的步驟流程，若有興趣可再專精音樂方面的造詣。
-                        </li>
-                      </ol>
+                      {LessonDetail && LessonDetail.length > 0 && (
+                        <ol>
+                          {LessonDetail[0].achievement}
+                          <li>
+                            用Logic Pro X 獨立完成一首或更多首屬於自己的音樂。
+                          </li>
+                          <li>
+                            了解音樂製作完整的步驟流程，若有興趣可再專精音樂方面的造詣。
+                          </li>
+                        </ol>
+                      )}
                     </div>
                   </div>
                   {/* 學員回饋 */}
@@ -526,11 +531,13 @@ export default function LessonDetailPage() {
                     <div className="detail-title">講師資訊</div>
                     <div className="teacher-info-area">
                       <div className="teacher-img-con ">
-                        <img
-                          loading="lazy"
-                          src="/課程與師資/teacher_img/teacher_001.jpeg"
-                          className="teacherImg"
-                        />
+                        {LessonDetail && LessonDetail.length > 0 && (
+                          <img
+                            loading="lazy"
+                            src="/課程與師資/teacher_img/teacher_001.jpeg"
+                            className="teacherImg"
+                          />
+                        )}
                       </div>
                       <div className="teacher-info-word">
                         <div className="teacher-name">徐歡CheerHsu</div>
@@ -550,7 +557,17 @@ export default function LessonDetailPage() {
 
           {/*   ----------------------頁面內容 右半部---------------------- */}
           <div className="d-none d-sm-block col-sm-6 page-control">
-            <ProductCard className="Right-card" />
+            {LessonDetail && LessonDetail.length > 0 && (
+              <ProductCard
+                className="Right-card"
+                name={LessonDetail[0].name}
+                homework={LessonDetail[0].homework}
+                sales={LessonDetail[0].sales}
+                price={LessonDetail[0].price}
+                length={LessonDetail[0].length}
+                info={LessonDetail[0].info}
+              />
+            )}
           </div>
         </div>
         {/* 猜你喜歡 */}
