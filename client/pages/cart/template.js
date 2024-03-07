@@ -26,15 +26,32 @@ import InstrumentList from '@/components/cart/instrument-cart-list.js'
 
 //cart-data
 import CartData from '@/data/cart/cart.json'
+import CouponData from '@/data/cart/coupon.json'
+
+//hook
+import { useCart } from '@/hooks/use-cart'
 
 export default function Test() {
+  //hook
+  const {
+    items,
+    instrumentData,
+    lessonData,
+    increment,
+    decrement,
+    remove,
+    calcInstrumentItems,
+    calcInstrumentPrice,
+    calcLessonItems,
+    calcLessonPrice,
+    calcTotalPrice,
+  } = useCart()
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
   const menuMbToggle = () => {
     setShowMenu(!showMenu)
   }
-
   // ----------------------假資料  ----------------------
 
   const [filterVisible, setFilterVisible] = useState(false)
@@ -55,84 +72,27 @@ export default function Test() {
 
   // --------------------- 購物車 -----------------------
 
-  //加入到購物車的項目
-  let [items, setItems] = useState([])
+  // const exItems = items.map((item,i)=>{
+  //   const newItem = { ...item, qty: 1 }
+  //   return newItem
+  // })
 
-  useEffect(() => {
-    setItems(CartData)
-  }, [])
+  // items = exItems
 
-  const exItems = items.map((item,i)=>{
-    const newItem = { ...item, qty: 1 }
-    return newItem
-  })
+  // //如果有找到，做數量遞增
+  // if (foundIndex > -1) {
+  //   increment(items, item.id)
+  // } else {
+  //   const newItem = { ...item, qty: 1 }
+  //   const newItems = [...items, newItem]
+  //   setItems(newItems)
+  // }
 
-  items = exItems
+  // //擴充item屬性
+  // const newItem = { ...item, qty: 1 }
+  // const newItems = [...items, newItem]
 
-  console.log(items);
-
-  const addItem = (item) => {
-    //擴充item的屬性多一個qty
-    const newItem = { ...item, qty: 1 }
-    const newItems = [...items, newItem]
-
-    setItems(newItems)
-  }
-
-  
-
-  //在購物車中，移除某商品的id
-
-  const remove = (items, id) => {
-    const newItems = items.filter((v, i) => {
-      return v.id !== id
-    })
-
-    setItems(newItems)
-  }
-
-  //遞增某商品id數量
-  const increment = (items, id) => {
-    const newItems = items.map((v, i) => {
-      if (v.id === id) return { ...v, qty: v.qty + 1 }
-      else return v
-    })
-
-    setItems(newItems)
-  }
-
-  //遞減某商品id數量
-  const decrement = (items, id) => {
-    const newItems = items.map((v, i) => {
-      if (v.id === id) return { ...v, qty: v.qty - 1 }
-      else return v
-    })
-
-    setItems(newItems)
-  }
-
-  //增加一個商品到購物車中
-  const addItems = (item) => {
-    //檢查商品的id是否已在購物車中
-    const foundIndex = items.findIndex((v, i) => {
-      return v.id === item.id
-    })
-
-    //如果有找到，做數量遞增
-    if (foundIndex > -1) {
-      increment(items, item.id)
-    } else {
-      const newItem = { ...item, qty: 1 }
-      const newItems = [...items, newItem]
-      setItems(newItems)
-    }
-
-    //擴充item屬性
-    const newItem = { ...item, qty: 1 }
-    const newItems = [...items, newItem]
-
-    setItems(newItems)
-  }
+  // setItems(newItems)
 
   return (
     <>
@@ -220,8 +180,10 @@ export default function Test() {
                   <div className="lesson-product">商品</div>
                   <div className="lesson-price">售價</div>
                 </div>
-                <LessonList items={items} remove={remove} />
-                <div className="cart-subtotal h6">原價 NT$ 999999</div>
+                <LessonList items={items} lessonData={lessonData} remove={remove} />
+                <div className="cart-subtotal h6">
+                  原價 NT$ {calcLessonPrice()}
+                </div>
                 <div className="cart-coupon">
                   <div className="coupon-selector">
                     <div className="cart-coupon-text">優惠券</div>
@@ -256,11 +218,14 @@ export default function Test() {
                 </div>
                 <InstrumentList
                   items={items}
+                  instrumentData={instrumentData}
                   increment={increment}
                   decrement={decrement}
                   remove={remove}
                 />
-                <div className="cart-subtotal h6">原價 NT$ 999999</div>
+                <div className="cart-subtotal h6">
+                  原價 NT$ {calcInstrumentPrice()}
+                </div>
                 <div className="cart-coupon">
                   <div className="coupon-selector">
                     <div className="cart-coupon-text">優惠券</div>
@@ -333,11 +298,13 @@ export default function Test() {
           <div className="total d-flex flex-column" style={{ gap: 20 }}>
             <div className="d-flex justify-content-between carttext">
               <div>商品數量</div>
-              <div>樂器*3 課程*2</div>
+              <div>
+                樂器*{calcInstrumentItems()} 課程*{calcLessonItems()}
+              </div>
             </div>
             <div className="d-flex justify-content-between carttext">
               <div>原價合計</div>
-              <div>NT $864000</div>
+              <div>NT ${calcTotalPrice()}</div>
             </div>
             <div className="d-flex justify-content-between carttext discount">
               <div>折扣合計</div>
@@ -345,7 +312,7 @@ export default function Test() {
             </div>
             <div className="d-flex justify-content-between h3">
               <div>合計</div>
-              <div>NT $790000</div>
+              <div>NT ${calcTotalPrice()}</div>
             </div>
           </div>
           <div className="cart-btn">
@@ -414,11 +381,6 @@ export default function Test() {
           font-style: normal;
           font-weight: 700;
           line-height: normal;
-          @media screen and (max-width: 576px) {
-            height: 40px;
-            width: 40px;
-            font-size: 18px;
-          }
         }
         .h5 {
           color: #000;

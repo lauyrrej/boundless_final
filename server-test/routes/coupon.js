@@ -1,54 +1,49 @@
 import express from "express";
 import db from "../db.js";
+import multer from "multer";
 
 const router = express.Router();
+const upload = multer();
 
-//整包coupon
+//取得coupon資料-升降冪：ID、價格/百分比、日期排序
 router.get("/", async (req, res) => {
   try {
-    let [coupon] = await db.execute("SELECT * FROM `product` WHERE `type` = 2");
-
-    if (coupon) {
-      res.json(coupon);
-    } else {
-      res.json("沒有找到相應的資訊");
-    }
-  } catch (error) {
-    console.error("發生錯誤：", error);
-    res.json("發生錯誤");
-  }
-});
-
-//coupon_kind
-router.get("/categories", async (req, res) => {
-  try {
-    let [lesson_category] = await db.execute(
-      "SELECT * FROM `lesson_category` "
+    let [couponData] = await db.execute(
+      "SELECT * FROM `coupon` WHERE `valid` = 1 AND  ORDER BY id ASC"
+      // "SELECT * FROM `coupon` WHERE `valid` = 1  ORDER BY discount DESC",
+      // "SELECT * FROM `coupon` WHERE `valid` = 1  ORDER BY limit_time ASC"
     );
-
-    if (lesson_category) {
-      res.json(lesson_category);
+    if (couponData) {
+      res.json(couponData);
     } else {
       res.json("沒有找到相應的資訊");
     }
   } catch (error) {
     console.error("發生錯誤：", error);
-    res.json("發生錯誤");
+    res.json("res.json發生錯誤");
   }
 });
 
-// // 商品列表路由，根據分類返回相應商品列表
-// router.get("/?category=${categoryId}", (req, res) => {
-//   const { category } = req.query;
-//   const query = "SELECT * FROM `product` WHERE `lesson_category_id` = ?"; // 假設您的商品表為 products，並且有一個字段為 category
-//   db.query(query, [category], (err, results) => {
-//     if (err) {
-//       console.error("Error querying database:", err);
-//       res.status(500).json({ error: "Internal server error" });
-//       return;
+//取得coupon資料-分頁：全部、樂器、課程、已使用
+// router.get("/", async (req, res) => {
+//   try {
+//     let [couponData] = await db.execute(
+//       // "SELECT * FROM `coupon` ORDER BY id ASC"
+//       // "SELECT * FROM `coupon` WHERE `type` = 1"
+//       "SELECT * FROM `coupon` WHERE `type` = 2 AND valid=1"
+//       // "SELECT * FROM `coupon` WHERE `valid` = 0 ORDER BY id ASC"
+//     );
+//     if (couponData) {
+//       res.json(couponData);
+//     } else {
+//       res.json("沒有找到相應的資訊");
 //     }
-//     res.json(results);
-//   });
+//   } catch (error) {
+//     console.error("發生錯誤：", error);
+//     res.json("res.json發生錯誤");
+//   }
 // });
+//取得coupon資料-條件篩選：品牌?
+// ("SELECT * FROM `brand` WHERE `name` = 1 ORDER BY id ASC");
 
 export default router;
