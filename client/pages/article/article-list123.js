@@ -37,7 +37,7 @@ export default function ArticleList() {
     }
     getDatas() // 在元件渲染後立即獲取文章數據
   }, []) // 空的依賴陣列表示只在元件第一次渲染時執行一次
-
+  console.log(article)
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
   const menuMbToggle = () => {
@@ -468,7 +468,7 @@ export default function ArticleList() {
                     img,
                     user_id,
                     author,
-                    publish_time,
+                    published_time,
                     articles,
                     fav,
                     category_id,
@@ -483,7 +483,7 @@ export default function ArticleList() {
                       img={img}
                       author={author}
                       category_id={category_id}
-                      publish_time={publish_time}
+                      published_time={published_time}
                       // publish_time={publish_time.split(' ')[0]}
                       articles={articles}
                       handleToggleFav={handleToggleFav}
@@ -502,7 +502,7 @@ export default function ArticleList() {
                     img,
                     user_id,
                     author,
-                    publish_time,
+                    published_time,
                     articles,
                     fav,
                     category_id,
@@ -517,7 +517,7 @@ export default function ArticleList() {
                       img={img}
                       author={author}
                       category_id={category_id}
-                      publish_time={publish_time}
+                      published_time={published_time}
                       // publish_time={publish_time.split('')[0]}
                       articles={articles}
                       handleToggleFav={handleToggleFav}

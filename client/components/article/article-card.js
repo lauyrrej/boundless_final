@@ -13,7 +13,7 @@ export default function Articlecard({
   user_id,
   content,
   img,
-  publish_time,
+  published_time,
   fav,
   handleToggleFav,
   category_id,
@@ -37,6 +37,14 @@ export default function Articlecard({
   //   setArticles(newArticles)
   // }
 
+  // 組合日期8
+  const createdYear = new Date(published_time).getFullYear()
+  // console.log(createdYear)
+  const createdMonth = new Date(published_time).getMonth() + 1
+  const createdDate = new Date(published_time).getDate()
+  const combineDate = `${createdYear}-${createdMonth}-${createdDate}`
+  console.log(combineDate)
+
   return (
     <>
       <Link href={`/article/${auid}`}>
@@ -52,7 +60,7 @@ export default function Articlecard({
               alt="空的圖"
             />
             <span className="info-p text-secondary">{user_id}</span>
-            <span className="info-p text-secondary">{publish_time}123</span>
+            <span className="info-p text-secondary">{combineDate}</span>
           </div>
           {/* article區塊 */}
           <div className="content d-flex">
