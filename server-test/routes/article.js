@@ -21,44 +21,19 @@ router.get("/", async (req, res) => {
   }
 });
 
-// 文章資訊頁，獲得單筆資料
-router.get("/:auid", async (req, res) => {
-  // 取得組團資訊中所需的曲風、樂手資料
-  let [genreData] = await db.execute("SELECT * FROM `genre`").catch(() => {
-    return undefined;
-  });
-  let [playerData] = await db.execute("SELECT * FROM `player`").catch(() => {
-    return undefined;
-  });
-
-  let auid = req.params.auid;
-  console.log(auid);
-  // console.log(id);
+// 獲得單篇文章資料
+router.get("/:id", async (req, res, next) => {
+  let aid = req.params.id;
+  console.log(aid);
   let [data] = await db
-    .execute("SELECT * FROM `article` WHERE `auid` = ? ", [auid])
+    .execute("SELECT * FROM `article` WHERE `id` = ? ", [aid])
     .catch(() => {
       return undefined;
     });
+
   if (data) {
-    const trueData = data[0];
     console.log(data);
-    let setMember = [];
-    if (trueData.member !== "[]" || trueData.member) {
-      setMember = JSON.parse(trueData.member);
-    }
-    const jamData = {
-      ...trueData,
-      member: setMember,
-      former: JSON.parse(trueData.former),
-      player: JSON.parse(trueData.players),
-      genre: JSON.parse(trueData.genre),
-    };
-    // console.log(jam);
-    res.status(200).json({
-      genreData: genreData,
-      playerData: playerData,
-      jamData: jamData,
-    });
+    res.status(200).json(data);
   } else {
     res.status(400).send("發生錯誤");
   }

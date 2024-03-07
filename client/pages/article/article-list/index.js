@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useMemo, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
@@ -53,25 +53,25 @@ export default function ArticleList() {
   // ----------------------功能  ----------------------
 
   // 搜尋功能
-  const handleSearch = () => {
-    let newData
-    if (search.trim() === '') {
-      newData = article
-      // 若搜尋為空，使用原始文章資料
-    } else {
-      article
-      newData = article.filter((v, i) => {
-        return v.title.includes(search)
-      })
-    }
-    setArticle(newData)
-  }
+  // const handleSearch = () => {
+  //   let newData
+  //   if (search.trim() === '') {
+  //     newData = article
+  //     // 若搜尋為空，使用原始文章資料
+  //   } else {
+  //     article
+  //     newData = article.filter((v, i) => {
+  //       return v.title.includes(search)
+  //     })
+  //   }
+  //   setArticle(newData)
+  // }
 
-  // 在搜尋條件為空時，顯示所有文章
-  const handleClearSearch = () => {
-    setSearch(''); // 清空搜尋條件
-    setArticle(article); // 設置文章列表為原始的列表
-  };
+  const filterArticle = useMemo(() => {
+    return article.filter((v) => {
+      return v.title.includes(search)
+    })
+  }, [article, search])
 
   // const categorySearch = () => {
   //   let newData
@@ -87,13 +87,13 @@ export default function ArticleList() {
 
   // ----------------------分類功能  ----------------------
 
-  // 純func
+  // 純func書籤
   const handleToggleFav = (id) => {
-    const newArticles = data.map((v, i) => {
+    const newArticles = article.map((v, i) => {
       if (v.id === id) return { ...v, fav: !v.fav }
       else return v
     })
-    setData(newArticles)
+    setArticle(newArticles)
   }
   // ----------------------假資料  ----------------------
 
@@ -151,7 +151,7 @@ export default function ArticleList() {
   // 全部的篩選條件
   const allCondition = ''
   const [condition, setCondition] = useState(allCondition)
-  useEffect(() => { }, [allCondition])
+  useEffect(() => {}, [allCondition])
 
   return (
     <>
@@ -162,8 +162,9 @@ export default function ArticleList() {
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
         <div
-          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${showMenu ? 'menu-mb-show' : ''
-            }`}
+          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${
+            showMenu ? 'menu-mb-show' : ''
+          }`}
         >
           {/* 用戶資訊 */}
           <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
@@ -220,8 +221,9 @@ export default function ArticleList() {
           <div className="col-12 col-sm-10 page-control">
             {/* 手機版sidebar */}
             <div
-              className={`sidebar-mb d-sm-none ${showSidebar ? 'sidebar-mb-show' : ''
-                }`}
+              className={`sidebar-mb d-sm-none ${
+                showSidebar ? 'sidebar-mb-show' : ''
+              }`}
             >
               <div className="sm-close">
                 <IoClose
@@ -264,15 +266,14 @@ export default function ArticleList() {
                   </div>
                   <div className="search input-group">
                     <input
-                      type="text"
                       className="form-control"
                       placeholder="請輸入關鍵字..."
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
+                      type="search"
                     />
                     <div
-                      // 搜尋按鈕
-                      onClick={handleSearch}
+                      // onClick={handleSearch}
                       className="search-btn btn d-flex justify-content-center align-items-center p-0"
                     >
                       <IoIosSearch size={25} />
@@ -306,8 +307,9 @@ export default function ArticleList() {
                       條件篩選
                       <FaFilter size={13} />
                       <div
-                        className={`filter ${filterVisible === false ? 'd-none' : 'd-block'
-                          }`}
+                        className={`filter ${
+                          filterVisible === false ? 'd-none' : 'd-block'
+                        }`}
                         onClick={stopPropagation}
                         role="presentation"
                       >
@@ -432,8 +434,9 @@ export default function ArticleList() {
                       <FaSortAmountDown size={14} />
                     </div>
                     <div
-                      className={`sort-item ${dataSort === 'latest' ? 'active' : ''
-                        }`}
+                      className={`sort-item ${
+                        dataSort === 'latest' ? 'active' : ''
+                      }`}
                       role="presentation"
                       onClick={(e) => {
                         setDataSort('latest')
@@ -442,8 +445,9 @@ export default function ArticleList() {
                       新到舊
                     </div>
                     <div
-                      className={`sort-item ${dataSort === 'oldest' ? 'active' : ''
-                        }`}
+                      className={`sort-item ${
+                        dataSort === 'oldest' ? 'active' : ''
+                      }`}
                       role="presentation"
                       onClick={(e) => {
                         setDataSort('oldest')
@@ -459,7 +463,7 @@ export default function ArticleList() {
             <main className="content me-2">
               <h4 className="text-primary pt-2">熱門文章</h4>
               <div className="content-pop d-flex flex-wrap">
-                {article.slice(0, 4).map((v, i) => {
+                {filterArticle.slice(0, 4).map((v, i) => {
                   {
                     /* 熱門文章的分類目前是抓前4筆 */
                   }
@@ -495,7 +499,7 @@ export default function ArticleList() {
               </div>
               <hr />
               <div className="content-pop d-flex flex-wrap">
-                {article.map((v, i) => {
+                {filterArticle.map((v, i) => {
                   const {
                     id,
                     title,
