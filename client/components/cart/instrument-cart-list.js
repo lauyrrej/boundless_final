@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Instrument from '@/pages/cart/instrument-item.module.scss'
 import Image from 'next/image'
 
@@ -9,19 +9,24 @@ import { FaTrash } from 'react-icons/fa6'
 
 import InstrumentCategory from '@/data/cart/instrument_category.json'
 
-export default function InstrumentList({
-  items = [],
-  increment = () => {},
-  decrement = () => {},
-  remove = () => {},
-}) {
-  const InstrumentData = items.filter((v, i) => {
+export default function InstrumentList(
+  {items, instrumentData, increment,decrement,remove}
+) {
+  // let [count, setCount] = useState(0);
+
+
+  const instruments = items.filter((v, i) => {
     return v.type == 1
   })
+  // const [instrumentData, setInstrumentData] = useState([])
 
-  // console.log(InstrumentData);
 
-  const categoryName = InstrumentData.map((item) => {
+  useEffect(()=>{
+    
+  },[])
+  console.log(instruments);
+
+  const categoryName = instruments.map((item) => {
     const findCategoryName = InstrumentCategory.find((v, i) => {
       return v.id === item.instrument_category_id
     }).name
@@ -32,19 +37,19 @@ export default function InstrumentList({
   return (
     <>
       <div className={`${Instrument.cartItemGroup}`}>
-        {InstrumentData.map((v, i) => {
+        {instrumentData.map((v, i) => {
           return (
             <div className={`${Instrument.instrumentItem}`} key={v.id}>
               <div className={`${Instrument.instrument_item_pic}`}>
                 <Image
                   className={`${Instrument.instrument_item_pic_div}`}
-                  // src={`/instrument/類別/small/`}
+                  src={`/instrument/${categoryName[i]}/small/${v.img_small}`}
                   alt={v.name}
                   fill
                 />
               </div>
               <div className={`${Instrument.instrument_item_name} h6`}>
-                ${v.name}
+                {v.name}
               </div>
               <div className={`${Instrument.instrument_item_price} h6`}>
                 ${v.price}
@@ -54,8 +59,12 @@ export default function InstrumentList({
                   <button
                     className={`${Instrument.quantity_left_minus} btn btn-light`}
                     onClick={() => {
-                      decrement(items, v.id)
-                    }}
+                      if (v.qty === 1) {
+                        remove(items,v.id)
+                      }else{
+                        decrement(items,v.id)
+                      }
+                      }}
                   >
                     <FaMinus />
                   </button>
@@ -64,7 +73,7 @@ export default function InstrumentList({
                     className={`${Instrument.input_number} form-control`}
                     id="quantity"
                     name="quantity"
-                    defaultValue={1}
+                    defaultValue={v.qty}
                     min={1}
                     max={100}
                   />
