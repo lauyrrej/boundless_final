@@ -1,5 +1,6 @@
 import '@/styles/globals.scss'
 import '@/styles/template.scss'
+import { CartProvider } from '@/hooks/use-cart'
 import { useEffect } from 'react'
 
 export default function MyApp({ Component, pageProps }) {
@@ -11,5 +12,10 @@ export default function MyApp({ Component, pageProps }) {
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout || ((page) => page)
 
-  return getLayout(<Component {...pageProps} />)
+  return (
+    <CartProvider>
+      getLayout(
+      <Component {...pageProps} />)
+    </CartProvider>
+  )
 }
