@@ -28,7 +28,6 @@ router.get("/", async (req, res) => {
 // router.get("/", async (req, res) => {
 //   try {
 //     let [couponData] = await db.execute(
-//       // "SELECT * FROM `coupon` ORDER BY id ASC"
 //       // "SELECT * FROM `coupon` WHERE `type` = 1"
 //       "SELECT * FROM `coupon` WHERE `type` = 2 AND valid=1"
 //       // "SELECT * FROM `coupon` WHERE `valid` = 0 ORDER BY id ASC"
