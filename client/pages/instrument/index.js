@@ -524,7 +524,7 @@ export default function Test() {
                     name,
                     price,
                     discount,
-
+                    category_name,
                     img_small,
                     sales,
                   } = v
@@ -533,9 +533,10 @@ export default function Test() {
                       {/* 寫discount的判斷式 */}
                       <Card
                         id={id}
-                        pname={name}
+                        name={name}
                         price={price}
                         discount={discount}
+                        category_name={category_name}
                         img_small={img_small}
                         sales={sales}
                       />
