@@ -4,7 +4,7 @@ import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
 import jamHero from '@/assets/jam-hero.png'
-import Editor from './editor-component'
+import Editor from '@/components/article/editor'
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
 import { IoIosSearch } from 'react-icons/io'
@@ -15,13 +15,15 @@ import { IoClose } from 'react-icons/io5'
 
 export default function Test() {
   const [editorLoaded, setEditorLoaded] = useState(false)
+
+  // 顯示編輯表
+  const [showEditor, setShowEditor] = useState(false)
+  const handleMainClick = () => {
+    setShowEditor(!showEditor)
+  }
+
   const [data, setData] = useState('')
   const initContent = 'JSON text 段落與標題需要分開編輯'
-  // 隱藏CKeditor
-  const [editorVisible, setEditorVisible] = useState(false);
-  const handleToggleEditor = () => {
-    setEditorVisible(!editorVisible);
-  };
 
   useEffect(() => {
     setEditorLoaded(true)
@@ -58,8 +60,9 @@ export default function Test() {
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
         <div
-          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${showMenu ? 'menu-mb-show' : ''
-            }`}
+          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${
+            showMenu ? 'menu-mb-show' : ''
+          }`}
         >
           {/* 用戶資訊 */}
           <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
@@ -113,26 +116,34 @@ export default function Test() {
           </div>
           <div className="">
             {/* 主內容 */}
-            <main onClick={handleToggleEditor}>
-              {editorVisible && (
-                <Editor
-                  name="description"
-                  onChange={(data) => {
-                    setData(data)
-                  }}
-                  editorLoaded={editorLoaded}
-                  value={initContent}
-                />
-              )}
+            <main className="content">
+              <Editor
+                name="description"
+                onChange={(data) => {
+                  setData(data)
+                }}
+                editorLoaded={editorLoaded}
+                value={initContent}
+              />
+              <Editor
+                name="description"
+                onChange={(data) => {
+                  setData(data)
+                }}
+                editorLoaded={editorLoaded}
+                value={initContent}
+              />
             </main>
+            {/* 這裡嘗試新的 */}
           </div>
         </div>
       </div>
       <Footer />
 
       <style jsx>{`
-      main{
-          min-height: 100svh;
+        .wrapper {
+          padding-left: 20px;
+          padding-right: 20px;
         }
         .nav-category {
           display: flex;
@@ -142,6 +153,10 @@ export default function Test() {
           .nav-category {
             display: none;
           }
+        }
+        main {
+          padding-left: 55px;
+          padding-right: 55px;
         }
         h1 {
           padding-top: 5;
@@ -176,7 +191,8 @@ export default function Test() {
             weight: 576px;
             height: 300px;
           }
-        }`}</style>
+        }
+      `}</style>
     </>
   )
 }

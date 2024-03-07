@@ -16,7 +16,6 @@ import bookmarkIcon from '@/assets/emptybookmark.svg'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 import ArticleCard from '@/components/article/article-card'
-import Pagination from '@/components/article/pagination'
 import ArticleJson from 'data/article/article.json'
 
 export default function ArticleList() {
@@ -52,6 +51,7 @@ export default function ArticleList() {
     if (search.trim() === '') {
       newData = ArticleJson
     } else {
+      ArticleJson
       newData = data.filter((v, i) => {
         return v.title.includes(search)
       })
@@ -59,17 +59,17 @@ export default function ArticleList() {
     setData(newData)
   }
 
-  const categorySearch = () => {
-    let newData
-    if (category === 'all') {
-      newData = ArticleJson
-    } else {
-      newData = data.filter((v, i) => {
-        return v.category_id === category
-      })
-    }
-    setData(newData)
-  }
+  // const categorySearch = () => {
+  //   let newData
+  //   if (category === 'all') {
+  //     newData = ArticleJson
+  //   } else {
+  //     newData = data.filter((v, i) => {
+  //       return v.category_id === category
+  //     })
+  //   }
+  //   setData(newData)
+  // }
 
   // ----------------------分類功能  ----------------------
 
@@ -235,9 +235,7 @@ export default function ArticleList() {
               <div className="breadcrumb-wrapper">
                 <ul className="d-flex align-items-center p-0 m-0">
                   <IoHome size={20} />
-                  <li style={{ marginLeft: '8px' }}>Let&apos;s JAM!</li>
-                  <FaChevronRight />
-                  <li style={{ marginLeft: '10px' }}>團員募集</li>
+                  <li style={{ marginLeft: '8px' }}>樂友論壇</li>
                 </ul>
               </div>
 
@@ -465,6 +463,7 @@ export default function ArticleList() {
                     publish_time,
                     articles,
                     fav,
+                    category_id,
                   } = v
                   return (
                     <ArticleCard
@@ -474,6 +473,7 @@ export default function ArticleList() {
                       content={content}
                       img={img}
                       author={author}
+                      category_id={category_id}
                       publish_time={publish_time.split(' ')[0]}
                       articles={articles}
                       handleToggleFav={handleToggleFav}
@@ -494,6 +494,7 @@ export default function ArticleList() {
                     publish_time,
                     articles,
                     fav,
+                    category_id,
                   } = v
                   return (
                     <ArticleCard
@@ -503,6 +504,7 @@ export default function ArticleList() {
                       content={content}
                       img={img}
                       author={author}
+                      category_id={category_id}
                       publish_time={publish_time.split(' ')[0]}
                       articles={articles}
                       handleToggleFav={handleToggleFav}
@@ -511,8 +513,6 @@ export default function ArticleList() {
                   )
                 })}
               </div>
-              {/* 分頁按鈕 */}
-              <Pagination />
               {/* <div className='d-flex justify-content-center pb-3'>
                 <nav aria-label="Page navigation example">
                   <ul className="pagination">
