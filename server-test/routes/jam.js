@@ -52,32 +52,32 @@ router.get("/", async (req, res, next) => {
     const genre =
       req.query.genre !== "all"
         ? " AND (`genre` LIKE '%," +
-          req.query.genre +
-          "]'" +
-          " OR `genre` LIKE '[" +
-          req.query.genre +
-          ",%'" +
-          " OR `genre` LIKE '%," +
-          req.query.genre +
-          ",%'" +
-          " OR `genre` = '[" +
-          req.query.genre +
-          "]')"
+        req.query.genre +
+        "]'" +
+        " OR `genre` LIKE '[" +
+        req.query.genre +
+        ",%'" +
+        " OR `genre` LIKE '%," +
+        req.query.genre +
+        ",%'" +
+        " OR `genre` = '[" +
+        req.query.genre +
+        "]')"
         : "";
     const player =
       req.query.player !== "all"
         ? " AND (`player` LIKE '%," +
-          req.query.player +
-          "]'" +
-          " OR `player` LIKE '[" +
-          req.query.player +
-          ",%'" +
-          " OR `player` LIKE '%," +
-          req.query.player +
-          ",%'" +
-          " OR `player` = '[" +
-          req.query.player +
-          "]')"
+        req.query.player +
+        "]'" +
+        " OR `player` LIKE '[" +
+        req.query.player +
+        ",%'" +
+        " OR `player` LIKE '%," +
+        req.query.player +
+        ",%'" +
+        " OR `player` = '[" +
+        req.query.player +
+        "]')"
         : "";
     const region =
       req.query.region !== "all"

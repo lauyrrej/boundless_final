@@ -7,7 +7,7 @@ import Head from 'next/head'
 //data
 import CityCountyData from '@/data/CityCountyData.json'
 import playerData from '@/data/player.json'
-import genereData from '@/data/genre.json'
+import genreData from '@/data/genre.json'
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
@@ -25,33 +25,27 @@ export default function Form() {
   }
   // ---------------------- 標題
   const [title, setTitle] = useState('')
+  const [titleCheck, setTitleCheck] = useState(true)
   // ---------------------- 技術程度
   const [degree, setDegree] = useState('')
 
   // ---------------------- 曲風
   // 儲存選擇的曲風
-  const [genere, setGenere] = useState([])
+  const [genre, setgenre] = useState([])
   // 儲存曲風下拉選單的數量
-  const [genereSelect, setGenereSelect] = useState([1])
+  const [genreSelect, setgenreSelect] = useState([1])
   // 實際使用的曲風陣列，避免使用者未照順序新增樂手
-  const [finalGenere, setFinalGenere] = useState([])
-  useEffect(() => {
-    const fgArr = genere.filter((v) => v != (null || undefined))
-    setFinalGenere(fgArr)
-  }, [genere])
+  const [finalgenre, setFinalgenre] = useState('')
 
   // ---------------------- 擔任職位
   const [myPlayer, setMyPlayer] = useState('')
+  console.log(myPlayer)
 
   // ---------------------- 徵求樂手
   const [players, setplayers] = useState([])
   const [playersSelect, setPlayersSelect] = useState([1])
   // 實際使用的樂手陣列，避免使用者未照順序新增樂手
   const [finalPlayers, setFinalPlayers] = useState([])
-  useEffect(() => {
-    const fpArr = players.filter((v) => v != (null || undefined))
-    setFinalPlayers(fpArr)
-  }, [players])
 
   // 篩選城市用的資料
   const cityData = CityCountyData.map((v, i) => {
@@ -65,6 +59,46 @@ export default function Form() {
   const [condition, setCondition] = useState('')
   // ---------------------- 描述
   const [description, setDescription] = useState('')
+
+  const checkForm = (
+    title,
+    degree,
+    finalgenre,
+    myPlayer,
+    finalPlayers,
+    region,
+    description
+  ) => {}
+
+  const sendForm = () => {
+    let formData = new FormData()
+    // title === '' ?
+    // formData.append('userID', document.querySelector('[name=userID]').value)
+
+    // for (let [key, value] of formData.entries()) {
+    //   console.log(`${key}: ${value}`)
+    // }
+  }
+  useEffect(() => {
+    // 檢查不雅字詞
+    if (title.includes('幹' || '屎' || '糞' || '尿' || '屁')) {
+      setTitleCheck(false)
+    }
+    // 把曲風&徵求樂手轉換成表單實際接收的字串格式
+    const fgArr = genre.filter((v) => v != (null || undefined))
+    setFinalgenre(`[${fgArr.toString()}]`)
+    const fpArr = players.filter((v) => v != (null || undefined))
+    setFinalPlayers(`[${fpArr.toString()}]`)
+    checkForm(
+      title,
+      degree,
+      finalgenre,
+      myPlayer,
+      finalPlayers,
+      region,
+      description
+    )
+  }, [title, degree, genre, myPlayer, players, region, description])
   return (
     <>
       <Head>
@@ -150,6 +184,7 @@ export default function Form() {
                       setTitle(e.target.value)
                     }}
                   />
+                  {titleCheck ? '' : <div>偵測到不雅字詞，請重新輸入</div>}
                 </div>
               </div>
               {/* -------------------------- 技術程度 -------------------------- */}
@@ -180,22 +215,22 @@ export default function Form() {
                 </div>
                 <div className={`${styles.itemInputWrapper} col-12 col-sm-10`}>
                   <div className={`${styles.selectGroup}`}>
-                    {genereSelect.map((v, i) => {
+                    {genreSelect.map((v, i) => {
                       return (
                         <select
                           key={i}
                           className="form-select"
                           style={{ width: 'auto' }}
-                          value={genere[i]}
-                          name="genere"
+                          value={genre[i]}
+                          name="genre"
                           onChange={(e) => {
-                            let newGenere = [...genere]
-                            newGenere[i] = e.target.value
-                            setGenere(newGenere)
+                            let newgenre = [...genre]
+                            newgenre[i] = e.target.value
+                            setgenre(newgenre)
                           }}
                         >
                           <option value="">請選擇</option>
-                          {genereData.map((v) => {
+                          {genreData.map((v) => {
                             return (
                               <option key={v.id} value={v.id}>
                                 {v.name}
@@ -205,18 +240,18 @@ export default function Form() {
                         </select>
                       )
                     })}
-                    {genereSelect.length < 3 ? (
+                    {genreSelect.length < 3 ? (
                       <div className={`${styles.plusBtn}`}>
                         <FaCirclePlus
                           size={24}
                           style={{ color: '#124365', cursor: 'pointer' }}
                           onClick={() => {
-                            const newArr = [...genereSelect, 1]
-                            setGenereSelect(newArr)
+                            const newArr = [...genreSelect, 1]
+                            setgenreSelect(newArr)
                           }}
                         />
                         <span style={{ color: '#1d1d1d' }}>
-                          (剩餘 {3 - genereSelect.length})
+                          (剩餘 {3 - genreSelect.length})
                         </span>
                       </div>
                     ) : (
@@ -237,7 +272,7 @@ export default function Form() {
                     value={myPlayer}
                     name="myPlayer"
                     onChange={(e) => {
-                      setMyPlayer(e.target.value)
+                      setMyPlayer('{"id": 1, "play": ' + e.target.value + '}')
                     }}
                   >
                     <option value="">請選擇</option>
@@ -366,6 +401,8 @@ export default function Form() {
                 <div
                   className="b-btn b-btn-primary"
                   style={{ paddingInline: '38px' }}
+                  role="presentation"
+                  onClick={sendForm}
                 >
                   提交
                 </div>
