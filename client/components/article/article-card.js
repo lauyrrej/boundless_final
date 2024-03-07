@@ -38,6 +38,7 @@ export default function Articlecard({
 
   return (
     <>
+      <Link href={`/articles/${id}`}></Link>
       <div className="article-card">
         {/* info區塊 */}
         <div

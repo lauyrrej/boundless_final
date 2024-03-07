@@ -66,7 +66,6 @@ router.get("/", async (req, res) => {
         : "";
     const player =
       req.query.player !== "all"
-<<<<<<< HEAD
         ? " AND (`player` LIKE '%," +
         req.query.player +
         "]'" +
@@ -79,20 +78,6 @@ router.get("/", async (req, res) => {
         " OR `player` = '[" +
         req.query.player +
         "]')"
-=======
-        ? " AND (`players` LIKE '%," +
-          req.query.player +
-          "]'" +
-          " OR `players` LIKE '[" +
-          req.query.player +
-          ",%'" +
-          " OR `players` LIKE '%," +
-          req.query.player +
-          ",%'" +
-          " OR `players` = '[" +
-          req.query.player +
-          "]')"
->>>>>>> acf878cd00e0634b1c107dd2bb7455e88c551f71
         : "";
     const region =
       req.query.region !== "all"
