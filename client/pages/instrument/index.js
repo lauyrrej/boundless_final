@@ -512,7 +512,34 @@ export default function Test() {
             <main className="content">
               <div className="hot-instrument">
                 <h4 className="text-primary">熱銷商品</h4>
-                <div className="hot-instrument-card"></div>
+                <div className="hot-instrument-card">
+                  {instrument.slice(0, 4).map((v, i) => {
+                    const {
+                      id,
+                      name,
+                      price,
+                      discount,
+                      category_name,
+                      img_small,
+                      sales,
+                    } = v
+
+                    return (
+                      <div key={id} className="">
+                        {/* 寫discount的判斷式 */}
+                        <Card
+                          id={id}
+                          name={name}
+                          price={price}
+                          discount={discount}
+                          category_name={category_name}
+                          img_small={img_small}
+                          sales={sales}
+                        />
+                      </div>
+                    )
+                  })}
+                </div>
               </div>
               <hr />
 
