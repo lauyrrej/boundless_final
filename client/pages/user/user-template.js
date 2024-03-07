@@ -454,8 +454,6 @@ export default function Test() {
             width: 100px;
             height: 100px;
             border-radius: 100px;
-            background: url(<path-to-image>),
-              lightgray -26.448px -3.114px / 132.653% 100% no-repeat;
           }
           .sidebar-user-info-text {
             display: flex;

@@ -4,10 +4,11 @@ import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
+import { debounce } from 'lodash'
 //data
 import CityCountyData from '@/data/CityCountyData.json'
 import playerData from '@/data/player.json'
-import genereData from '@/data/genre.json'
+import genreData from '@/data/genre.json'
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
@@ -17,43 +18,42 @@ import { FaCirclePlus } from 'react-icons/fa6'
 import styles from '@/pages/jam/jam.module.scss'
 
 export default function Form() {
+  // const navigate = useNavigate()
   // ---------------------- 手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
   const menuMbToggle = () => {
     setShowMenu(!showMenu)
   }
-  // ---------------------- 標題
+  // ---------------------- 標題 ----------------------
   const [title, setTitle] = useState('')
+  const [titleCheck, setTitleCheck] = useState(true)
   // ---------------------- 技術程度
   const [degree, setDegree] = useState('')
 
-  // ---------------------- 曲風
+  // ---------------------- 曲風 ----------------------
   // 儲存選擇的曲風
-  const [genere, setGenere] = useState([])
-  // 儲存曲風下拉選單的數量
-  const [genereSelect, setGenereSelect] = useState([1])
+  const [genre, setgenre] = useState([])
+  const [genreCheck, setGenreCheck] = useState(true)
+  // 變更曲風下拉選單的數量時，陣列會多一個元素
+  const [genreSelect, setgenreSelect] = useState([1])
   // 實際使用的曲風陣列，避免使用者未照順序新增樂手
-  const [finalGenere, setFinalGenere] = useState([])
-  useEffect(() => {
-    const fgArr = genere.filter((v) => v != (null || undefined))
-    setFinalGenere(fgArr)
-  }, [genere])
+  const [finalgenre, setFinalgenre] = useState('')
 
-  // ---------------------- 擔任職位
+  // ---------------------- 擔任職位 ----------------------
+  // 控制表單狀態
   const [myPlayer, setMyPlayer] = useState('')
+  // 表單實際送出的內容
+  const [finalMyPlayer, setFinalMyPlayer] = useState('')
+  // console.log(finalMyPlayers)
 
-  // ---------------------- 徵求樂手
+  // ---------------------- 徵求樂手 ----------------------
   const [players, setplayers] = useState([])
   const [playersSelect, setPlayersSelect] = useState([1])
   // 實際使用的樂手陣列，避免使用者未照順序新增樂手
   const [finalPlayers, setFinalPlayers] = useState([])
-  useEffect(() => {
-    const fpArr = players.filter((v) => v != (null || undefined))
-    setFinalPlayers(fpArr)
-  }, [players])
 
-  // 篩選城市用的資料
+  // ---------------------- 篩選城市用的資料 ----------------------
   const cityData = CityCountyData.map((v, i) => {
     return v.CityName
   }).filter((v) => {
@@ -61,10 +61,129 @@ export default function Form() {
   })
   const [region, setRegion] = useState('')
 
-  // ---------------------- 其他條件
+  // ---------------------- 其他條件 ----------------------
   const [condition, setCondition] = useState('')
-  // ---------------------- 描述
+  const [conditionCheck, setConditionCheck] = useState(true)
+  // ---------------------- 描述 ----------------------
   const [description, setDescription] = useState('')
+  const [descriptionCheck, setDescriptionCheck] = useState(true)
+
+  // ---------------------- 表單填寫 ----------------------
+  // 表單完成狀態 0: 送出時有欄位尚未填寫, 1: 填寫完成, 2: 初次進入頁面 or 從未填寫完必狀態繼續填寫
+  const [complete, setComplete] = useState(2)
+  // 檢查不雅字詞
+  const checkBadWords = debounce(() => {
+    const badWords = /幹|屎|尿|屁|糞|靠北|靠腰|雞掰|王八|你媽|妳媽/g
+    setTitleCheck(title.search(badWords) < 0 ? true : false)
+    setConditionCheck(condition.search(badWords) < 0 ? true : false)
+    setDescriptionCheck(description.search(badWords) < 0 ? true : false)
+  }, 250)
+  // 檢查是否重複填寫曲風
+  const checkGenre = debounce(() => {
+    const genreSet = new Set(genre) // 建立 set 物件，該物件中的每個屬性都是唯一值
+    // 若長度不同，則代表陣列中有重複的值
+    if (genre.length !== genreSet.size) {
+      setGenreCheck(false)
+    } else {
+      setGenreCheck(true)
+    }
+  }, 250)
+  // 檢查表單是否填妥
+  const checkComplete = () => {
+    if (titleCheck === false || title === '') {
+      setComplete(0)
+      return false
+    }
+    if (degree === '') {
+      setComplete(0)
+      return false
+    }
+    if (genreCheck === false || finalgenre === '') {
+      setComplete(0)
+      return false
+    }
+    if (finalMyPlayer === '') {
+      setComplete(0)
+      return false
+    }
+    if (finalPlayers === '') {
+      setComplete(0)
+      return false
+    }
+    if (region === '') {
+      setComplete(0)
+      return false
+    }
+    if (conditionCheck === false) {
+      setComplete(0)
+      return false
+    }
+    if (descriptionCheck === false || description === '') {
+      setComplete(0)
+      return false
+    }
+    setComplete(1)
+    return true
+  }
+  const sendForm = async (
+    title,
+    degree,
+    finalgenre,
+    finalMyPlayer,
+    finalPlayers,
+    region,
+    condition,
+    description
+  ) => {
+    // checkComplete()
+    // console.log(complete)
+    if (!checkComplete()) {
+      return false
+    }
+    let formData = new FormData()
+    formData.append('title', title)
+    formData.append('degree', degree)
+    formData.append('genre', finalgenre)
+    formData.append('former', finalMyPlayer)
+    formData.append('players', finalPlayers)
+    formData.append('region', region)
+    formData.append('condition', condition)
+    formData.append('description', description)
+    // 確認formData內容
+    // for (let [key, value] of formData.entries()) {
+    //   console.log(`${key}: ${value}`)
+    // }
+    const res = await fetch('http://localhost:3005/api/jam/form', {
+      method: 'POST',
+      body: formData,
+      credentials: 'include',
+    })
+    const result = await res.json()
+    if (result.status === 'success') {
+      // 跳轉路由，並攜帶成功狀態物件
+      // navigate(`/jam/recruit-list/${result.juid}`, { status: true })
+      console.log('發起成功')
+    } else {
+      console.log(result.error)
+    }
+  }
+  // ---------------------- 偵測表單輸入變化，並執行檢查
+  useEffect(() => {
+    // 跳出未填寫完畢警告後再次輸入，消除警告
+    setComplete(2)
+    // 檢查不雅字詞
+    checkBadWords.cancel() // 取消上一次的延遲
+    checkBadWords()
+    // 檢查無重複的曲風
+    checkGenre.cancel()
+    checkGenre()
+    // 把曲風&徵求樂手轉換成表單實際接收的字串格式
+    const fgArr = genre.filter((v) => v != (null || undefined))
+    setFinalgenre(`[${fgArr.toString()}]`)
+    const fpArr = players.filter((v) => v != (null || undefined))
+    setFinalPlayers(`[${fpArr.toString()}]`)
+    // 檢查表單是否完成
+  }, [title, degree, genre, myPlayer, players, region, condition, description])
   return (
     <>
       <Head>
@@ -134,13 +253,29 @@ export default function Form() {
           <div className="col-12 col-sm-8" style={{ padding: 0 }}>
             {/* 主內容 */}
             <div className={`${styles.jamLeft}`}>
-              <div className={`${styles.jamTitle}`}>發起表單</div>
-              {/* -------------------------- 標題 -------------------------- */}
+              <div className="row align-items-center">
+                <div className={`${styles.jamTitle} col-12 col-sm-2`}>
+                  發起表單
+                </div>
+                <div className="col-12 col-sm-10 mt-sm-0">
+                  (提示: 點擊&nbsp;
+                  <FaCirclePlus
+                    size={18}
+                    style={{ color: '#18a1ff' }}
+                    className="mb-1"
+                  />
+                  &nbsp;可增加項目)
+                </div>
+              </div>
+
+              {/* -------------------------- 主旨 -------------------------- */}
               <div className={`${styles.formItem} row`}>
                 <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                  標題
+                  主旨
                 </div>
-                <div className={`${styles.itemInputWrapper} col-12 col-sm-10`}>
+                <div
+                  className={`${styles.itemInputWrapper} col-12 col-sm-10 d-flex align-items-center`}
+                >
                   <input
                     type="text"
                     className={`${styles.itemInput} form-control`}
@@ -150,7 +285,25 @@ export default function Form() {
                       setTitle(e.target.value)
                     }}
                   />
+                  {titleCheck ? (
+                    ''
+                  ) : (
+                    <div
+                      className={`${styles.warningText} ms-2 d-none d-sm-block`}
+                    >
+                      偵測到不雅字詞
+                    </div>
+                  )}
                 </div>
+                {titleCheck ? (
+                  ''
+                ) : (
+                  <div
+                    className={`${styles.warningText} d-block d-sm-none p-0`}
+                  >
+                    偵測到不雅字詞
+                  </div>
+                )}
               </div>
               {/* -------------------------- 技術程度 -------------------------- */}
               <div className={`${styles.formItem} row`}>
@@ -180,22 +333,22 @@ export default function Form() {
                 </div>
                 <div className={`${styles.itemInputWrapper} col-12 col-sm-10`}>
                   <div className={`${styles.selectGroup}`}>
-                    {genereSelect.map((v, i) => {
+                    {genreSelect.map((v, i) => {
                       return (
                         <select
                           key={i}
                           className="form-select"
                           style={{ width: 'auto' }}
-                          value={genere[i]}
-                          name="genere"
+                          value={genre[i]}
+                          name="genre"
                           onChange={(e) => {
-                            let newGenere = [...genere]
-                            newGenere[i] = e.target.value
-                            setGenere(newGenere)
+                            let newgenre = [...genre]
+                            newgenre[i] = e.target.value
+                            setgenre(newgenre)
                           }}
                         >
                           <option value="">請選擇</option>
-                          {genereData.map((v) => {
+                          {genreData.map((v) => {
                             return (
                               <option key={v.id} value={v.id}>
                                 {v.name}
@@ -205,24 +358,43 @@ export default function Form() {
                         </select>
                       )
                     })}
-                    {genereSelect.length < 3 ? (
-                      <div className={`${styles.plusBtn}`}>
+                    {genreSelect.length < 3 ? (
+                      <div className={`${styles.plusBtnWrapper}`}>
                         <FaCirclePlus
                           size={24}
-                          style={{ color: '#124365', cursor: 'pointer' }}
+                          className={`${styles.plusBtn}`}
                           onClick={() => {
-                            const newArr = [...genereSelect, 1]
-                            setGenereSelect(newArr)
+                            const newArr = [...genreSelect, 1]
+                            setgenreSelect(newArr)
                           }}
                         />
-                        <span style={{ color: '#1d1d1d' }}>
-                          (剩餘 {3 - genereSelect.length})
+                        <span className="mb-1" style={{ color: '#1d1d1d' }}>
+                          (剩餘 {3 - genreSelect.length})
                         </span>
                       </div>
                     ) : (
                       ''
                     )}
+                    {genreCheck ? (
+                      ''
+                    ) : (
+                      <div
+                        className={`${styles.warningText} d-none d-sm-block`}
+                        style={{ marginTop: '5px' }}
+                      >
+                        無法選擇重複曲風
+                      </div>
+                    )}
                   </div>
+                  {genreCheck ? (
+                    ''
+                  ) : (
+                    <div
+                      className={`${styles.warningText} d-block d-sm-none mt-2 p-0`}
+                    >
+                      無法選擇重複曲風
+                    </div>
+                  )}
                 </div>
               </div>
               {/* -------------------------- 擔任職位 -------------------------- */}
@@ -238,6 +410,9 @@ export default function Form() {
                     name="myPlayer"
                     onChange={(e) => {
                       setMyPlayer(e.target.value)
+                      setFinalMyPlayer(
+                        '{"id": 1, "play": ' + e.target.value + '}'
+                      )
                     }}
                   >
                     <option value="">請選擇</option>
@@ -284,10 +459,10 @@ export default function Form() {
                       )
                     })}
                     {playersSelect.length < 6 ? (
-                      <div className={`${styles.plusBtn}`}>
+                      <div className={`${styles.plusBtnWrapper}`}>
                         <FaCirclePlus
                           size={24}
-                          style={{ color: '#124365', cursor: 'pointer' }}
+                          className={`${styles.plusBtn}`}
                           onClick={() => {
                             const newArr = [...playersSelect, 1]
                             setPlayersSelect(newArr)
@@ -344,7 +519,25 @@ export default function Form() {
                       setCondition(e.target.value)
                     }}
                   />
+                  {conditionCheck ? (
+                    ''
+                  ) : (
+                    <div
+                      className={`${styles.warningText} mt-1 d-none d-sm-block`}
+                    >
+                      偵測到不雅字詞
+                    </div>
+                  )}
                 </div>
+                {conditionCheck ? (
+                  ''
+                ) : (
+                  <div
+                    className={`${styles.warningText} d-block d-sm-none p-0`}
+                  >
+                    偵測到不雅字詞
+                  </div>
+                )}
               </div>
               {/* -------------------------- 描述 -------------------------- */}
               <div className={`${styles.formItem} row`}>
@@ -355,21 +548,66 @@ export default function Form() {
                   <textarea
                     className={`${styles.textArea} form-control`}
                     placeholder="輸入清楚、吸引人的描述，讓大家瞭解你的成團動機吧！限150字"
+                    name="description"
                     maxLength={150}
                     onChange={(e) => {
                       setDescription(e.target.value)
                     }}
                   />
+                  {descriptionCheck ? (
+                    ''
+                  ) : (
+                    <div
+                      className={`${styles.warningText} mt-1 d-none d-sm-block`}
+                    >
+                      偵測到不雅字詞
+                    </div>
+                  )}
                 </div>
+                {descriptionCheck ? (
+                  ''
+                ) : (
+                  <div
+                    className={`${styles.warningText} d-block d-sm-none p-0`}
+                  >
+                    偵測到不雅字詞
+                  </div>
+                )}
               </div>
+
               <div className="d-flex justify-content-center">
                 <div
                   className="b-btn b-btn-primary"
                   style={{ paddingInline: '38px' }}
+                  role="presentation"
+                  onClick={() => {
+                    sendForm(
+                      title,
+                      degree,
+                      finalgenre,
+                      finalMyPlayer,
+                      finalPlayers,
+                      region,
+                      condition,
+                      description
+                    )
+                  }}
                 >
                   提交
                 </div>
               </div>
+              {complete === 0 ? (
+                <div
+                  className="d-flex justify-content-center"
+                  style={{ marginTop: '-8px' }}
+                >
+                  <div className={`${styles.warningText}`}>
+                    請遵照規則，並填寫所有必填內容
+                  </div>
+                </div>
+              ) : (
+                ''
+              )}
             </div>
           </div>
 
@@ -384,6 +622,11 @@ export default function Form() {
                   <span className={`${styles.point}`}>以一個為限</span>
                   ，且發起期間<span className={`${styles.point}`}>不得</span>
                   申請他人的 JAM。
+                </li>
+                <li>
+                  除<span className={`${styles.point}`}>其他條件</span>
+                  以外，所有內容皆為
+                  <span className={`${styles.point}`}>必填</span>。
                 </li>
                 <li>
                   為避免頻繁改變樂團方向，造成和參與者間的協調糾紛，發起後

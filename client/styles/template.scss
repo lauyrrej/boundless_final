@@ -23,7 +23,7 @@ header {
 .navbar-wrapper {
   flex: 1;
   max-width: 660px;
-  & ul{
+  & ul {
     margin: 0;
   }
 }
@@ -46,7 +46,7 @@ header {
   color: #fff;
 }
 
-.icon:hover{
+.icon:hover {
   color: $deep-primary;
 }
 
@@ -88,11 +88,11 @@ header {
   font-weight: 500;
   font-size: $h4;
   .mb-photo-wrapper {
-  width: 120px;
-  height: 120px;
-  overflow: hidden;
-  border-radius: 50%;
-  position: relative;
+    width: 120px;
+    height: 120px;
+    overflow: hidden;
+    border-radius: 50%;
+    position: relative;
     & img {
       object-fit: cover;
     }
@@ -127,18 +127,18 @@ header {
   color: $secondary;
   font-size: $h5;
   font-weight: 700;
-  & ul{
-      margin: 0;
-      padding: 0;
+  & ul {
+    margin: 0;
+    padding: 0;
   }
   & li {
-      padding: 12px;
-      &:hover {
-          color: $primary;
-      }
+    padding: 12px;
+    &:hover {
+      color: $primary;
+    }
   }
   .active {
-      color: $primary;
+    color: $primary;
   }
 }
 .sidebar-mb {
@@ -198,7 +198,6 @@ header {
   top: 10px;
   z-index: 100;
   @media screen and (max-width: 576px) {
-
     top: 60px;
     padding-block: 20px 12px;
     padding-inline: 12px;
@@ -253,12 +252,12 @@ header {
 }
 
 .filter-text {
-    color: $secondary;
-    font-weight: 600;
-    font-size: $h6;
-    gap: 5px;
-    cursor: pointer;
-    user-select: none;
+  color: $secondary;
+  font-weight: 600;
+  font-size: $h6;
+  gap: 5px;
+  cursor: pointer;
+  user-select: none;
 }
 
 .filter-sort {
@@ -331,19 +330,19 @@ header {
   gap: 10px;
   user-select: none;
   .sort-item {
-      padding-inline: 4px;
-      cursor: pointer;
-      transition: 0.2s;
-      &:hover {
-          color: $light-primary;
-      }
+    padding-inline: 4px;
+    cursor: pointer;
+    transition: 0.2s;
+    &:hover {
+      color: $light-primary;
+    }
   }
   .active {
+    color: $primary;
+    cursor: default;
+    &:hover {
       color: $primary;
-      cursor: default;
-      &:hover {
-          color: $primary;
-      }
+    }
   }
 }
 
@@ -357,6 +356,7 @@ header {
   justify-content: center;
   user-select: none;
   cursor: pointer;
+  transition: 0.25s;
 }
 .b-btn-primary {
   background-color: $light-primary;
@@ -369,4 +369,40 @@ header {
   &:hover {
     background-color: $secondary;
   }
+}
+
+.pagination {
+  gap: 3px;
+}
+.page-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  color: $dark;
+  padding-bottom: 2px;
+}
+.page-link:hover {
+  background-color: transparent;
+  color: $primary;
+}
+.page-item:first-child .page-link{
+  margin-right: 10px;
+  border: 1px solid $body;
+  border-radius: 3px;
+  padding-bottom: 0;
+}
+.page-item:last-child .page-link{
+  margin-left: 10px;
+  border: 1px solid $body;
+  border-radius: 3px;
+  padding-bottom: 0;
+}
+.active > .page-link {
+  background-color: $light-primary;
+  color: #fff;
 }
