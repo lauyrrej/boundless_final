@@ -33,7 +33,7 @@ export default function Test() {
   const getArticleDetail = async (auid) => {
     try {
       const res = await fetch(`http://localhost:3005/api/article/${auid}`)
-
+      console.log(res)
       // res.json()是解析res的body的json格式資料，得到JS的資料格式
       const data = await res.json()
 
@@ -43,7 +43,7 @@ export default function Test() {
       // 進入狀態前檢查資料類型有值，以避免錯誤
       if (data) {
         setArticleDetail(data)
-        console.log(articleDetail[0].name)
+        console.log(articleDetail[0].title)
       }
     } catch (e) {
       console.error(e)
@@ -53,9 +53,9 @@ export default function Test() {
   useEffect(() => {
     // 如果isReady是true，確保能得到query的值
     if (router.isReady) {
-      const { lid } = router.query
-      console.log(lid)
-      getArticleDetail(lid)
+      const { auid } = router.query
+      console.log(auid)
+      getArticleDetail(auid)
     }
   }, [router.isReady])
 

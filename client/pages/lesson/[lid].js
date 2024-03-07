@@ -87,7 +87,6 @@ export default function LessonDetailPage() {
   const getLessonDetail = async (lid) => {
     try {
       const res = await fetch(`http://localhost:3005/api/lesson/${lid}`)
-
       // res.json()是解析res的body的json格式資料，得到JS的資料格式
       const data = await res.json()
 

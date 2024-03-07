@@ -1,9 +1,7 @@
 import express, { json } from "express";
 import db from "../db.js";
-import multer from "multer";
 
 const router = express.Router();
-const upload = multer();
 
 // 文章列表
 router.get("/", async (req, res) => {
@@ -23,10 +21,10 @@ router.get("/", async (req, res) => {
 
 // 獲得單篇文章資料
 router.get("/:id", async (req, res, next) => {
-  let aid = req.params.id;
-  console.log(aid);
+  let auid = req.params.id;
+  console.log(auid);
   let [data] = await db
-    .execute("SELECT * FROM `article` WHERE `id` = ? ", [aid])
+    .execute("SELECT * FROM `article` WHERE `id` = ? ", [auid])
     .catch(() => {
       return undefined;
     });
