@@ -6,6 +6,15 @@ import Image from 'next/image'
 import jamHero from '@/assets/jam-hero.png'
 import avatar from '@/public/user/Meiyuyu.jpg'
 
+// lessoncard
+import Card from '@/components/lesson/lesson-card'
+import Cardrwd from '@/components/lesson/lesson-card-rwd'
+//instrument
+import InstrumentCard from '@/components/instrument/card'
+
+//ArticleCard
+import ArticleCard from '@/components/article/article-card'
+
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
@@ -16,6 +25,22 @@ import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 
 export default function Test() {
+  // 在電腦版或手機版時
+  const [isSmallScreen, setIsSmallScreen] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth <= 576)
+    }
+
+    handleResize()
+
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -144,11 +169,7 @@ export default function Test() {
             <div className="sidebar">
               <div className="sidebar-user-info">
                 <div className="sidebar-user-info-imgBox">
-                  <Image
-                    style={{ width: 100, height: 100, resizeMode: 'cover' }}
-                    src={avatar}
-                    alt="user photo mb"
-                  ></Image>
+                  <Image src={avatar} alt="user photo mb" fill></Image>
                 </div>
                 <div className="sidebar-user-info-text">
                   <div className="sidebar-user-info-name">棉悠悠</div>
@@ -232,7 +253,7 @@ export default function Test() {
                   </div>
                 </div>
 
-                <div className="filter-sort d-flex justify-content-between">
+                {/* <div className="filter-sort d-flex justify-content-between">
                   <div className="sort-mb d-block d-sm-none">
                     <select
                       className="form-select"
@@ -247,9 +268,9 @@ export default function Test() {
                       </option>
                       <option value="oldest">舊到新</option>
                     </select>
-                  </div>
-                  {/*  ---------------------- 條件篩選  ---------------------- */}
-                  <form className="d-flex align-items-center position-relative">
+                  </div> */}
+                {/*  ---------------------- 條件篩選  ---------------------- */}
+                {/* <form className="d-flex align-items-center position-relative">
                     <div
                       className="filter-text d-flex align-items-center me-sm-4"
                       role="presentation"
@@ -263,9 +284,9 @@ export default function Test() {
                         }`}
                         onClick={stopPropagation}
                         role="presentation"
-                      >
-                        {/* 品牌 */}
-                        <div className="filter-item">
+                      > */}
+                {/* 品牌 */}
+                {/* <div className="filter-item">
                           <div className="filter-title">選擇品牌</div>
                           <select
                             className="form-select"
@@ -287,9 +308,9 @@ export default function Test() {
                               )
                             })}
                           </select>
-                        </div>
-                        {/* 價格區間 */}
-                        <div className="filter-item">
+                        </div> */}
+                {/* 價格區間 */}
+                {/* <div className="filter-item">
                           <div className="filter-title">價格區間</div>
                           <input
                             type="number"
@@ -314,9 +335,9 @@ export default function Test() {
                               setPriceHigh(e.target.value)
                             }}
                           />
-                        </div>
-                        {/* 商品評價 */}
-                        <div className="filter-item m-0">
+                        </div> */}
+                {/* 商品評價 */}
+                {/* <div className="filter-item m-0">
                           <div className="filter-title">商品評價</div>
                           <div className="filter-radio-group d-flex flex-wrap justify-content-between">
                             {scoreState.map((v, i) => {
@@ -342,9 +363,9 @@ export default function Test() {
                               )
                             })}
                           </div>
-                        </div>
-                        {/* 促銷商品 */}
-                        <div className="filter-item">
+                        </div> */}
+                {/* 促銷商品 */}
+                {/* <div className="filter-item">
                           <div className="form-check">
                             <label className="form-check-label filter-title mb-0">
                               <input
@@ -377,9 +398,9 @@ export default function Test() {
                         </div>
                       </div>
                     </div>
-                  </form>
-                  {/* ---------------------- 資料排序  ---------------------- */}
-                  <div className="sort d-none d-sm-flex justify-content-between align-items-center">
+                  </form> */}
+                {/* ---------------------- 資料排序  ---------------------- */}
+                {/* <div className="sort d-none d-sm-flex justify-content-between align-items-center">
                     <div className="d-flex align-items-center">
                       排序
                       <FaSortAmountDown size={14} />
@@ -407,7 +428,7 @@ export default function Test() {
                       舊到新
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
             {/* 主內容 */}
@@ -436,9 +457,9 @@ export default function Test() {
                             </div>
                           </div>
                           <div className="user-favorite-cardList-item">
-                            <div>待放樂器卡片元件</div>
-                            <div>待放樂器卡片元件</div>
-                            <div>待放樂器卡片元件</div>
+                            <InstrumentCard />
+                            <InstrumentCard />
+                            <InstrumentCard />
                           </div>
                         </div>
 
@@ -452,9 +473,9 @@ export default function Test() {
                             </div>
                           </div>
                           <div className="user-favorite-cardList-item">
-                            <div>待放課程卡片元件</div>
-                            <div>待放課程卡片元件</div>
-                            <div>待放課程卡片元件</div>
+                            {isSmallScreen ? <Cardrwd /> : <Card />}
+                            {isSmallScreen ? <Cardrwd /> : <Card />}
+                            {isSmallScreen ? <Cardrwd /> : <Card />}
                           </div>
                         </div>
 
@@ -468,9 +489,8 @@ export default function Test() {
                             </div>
                           </div>
                           <div className="user-favorite-cardList-item">
-                            <div>待放文章卡片元件</div>
-                            <div>待放文章卡片元件</div>
-                            <div>待放文章卡片元件</div>
+                            <ArticleCard />
+                            <ArticleCard />
                           </div>
                         </div>
                       </div>
@@ -504,8 +524,11 @@ export default function Test() {
             width: 100px;
             height: 100px;
             border-radius: 100px;
-            background: url(<path-to-image>),
-              lightgray -26.448px -3.114px / 132.653% 100% no-repeat;
+
+            /* react Image 要加上這兩條參數 家在外層容器的css , Image本身要fill */
+
+            position: relative;
+            overflow: hidden;
           }
           .sidebar-user-info-text {
             display: flex;
@@ -540,7 +563,9 @@ export default function Test() {
         /* -------------------user sidebar-------------------- */
 
         /* --------------- user-contect-acticle--------------- */
-
+        .btn-primary {
+          background-color: #18a1ff;
+        }
         .custom-container {
           padding: 0;
           color: #000;
@@ -627,7 +652,7 @@ export default function Test() {
                 display: flex;
                 justify-content: center;
                 align-items: flex-start;
-                gap: 30px;
+                gap: 90px;
                 align-self: stretch;
               }
             }

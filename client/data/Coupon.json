@@ -236,7 +236,7 @@
   {
     "id": 19,
     "name": "5折優惠券",
-    "discount": 0.500000000000001,
+    "discount": 0.5,
     "kind": "樂器",
     "type": "百分比",
     "coupon_code": "UPbgHECk5r",

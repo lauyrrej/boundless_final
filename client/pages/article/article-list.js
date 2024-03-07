@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
@@ -10,6 +11,8 @@ import { FaChevronRight } from 'react-icons/fa6'
 import { IoIosSearch } from 'react-icons/io'
 import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
+import bookmarkIconFill from '@/assets/fillbookmark.svg'
+import bookmarkIcon from '@/assets/emptybookmark.svg'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 import ArticleCard from '@/components/article/article-card'
@@ -29,11 +32,55 @@ export default function ArticleList() {
     setShowSidebar(!showSidebar)
   }
 
-  // ----------------------真資料  ----------------------
+  // ----------------------功能  ----------------------
+  // const cardData = { ArticleJson }
+  // const [data, setData] = useState(ArticleJson);
 
-  // Article-card
-  const cardData = { ArticleJson }
+  // 擴充收藏功能
+  // 每個Json增加虛構的fav值
+  const initState = ArticleJson.map((v, i) => {
+    return { ...v, fav: false }
+  })
+  // 擴充後的物件陣列作為初始值
+  const [data, setData] = useState(initState)
+  const [search, setSearch] = useState('')
 
+  // 搜尋功能
+  const handleSearch = () => {
+    console.log('按鈕被典籍了')
+    let newData
+    if (search.trim() === '') {
+      newData = ArticleJson
+    } else {
+      newData = data.filter((v, i) => {
+        return v.title.includes(search)
+      })
+    }
+    setData(newData)
+  }
+
+  const categorySearch = () => {
+    let newData
+    if (category === 'all') {
+      newData = ArticleJson
+    } else {
+      newData = data.filter((v, i) => {
+        return v.category_id === category
+      })
+    }
+    setData(newData)
+  }
+
+  // ----------------------分類功能  ----------------------
+
+  // 純func
+  const handleToggleFav = (id) => {
+    const newArticles = data.map((v, i) => {
+      if (v.id === id) return { ...v, fav: !v.fav }
+      else return v
+    })
+    setData(newArticles)
+  }
   // ----------------------假資料  ----------------------
 
   // sidebar假資料
@@ -85,6 +132,13 @@ export default function ArticleList() {
     setSales(false)
   }
 
+  // ------------------------- 搜尋/篩選
+  const router = useRouter()
+  // 全部的篩選條件
+  const allCondition = ''
+  const [condition, setCondition] = useState(allCondition)
+  useEffect(() => {}, [allCondition])
+
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
@@ -94,8 +148,9 @@ export default function ArticleList() {
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
         <div
-          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${showMenu ? 'menu-mb-show' : ''
-            }`}
+          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${
+            showMenu ? 'menu-mb-show' : ''
+          }`}
         >
           {/* 用戶資訊 */}
           <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
@@ -152,8 +207,9 @@ export default function ArticleList() {
           <div className="col-12 col-sm-10 page-control">
             {/* 手機版sidebar */}
             <div
-              className={`sidebar-mb d-sm-none ${showSidebar ? 'sidebar-mb-show' : ''
-                }`}
+              className={`sidebar-mb d-sm-none ${
+                showSidebar ? 'sidebar-mb-show' : ''
+              }`}
             >
               <div className="sm-close">
                 <IoClose
@@ -201,8 +257,14 @@ export default function ArticleList() {
                       type="text"
                       className="form-control"
                       placeholder="請輸入關鍵字..."
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
                     />
-                    <div className="search-btn btn d-flex justify-content-center align-items-center p-0">
+                    <div
+                      // 搜尋按鈕
+                      onClick={handleSearch}
+                      className="search-btn btn d-flex justify-content-center align-items-center p-0"
+                    >
                       <IoIosSearch size={25} />
                     </div>
                   </div>
@@ -234,8 +296,9 @@ export default function ArticleList() {
                       條件篩選
                       <FaFilter size={13} />
                       <div
-                        className={`filter ${filterVisible === false ? 'd-none' : 'd-block'
-                          }`}
+                        className={`filter ${
+                          filterVisible === false ? 'd-none' : 'd-block'
+                        }`}
                         onClick={stopPropagation}
                         role="presentation"
                       >
@@ -360,8 +423,9 @@ export default function ArticleList() {
                       <FaSortAmountDown size={14} />
                     </div>
                     <div
-                      className={`sort-item ${dataSort === 'latest' ? 'active' : ''
-                        }`}
+                      className={`sort-item ${
+                        dataSort === 'latest' ? 'active' : ''
+                      }`}
                       role="presentation"
                       onClick={(e) => {
                         setDataSort('latest')
@@ -370,8 +434,9 @@ export default function ArticleList() {
                       新到舊
                     </div>
                     <div
-                      className={`sort-item ${dataSort === 'oldest' ? 'active' : ''
-                        }`}
+                      className={`sort-item ${
+                        dataSort === 'oldest' ? 'active' : ''
+                      }`}
                       role="presentation"
                       onClick={(e) => {
                         setDataSort('oldest')
@@ -385,33 +450,69 @@ export default function ArticleList() {
             </div>
             {/* 主內容 */}
             <main className="content me-2">
-              <h4 className='text-primary pt-2'>熱門文章</h4>
-              <div className="content-pop d-flex flex-wrap justify-content-between pe-2">
-                {ArticleJson.slice(0, 4).map((v, i) => {
-                  {/* 熱門文章的分類目前是抓前4筆 */ }
-                  const { id, title, content, img, author, publish_time } = v
+              <h4 className="text-primary pt-2">熱門文章</h4>
+              <div className="content-pop d-flex flex-wrap">
+                {data.slice(0, 4).map((v, i) => {
+                  {
+                    /* 熱門文章的分類目前是抓前4筆 */
+                  }
+                  const {
+                    id,
+                    title,
+                    content,
+                    img,
+                    author,
+                    publish_time,
+                    articles,
+                    fav,
+                  } = v
                   return (
-                    <ArticleCard key={id} id={id} title={title} content={content} img={img} author={author} publish_time={publish_time.split(" ")[0]} />
+                    <ArticleCard
+                      key={id}
+                      id={id}
+                      title={title}
+                      content={content}
+                      img={img}
+                      author={author}
+                      publish_time={publish_time.split(' ')[0]}
+                      articles={articles}
+                      handleToggleFav={handleToggleFav}
+                      fav={fav}
+                    />
                   )
                 })}
               </div>
               <hr />
-              <div className="content-pop d-flex flex-wrap justify-content-between pb-3">
-                {ArticleJson.map((v, i) => {
-                  const { id, title, content, img, author, publish_time } = v
+              <div className="content-pop d-flex flex-wrap">
+                {data.map((v, i) => {
+                  const {
+                    id,
+                    title,
+                    content,
+                    img,
+                    author,
+                    publish_time,
+                    articles,
+                    fav,
+                  } = v
                   return (
-                    <ArticleCard key={id} id={id} title={title} content={content} img={img} author={author} publish_time={publish_time.split(" ")[0]} />
+                    <ArticleCard
+                      key={id}
+                      id={id}
+                      title={title}
+                      content={content}
+                      img={img}
+                      author={author}
+                      publish_time={publish_time.split(' ')[0]}
+                      articles={articles}
+                      handleToggleFav={handleToggleFav}
+                      fav={fav}
+                    />
                   )
                 })}
-
               </div>
               {/* 分頁按鈕 */}
-              <Pagination
-                totalItems={totalItems}
-                itemsPerPage={itemsPerPage}
-                currentPage={currentPage}
-                onPageChange={handlePageChange}
-              />
+              <Pagination />
               {/* <div className='d-flex justify-content-center pb-3'>
                 <nav aria-label="Page navigation example">
                   <ul className="pagination">
