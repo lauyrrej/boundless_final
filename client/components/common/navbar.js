@@ -3,42 +3,43 @@ import { IoCart, IoMenu } from 'react-icons/io5'
 import Image from 'next/image'
 import logo from '@/assets/logo.svg'
 import logoMb from '@/assets/logo_mb.svg'
+import Link from 'next/link'
 
 export default function Navbar({ menuMbToggle }) {
   const [showMenu, setShowMenu] = useState(false)
   return (
     <>
       <header className="w-100 d-flex justify-content-between align-items-center">
-        <a href="#">
-          <Image src={logo} alt="logo" className="d-none d-sm-block logo" />
-        </a>
-        <a href="">
-          <Image src={logoMb} alt="logo-mobile" className="d-sm-none logo-mb" />
-        </a>
+        <Link href="#" className="d-none d-lg-block ">
+          <Image src={logo} alt="logo" className="logo" />
+        </Link>
+        <Link href="" className="d-lg-none">
+          <Image src={logoMb} alt="logo-mobile" className=" logo-mb" />
+        </Link>
 
         <nav className="navbar-wrapper">
-          <ul className="navbar d-none d-sm-flex justify-content-between flex-row">
+          <ul className="navbar d-none d-lg-flex justify-content-between flex-row">
             <li>
-              <a href="/lesson">探索課程</a>
+              <Link href="/lesson">探索課程</Link>
             </li>
             <li>
-              <a href="/instrument">樂器商城</a>
+              <Link href="/instrument">樂器商城</Link>
             </li>
             <li>
-              <a href="/jam">Let&apos;s JAM!</a>
+              <Link href="/jam/recruit-list">Let&apos;s JAM!</Link>
             </li>
             <li>
-              <a href="/article">樂友論壇</a>
+              <Link href="/article">樂友論壇</Link>
             </li>
             <li className="ms-3">
-              <a href="/cart">
+              <Link href="/cart">
                 <IoCart size={30} className="cart-icon" />
-              </a>
+              </Link>
             </li>
             <li className="login-state d-flex justify-content-center">
-              <a className="" href="/login">
+              <Link className="" href="/login">
                 登入/註冊
-              </a>
+              </Link>
               {/* 用戶頭像 */}
               <div className="user-img d-none">
                 <Image
@@ -50,10 +51,10 @@ export default function Navbar({ menuMbToggle }) {
             </li>
           </ul>
           {/* 手機版 navbar */}
-          <div className="navbar-mb d-sm-none d-flex justify-content-end align-items-center">
-            <a href="/cart" className="p-0 me-3">
+          <div className="navbar-mb d-lg-none d-flex justify-content-end align-items-center">
+            <Link href="/cart" className="p-0 me-3">
               <IoCart size={30} />
-            </a>
+            </Link>
             <IoMenu size={30} className="ms-3" onClick={menuMbToggle} />
           </div>
         </nav>

@@ -3,8 +3,13 @@ import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
+
+//圖片
 import jamHero from '@/assets/jam-hero.png'
 import avatar from '@/public/user/Meiyuyu.jpg'
+
+// 會員認證hook
+import { useAuth } from '@/hooks/user/use-auth'
 
 // icons
 import { IoHome } from 'react-icons/io5'
@@ -16,6 +21,10 @@ import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 
 export default function Test() {
+  // ----------------------會員登入  ----------------------
+
+  const { auth, login, logout } = useAuth()
+
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -144,11 +153,7 @@ export default function Test() {
             <div className="sidebar">
               <div className="sidebar-user-info">
                 <div className="sidebar-user-info-imgBox">
-                  <Image
-                    style={{ width: 100, height: 100, resizeMode: 'cover' }}
-                    src={avatar}
-                    alt="user photo mb"
-                  ></Image>
+                  <Image src={avatar} alt="user photo mb" fill></Image>
                 </div>
                 <div className="sidebar-user-info-text">
                   <div className="sidebar-user-info-name">棉悠悠</div>
@@ -249,6 +254,24 @@ export default function Test() {
                       backgroundColor: 'rgb(255, 255, 255)',
                     }}
                   >
+                    {/* ---------------------測試登入------------------- */}
+
+                    <p>目前登入狀態: {auth.isAuth ? '會員已登入' : '未登入'}</p>
+                    <p>
+                      <button
+                        onClick={() => {
+                          if (auth.isAuth) logout()
+                          else login()
+                        }}
+                      >
+                        {auth.isAuth ? '登出' : '登入'}
+                      </button>
+                    </p>
+                    <p>ID: {auth.userData.id}</p>
+                    <p>帳號: {auth.userData.name}</p>
+                    <p>電子信箱: {auth.userData.email}</p>
+                    <hr />
+                    {/* ---------------------------------------- */}
                     <div className="user-content col-12">
                       <div className="user-content-top">
                         <div className="user-title-userInfo">會員資訊</div>
@@ -419,8 +442,11 @@ export default function Test() {
             width: 100px;
             height: 100px;
             border-radius: 100px;
-            background: url(<path-to-image>),
-              lightgray -26.448px -3.114px / 132.653% 100% no-repeat;
+
+            /* react Image 要加上這兩條參數 家在外層容器的css , Image本身要fill */
+
+            position: relative;
+            overflow: hidden;
           }
           .sidebar-user-info-text {
             display: flex;
@@ -660,19 +686,19 @@ export default function Test() {
               width: 390px;
               padding: 10px;
               overflow: hidden;
-              margin-bottom:20px;
+              margin-bottom: 20px;
 
-
-              .user-info-item {           
+              .user-info-item {
                 display: block;
               }
 
               .user-info-item-info {
                 display: block;
+              }
+            }
           }
-          }
+          /*------------- RWD  ----------- */
         }
-        /*------------- RWD  ----------- */
       `}</style>
     </>
   )
