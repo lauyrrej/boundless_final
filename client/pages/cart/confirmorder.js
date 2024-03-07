@@ -112,7 +112,7 @@ export default function Test() {
             </div>
           </div>
           <div className="d-flex">
-            <div className="w-100 p-0 cart-main" style={{ height: '100vh' }}>
+            <div className="w-100 p-0 cart-main" style={{ height: '' }}>
               <div className="cart-lesson">
                 <div className="cart-title">訂單內容</div>
                 <div className="cart-thead">
@@ -231,13 +231,62 @@ export default function Test() {
                   </div>
                 </div>
                 <div className="cart-btn">
-                  <div className="btn btn-prev btn-secondary">回上一步</div>
-                  <div className="btn btn-next btn-primary">確認付款</div>
+                  <div
+                    className="b-btn b-btn-body d-flex w-100 h-100 justify-content-center"
+                    style={{ padding: '14px 0' }}
+                  >
+                    回上一步
+                  </div>
+                  <div
+                    className="b-btn b-btn-primary d-flex w-100 h-100 justify-content-center"
+                    style={{ padding: '14px 0' }}
+                  >
+                    確認付款
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </>
+      </div>
+      <div className="flow-cart-mb" style={{}}>
+        <div
+          className="d-flex flex-column position-sticky"
+          style={{ gap: 20, top: 110 }}
+        >
+          <div className="total d-flex flex-column" style={{ gap: 20 }}>
+            <div className="d-flex justify-content-between carttext">
+              <div>商品數量</div>
+              <div>樂器*3 課程*2</div>
+            </div>
+            <div className="d-flex justify-content-between carttext">
+              <div>原價合計</div>
+              <div>NT $864000</div>
+            </div>
+            <div className="d-flex justify-content-between carttext discount">
+              <div>折扣合計</div>
+              <div>-NT $3400</div>
+            </div>
+            <div className="d-flex justify-content-between h3">
+              <div>合計</div>
+              <div>NT $790000</div>
+            </div>
+          </div>
+          <div className="cart-btn">
+            <div
+              className="b-btn b-btn-body d-flex w-100 h-100 justify-content-center"
+              style={{ padding: '14px 0' }}
+            >
+              回上一步
+            </div>
+            <div
+              className="b-btn b-btn-primary d-flex w-100 h-100 justify-content-center"
+              style={{ padding: '14px 0' }}
+            >
+              確認付款
+            </div>
+          </div>
+        </div>
       </div>
       <Footer />
 
@@ -335,6 +384,11 @@ export default function Test() {
           border: 1px solid var(--primary, #1581cc);
           padding: 20px;
           align-self: stretch;
+          @media screen and (max-width: 576px) {
+            border: 0;
+            padding: 0;
+            gap: 10px !important;
+          }
         }
         .cart-btn {
           width: 100%;
@@ -658,6 +712,18 @@ export default function Test() {
       .consumer-info{
         color: black;
       }
+      .flow-cart-mb {
+          display: none;
+          @media screen and (max-width: 576px) {
+            display: block;
+            position: sticky;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            background-color: #FFF;
+            padding: 20px 30px;
+            }
+        }
       `}</style>
     </>
   )

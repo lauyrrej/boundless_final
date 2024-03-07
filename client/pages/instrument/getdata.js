@@ -14,7 +14,6 @@ function App() {
         })
         .then((result) => {
           resolve(result)
-
           setInstrument(result)
           console.log(result)
         })
