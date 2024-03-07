@@ -37,7 +37,7 @@ router.get("/categories", async (req, res) => {
   }
 });
 //特定分類的資料
-router.get("/api/Lesson/:category", async (req, res) => {
+router.get("/category/:category", async (req, res) => {
   try {
     const category = req.params.category;
 
@@ -77,18 +77,22 @@ router.get("/api/Lesson/:category", async (req, res) => {
 //   // 排序用
 //   let orderDirection = req.query.order || "ASC";
 
-// // 商品列表路由，根據分類返回相應商品列表
-// router.get("/?category=${categoryId}", (req, res) => {
-//   const { category } = req.query;
-//   const query = "SELECT * FROM `product` WHERE `lesson_category_id` = ?"; // 假設您的商品表為 products，並且有一個字段為 category
-//   db.query(query, [category], (err, results) => {
-//     if (err) {
-//       console.error("Error querying database:", err);
-//       res.status(500).json({ error: "Internal server error" });
-//       return;
-//     }
-//     res.json(results);
-//   });
+// 商品列表路由，根據分類返回相應商品列表
+// router.get("/:categoryId", async (req, res) => {
+//   const { category } = req.query.categoryId;
+//   let [data] = await db
+//     .execute("SELECT * FROM `product` WHERE `lesson_category_id` = ? ", [
+//       category,
+//     ])
+//     .catch(() => {
+//       return undefined;
+//     });
+//   if (data) {
+//     console.log(data);
+//     res.status(200).json(data);
+//   } else {
+//     res.status(400).send("發生錯誤");
+//   }
 // });
 
 // 獲得單筆課程資料
