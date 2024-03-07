@@ -149,7 +149,7 @@ export default function RecruitList() {
 
       // 設定到state中，觸發重新渲染(re-render)，會進入到update階段
       // 進入狀態前檢查資料類型為陣列，以避免錯誤
-      console.log(datas)
+      // console.log(datas)
       if (datas) {
         // 設定獲取頁數總合
         setPageTotal(datas.pageTotal)
@@ -170,7 +170,7 @@ export default function RecruitList() {
       const { order, page, genre, player, degree, region } = router.query
       // 要送至伺服器的query string參數
 
-      console.log(router.query)
+      // console.log(router.query)
 
       // 設定回所有狀態(注意所有從查詢字串來都是字串類型)，都要給預設值
       setPage(Number(page) || 1)
