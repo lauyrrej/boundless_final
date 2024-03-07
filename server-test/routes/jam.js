@@ -6,7 +6,7 @@ const router = express.Router();
 const upload = multer();
 
 // 取得所有組團資料
-router.get("/", async (req, res, next) => {
+router.get("/", async (req, res) => {
   // 取得組團資訊中所需的曲風、樂手資料
   let [genreData] = await db.execute("SELECT * FROM `genre`").catch(() => {
     return undefined;
@@ -66,16 +66,16 @@ router.get("/", async (req, res, next) => {
         : "";
     const player =
       req.query.player !== "all"
-        ? " AND (`player` LIKE '%," +
+        ? " AND (`players` LIKE '%," +
           req.query.player +
           "]'" +
-          " OR `player` LIKE '[" +
+          " OR `players` LIKE '[" +
           req.query.player +
           ",%'" +
-          " OR `player` LIKE '%," +
+          " OR `players` LIKE '%," +
           req.query.player +
           ",%'" +
-          " OR `player` = '[" +
+          " OR `players` = '[" +
           req.query.player +
           "]')"
         : "";
@@ -103,11 +103,11 @@ router.get("/", async (req, res, next) => {
     pageString = " LIMIT " + offset + "," + dataPerpage;
 
     sqlString += pageString;
-    console.log(sqlString);
+    // console.log(sqlString);
     [data] = await db.execute(sqlString).catch(() => {
       return undefined;
     });
-    console.log(data);
+    // console.log(data);
   } else {
     // 沒有篩選條件
     [data] = await db
@@ -118,7 +118,7 @@ router.get("/", async (req, res, next) => {
       .catch(() => {
         return undefined;
       });
-    console.log(data);
+    // console.log(data);
   }
 
   if (data && data != undefined) {
@@ -133,7 +133,7 @@ router.get("/", async (req, res, next) => {
         ...v,
         former: JSON.parse(v.former),
         member: setMember,
-        player: JSON.parse(v.player),
+        player: JSON.parse(v.players),
         genre: JSON.parse(v.genre),
       };
     });
@@ -151,7 +151,7 @@ router.get("/", async (req, res, next) => {
 });
 
 // 組團資訊頁，獲得單筆資料
-router.get("/:id", async (req, res, next) => {
+router.get("/:juid", async (req, res) => {
   // 取得組團資訊中所需的曲風、樂手資料
   let [genreData] = await db.execute("SELECT * FROM `genre`").catch(() => {
     return undefined;
@@ -160,25 +160,27 @@ router.get("/:id", async (req, res, next) => {
     return undefined;
   });
 
-  let id = req.params.id;
+  let juid = req.params.juid;
+  console.log(juid);
   // console.log(id);
   let [data] = await db
-    .execute("SELECT * FROM `jam` WHERE `id` = ? ", [id])
+    .execute("SELECT * FROM `jam` WHERE `juid` = ? ", [juid])
     .catch(() => {
       return undefined;
     });
 
   if (data) {
     const trueData = data[0];
+    console.log(data);
     let setMember = [];
-    if (trueData.member) {
+    if (trueData.member !== "[]" || trueData.member) {
       setMember = JSON.parse(trueData.member);
     }
     const jamData = {
       ...trueData,
       member: setMember,
       former: JSON.parse(trueData.former),
-      player: JSON.parse(trueData.player),
+      player: JSON.parse(trueData.players),
       genre: JSON.parse(trueData.genre),
     };
     // console.log(jam);
@@ -191,5 +193,65 @@ router.get("/:id", async (req, res, next) => {
     res.status(400).send("發生錯誤");
   }
 });
+
+// 發起JAM表單
+router.post("/form", upload.none(), async (req, res) => {
+  // console.log(req.body);
+  const {
+    title,
+    degree,
+    genre,
+    former,
+    players,
+    region,
+    condition,
+    description,
+  } = req.body;
+  const tureDegree = parseInt(degree);
+  const juid = generateUid();
+  await db
+    .execute(
+      "INSERT INTO `jam` (`id`, `juid`, `title`, `degree`, `genre`, `former`, `players`, `region`, `band_condition`, `description`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      [
+        juid,
+        title,
+        tureDegree,
+        genre,
+        former,
+        players,
+        region,
+        condition,
+        description,
+      ]
+    )
+    .then(() => {
+      res.status(200).json({ status: "success", juid });
+    })
+    .catch((error) => {
+      res.status(409).json({ status: "error", error });
+    });
+});
+
+function generateUid() {
+  let characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let codeLength = 12;
+  let createdCodes = [];
+  let createCodes = "";
+
+  let Code = "";
+  do {
+    Code = "";
+    for (let i = 0; i < codeLength; i++) {
+      let randomIndex = Math.floor(Math.random() * characters.length);
+      //   回傳characters當中的隨機一值
+      Code += characters.charAt(randomIndex);
+    }
+  } while (createdCodes.includes(Code));
+
+  createdCodes.push(Code);
+  createCodes += Code;
+  return createCodes;
+}
 
 export default router;

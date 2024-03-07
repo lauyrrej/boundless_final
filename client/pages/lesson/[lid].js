@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
@@ -28,7 +29,7 @@ import App from '@/pages/_app'
 
 export default function LessonDetailPage() {
   // -------試抓資料區----------
-  console.log(Lesson)
+  //   console.log(Lesson)
 
   // ----------------------手機版本  ----------------------
   // 主選單
@@ -73,6 +74,48 @@ export default function LessonDetailPage() {
   //   </React.StrictMode>,
   //   document.getElementById('root')
   // )
+
+  //-----------------------動態路由
+  //  由router中獲得動態路由(屬性名稱pid，即檔案[pid].js)的值，router.query中會包含pid屬性
+  // 1. 執行(呼叫)useRouter，會回傳一個路由器
+  // 2. router.isReady(布林值)，true代表本元件已完成水合作用(hydration)，可以取得router.query的值
+  const router = useRouter()
+
+  const [LessonDetail, setLessonDetail] = useState()
+
+  // 向伺服器要求資料，設定到狀態中用的函式
+  const getLessonDetail = async (lid) => {
+    try {
+      const res = await fetch(`http://localhost:3005/api/lesson/${lid}`)
+
+      // res.json()是解析res的body的json格式資料，得到JS的資料格式
+      const data = await res.json()
+
+      console.log(data)
+
+      // 設定到state中，觸發重新渲染(re-render)，會進入到update階段
+      // 進入狀態前檢查資料類型有值，以避免錯誤
+      if (data) {
+        setLessonDetail(data)
+        console.log(LessonDetail[0].name)
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  // 初次渲染"之後(After)"+router.isReady改變時，執行其中程式碼
+  useEffect(() => {
+    // 如果isReady是true，確保能得到query的值
+    if (router.isReady) {
+      const { lid } = router.query
+      console.log(lid)
+      getLessonDetail(lid)
+    }
+  }, [router.isReady])
+
+  console.log('render')
+  console.log(router.query, ' isReady=', router.isReady)
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
@@ -123,14 +166,16 @@ export default function LessonDetailPage() {
           <div className="breadcrumb-wrapper" style={{ paddingBlock: '20px' }}>
             <ul className="d-flex align-items-center p-0 m-0">
               <IoHome size={20} />
-              <li style={{ marginLeft: '8px' }}>Let&apos;s JAM!</li>
-              <FaChevronRight />
-              <Link href="/jam/recruit-list">
-                <li style={{ marginLeft: '10px' }}>團員募集</li>
+              <Link href="/lesson/lesson-data">
+                <li style={{ marginLeft: '8px' }}>探索課程</li>
               </Link>
-
               <FaChevronRight />
-              <li style={{ marginLeft: '10px' }}>JAM 資訊</li>
+
+              {LessonDetail && LessonDetail.length > 0 && (
+                <li style={{ marginLeft: '10px' }}>
+                  {LessonDetail[0].lesson_category_id}
+                </li>
+              )}
             </ul>
           </div>
           <div className="col-12 col-sm-6">
@@ -139,15 +184,22 @@ export default function LessonDetailPage() {
               <div className="Left">
                 {/* prodBriefingArea */}
                 <div className="prodBriefingArea d-flex">
-                  <img
-                    src={`/課程與師資/lesson_img/${Lesson[0].img}`}
-                    className="prodImg"
-                  />
+                  {LessonDetail && LessonDetail.length > 0 && (
+                    <img
+                      src={`/課程與師資/lesson_img/${LessonDetail[0].img}`}
+                      className="prodImg"
+                    />
+                  )}
                 </div>
                 {/* 手機版productbrief-card放這 */}
                 <div className="Right-mobile">
                   <div className="prodBriefing sticky-top">
-                    <div className="prodMainName">Logic Pro X 從零開始</div>
+                    {LessonDetail && LessonDetail.length > 0 && (
+                      <div className="prodMainName">
+                        {LessonDetail[0].name}Logic Pro X 從零開始
+                      </div>
+                    )}
+
                     <div className="Rating">
                       <div className="star">
                         <img
@@ -209,45 +261,54 @@ export default function LessonDetailPage() {
                   <div className="outline detail-wrapp  mt40">
                     <div className="detail-title">單元一覽</div>
                     <div className="list">
-                      <ul>
-                        {Lesson[0].outline}
-                        <li>Logic Pro X 從零開始</li>
-                        <li>正式課程開始</li>
-                        <li>編曲Arrange</li>
-                        <li>數位錄音Recording</li>
-                        <li>混音Mixing</li>
-                        <li>專題課程</li>
-                        <li>【 iPad 版】Logic Pro</li>
-                      </ul>
+                      {LessonDetail && LessonDetail.length > 0 && (
+                        <ul>
+                          {LessonDetail[0].outline}
+                          //FIXME做斷行
+                          <li>Logic Pro X 從零開始</li>
+                          <li>正式課程開始</li>
+                          <li>編曲Arrange</li>
+                          <li>數位錄音Recording</li>
+                          <li>混音Mixing</li>
+                          <li>專題課程</li>
+                          <li>【 iPad 版】Logic Pro</li>
+                        </ul>
+                      )}
                     </div>
                   </div>
                   {/* 適合對象 */}
                   <div className="suitable   mt40">
                     <div className="detail-title">適合對象</div>
                     <div className="list">
-                      <ul>
-                        {Lesson[0].suitable}
-                        <li>本身熱愛音樂，但從沒機會學習過。</li>
-                        <li>
-                          會至少一樣樂器，但不會音樂製作，想學錄音編曲和混音。
-                        </li>
-                        <li>本身有接觸過數位音樂，但沒使用過 Logic Pro X。</li>
-                      </ul>
+                      {LessonDetail && LessonDetail.length > 0 && (
+                        <ul>
+                          {LessonDetail[0].suitable}
+                          <li>本身熱愛音樂，但從沒機會學習過。</li>
+                          <li>
+                            會至少一樣樂器，但不會音樂製作，想學錄音編曲和混音。
+                          </li>
+                          <li>
+                            本身有接觸過數位音樂，但沒使用過 Logic Pro X。
+                          </li>
+                        </ul>
+                      )}
                     </div>
                   </div>
                   {/* 你將學到 */}
                   <div className="achievement  -secondary mt40">
                     <div className="detail-title">你將學到</div>
                     <div className="list">
-                      <ol>
-                        {Lesson[0].achievement}
-                        <li>
-                          用Logic Pro X 獨立完成一首或更多首屬於自己的音樂。
-                        </li>
-                        <li>
-                          了解音樂製作完整的步驟流程，若有興趣可再專精音樂方面的造詣。
-                        </li>
-                      </ol>
+                      {LessonDetail && LessonDetail.length > 0 && (
+                        <ol>
+                          {LessonDetail[0].achievement}
+                          <li>
+                            用Logic Pro X 獨立完成一首或更多首屬於自己的音樂。
+                          </li>
+                          <li>
+                            了解音樂製作完整的步驟流程，若有興趣可再專精音樂方面的造詣。
+                          </li>
+                        </ol>
+                      )}
                     </div>
                   </div>
                   {/* 學員回饋 */}
@@ -470,11 +531,13 @@ export default function LessonDetailPage() {
                     <div className="detail-title">講師資訊</div>
                     <div className="teacher-info-area">
                       <div className="teacher-img-con ">
-                        <img
-                          loading="lazy"
-                          src="/課程與師資/teacher_img/teacher_001.jpeg"
-                          className="teacherImg"
-                        />
+                        {LessonDetail && LessonDetail.length > 0 && (
+                          <img
+                            loading="lazy"
+                            src="/課程與師資/teacher_img/teacher_001.jpeg"
+                            className="teacherImg"
+                          />
+                        )}
                       </div>
                       <div className="teacher-info-word">
                         <div className="teacher-name">徐歡CheerHsu</div>
@@ -494,7 +557,17 @@ export default function LessonDetailPage() {
 
           {/*   ----------------------頁面內容 右半部---------------------- */}
           <div className="d-none d-sm-block col-sm-6 page-control">
-            <ProductCard className="Right-card" />
+            {LessonDetail && LessonDetail.length > 0 && (
+              <ProductCard
+                className="Right-card"
+                name={LessonDetail[0].name}
+                homework={LessonDetail[0].homework}
+                sales={LessonDetail[0].sales}
+                price={LessonDetail[0].price}
+                length={LessonDetail[0].length}
+                info={LessonDetail[0].info}
+              />
+            )}
           </div>
         </div>
         {/* 猜你喜歡 */}
