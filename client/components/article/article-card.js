@@ -8,11 +8,12 @@ import Link from 'next/link'
 
 export default function Articlecard({
   id,
+  auid,
   title,
+  user_id,
   content,
   img,
-  author,
-  publish_time,
+  published_time,
   fav,
   handleToggleFav,
   category_id,
@@ -36,9 +37,16 @@ export default function Articlecard({
   //   setArticles(newArticles)
   // }
 
+  // 組合日期8
+  const createdYear = new Date(published_time).getFullYear()
+  // console.log(createdYear)
+  const createdMonth = new Date(published_time).getMonth() + 1
+  const createdDate = new Date(published_time).getDate()
+  const combineDate = `${createdYear}-${createdMonth}-${createdDate}`
+  // console.log(combineDate)
+
   return (
     <>
-      <Link href={`/articles/${id}`}></Link>
       <div className="article-card">
         {/* info區塊 */}
         <div
@@ -50,17 +58,19 @@ export default function Articlecard({
             src="/article/empty.png"
             alt="空的圖"
           />
-          <span className="info-p text-secondary">{author}</span>
-          <span className="info-p text-secondary">{publish_time}</span>
+          <span className="info-p text-secondary">{user_id}</span>
+          <span className="info-p text-secondary">{combineDate}</span>
         </div>
         {/* article區塊 */}
-        <div className="content d-flex">
-          <div className="text me-1">
-            <h5 className="fw-bold clamped-text">{title}</h5>
-            <p className="text-secondary">{content}</p>
+        <Link href={`/article/article-list/${auid}`}>
+          <div className="content d-flex">
+            <div className="text me-1">
+              <h5 className="fw-bold clamped-text">{title}</h5>
+              <p className="text-secondary">{content}</p>
+            </div>
+            <img className="article-image" src={`/article/${img}`} alt="" />
           </div>
-          <img className="article-image" src={`/article/${img}`} alt="" />
-        </div>
+        </Link>
         {/* views-like */}
         <div className="views-like d-flex">
           <div className="views d-flex">

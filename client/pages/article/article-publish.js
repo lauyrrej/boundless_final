@@ -11,11 +11,49 @@ import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
-import { IoCloseOutline } from "react-icons/io5";
-import { IoIosArrowForward } from "react-icons/io";
-import { IoMdHome } from "react-icons/io";
+import { IoCloseOutline } from 'react-icons/io5'
+import { IoIosArrowForward } from 'react-icons/io'
+import { IoMdHome } from 'react-icons/io'
+import axios from 'axios'
 
-export default function Test() {
+export default function Publish() {
+  // ----------------------上傳圖片  ----------------------
+  // const uploadFileToServer = (file) => {
+  //   // 構造 FormData 對象，用於將文件上傳到服務器
+  //   const formData = new FormData()
+  //   formData.append('file', file)
+
+  //   // 發送 POST 請求到服務器，將文件上傳
+  //   return fetch('http://localhost:3005/api/upload', {
+  //     method: 'POST',
+  //     body: formData,
+  //   }).then((response) => {
+  //     // 檢查響應是否成功，如果不成功則拋出錯誤
+  //     if (!response.ok) {
+  //       throw new Error('File upload failed')
+  //     }
+  //     // 返回響應
+  //     return response.json()
+  //   })
+  // }
+  const [file, setFile] = useState()
+  const upload = () => {
+    const formData = new FormData()
+    formData.append('file', file)
+    axios
+      .post('http://localhost:3005/api/upload', formData)
+      .then((response) => {
+        // 檢查響應是否成功，如果不成功則拋出錯誤
+        if (!response.ok) {
+          throw new Error('File upload failed')
+        }
+        // 返回響應
+        return response.json()
+      })
+      .catch((error) => console.log(error))
+    // bug 顯示error但不知道問題在哪
+  }
+
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -90,21 +128,22 @@ export default function Test() {
           <div className="breadcrumb-wrapper-ns">
             <ul className="d-flex align-items-center p-0 m-0">
               <IoHome size={20} />
-              <li style={{ marginLeft: '8px' }}>Let&apos;s JAM!</li>
+              <li style={{ marginLeft: '8px' }}>樂友論壇</li>
               <FaChevronRight />
-              <Link href="/jam/recruit-list">
-                <li style={{ marginLeft: '10px' }}>團員募集</li>
+              <Link href="/article/article-list">
+                <li style={{ marginLeft: '10px' }}>文章資訊</li>
               </Link>
-
               <FaChevronRight />
-              <li style={{ marginLeft: '10px' }}>JAM 資訊</li>
+              <li style={{ marginLeft: '10px' }}>文章發布</li>
             </ul>
           </div>
           <div className="">
             {/* 主內容 */}
             {/* XLg */}
             <div className="x-lg text-end pb-3">
-              <IoCloseOutline size={50} />
+              <Link href={`/article/article-list`} className="icon-btn">
+                <IoCloseOutline size={50} />
+              </Link>
             </div>
             {/* setting category */}
             <div className="set-category d-flex justify-content-between row">
@@ -112,7 +151,10 @@ export default function Test() {
                 <h3>設定文章分類</h3>
               </div>
               <div className="col-8">
-                <select className="form-select" aria-label="Default select example">
+                <select
+                  className="form-select"
+                  aria-label="Default select example"
+                >
                   <option value={1}>技術</option>
                   <option value={2}>樂評</option>
                   <option value={3}>公告</option>
@@ -130,13 +172,16 @@ export default function Test() {
                   上限150個字，系統已經先擷取，你也可以自行修改摘要說明。(140/150)
                 </h5>
                 <div>
-                  <label htmlFor="exampleFormControlTextarea1" className="form-label" />
+                  <label
+                    htmlFor="exampleFormControlTextarea1"
+                    className="form-label"
+                  ></label>
                   <textarea
                     className="form-control"
                     id="exampleFormControlTextarea1"
                     rows={3}
                     placeholder="輸入內容..."
-                    defaultValue={""}
+                    defaultValue={''}
                   />
                 </div>
               </div>
@@ -152,8 +197,28 @@ export default function Test() {
                   選擇或上傳照片作為文章縮圖(同時也是社群分享文章連結時的縮圖)。
                 </h5>
                 <div className="upload-img d-flex align-items-center mt-4">
-                  <Image src="/article/singer.png" alt="" width={150} height={150} />
-                  <h5 className="text-secondary ms-5">上傳圖片</h5>
+                  <Image
+                    src="/article/singer.png"
+                    alt=""
+                    width={150}
+                    height={150}
+                  />
+                  <form
+                    action="/upload"
+                    method="post"
+                    encType="multipart/form-data"
+                  >
+                    <input
+                      type="file"
+                      name="myFile"
+                      id="myFile"
+                      onChange={(e) => setFile(e.target.files[0])}
+                    />
+                    <button type="button" onClick={upload}>
+                      送出
+                    </button>
+                  </form>
+                  {/* <h5 className="text-secondary ms-5">上傳圖片</h5> */}
                 </div>
                 <h5 className="text-secondary mt-4">
                   建議尺寸: 寬1200 x 高630 像素的等比例圖片 <br />
@@ -268,47 +333,49 @@ export default function Test() {
       </div>
       <Footer />
 
-      <style jsx>{`.wrapper {
-        min-height: calc(100vh);
-        padding: 0 35px;
+      <style jsx>{`
+        .wrapper {
+          min-height: calc(100vh);
+          padding: 0 35px;
         }
-      .set-content button {
-        background-color: white;
-        color: var(--secondary);
-        font-weight: 500;
-        border-color: var(--secondary);
-        border-width: 2px;
+        .set-content button {
+          background-color: white;
+          color: var(--secondary);
+          font-weight: 500;
+          border-color: var(--secondary);
+          border-width: 2px;
         }
-      /* set-content,set-img, set-tag */
-      .set-rwd{
-    display: flex;
-    flex-direction: row;
-}
-.rwd-title{
-    width: calc(60%);
-}
-.rwd-content{
-    width: calc(60%);
-}
-.tag-btns{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: start;
-    .btn{
-        margin-right: 20px;
-    }
-}
-@media screen and (max-width: 576px) {
-    .set-rwd{
-        flex-direction: column;
-    }
-    .rwd-title{
-        width: 100%;
-    }
-    .rwd-content{
-        width: 100%;
-    }
-}`}</style>
+        /* set-content,set-img, set-tag */
+        .set-rwd {
+          display: flex;
+          flex-direction: row;
+        }
+        .rwd-title {
+          width: calc(60%);
+        }
+        .rwd-content {
+          width: calc(60%);
+        }
+        .tag-btns {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: start;
+          .btn {
+            margin-right: 20px;
+          }
+        }
+        @media screen and (max-width: 576px) {
+          .set-rwd {
+            flex-direction: column;
+          }
+          .rwd-title {
+            width: 100%;
+          }
+          .rwd-content {
+            width: 100%;
+          }
+        }
+      `}</style>
     </>
   )
 }

@@ -96,7 +96,7 @@ export function CartProvider({ children }) {
     }
     return total
   }
-  console.log(lessonData);
+  // console.log(lessonData);
   const calcTotalPrice = () => {
     let total = 0
 
@@ -129,4 +129,4 @@ export function CartProvider({ children }) {
   )
 }
 
-export const useCart = ()=> useContext(CartContext)
+export const useCart = () => useContext(CartContext)
