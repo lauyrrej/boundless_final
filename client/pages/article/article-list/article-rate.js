@@ -69,7 +69,12 @@ export default function ArticleList() {
 
   const filterArticle = useMemo(() => {
     return article.filter((v) => {
-      return v.title.includes(search)
+      // 檢查文章的標題是否包含搜尋關鍵字
+      const titleMatch = v.title.includes(search)
+      // 檢查文章的 category_id 是否為 1
+      const categoryIdMatch = v.category_id === 1
+      // 將上述條件組合起來，若兩者皆符合則返回 true，否則返回 false
+      return titleMatch && categoryIdMatch
     })
   }, [article, search])
 
@@ -96,9 +101,6 @@ export default function ArticleList() {
     setArticle(newArticles)
   }
   // ----------------------假資料  ----------------------
-
-  // sidebar假資料
-  const sidebarData = ['全部', '技術分享', '音樂評論']
 
   // 資料排序
   const [dataSort, setDataSort] = useState('latest')
@@ -207,14 +209,12 @@ export default function ArticleList() {
             <div className="sidebar">
               <ul className="d-flex flex-column">
                 <li>
-                  <Link href={`/article/article-list`} className="active">
+                  <Link href={`/article`} className="active">
                     全部
                   </Link>
                 </li>
                 <li>
-                  <Link href={`/article/article-list/article-rate`}>
-                    音樂評論
-                  </Link>
+                  <Link href={`/article/article-rate`}>音樂評論</Link>
                 </li>
                 <li>
                   <Link href={`/article/Q&A`}>技術分享</Link>

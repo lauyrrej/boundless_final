@@ -14,13 +14,26 @@ import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 
-export default function Test() {
+export default function Auid({
+  id,
+  auid,
+  title,
+  user_id,
+  content,
+  img,
+  published_time,
+  fav,
+  handleToggleFav,
+  category_id,
+}) {
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
   const menuMbToggle = () => {
     setShowMenu(!showMenu)
   }
+
+  // ----------------------要資料  ----------------------
 
   // ----------------------跟後端要資料  ----------------------
   //-----------------------動態路由
@@ -30,14 +43,11 @@ export default function Test() {
   const router = useRouter()
 
   const [articleDetail, setArticleDetail] = useState()
-  const getArticleDetail = async (auid) => {
+  const getSingleDetail = async (auid) => {
     try {
       const res = await fetch(`http://localhost:3005/api/article/${auid}`)
-      console.log(res)
       // res.json()是解析res的body的json格式資料，得到JS的資料格式
       const data = await res.json()
-
-      console.log(data)
 
       // 設定到state中，觸發重新渲染(re-render)，會進入到update階段
       // 進入狀態前檢查資料類型有值，以避免錯誤
@@ -54,8 +64,7 @@ export default function Test() {
     // 如果isReady是true，確保能得到query的值
     if (router.isReady) {
       const { auid } = router.query
-      console.log(auid)
-      getArticleDetail(auid)
+      getSingleDetail(auid)
     }
   }, [router.isReady])
 
