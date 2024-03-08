@@ -57,6 +57,7 @@ export default function Auid({
       }
     } catch (e) {
       console.error(e)
+      // bug 瀏覽器路由顯示undefined
     }
   }
   // 初次渲染"之後(After)"+router.isReady改變時，執行其中程式碼
@@ -92,9 +93,8 @@ export default function Auid({
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
         <div
-          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${
-            showMenu ? 'menu-mb-show' : ''
-          }`}
+          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${showMenu ? 'menu-mb-show' : ''
+            }`}
         >
           {/* 用戶資訊 */}
           <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">

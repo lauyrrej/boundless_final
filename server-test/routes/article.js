@@ -54,6 +54,7 @@ router.post("/api/upload", upload.single("myFile"), (req, res) => {
   // 根據時間點給予新的名稱
   renameSync(req.file.path, resolve(__dirname, "public/upload", newFileName));
   res.json({ body: req.body, file: req.file });
+  // bug 上傳bug
 })
 
 export default router;
