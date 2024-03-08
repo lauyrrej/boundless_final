@@ -1,11 +1,13 @@
 import { createContext, useContext, useState } from 'react'
 import CartData from '@/data/cart/cart.json'
+import CouponData from '@/data/cart/coupons.json'
 
 export const CartContext = createContext()
 
 export function CartProvider({ children }) {
   //加入到購物車的項目
   let [items, setItems] = useState(CartData)
+
   const addItem = (item) => {
     //擴充item的屬性多一個qty
     const newItem = { ...item, qty: 1 }
@@ -48,9 +50,17 @@ export function CartProvider({ children }) {
     return v.type === 2
   })
 
+  const lessonCoupons = CouponData.filter((v, i) => {
+    return v.kind === 2
+  })
+
   //instrumentdata
   const instrumentData = items.filter((v, i) => {
     return v.type === 1
+  })
+
+  const instrumentCoupons = CouponData.filter((v, i) => {
+    return v.kind === 1
   })
 
   //計算個數
@@ -83,7 +93,7 @@ export function CartProvider({ children }) {
     let total = 0
 
     for (let i = 0; i < lessonData.length; i++) {
-      total += lessonData[i] * parseInt(lessonData[i].price, 10)
+      total += lessonData[i].price
     }
     return total
   }
@@ -92,26 +102,47 @@ export function CartProvider({ children }) {
     let total = 0
 
     for (let i = 0; i < instrumentData.length; i++) {
-      total += instrumentData[i].qty * parseInt(instrumentData[i].price, 10)
+      total += instrumentData[i].qty * instrumentData[i].price
     }
     return total
   }
-  console.log(lessonData);
+
   const calcTotalPrice = () => {
     let total = 0
 
     for (let i = 0; i < items.length; i++) {
-      total += items[i].qty * parseInt(items[i].price)
+      total = calcLessonPrice() + calcInstrumentPrice()
     }
     return total
   }
+
+  //計算折價券
+
+  const [lessonDiscount, setLessonDiscount] = useState(0)
+
+  const handleLessonSelector = (e) => {
+    setLessonDiscount(e)
+  }
+
+  const [instrumentDiscount, setinstrumentDiscount] = useState(0)
+
+  const handleInstrumentSelector = (e) => {
+    setinstrumentDiscount(e)
+  }
+
 
   return (
     <CartContext.Provider
       value={{
         items,
         instrumentData,
+        instrumentCoupons,
+        instrumentDiscount,
         lessonData,
+        lessonCoupons,
+        lessonDiscount,
+        handleLessonSelector,
+        handleInstrumentSelector,
         addItem,
         increment,
         decrement,
@@ -129,4 +160,4 @@ export function CartProvider({ children }) {
   )
 }
 
-export const useCart = ()=> useContext(CartContext)
+export const useCart = () => useContext(CartContext)
