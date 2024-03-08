@@ -124,6 +124,9 @@ export function AuthProvider({ children }) {
     const userID = jwtDecode(Loginusertoken)
     const id = userID.id
 
+    //測試
+    const jam = userID.my_jam
+    console.log(jam)
     try {
       const response = await fetch(`http://localhost:3005/api/user/${id}`, {
         method: 'get',

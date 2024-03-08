@@ -46,7 +46,8 @@ router.post("/login", upload.none(), (req, res) => {
         id: user.id,
         name: user.name,
         email: user.email,
-        avatar: user.avatar,
+        img: user.img,
+        my_jam:user.my_jam,
       },
       accessTokenSecret,
       //token 認證的時長原為30m
@@ -73,7 +74,8 @@ router.post("/logout", checkToken, (req, res) => {
         id: user.id,
         name: user.name,
         email: user.email,
-        avatar: user.avatar,
+        img: user.img,
+        my_jam:user.my_jam,
       },
       accessTokenSecret,
       { expiresIn: "-10s" }
@@ -98,7 +100,8 @@ router.post("/status", checkToken, (req, res) => {
         id: user.id,
         name: user.name,
         mail: user.mail,
-        head: user.head,
+        img: user.img,
+        my_jam:user.my_jam,
       },
       accessTokenSecret,
       { expiresIn: "30m" }
@@ -133,7 +136,7 @@ router.get("/:id", checkToken, async function (req, res) {
 
   // 不回傳密碼跟創建時間的版本
   const [singerUser] = await db.execute(
-    `SELECT \`id\` ,\`name\` ,\`email\`,\`phone\`,\`postcode\`,\`country\`,\`township\`,\`address\`,\`birthday\`,\`genre_like\`,\`play_instrument\`,\`info\`,\`img\`,\`gender\`,\`nickname\`,\`google_uid\`,\`photo_url\`,\`privacy\`,\`my_lesson\` FROM \`user\` WHERE \`id\` = ? AND \`valid\` = 1`,
+    `SELECT \`id\` ,\`name\` ,\`email\`,\`phone\`,\`postcode\`,\`country\`,\`township\`,\`address\`,\`birthday\`,\`genre_like\`,\`play_instrument\`,\`info\`,\`img\`,\`gender\`,\`nickname\`,\`google_uid\`,\`photo_url\`,\`privacy\`,\`my_lesson\` ,\`my_jam\` FROM \`user\` WHERE \`id\` = ? AND \`valid\` = 1`,
     [id]
   );
 
