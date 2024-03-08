@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import Navbar from '@/components/common/navbar'
+import Navbar from '@/components/common/navbar-test'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -34,7 +34,8 @@ export default function Test() {
   }
   // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
-  const { LoginUserData, handleLoginStatus, getLoginUserData } = useAuth()
+  const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
+    useAuth()
   const [userData, setUserData] = useState()
   //檢查token
   useEffect(() => {
@@ -42,9 +43,10 @@ export default function Test() {
     //獲得資料
     getLoginUserData()
   }, [])
+  //登出功能
 
   //檢查是否獲取資料
-  console.log(LoginUserData)
+  // console.log(LoginUserData)
   //   讀取使用者資料後 定義大頭貼路徑   再觀察一下 大頭貼目前有bad 錯誤訊息
   const avatarImage = `/user/${LoginUserData.img}`
   const avatarDefault = `/user/avatar_userDefault.jpg`
@@ -156,13 +158,9 @@ export default function Test() {
           {/* 用戶資訊 */}
           <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
             <div className="mb-photo-wrapper mb-2">
-              <Image
-                src="/jam/amazingshow.jpg"
-                alt="user photo mb"
-                fill
-              ></Image>
+              <Image src={avatarImage} alt="user photo mb" fill></Image>
             </div>
-            <div>用戶名稱</div>
+            <div>{LoginUserData.nickname}</div>
           </div>
           <Link
             className="mm-item"
@@ -183,7 +181,14 @@ export default function Test() {
           <Link className="mm-item" href="/article/article-list">
             樂友論壇
           </Link>
-          <div className="mm-item" style={{ color: '#1581cc' }}>
+          {/*eslint-disable-next-line jsx-a11y/click-events-have-key-events*/}
+          <div
+            onClick={handleLogout}
+            //onclick 要加這個 不然ES會跳沒有給身障人士使用
+            role="presentation"
+            className="mm-item"
+            style={{ color: '#1581cc' }}
+          >
             登出
             <ImExit size={20} className="ms-2" />
           </div>
@@ -214,13 +219,35 @@ export default function Test() {
                 </div> */}
               </div>
               <ul className="d-flex flex-column">
-                {sidebarData.map((item, index) => {
+                {/* {sidebarData.map((item, index) => {
                   return (
                     <li key={index}>
                       <Link href={`#`}>{item}</Link>
                     </li>
                   )
-                })}
+                })} */}
+
+                <li key={1}>
+                  <Link href="/user/user-info">會員資訊</Link>
+                </li>
+                <li key={2}>
+                  <Link href="/user/user-jam">我的樂團</Link>
+                </li>
+                <li key={3}>
+                  <Link href="/user/user-order">我的訂單</Link>
+                </li>
+                <li key={4}>
+                  <Link href="/user/user-favorite">我的收藏</Link>
+                </li>
+                <li key={5}>
+                  <Link href="/coupon/userCoupon">我的優惠券</Link>
+                </li>
+                <li key={6}>
+                  <Link href="/user/user-lesson">我的課程</Link>
+                </li>
+                <li key={7}>
+                  <Link href="/user/user-notify">我的訊息</Link>
+                </li>
               </ul>
             </div>
           </div>
@@ -484,7 +511,9 @@ export default function Test() {
           }
           .sidebar-user-info-text {
             display: flex;
-            width: 100px;
+
+            /* width: 150px; */
+
             flex-direction: column;
             align-items: flex-start;
             gap: 6px;
