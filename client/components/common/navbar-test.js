@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 import { IoCart, IoMenu } from 'react-icons/io5'
 import Image from 'next/image'
 import logo from '@/assets/logo.svg'
 import logoMb from '@/assets/logo_mb.svg'
 import Link from 'next/link'
 import { ImExit } from 'react-icons/im'
+// sweetalert
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
@@ -39,9 +43,28 @@ export default function Navbar({ menuMbToggle }) {
     // 更改狀態，切換 className
     setavatarActive(!avatarActive)
   }
-
-  // 根據狀態設置不同的 className
+  // 根據狀態設置不同的 className 針對右上角小視窗
   const avatarActivestatus = avatarActive ? '' : 'menu-active'
+  //----------------------------sweetalert--------------------------------------
+  //登出
+  const router = useRouter()
+  const mySwal = withReactContent(Swal)
+  const logoutAlert = () => {
+    mySwal
+      .fire({
+        position: 'center',
+        icon: 'success',
+        iconColor: '#1581cc',
+        title: '登出成功，將為您跳轉到首頁',
+        showConfirmButton: false,
+        timer: 2000,
+      })
+      .then(
+        setTimeout(() => {
+          router.push(`/login`)
+        }, 2000)
+      )
+  }
 
   return (
     <>
@@ -74,15 +97,13 @@ export default function Navbar({ menuMbToggle }) {
             </li>
             <li className="login-state d-flex justify-content-center">
               {LoginUserData.id ? (
-                <Link className="" href="">
-                  <div
-                    className="user-img "
-                    onClick={handleClick}
-                    role="presentation"
-                  >
-                    <Image src={avatarImage} alt="user-photo" fill={true} />
-                  </div>
-                </Link>
+                <div
+                  className="user-img "
+                  onClick={handleClick}
+                  role="presentation"
+                >
+                  <Image src={avatarImage} alt="user-photo" fill={true} />
+                </div>
               ) : (
                 <Link className="" href="/login">
                   登入/註冊
@@ -106,71 +127,90 @@ export default function Navbar({ menuMbToggle }) {
             </Link>
             <IoMenu size={30} className="ms-3" onClick={menuMbToggle} />
           </div>
-        </nav>
-      </header>
-      {/* 登入狀態下 點擊右上角叫出小視窗          */}
-      <div
-        className={`avatar-menu  d-flex flex-column align-items-center ${avatarActivestatus}`}
-      >
-        {/* 用戶資訊 */}
-        <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
-          {/* <div className="mb-photo-wrapper mb-2">
+          {/* 登入狀態下 點擊右上角叫出小視窗          */}
+          <div
+            className={`avatar-menu d-none  d-sm-flex  flex-column align-items-center ${avatarActivestatus}`}
+          >
+            {/* 用戶資訊 */}
+            <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
+              {/* <div className="mb-photo-wrapper mb-2">
             <Image src={avatarImage} alt="user photo mb" fill></Image>
           </div>
           <div>{LoginUserData.nickname}</div> */}
-        </div>
-        <Link
-          className="mm-item"
-          href="/user/user-info"
-          style={{ borderTop: '1px solid #b9b9b9' }}
-        >
-          會員中心
-        </Link>
-        <Link className="mm-item" href="/lesson/lesson-list">
-          探索課程
-        </Link>
-        <Link className="mm-item" href="/instrument/instrument-list">
-          樂器商城
-        </Link>
-        <Link className="mm-item" href="/jam/recruit-list">
-          Let &apos;s JAM!
-        </Link>
-        <Link className="mm-item" href="/article/article-list">
-          樂友論壇
-        </Link>
-        {/*eslint-disable-next-line jsx-a11y/click-events-have-key-events*/}
-        <div
-          onClick={handleLogout}
-          //onclick 要加這個 不然ES會跳沒有給身障人士使用
-          role="presentation"
-          className="mm-item logout-btn"
-          style={{ color: '#1581cc' }}
-        >
-          登出
-          <ImExit size={20} className="ms-2" />
-        </div>
-      </div>
-      <style jsx>{`
-        .avatar-menu {
-          padding-top: 10px;
-          width: 300px;
+            </div>
+            <Link
+              className="mm-item-right"
+              href="/user/user-info"
+              style={{ borderTop: '1px solid #b9b9b9' }}
+            >
+              會員中心
+            </Link>
+            <Link className="mm-item-right" href="/lesson/lesson-list">
+              探索課程
+            </Link>
+            <Link className="mm-item-right" href="/instrument/instrument-list">
+              樂器商城
+            </Link>
+            <Link className="mm-item-right" href="/jam/recruit-list">
+              Let &apos;s JAM!
+            </Link>
+            <Link className="mm-item-right" href="/article/article-list">
+              樂友論壇
+            </Link>
+            {/*eslint-disable-next-line jsx-a11y/click-events-have-key-events*/}
+            <div
+              onClick={() => {
+                handleLogout()
+                logoutAlert()
+              }}
+              //onclick 要加這個 不然ES會跳沒有給身障人士使用
+              role="presentation"
+              className="mm-item-right logout-btn"
+              style={{ color: '#1581cc' }}
+            >
+              登出
+              <ImExit size={20} className="ms-2" />
+            </div>
+          </div>
+        </nav>
+      </header>
 
+      <style jsx>{`
+        .navbar-wrapper {
+          position: relative;
+          z-index: 120; /* 設置 z-index */
+        }
+        .avatar-menu {
+          width: 300px;
+          z-index: 80; /*沒生效*/
           position: absolute;
           top: 60px;
-          right: 20px;
-          z-index: 1000;
+          right: 0px;
           background-color: #fff;
-          /*display: none;*/
-          transition: all 0.5s ease;
-          /*border-radius: 20px;*/
+          /*transition: all 0.5s;*/
+
+          a {
+            color: #1581cc;
+          }
+          .mm-item-right {
+            border-radius: 0px;
+            width: 100%;
+            padding-block: 16px;
+            border-bottom: 1px solid #b9b9b9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: var($primary);
+            cursor: pointer;
+          }
+
+          .logout-btn {
+            font-size: 20px;
+          }
         }
         .menu-active {
-          top: -600px;
-        }
-        .logout-btn:hover {
-          cursor: pointer; /* 添加手型游標 */
-          /* 其他樣式，例如改變背景顏色或邊框等 */
-          background-color: #f0f0f0;
+          top: -580px;
         }
       `}</style>
     </>

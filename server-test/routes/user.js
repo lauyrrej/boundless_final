@@ -142,6 +142,35 @@ router.get("/:id", checkToken, async function (req, res) {
   return res.json(resUser);
 });
 
+// 註冊 = 檢查資料庫是否有此email及密碼 ,如果沒有 就增加sql
+router.post('/', (req, res) => {
+
+  // req.body資料範例
+  // {
+  //     "name":"金妮",
+  //     "email":"ginny@test.com",
+  //     "username":"ginny",
+  //     "password":"12345"
+  // }
+
+  // 要新增的會員資料
+  const newUser = req.body
+
+  // 檢查從前端來的資料哪些為必要(name, username...)
+  if (
+    !newUser.email ||
+    !newUser.password ||
+    !newUser.passwordCheck
+  ) {
+    return res.json({ status: 'error', message: '缺少必要資料' })
+  }
+  return res.json({ status: '1', message: '有' })
+
+
+
+})
+
+
 //檢查token 當作中介使用
 function checkToken(req, res, next) {
   let token = req.get("Authorization");
