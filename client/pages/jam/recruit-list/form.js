@@ -278,14 +278,17 @@ export default function Form() {
                 <div className={`${styles.jamTitle} col-12 col-sm-2`}>
                   發起表單
                 </div>
-                <div className="col-12 col-sm-10 mt-sm-0">
-                  (提示: 點擊&nbsp;
+                <div
+                  className="col-12 col-sm-10 mt-sm-0"
+                  style={{ color: '#5a5a5a' }}
+                >
+                  ※ 點擊&nbsp;
                   <FaCirclePlus
                     size={18}
                     style={{ color: '#18a1ff' }}
                     className="mb-1"
                   />
-                  &nbsp;可增加項目)
+                  &nbsp;可增加項目
                 </div>
               </div>
 

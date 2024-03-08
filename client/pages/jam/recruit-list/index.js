@@ -141,7 +141,7 @@ export default function RecruitList() {
 
     try {
       const res = await fetch(
-        `http://localhost:3005/api/jam?${searchParams.toString()}`
+        `http://localhost:3005/api/jam/allJam?${searchParams.toString()}`
       )
 
       // res.json()是解析res的body的json格式資料，得到JS的資料格式
@@ -151,11 +151,21 @@ export default function RecruitList() {
       // 進入狀態前檢查資料類型為陣列，以避免錯誤
       // console.log(datas)
       if (datas) {
+        // const genreName = jam.genre.map((g) => {
+        //   const matchedgenre = genre.find((gd) => gd.id === g)
+        //   return matchedgenre.name
+        // })
+        const combineData = datas.jamData.map((v) => {
+          const matchFormer = datas.formerData.find(
+            (fv) => fv.id === v.former.id
+          )
+          return { ...v, former: matchFormer }
+        })
         // 設定獲取頁數總合
         setPageTotal(datas.pageTotal)
         // 設定獲取項目
         setPage(datas.page)
-        setJams(datas.jamData)
+        setJams(combineData)
         setGenreData(datas.genreData)
         setPlayerData(datas.playerData)
       }
