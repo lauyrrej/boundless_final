@@ -9,22 +9,17 @@ import { FaTrash } from 'react-icons/fa6'
 
 import InstrumentCategory from '@/data/cart/instrument_category.json'
 
-export default function InstrumentList(
-  {items, instrumentData, increment,decrement,remove}
-) {
-  // let [count, setCount] = useState(0);
-
+export default function InstrumentList({
+  items,
+  instrumentData,
+  increment,
+  decrement,
+  remove,
+}) {
 
   const instruments = items.filter((v, i) => {
     return v.type == 1
   })
-  // const [instrumentData, setInstrumentData] = useState([])
-
-
-  useEffect(()=>{
-    
-  },[])
-  console.log(instruments);
 
   const categoryName = instruments.map((item) => {
     const findCategoryName = InstrumentCategory.find((v, i) => {
@@ -33,7 +28,6 @@ export default function InstrumentList(
     return findCategoryName
   })
 
-  // console.log(categoryName);
   return (
     <>
       <div className={`${Instrument.cartItemGroup}`}>
@@ -60,11 +54,11 @@ export default function InstrumentList(
                     className={`${Instrument.quantity_left_minus} btn btn-light`}
                     onClick={() => {
                       if (v.qty === 1) {
-                        remove(items,v.id)
-                      }else{
-                        decrement(items,v.id)
+                        remove(items, v.id)
+                      } else {
+                        decrement(items, v.id)
                       }
-                      }}
+                    }}
                   >
                     <FaMinus />
                   </button>
