@@ -179,6 +179,16 @@ header {
   }
 }
 
+.fixed-btn {
+  position: fixed;
+  top: 75svh;
+  right: 10px;
+  z-index: 100;
+  width: 64px;
+  height: 64px;
+  text-align: center;
+}
+
 .top-function-flex {
   display: flex;
   justify-content: space-between;

@@ -9,6 +9,13 @@
   --red: #ec3f3f;
   --back: rgba(185, 185, 185, 0.3);
 }
+.jamMain {
+  padding: 0;
+  margin-bottom: 60px;
+  @media screen and (max-width: 576px) {
+    margin-bottom: 0;
+  }
+}
 .jamTitle {
   color: var(--deep-primary);
   font-size: 24px;

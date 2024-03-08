@@ -303,7 +303,7 @@ export default function Form() {
                   <input
                     type="text"
                     className={`${styles.itemInput} form-control`}
-                    placeholder="發起動機或目的，限20字"
+                    placeholder="發起動機或目的，上限20字"
                     maxLength={20}
                     onChange={(e) => {
                       setTitle(e.target.value)
@@ -537,7 +537,7 @@ export default function Form() {
                   <input
                     type="text"
                     className={`form-control`}
-                    placeholder="事先說好要求，有助於玩團和樂哦~ 限30字"
+                    placeholder="事先說好要求，有助於玩團和樂哦～上限30字"
                     maxLength={30}
                     onChange={(e) => {
                       setCondition(e.target.value)
@@ -571,7 +571,7 @@ export default function Form() {
                 <div className={`${styles.itemInputWrapper} col-12 col-sm-10`}>
                   <textarea
                     className={`${styles.textArea} form-control`}
-                    placeholder="輸入清楚、吸引人的描述，讓大家瞭解你的成團動機吧！限150字"
+                    placeholder="輸入清楚、吸引人的描述，讓大家瞭解你的成團動機吧！上限150字"
                     name="description"
                     maxLength={150}
                     onChange={(e) => {

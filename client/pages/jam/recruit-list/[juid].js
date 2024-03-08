@@ -293,8 +293,8 @@ export default function Info() {
               <li style={{ marginLeft: '10px' }}>JAM資訊</li>
             </ul>
           </div>
-          <div className="col-12 col-sm-8" style={{ padding: 0 }}>
-            {/* 主內容 */}
+          {/*   ---------------------- 主要內容  ---------------------- */}
+          <div className={`${styles.jamMain} col-12 col-sm-8`}>
             <div className={`${styles.jamLeft}`}>
               <div
                 className={`${styles.jamTitle} d-flex justify-content-between align-items-center`}
@@ -415,8 +415,7 @@ export default function Info() {
                   className={`${styles.noticeText}`}
                   style={{ color: '#5a5a5a' }}
                 >
-                  ※ 可同時申請多個 JAM，但加入的 JAM
-                  以一個為限，請考慮清楚再提出申請。
+                  ※ 可同時申請多個 JAM，但最終只能擇一加入。
                 </div>
               </div>
               {/* -------------------------- 擔任職位 -------------------------- */}
@@ -456,7 +455,7 @@ export default function Info() {
                 <div className={`${styles.itemInputWrapper} col-12 col-sm-10`}>
                   <textarea
                     className={`${styles.textArea} form-control`}
-                    placeholder="建議可以提到自己喜歡的音樂、入團動機等，並請注意禮貌，限150字"
+                    placeholder="建議可以提到自己喜歡的音樂、入團動機等，上限150字"
                     name="message"
                     maxLength={150}
                     onChange={(e) => {

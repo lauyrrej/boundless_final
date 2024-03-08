@@ -8,7 +8,8 @@ const upload = multer();
 // 取得所有組團資料
 router.get("/allJam", async (req, res) => {
   // 取得組團資訊中所需的曲風、樂手資料
-  let [genreData] = await db.execute("SELECT * FROM `genre`").catch(() => {
+  let [genreData] = await db.execute("SELECT * FROM `genre`").catch((error) => {
+    console.log(error);
     return undefined;
   });
   let [playerData] = await db.execute("SELECT * FROM `player`").catch(() => {

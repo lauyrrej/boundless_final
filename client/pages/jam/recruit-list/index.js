@@ -295,6 +295,13 @@ export default function RecruitList() {
                 什麼是JAM？
               </Link>
             </div>
+            {/* 手機版 發起/我的JAM 按鍵 */}
+            <Link
+              href="/jam/recruit-list/form"
+              className="fixed-btn b-btn b-btn-primary d-block d-sm-none"
+            >
+              發起JAM
+            </Link>
             {/*  ---------------------- 頂部功能列  ---------------------- */}
             <div className="top-function-container">
               {/*  ---------------------- 麵包屑  ---------------------- */}
@@ -318,8 +325,11 @@ export default function RecruitList() {
                   >
                     選單
                   </div>
-                  <Link href="/jam/recruit-list/form">
-                    <div className="b-btn b-btn-primary px-3">發起JAM</div>
+                  <Link
+                    href="/jam/recruit-list/form"
+                    className="b-btn b-btn-primary px-3 d-none d-sm-block"
+                  >
+                    發起JAM
                   </Link>
                 </div>
 
