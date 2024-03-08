@@ -51,6 +51,7 @@ export default function Publish() {
         return response.json()
       })
       .catch((error) => console.log(error))
+    // bug 顯示error但不知道問題在哪
   }
 
   // ----------------------手機版本  ----------------------
@@ -84,9 +85,8 @@ export default function Publish() {
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
         <div
-          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${
-            showMenu ? 'menu-mb-show' : ''
-          }`}
+          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${showMenu ? 'menu-mb-show' : ''
+            }`}
         >
           {/* 用戶資訊 */}
           <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
