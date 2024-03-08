@@ -161,3 +161,4 @@ export function CartProvider({ children }) {
 }
 
 export const useCart = () => useContext(CartContext)
+export const useCart = () => useContext(CartContext)

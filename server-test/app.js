@@ -11,7 +11,8 @@ import jamRouter from "./routes/jam.js";
 import instrumentRouter from "./routes/instrument.js";
 import lessonRouter from "./routes/lesson.js";
 import couponRouter from "./routes/coupon.js";
-import userRouter from './routes/user.js'
+// import userRouter from './routes/user.js'
+import articleRouter from "./routes/article.js";
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -44,7 +45,8 @@ app.use("/api/jam", jamRouter);
 app.use("/api/instrument", instrumentRouter);
 app.use("/api/lesson", lessonRouter);
 app.use("/api/coupon", couponRouter);
-app.use('/api/user', userRouter)
+// app.use('/api/user', userRouter)
+app.use("/api/article", articleRouter);
 
 
 // catch 404 and forward to error handler

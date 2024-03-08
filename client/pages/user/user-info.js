@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import Navbar from '@/components/common/navbar'
+import Navbar from '@/components/common/navbar-test'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -20,21 +20,10 @@ import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 
 export default function Test() {
-  // ----------------------測試用 獲得所有使用者清單 ----------------------
-  const getUser = async () => {
-    try {
-      const res = await fetch('http://localhost:3005/api/user')
-
-      // 使用 res.json() 來解析 response 的 JSON 格式資料
-      const usersData = await res.json()
-      //   console.log(usersData)
-    } catch (error) {
-      console.error('There was a problem with the fetch operation:', error)
-    }
-  }
   // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
-  const { LoginUserData, handleLoginStatus, getLoginUserData } = useAuth()
+  const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
+    useAuth()
   const [userData, setUserData] = useState()
   //檢查token
   useEffect(() => {
@@ -42,28 +31,14 @@ export default function Test() {
     //獲得資料
     getLoginUserData()
   }, [])
+  //登出功能
 
   //檢查是否獲取資料
-  console.log(LoginUserData)
+  // console.log(LoginUserData)
   //   讀取使用者資料後 定義大頭貼路徑   再觀察一下 大頭貼目前有bad 錯誤訊息
   const avatarImage = `/user/${LoginUserData.img}`
   const avatarDefault = `/user/avatar_userDefault.jpg`
 
-  //以下為觀察錯誤訊息  先註解掉
-  // Uncaught (in promise) Error: A listener indicated an asynchronous response by returning true, but the message channel closed before a response was received
-  // useEffect(() => {
-  //   let isMounted = true // 判斷組件是否還在掛載
-
-  //   handleLoginStatus() // 做一些同步的操作
-
-  //   if (isMounted) {
-  //     getLoginUserData() // 異步操作
-  //   }
-
-  //   return () => {
-  //     isMounted = false // 組件卸載時更新狀態
-  //   }
-  // }, [handleLoginStatus, getLoginUserData])
   // ----------------------會員登入狀態  ----------------------
 
   // ----------------------手機版本  ----------------------
@@ -79,16 +54,16 @@ export default function Test() {
   }
   // ----------------------假資料  ----------------------
   // sidebar假資料
-  const sidebarData = [
-    '會員資訊',
-    '我的樂團',
-    '我的訂單',
-    '我的文章',
-    '我的收藏',
-    '我的優惠券 ',
-    '我的課程',
-    '我的訊息',
-  ]
+  // const sidebarData = [
+  //   '會員資訊',
+  //   '我的樂團',
+  //   '我的訂單',
+  //   '我的文章',
+  //   '我的收藏',
+  //   '我的優惠券 ',
+  //   '我的課程',
+  //   '我的訊息',
+  // ]
 
   // 資料排序
   const [dataSort, setDataSort] = useState('latest')
@@ -156,17 +131,13 @@ export default function Test() {
           {/* 用戶資訊 */}
           <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
             <div className="mb-photo-wrapper mb-2">
-              <Image
-                src="/jam/amazingshow.jpg"
-                alt="user photo mb"
-                fill
-              ></Image>
+              <Image src={avatarImage} alt="user photo mb" fill></Image>
             </div>
-            <div>用戶名稱</div>
+            <div>{LoginUserData.nickname}</div>
           </div>
           <Link
             className="mm-item"
-            href="/user"
+            href="/user/user-info"
             style={{ borderTop: '1px solid #b9b9b9' }}
           >
             會員中心
@@ -183,7 +154,14 @@ export default function Test() {
           <Link className="mm-item" href="/article/article-list">
             樂友論壇
           </Link>
-          <div className="mm-item" style={{ color: '#1581cc' }}>
+          {/*eslint-disable-next-line jsx-a11y/click-events-have-key-events*/}
+          <div
+            onClick={handleLogout}
+            //onclick 要加這個 不然ES會跳沒有給身障人士使用
+            role="presentation"
+            className="mm-item"
+            style={{ color: '#1581cc' }}
+          >
             登出
             <ImExit size={20} className="ms-2" />
           </div>
@@ -214,13 +192,38 @@ export default function Test() {
                 </div> */}
               </div>
               <ul className="d-flex flex-column">
-                {sidebarData.map((item, index) => {
+                {/* {sidebarData.map((item, index) => {
                   return (
                     <li key={index}>
                       <Link href={`#`}>{item}</Link>
                     </li>
                   )
-                })}
+                })} */}
+
+                <li key={1}>
+                  <Link href="/user/user-info">會員資訊</Link>
+                </li>
+                <li key={2}>
+                  <Link href="/user/user-jam">我的樂團</Link>
+                </li>
+                <li key={3}>
+                  <Link href="/user/user-order">我的訂單</Link>
+                </li>
+                <li key={4}>
+                  <Link href="/user/user-acticle">我的文章</Link>
+                </li>
+                <li key={5}>
+                  <Link href="/user/user-favorite">我的收藏</Link>
+                </li>
+                <li key={6}>
+                  <Link href="/coupon/userCoupon">我的優惠券</Link>
+                </li>
+                <li key={7}>
+                  <Link href="/user/user-lesson">我的課程</Link>
+                </li>
+                <li key={8}>
+                  <Link href="/user/user-notify">我的訊息</Link>
+                </li>
               </ul>
             </div>
           </div>
@@ -308,7 +311,11 @@ export default function Test() {
                         <div className="user-title-userInfo">會員資訊</div>
                         <div className="user-btnGroup">
                           <div className="user-btnGroup-btn1">
-                            <div>預覽個人首頁</div>
+                            <div>
+                              <Link href="/user/user-homepage">
+                                預覽個人首頁
+                              </Link>
+                            </div>
                           </div>
                           <div className="user-btnGroup-btn2">
                             <div>編輯資訊</div>
@@ -484,7 +491,9 @@ export default function Test() {
           }
           .sidebar-user-info-text {
             display: flex;
-            width: 100px;
+
+            /* width: 150px; */
+
             flex-direction: column;
             align-items: flex-start;
             gap: 6px;
