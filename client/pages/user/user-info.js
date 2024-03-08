@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react'
-import Navbar from '@/components/common/navbar'
+import Navbar from '@/components/common/navbar-test'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
 
 //圖片
 import jamHero from '@/assets/jam-hero.png'
-import avatar from '@/public/user/Meiyuyu.jpg'
 
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
@@ -21,9 +20,53 @@ import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 
 export default function Test() {
-  // ----------------------會員登入  ----------------------
+  // ----------------------測試用 獲得所有使用者清單 ----------------------
+  const getUser = async () => {
+    try {
+      const res = await fetch('http://localhost:3005/api/user')
 
-  const { auth, login, logout } = useAuth()
+      // 使用 res.json() 來解析 response 的 JSON 格式資料
+      const usersData = await res.json()
+      //   console.log(usersData)
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error)
+    }
+  }
+  // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
+  //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
+  const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
+    useAuth()
+  const [userData, setUserData] = useState()
+  //檢查token
+  useEffect(() => {
+    handleLoginStatus()
+    //獲得資料
+    getLoginUserData()
+  }, [])
+  //登出功能
+
+  //檢查是否獲取資料
+  // console.log(LoginUserData)
+  //   讀取使用者資料後 定義大頭貼路徑   再觀察一下 大頭貼目前有bad 錯誤訊息
+  const avatarImage = `/user/${LoginUserData.img}`
+  const avatarDefault = `/user/avatar_userDefault.jpg`
+
+  //以下為觀察錯誤訊息  先註解掉
+  // Uncaught (in promise) Error: A listener indicated an asynchronous response by returning true, but the message channel closed before a response was received
+  // useEffect(() => {
+  //   let isMounted = true // 判斷組件是否還在掛載
+
+  //   handleLoginStatus() // 做一些同步的操作
+
+  //   if (isMounted) {
+  //     getLoginUserData() // 異步操作
+  //   }
+
+  //   return () => {
+  //     isMounted = false // 組件卸載時更新狀態
+  //   }
+  // }, [handleLoginStatus, getLoginUserData])
+  // ----------------------會員登入狀態  ----------------------
 
   // ----------------------手機版本  ----------------------
   // 主選單
@@ -115,13 +158,9 @@ export default function Test() {
           {/* 用戶資訊 */}
           <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
             <div className="mb-photo-wrapper mb-2">
-              <Image
-                src="/jam/amazingshow.jpg"
-                alt="user photo mb"
-                fill
-              ></Image>
+              <Image src={avatarImage} alt="user photo mb" fill></Image>
             </div>
-            <div>用戶名稱</div>
+            <div>{LoginUserData.nickname}</div>
           </div>
           <Link
             className="mm-item"
@@ -142,7 +181,14 @@ export default function Test() {
           <Link className="mm-item" href="/article/article-list">
             樂友論壇
           </Link>
-          <div className="mm-item" style={{ color: '#1581cc' }}>
+          {/*eslint-disable-next-line jsx-a11y/click-events-have-key-events*/}
+          <div
+            onClick={handleLogout}
+            //onclick 要加這個 不然ES會跳沒有給身障人士使用
+            role="presentation"
+            className="mm-item"
+            style={{ color: '#1581cc' }}
+          >
             登出
             <ImExit size={20} className="ms-2" />
           </div>
@@ -153,11 +199,19 @@ export default function Test() {
             <div className="sidebar">
               <div className="sidebar-user-info">
                 <div className="sidebar-user-info-imgBox">
-                  <Image src={avatar} alt="user photo mb" fill></Image>
+                  <Image
+                    src={avatarImage || avatarDefault}
+                    alt="user photo mb"
+                    fill
+                    priority="default" //不加的話Next 會問是否要加優先級
+                    sizes="(max-width: 150px) 150px, 50vw"
+                  ></Image>
                 </div>
                 <div className="sidebar-user-info-text">
-                  <div className="sidebar-user-info-name">棉悠悠</div>
-                  <div className="sidebar-user-info-band">幻獸帕魯</div>
+                  <div className="sidebar-user-info-name">
+                    {LoginUserData.nickname}
+                  </div>
+                  <div className="sidebar-user-info-band">樂團名稱</div>
                 </div>
                 {/* 更換大頭貼的功能暫定併回會員資訊 故不再sidebar顯示 */}
                 {/* <div className="sidebar-user-info-Camera-img">
@@ -165,13 +219,35 @@ export default function Test() {
                 </div> */}
               </div>
               <ul className="d-flex flex-column">
-                {sidebarData.map((item, index) => {
+                {/* {sidebarData.map((item, index) => {
                   return (
                     <li key={index}>
                       <Link href={`#`}>{item}</Link>
                     </li>
                   )
-                })}
+                })} */}
+
+                <li key={1}>
+                  <Link href="/user/user-info">會員資訊</Link>
+                </li>
+                <li key={2}>
+                  <Link href="/user/user-jam">我的樂團</Link>
+                </li>
+                <li key={3}>
+                  <Link href="/user/user-order">我的訂單</Link>
+                </li>
+                <li key={4}>
+                  <Link href="/user/user-favorite">我的收藏</Link>
+                </li>
+                <li key={5}>
+                  <Link href="/coupon/userCoupon">我的優惠券</Link>
+                </li>
+                <li key={6}>
+                  <Link href="/user/user-lesson">我的課程</Link>
+                </li>
+                <li key={7}>
+                  <Link href="/user/user-notify">我的訊息</Link>
+                </li>
               </ul>
             </div>
           </div>
@@ -254,24 +330,6 @@ export default function Test() {
                       backgroundColor: 'rgb(255, 255, 255)',
                     }}
                   >
-                    {/* ---------------------測試登入------------------- */}
-
-                    <p>目前登入狀態: {auth.isAuth ? '會員已登入' : '未登入'}</p>
-                    <p>
-                      <button
-                        onClick={() => {
-                          if (auth.isAuth) logout()
-                          else login()
-                        }}
-                      >
-                        {auth.isAuth ? '登出' : '登入'}
-                      </button>
-                    </p>
-                    <p>ID: {auth.userData.id}</p>
-                    <p>帳號: {auth.userData.name}</p>
-                    <p>電子信箱: {auth.userData.email}</p>
-                    <hr />
-                    {/* ---------------------------------------- */}
                     <div className="user-content col-12">
                       <div className="user-content-top">
                         <div className="user-title-userInfo">會員資訊</div>
@@ -288,34 +346,40 @@ export default function Test() {
                         <div className="user-info-item-titleText">真實姓名</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            鍾傑元
+                            {LoginUserData.name}
                           </div>
                         </div>
                       </div>
                       <div className="user-info-item">
                         <div className="user-info-item-titleText">暱稱</div>
                         <div className="user-info-item-Content">
-                          <div className="user-info-item-contentText">阿傑</div>
+                          <div className="user-info-item-contentText">
+                            {LoginUserData.nickname}
+                          </div>
                         </div>
                       </div>
                       <div className="user-info-item">
                         <div className="user-info-item-titleText">性別</div>
                         <div className="user-info-item-Content">
-                          <div className="user-info-item-contentText">男</div>
+                          <div className="user-info-item-contentText">
+                            {LoginUserData.gender}
+                          </div>
                         </div>
                       </div>
                       <div className="user-info-item">
                         <div className="user-info-item-titleText">喜歡曲風</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            金屬、搖滾
+                            {LoginUserData.genre_like}
                           </div>
                         </div>
                       </div>
                       <div className="user-info-item">
                         <div className="user-info-item-titleText">演奏樂器</div>
                         <div className="user-info-item-Content">
-                          <div className="user-info-item-contentText">貝斯</div>
+                          <div className="user-info-item-contentText">
+                            {LoginUserData.play_instrument}
+                          </div>
                         </div>
                       </div>
                       <div className="user-info-item">
@@ -372,7 +436,7 @@ export default function Test() {
                         <div className="user-info-item-titleText">生日</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            1985-01-19
+                            {LoginUserData.birthday}
                           </div>
                         </div>
                       </div>
@@ -380,7 +444,7 @@ export default function Test() {
                         <div className="user-info-item-titleText">手機</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            0910047354
+                            {LoginUserData.phone}
                           </div>
                         </div>
                       </div>
@@ -388,7 +452,7 @@ export default function Test() {
                         <div className="user-info-item-titleText">信箱</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            harmon4652@gmail.com
+                            {LoginUserData.email}
                           </div>
                         </div>
                       </div>
@@ -396,7 +460,10 @@ export default function Test() {
                         <div className="user-info-item-titleText">地址</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            臺東縣臺東市同樂街87號6樓
+                            {LoginUserData.postcode}
+                            {LoginUserData.country}
+                            {LoginUserData.township}
+                            {LoginUserData.address}
                           </div>
                         </div>
                       </div>
@@ -406,13 +473,7 @@ export default function Test() {
                         </div>
                         <div className="user-info-item-info2">
                           <div className="user-info-item-info-contentText">
-                            嗨，大家好，我是阿傑！我的音樂旅程始於青少年時期，當時我對貝斯的低沉與穩定的音色深感著迷。這把強而有力的樂器成為我表達情感的媒介，並啟發我不斷追求音樂創作的腳步。
-                            <br />
-                            我的演奏風格融合了多種音樂元素，從爵士樂的靈活性到搖滾樂的澎湃力道，我喜歡在音符之間探索各種可能性。音樂對我而言不僅僅是一種技能，更是一種生活的態度，一種能夠連結人心的語言。
-                            <br />
-                            在這支樂團中，我將負責打造穩固的節奏底層，並以創意豐富的貝斯線條為樂曲增色。我相信每一個音符都有其特殊的故事，而我將竭盡所能，透過貝斯的振奏，向大家傳達那些動人的音樂故事。
-                            <br />
-                            不論是舞台上的熱情演奏還是幕後的音樂創作，我都全心全意地致力於音樂之中。期待與你們一同創造出充滿魔力的音樂體驗，讓每一位聽眾都能沉浸在音樂的海洋中，一同感受音符的力量！
+                            {LoginUserData.info}
                           </div>
                         </div>
                       </div>
@@ -450,7 +511,9 @@ export default function Test() {
           }
           .sidebar-user-info-text {
             display: flex;
-            width: 100px;
+
+            /* width: 150px; */
+
             flex-direction: column;
             align-items: flex-start;
             gap: 6px;

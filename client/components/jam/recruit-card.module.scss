@@ -38,13 +38,10 @@
 
 }
 .userPhotoWrapper {
-    width: 32px;
-    height: 32px;
     border-radius: 50%;
     position: relative;
     overflow: hidden;
 }
 .userPhoto {
-    width: 100%;
     object-fit: cover;
 }
