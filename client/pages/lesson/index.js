@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
-import Card from '@/components/lesson/lesson-card'
-import Cardrwd from '@/components/lesson/lesson-card-rwd'
+//試抓資料區
+import Card from '@/components/lesson/lesson-card-data'
+import Cardrwd from '@/components/lesson/lesson-card-rwd-data'
+// import Lesson from '@/data/Lesson.json'
+
 import Link from 'next/link'
 import Image from 'next/image'
 import lessonHero from '@/assets/lesson-hero.jpg'
@@ -15,8 +19,12 @@ import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 
-export default function Test() {
-  // 在電腦版或手機版時，決定card的樣式，電腦版是直的，手機板是橫的
+import BS5Pagination from '@/components/common/pagination.js'
+
+import { useParams } from 'react-router-dom'
+
+export default function Test({ onSearch }) {
+  // 在電腦版或手機版時
   const [isSmallScreen, setIsSmallScreen] = useState(false)
 
   useEffect(() => {
@@ -46,12 +54,13 @@ export default function Test() {
 
   // ----------------------條件篩選  ----------------------
   const [filterVisible, setFilterVisible] = useState(false)
+
   useEffect(() => {
     document.addEventListener('click', () => {
       setFilterVisible(false)
-    })
-  }, [])
-  // 阻止事件冒泡造成篩選表單關閉
+    }) //鉤子在組件渲染完成後註冊了一個點擊事件監聽器。當點擊事件發生時，會調用一個函數來將 filterVisible 設置為 false，從而隱藏篩選表單。
+  }, []) //這個事件監聽器只會在組件首次渲染時被註冊，並且在組件卸載時被清理。
+  // 阻止事件冒泡造成篩選表單關閉//防止觸發組件外部的點擊事件，進而導致篩選表單被關閉。
   const stopPropagation = (e) => {
     e.stopPropagation()
   }
@@ -64,14 +73,14 @@ export default function Test() {
   // 資料排序
   const [dataSort, setDataSort] = useState('upToDate')
   // sidebar假資料
-  const sidebarData = [
-    '歌唱技巧',
-    '樂器演奏',
-    '音樂理論',
-    '詞曲創作',
-    '軟體操作',
-    '活動專區',
-  ]
+  //   const sidebarData = [
+  //     '歌唱技巧',
+  //     '樂器演奏',
+  //     '音樂理論',
+  //     '詞曲創作',
+  //     '軟體操作',
+  //     '活動專區',
+  //   ]
   const [priceLow, setPriceLow] = useState('')
   const [priceHigh, setPriceHigh] = useState('')
   // 課程評價
@@ -88,8 +97,151 @@ export default function Test() {
     setScore('all')
     setSales(false)
   }
+  //-------------------連資料庫
 
-  let arr = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+  const [Lesson, setLesson] = useState([])
+
+  function getLesson() {
+    return new Promise((resolve, reject) => {
+      let url = 'http://localhost:3005/api/lesson'
+      fetch(url, {
+        method: 'GET',
+        credentials: 'include',
+      })
+        .then((response) => {
+          return response.json()
+        })
+        .then((result) => {
+          resolve(result)
+          //   console.log(result)
+          setLesson(result)
+        })
+        .catch((error) => {
+          console.log(error)
+          reject()
+        })
+    })
+  }
+
+  useEffect(() => {
+    getLesson()
+  }, [])
+
+  useEffect(() => {
+    setData(Lesson) // 未搜尋時顯示完整列表
+  }, [Lesson])
+
+  //-------------------搜尋功能
+  const [data, setData] = useState(Lesson)
+  const [search, setSearch] = useState('')
+  const handleSearch = () => {
+    // console.log('按鈕被點擊了')
+    let newData
+    if (search.trim() === '') {
+      newData = Lesson
+      //   console.log(newData)
+    } else {
+      newData = Lesson.filter((v, i) => {
+        return v.name.includes(search)
+      })
+    }
+    setData(newData)
+  }
+  useEffect(() => {
+    getLesson()
+  }, []) //FIXME不太懂這裡加這個的意思 少加了這個所以沒辦法在未搜尋狀態下顯示完整列表
+
+  //-------------------排序功能
+  //FIXME升冪降冪
+  //最熱門
+  const sortBySales = () => {
+    const sortedProducts = [...Lesson].sort((a, b) => b.sales - a.sales)
+    setData(sortedProducts)
+  }
+  useEffect(() => {
+    getLesson()
+  }, [])
+  //依評價
+  //FIXME沒有資料？
+  //依時數
+  const sortBylength = () => {
+    const sortedProducts = [...Lesson].sort((a, b) => b.length - a.length)
+    setData(sortedProducts)
+  }
+  useEffect(() => {
+    getLesson()
+  }, [])
+  //-------------------渲染分類功能li
+  const [LessonCategory, setLessonCategory] = useState([])
+  function getLessonCategory() {
+    return new Promise((resolve, reject) => {
+      let url = 'http://localhost:3005/api/lesson/categories'
+      fetch(url, {
+        method: 'GET',
+        credentials: 'include',
+      })
+        .then((response) => {
+          return response.json()
+        })
+        .then((result) => {
+          resolve(result)
+          //   console.log(result)
+          setLessonCategory(result)
+        })
+        .catch((error) => {
+          console.log(error)
+          reject()
+        })
+    })
+  }
+
+  useEffect(() => {
+    getLessonCategory()
+  }, [])
+
+  //-------------------選定特定分類
+
+  const [selectedCategory, setSelectedCategory] = useState('') // 用于存储用户选择的分类
+  function handleCategoryChange(id) {
+    console.log('Clicked on category with ID:', id)
+    // 在這裡執行你的其他邏輯，比如更新狀態
+    setSelectedCategory(id)
+  }
+
+  useEffect(() => {
+    // 定义一个函数用于获取商品数据
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3005/api/Lesson/category/${selectedCategory}`
+        )
+        const data = await response.json()
+        // console.log(data)
+
+        setData(data) //連回渲染特定分類課程
+      } catch (error) {
+        console.error('Error fetching products:', error)
+      }
+    }
+    //当selectedCategory变化时重新获取商品数据
+    if (selectedCategory !== '') {
+      fetchProducts()
+    }
+  }, [selectedCategory])
+
+  //-------------------選定特定分類後 熱門課程消失
+  const { category } = useParams() // 从URL参数中获取category值
+    const [showHotCourses, setShowHotCourses] = useState(true) // 控制是否显示热门课程部分
+    
+  useEffect(() => {
+    // 如果URL中存在category参数，则显示热门课程部分
+    if ('category') {
+      setShowHotCourses(false)
+    } else {
+      // 否则隐藏热门课程部分
+      setShowHotCourses(true)
+    }
+  }, [category])
 
   return (
     <>
@@ -150,13 +302,19 @@ export default function Test() {
             <div className="sidebar">
               <ul className="d-flex flex-column">
                 <li>
-                  <Link href={'/lesson/all'}>全部</Link>
+                  <Link href={'/lesson/lesson-data'}>全部</Link>
                 </li>
-                {sidebarData.map((item, index) => {
+                {/* 分類功能 */}
+                {LessonCategory.map((v, index) => {
                   return (
-                    <li key={index}>
-                      <Link href={`#`}>{item}</Link>
-                    </li>
+                    <Link
+                      key={index}
+                      href={'/lesson/?${v.id}'}
+                    >
+                      <li onClick={() => handleCategoryChange(v.id)}>
+                        {v.name}
+                      </li>
+                    </Link>
                   )
                 })}
               </ul>
@@ -217,6 +375,7 @@ export default function Test() {
               <div className="top-function-flex">
                 {/*  ---------------------- 搜尋欄  ---------------------- */}
                 <div className="search-sidebarBtn">
+                  {/* ?? */}
                   <div
                     className="d-flex d-sm-none b-btn b-btn-body"
                     role="presentation"
@@ -226,17 +385,24 @@ export default function Test() {
                     選單
                   </div>
                   <div className="search input-group">
+                    {/* 輸入欄位 */}
                     <input
                       type="text"
                       className="form-control"
                       placeholder="請輸入關鍵字..."
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
                     />
-                    <div className="search-btn btn d-flex justify-content-center align-items-center p-0">
+                    <div
+                      // 搜尋按鈕
+                      onClick={handleSearch}
+                      className="search-btn btn d-flex justify-content-center align-items-center p-0"
+                    >
                       <IoIosSearch size={25} />
                     </div>
                   </div>
                 </div>
-
+                {/* 手機版排序 */}
                 <div className="filter-sort d-flex justify-content-between">
                   <div className="sort-mb d-block d-sm-none">
                     <select
@@ -250,8 +416,8 @@ export default function Test() {
                       <option selected value="upToDate">
                         最熱門
                       </option>
-                      <option value="recent">依評價</option>
-                      <option value="recent">依時數</option>
+                      <option value="review">依評價</option>
+                      <option value="classLength">依時數</option>
                     </select>
                   </div>
 
@@ -358,38 +524,79 @@ export default function Test() {
                       </div>
                     </div>
                   </form>
-                  {/* 資料排序 */}
+                  {/* web版資料排序 */}
                   <div className="sort d-none d-sm-flex justify-content-between align-items-center">
                     <div className="d-flex align-items-center">
                       排序
                       <FaSortAmountDown size={14} />
                     </div>
 
-                    <div className="sort-item active">最熱門</div>
+                    <div className="sort-item " onClick={sortBySales}>
+                      最熱門
+                    </div>
                     <div className="sort-item">依評價</div>
-                    <div className="sort-item">依實數</div>
+                    <div className="sort-item" onClick={sortBylength}>
+                      依時數
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
             {/* 主內容 */}
             <div className="content">
-              <div className="hot-lesson">
-                <h4 className="text-primary">熱門課程</h4>
-                <div className="hot-lesson-card">
-                  <Card />
-                  <Card />
-                  <Card />
-                  <Card />
+              {showHotCourses && (
+                <div className="hot-lesson">
+                  <h4 className="text-primary">熱門課程</h4>
+                  <div className="hot-lesson-card-group">
+                    {/* //FIXME還沒寫熱門課程邏輯sales最高的前4筆 */}
+                    {data.slice(0, 4).map((v, i) => (
+                      <div className="hot-lesson-card" key={i}>
+                        <Card
+                          id={v.id}
+                          course-card
+                          name={v.name}
+                          price={v.price}
+                          teacher_id={v.teacher_id}
+                          img={v.img}
+                          length={v.length}
+                          sales={v.sales}
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
               <hr />
-
+              {/*-------- 列表頁卡片迴圈------- */}
               <div className="lesson-card-group">
-                {arr.map((i, index) => {
+                {/* 更改為搜尋過後篩選出來的課程 */}
+                {data.map((v, i) => {
                   return (
-                    <div key={index} className="">
-                      {isSmallScreen ? <Cardrwd /> : <Card />}
+                    <div className="mb-4 " key={v.id}>
+                      {isSmallScreen ? (
+                        <Cardrwd
+                          id={v.id}
+                          name={v.name}
+                          price={v.price}
+                          teacher_id={v.teacher_id}
+                          img={v.img}
+                          sales={v.sales}
+                        />
+                      ) : (
+                        <Card
+                          id={v.id}
+                          course-card
+                          name={v.name}
+                                      price={v.price}
+                                      
+                          teacher_id={v.teacher_id}
+                          img={v.img}
+                          length={v.length}
+                          sales={v.sales}
+                        />
+                      )}
+                          <Link href={`/lesson/${v.id}`}></Link>
+                          
                     </div>
                   )
                 })}
@@ -398,8 +605,11 @@ export default function Test() {
           </div>
         </div>
       </div>
+      <div className="d-flex justify-content-center">
+        <BS5Pagination />
+        {/* //FIXME 沒有頁碼細節 */}
+      </div>
       <Footer />
-
       <style jsx>{`
         .content {
           padding-inline: 22px;
@@ -410,7 +620,7 @@ export default function Test() {
           gap: 20px;
           flex-wrap: wrap;
         }
-        .hot-lesson-card {
+        .hot-lesson-card-group {
           margin-block: 30px;
           gap: 10px;
           display: flex;
@@ -420,7 +630,7 @@ export default function Test() {
           .content {
             padding-inline: 0;
           }
-          .hot-lesson-card {
+          .hot-lesson {
             display: none;
           }
         }

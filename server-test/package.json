@@ -19,6 +19,7 @@
     "ejs": "~2.6.1",
     "express": "~4.16.1",
     "express-session": "^1.18.0",
+    "formidable": "^3.5.1",
     "http-errors": "~1.6.3",
     "jsonwebtoken": "^9.0.2",
     "moment": "^2.30.1",
@@ -27,7 +28,6 @@
     "mysql2": "^3.9.2"
   },
   "main": "app.js",
-  "devDependencies": {},
   "keywords": [],
   "author": "",
   "license": "ISC",

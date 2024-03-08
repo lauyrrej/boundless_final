@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef} from 'react'
 import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
@@ -82,12 +82,11 @@ export default function LessonDetailPage() {
   const router = useRouter()
 
   const [LessonDetail, setLessonDetail] = useState()
-
+ const prevLidRef = useRef(null)
   // 向伺服器要求資料，設定到狀態中用的函式
   const getLessonDetail = async (lid) => {
     try {
       const res = await fetch(`http://localhost:3005/api/lesson/${lid}`)
-
       // res.json()是解析res的body的json格式資料，得到JS的資料格式
       const data = await res.json()
 
@@ -110,7 +109,11 @@ export default function LessonDetailPage() {
     if (router.isReady) {
       const { lid } = router.query
       console.log(lid)
-      getLessonDetail(lid)
+      // 如果lid與上一次的不同，觸發getLessonDetail
+      if (lid !== prevLidRef.current) {
+        getLessonDetail(lid)
+        prevLidRef.current = lid
+      }
     }
   }, [router.isReady])
 
