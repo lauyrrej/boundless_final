@@ -6,7 +6,7 @@ const router = express.Router();
 const upload = multer();
 
 // 取得所有組團資料
-router.get("/", async (req, res) => {
+router.get("/allJam", async (req, res) => {
   // 取得組團資訊中所需的曲風、樂手資料
   let [genreData] = await db.execute("SELECT * FROM `genre`").catch(() => {
     return undefined;
@@ -24,7 +24,8 @@ router.get("/", async (req, res) => {
       "SELECT * FROM `jam` WHERE `valid` = 1 AND DATE_ADD(`created_time`, INTERVAL 30 DAY) > ? AND (`formed_time` IS NULL OR `formed_time` = '0000-00-00 00:00:00')",
       [now]
     )
-    .catch(() => {
+    .catch((error) => {
+      console.log(error);
       return undefined;
     });
 
@@ -41,7 +42,7 @@ router.get("/", async (req, res) => {
   if (Object.keys(req.query).length !== 0) {
     // 所有篩選條件
     let sqlString =
-      "SELECT * FROM `jam` WHERE `valid` = 1 AND DATE_ADD(`created_time`, INTERVAL 30 DAY) > '" +
+      "SELECT * FROM `jam` WHERE `valid` = 1 AND (`formed_time` IS NULL OR `formed_time` = '0000-00-00 00:00:00') AND DATE_ADD(`created_time`, INTERVAL 30 DAY) > '" +
       now +
       "'";
     const degree =
@@ -137,13 +138,36 @@ router.get("/", async (req, res) => {
         genre: JSON.parse(v.genre),
       };
     });
+
+    // 搜尋對應的發起人資料
+    let formerSql = "SELECT `id`, `name`, `img` FROM `user` WHERE `id` IN ";
+    let formersID = '';
+    jamData.forEach((v,i) => {
+      if(i<jamData.length-1) {
+        formersID += v.former.id + ","
+      } else {
+        formersID += v.former.id
+      }
+    })
+    formerSql += `(${formersID})`
+    // console.log(formerSql);
+    let  [formerData] = await db
+      .execute(
+        formerSql
+      )
+      .catch(() => {
+        return undefined;
+      });
+      // console.log(formerData);
+
     res.status(200).json({
-      genreData: genreData,
-      playerData: playerData,
-      jamData: jamData,
+      genreData,
+      playerData,
+      jamData,
+      formerData,
       dataTotal: dataCount.length,
-      pageTotal: pageTotal,
-      page: page,
+      pageTotal,
+      page,
     });
   } else {
     res.status(400).send("發生錯誤");
@@ -151,7 +175,7 @@ router.get("/", async (req, res) => {
 });
 
 // 組團資訊頁，獲得單筆資料
-router.get("/:juid", async (req, res) => {
+router.get("/singleJam/:juid", async (req, res) => {
   // 取得組團資訊中所需的曲風、樂手資料
   let [genreData] = await db.execute("SELECT * FROM `genre`").catch(() => {
     return undefined;
@@ -190,7 +214,7 @@ router.get("/:juid", async (req, res) => {
       jamData: jamData,
     });
   } else {
-    res.status(400).send("發生錯誤");
+    res.status(400).json({ status: "error", message: "無指定資料" });
   }
 });
 

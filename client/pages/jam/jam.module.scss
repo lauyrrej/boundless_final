@@ -135,7 +135,18 @@
 .genere {
   background-color: #faad14;
 }
+
 .infoText {
   padding: 0;
   color: var(--dark);
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.noticeText {
+  margin-top: 6px;
+  padding: 0;
+  color: var(--dark);
+  font-size: 16px;
+  font-weight: 400;
 }

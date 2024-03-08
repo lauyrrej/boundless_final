@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useMemo, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import jamHero from '@/assets/jam-hero.png'
 // icons
+import { MdNoteAdd } from 'react-icons/md'
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
 import { IoIosSearch } from 'react-icons/io'
@@ -16,11 +17,29 @@ import bookmarkIcon from '@/assets/emptybookmark.svg'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 import ArticleCard from '@/components/article/article-card'
-import Pagination from '@/components/article/pagination'
-import ArticleJson from 'data/article/article.json'
 
 export default function ArticleList() {
   // ----------------------手機版本  ----------------------
+  // 後端資料庫
+  const [article, setArticle] = useState([])
+  const [search, setSearch] = useState('')
+
+  useEffect(() => {
+    const getDatas = async () => {
+      try {
+        const res = await fetch(`http://localhost:3005/api/article`)
+        const datas = await res.json()
+        if (datas) {
+          setArticle(datas) // 設定獲取的文章數據到狀態中
+          // console.log(datas)
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    }
+    getDatas() // 在元件渲染後立即獲取文章數據
+  }, []) // 空的依賴陣列表示只在元件第一次渲染時執行一次
+
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
   const menuMbToggle = () => {
@@ -33,59 +52,51 @@ export default function ArticleList() {
   }
 
   // ----------------------功能  ----------------------
-  // const cardData = { ArticleJson }
-  // const [data, setData] = useState(ArticleJson);
-
-  // 擴充收藏功能
-  // 每個Json增加虛構的fav值
-  const initState = ArticleJson.map((v, i) => {
-    return { ...v, fav: false }
-  })
-  // 擴充後的物件陣列作為初始值
-  const [data, setData] = useState(initState)
-  const [search, setSearch] = useState('')
 
   // 搜尋功能
-  const handleSearch = () => {
-    console.log('按鈕被典籍了')
-    let newData
-    if (search.trim() === '') {
-      newData = ArticleJson
-    } else {
-      newData = data.filter((v, i) => {
-        return v.title.includes(search)
-      })
-    }
-    setData(newData)
-  }
+  // const handleSearch = () => {
+  //   let newData
+  //   if (search.trim() === '') {
+  //     newData = article
+  //     // 若搜尋為空，使用原始文章資料
+  //   } else {
+  //     article
+  //     newData = article.filter((v, i) => {
+  //       return v.title.includes(search)
+  //     })
+  //   }
+  //   setArticle(newData)
+  // }
 
-  const categorySearch = () => {
-    let newData
-    if (category === 'all') {
-      newData = ArticleJson
-    } else {
-      newData = data.filter((v, i) => {
-        return v.category_id === category
-      })
-    }
-    setData(newData)
-  }
+  const filterArticle = useMemo(() => {
+    return article.filter((v) => {
+      return v.title.includes(search)
+    })
+  }, [article, search])
+
+  // ------------------分類category_id的資料庫------------------------
+  // const filterArticle = useMemo(() => {
+  //   return article.filter((v) => {
+  //     // 檢查文章的標題是否包含搜尋關鍵字
+  //     const titleMatch = v.title.includes(search)
+  //     // 檢查文章的 category_id 是否為 2
+  //     const categoryIdMatch = v.category_id === 2
+  //     // 將上述條件組合起來，若兩者皆符合則返回 true，否則返回 false
+  //     return titleMatch && categoryIdMatch
+  //   })
+  // }, [article, search])
 
   // ----------------------分類功能  ----------------------
 
-  // 純func
+  // 純func書籤
   const handleToggleFav = (id) => {
-    const newArticles = data.map((v, i) => {
+    const newArticles = article.map((v, i) => {
       if (v.id === id) return { ...v, fav: !v.fav }
       else return v
     })
-    setData(newArticles)
+    setArticle(newArticles)
   }
   // ----------------------假資料  ----------------------
-
-  // sidebar假資料
-  const sidebarData = ['全部', '技術分享', '音樂評論']
-
   // 資料排序
   const [dataSort, setDataSort] = useState('latest')
   // ----------------------條件篩選  ----------------------
@@ -137,7 +148,7 @@ export default function ArticleList() {
   // 全部的篩選條件
   const allCondition = ''
   const [condition, setCondition] = useState(allCondition)
-  useEffect(() => {}, [allCondition])
+  useEffect(() => { }, [allCondition])
 
   return (
     <>
@@ -148,9 +159,8 @@ export default function ArticleList() {
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
         <div
-          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${
-            showMenu ? 'menu-mb-show' : ''
-          }`}
+          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${showMenu ? 'menu-mb-show' : ''
+            }`}
         >
           {/* 用戶資訊 */}
           <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
@@ -180,6 +190,7 @@ export default function ArticleList() {
             Let &apos;s JAM!
           </Link>
           <Link className="mm-item" href="/article/article-list">
+            {/* bug 瀏覽器顯示的跟其他人的不一樣 */}
             樂友論壇
           </Link>
           <div className="mm-item" style={{ color: '#1581cc' }}>
@@ -188,17 +199,21 @@ export default function ArticleList() {
           </div>
         </div>
         <div className="row">
-          {/* sidebar */}
+          {/* -----------sidebar------------ */}
           <div className="sidebar-wrapper d-none d-sm-block col-sm-2">
             <div className="sidebar">
               <ul className="d-flex flex-column">
-                {sidebarData.map((item, index) => {
-                  return (
-                    <li key={index}>
-                      <Link href={`#`}>{item}</Link>
-                    </li>
-                  )
-                })}
+                <li>
+                  <Link href={`/article/article-list`} className="active">
+                    全部
+                  </Link>
+                </li>
+                <li>
+                  <Link href={`/article/article-list`}>音樂評論</Link>
+                </li>
+                <li>
+                  <Link href={`/article/article-list`}>技術分享</Link>
+                </li>
               </ul>
             </div>
           </div>
@@ -207,9 +222,8 @@ export default function ArticleList() {
           <div className="col-12 col-sm-10 page-control">
             {/* 手機版sidebar */}
             <div
-              className={`sidebar-mb d-sm-none ${
-                showSidebar ? 'sidebar-mb-show' : ''
-              }`}
+              className={`sidebar-mb d-sm-none ${showSidebar ? 'sidebar-mb-show' : ''
+                }`}
             >
               <div className="sm-close">
                 <IoClose
@@ -219,14 +233,14 @@ export default function ArticleList() {
                   }}
                 />
               </div>
-              <Link href={`/jam/recruit-list`} className="sm-item active">
-                團員募集
+              <Link href={`/article/article-list`} className="sm-item active">
+                全部
               </Link>
-              <Link href={`/jam/jam-list`} className="sm-item">
-                活動中的JAM
+              <Link href={`/article/article-list`} className="sm-item">
+                樂評
               </Link>
-              <Link href={`/jam/Q&A`} className="sm-item">
-                什麼是JAM？
+              <Link href={`/article/article-list`} className="sm-item">
+                技術分享
               </Link>
             </div>
             {/*  ---------------------- 頂部功能列  ---------------------- */}
@@ -235,9 +249,11 @@ export default function ArticleList() {
               <div className="breadcrumb-wrapper">
                 <ul className="d-flex align-items-center p-0 m-0">
                   <IoHome size={20} />
-                  <li style={{ marginLeft: '8px' }}>Let&apos;s JAM!</li>
+                  <li style={{ marginLeft: '8px' }}>樂友論壇</li>
                   <FaChevronRight />
-                  <li style={{ marginLeft: '10px' }}>團員募集</li>
+                  <Link href="/article/article-list">
+                    <li style={{ marginLeft: '10px' }}>文章資訊</li>
+                  </Link>
                 </ul>
               </div>
 
@@ -254,15 +270,14 @@ export default function ArticleList() {
                   </div>
                   <div className="search input-group">
                     <input
-                      type="text"
                       className="form-control"
                       placeholder="請輸入關鍵字..."
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
+                      type="search"
                     />
                     <div
-                      // 搜尋按鈕
-                      onClick={handleSearch}
+                      // onClick={handleSearch}
                       className="search-btn btn d-flex justify-content-center align-items-center p-0"
                     >
                       <IoIosSearch size={25} />
@@ -296,9 +311,8 @@ export default function ArticleList() {
                       條件篩選
                       <FaFilter size={13} />
                       <div
-                        className={`filter ${
-                          filterVisible === false ? 'd-none' : 'd-block'
-                        }`}
+                        className={`filter ${filterVisible === false ? 'd-none' : 'd-block'
+                          }`}
                         onClick={stopPropagation}
                         role="presentation"
                       >
@@ -365,7 +379,7 @@ export default function ArticleList() {
                                 >
                                   <label className="form-check-label">
                                     <input
-                                      classname="form-check-input"
+                                      className="form-check-input"
                                       type="radio"
                                       name="score"
                                       value={v}
@@ -423,9 +437,8 @@ export default function ArticleList() {
                       <FaSortAmountDown size={14} />
                     </div>
                     <div
-                      className={`sort-item ${
-                        dataSort === 'latest' ? 'active' : ''
-                      }`}
+                      className={`sort-item ${dataSort === 'latest' ? 'active' : ''
+                        }`}
                       role="presentation"
                       onClick={(e) => {
                         setDataSort('latest')
@@ -434,9 +447,8 @@ export default function ArticleList() {
                       新到舊
                     </div>
                     <div
-                      className={`sort-item ${
-                        dataSort === 'oldest' ? 'active' : ''
-                      }`}
+                      className={`sort-item ${dataSort === 'oldest' ? 'active' : ''
+                        }`}
                       role="presentation"
                       onClick={(e) => {
                         setDataSort('oldest')
@@ -450,9 +462,17 @@ export default function ArticleList() {
             </div>
             {/* 主內容 */}
             <main className="content me-2">
-              <h4 className="text-primary pt-2">熱門文章</h4>
+              <div className="d-flex justify-content-between align-items-center">
+                <h4 className="text-primary pt-2">熱門文章</h4>
+                <Link href={`/article/article-publish`} className="icon-btn">
+                  <MdNoteAdd
+                    size={35}
+                    style={{ color: 'gray', cursor: 'pointer' }}
+                  />
+                </Link>
+              </div>
               <div className="content-pop d-flex flex-wrap">
-                {data.slice(0, 4).map((v, i) => {
+                {filterArticle.slice(0, 4).map((v, i) => {
                   {
                     /* 熱門文章的分類目前是抓前4筆 */
                   }
@@ -461,20 +481,24 @@ export default function ArticleList() {
                     title,
                     content,
                     img,
+                    user_id,
                     author,
-                    publish_time,
+                    published_time,
                     articles,
                     fav,
+                    category_id,
                   } = v
                   return (
                     <ArticleCard
                       key={id}
                       id={id}
+                      user_id={user_id}
                       title={title}
                       content={content}
                       img={img}
                       author={author}
-                      publish_time={publish_time.split(' ')[0]}
+                      category_id={category_id}
+                      published_time={published_time}
                       articles={articles}
                       handleToggleFav={handleToggleFav}
                       fav={fav}
@@ -484,26 +508,30 @@ export default function ArticleList() {
               </div>
               <hr />
               <div className="content-pop d-flex flex-wrap">
-                {data.map((v, i) => {
+                {filterArticle.map((v, i) => {
                   const {
                     id,
                     title,
                     content,
                     img,
+                    user_id,
                     author,
-                    publish_time,
+                    published_time,
                     articles,
                     fav,
+                    category_id,
                   } = v
                   return (
                     <ArticleCard
                       key={id}
+                      user_id={user_id}
                       id={id}
                       title={title}
                       content={content}
                       img={img}
                       author={author}
-                      publish_time={publish_time.split(' ')[0]}
+                      category_id={category_id}
+                      published_time={published_time}
                       articles={articles}
                       handleToggleFav={handleToggleFav}
                       fav={fav}
@@ -511,8 +539,6 @@ export default function ArticleList() {
                   )
                 })}
               </div>
-              {/* 分頁按鈕 */}
-              <Pagination />
               {/* <div className='d-flex justify-content-center pb-3'>
                 <nav aria-label="Page navigation example">
                   <ul className="pagination">

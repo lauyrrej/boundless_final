@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Card from '@/components/instrument/card.js'
@@ -14,8 +15,11 @@ import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 import Data from '@/data/instrument/instrument.json'
+// 自製元件
+import BS5Pagination from '@/components/common/pagination'
 
 export default function Test() {
+  const router = useRouter()
   //a
   // console.log(Data)
   // ----------------------手機版本  ----------------------
@@ -87,6 +91,64 @@ export default function Test() {
     setPriceHigh('')
     setScore('all')
     setSales(false)
+  }
+
+  // ------------------------------------------------------- 製作分頁
+  const [page, setPage] = useState(1)
+  const [pageTotal, setPageTotal] = useState(1)
+  // 資料排序
+  const [order, setOrder] = useState('ASC')
+  // 點按分頁時，要送至伺服器的query string參數
+  const handlePageClick = (event) => {
+    router.push({
+      pathname: router.pathname,
+
+      query: {
+        page: event.selected + 1,
+        // order: order,
+        // genre: genre,
+        // player: player,
+        // degree: degree,
+        // region: region,
+      },
+    })
+  }
+
+  const handleLoadData = () => {
+    // 要送至伺服器的query string參數
+
+    // 註: 重新載入資料需要跳至第一頁
+    const params = {
+      page: 1, // 跳至第一頁
+      // order: order,
+      // genre: genre,
+      // player: player,
+      // degree: degree,
+      // region: region,
+    }
+
+    // console.log(params)
+
+    router.push({
+      pathname: router.pathname,
+      query: params,
+    })
+  }
+  const handleOrder = (order) => {
+    setOrder(order)
+    const params = {
+      page: 1,
+      order: order,
+      // genre: genre,
+      // player: player,
+      // degree: degree,
+      // region: region,
+    }
+
+    router.push({
+      pathname: router.pathname,
+      query: params,
+    })
   }
 
   // const hotSales = Data.sort
@@ -512,7 +574,34 @@ export default function Test() {
             <main className="content">
               <div className="hot-instrument">
                 <h4 className="text-primary">熱銷商品</h4>
-                <div className="hot-instrument-card"></div>
+                <div className="hot-instrument-card">
+                  {instrument.slice(0, 4).map((v, i) => {
+                    const {
+                      id,
+                      name,
+                      price,
+                      discount,
+                      category_name,
+                      img_small,
+                      sales,
+                    } = v
+
+                    return (
+                      <div key={id} className="">
+                        {/* 寫discount的判斷式 */}
+                        <Card
+                          id={id}
+                          name={name}
+                          price={price}
+                          discount={discount}
+                          category_name={category_name}
+                          img_small={img_small}
+                          sales={sales}
+                        />
+                      </div>
+                    )
+                  })}
+                </div>
               </div>
               <hr />
 
@@ -545,6 +634,13 @@ export default function Test() {
                 })}
               </div>
             </main>
+            <div className="d-flex justify-content-center">
+              <BS5Pagination
+                forcePage={page - 1}
+                onPageChange={handlePageClick}
+                pageCount={pageTotal}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -557,7 +653,6 @@ export default function Test() {
         }
         .instrument-card-group {
           display: flex;
-          justify-content: space-between;
           margin-block: 30px;
           gap: 10px;
           flex-wrap: wrap;

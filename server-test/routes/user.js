@@ -1,123 +1,122 @@
-import express, { json } from 'express'
-import db from '../db.js'
-import multer from 'multer'
-import moment from 'moment'
+import express, { json } from "express";
+import db from "../db.js";
+import multer from "multer";
+import moment from "moment";
 
 //token相關
-import jwt from 'jsonwebtoken'
-import 'dotenv/config.js'
+import jwt from "jsonwebtoken";
+import "dotenv/config.js";
 
 // 從環境檔抓取secretKey(token加密用)
-const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
+const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 
-const router = express.Router()
-const upload = multer()
+const router = express.Router();
+const upload = multer();
 //得到所有會員資料
-let [userData] = await db.execute('SELECT * FROM `user` WHERE `valid` = 1')
+let [userData] = await db.execute("SELECT * FROM `user` WHERE `valid` = 1");
 // console.log(userData)
 
 //GET 測試 - 得到所有會員資料
-router.get('/', async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
-    let [userData] = await db.execute('SELECT * FROM `user` WHERE `valid` = 1')
+    let [userData] = await db.execute("SELECT * FROM `user` WHERE `valid` = 1");
 
     if (userData) {
-      res.json(userData)
-      console.log(userData)
+      res.json(userData);
+      console.log(userData);
     } else {
-      res.json('沒有找到相應的資訊')
+      res.json("沒有找到相應的資訊");
     }
   } catch (error) {
-    console.error('發生錯誤：', error)
-    res.json('發生錯誤')
+    console.error("發生錯誤：", error);
+    res.json("發生錯誤");
   }
-})
+});
 
 //登入 目前設定 email 就是帳號 不可更改
-router.post('/login', upload.none(), (req, res) => {
-  const { email, password } = req.body
+router.post("/login", upload.none(), (req, res) => {
+  const { email, password } = req.body;
   const user = userData.find(
     (u) => u.email === email && u.password === password
-  )
+  );
   if (user) {
     const token = jwt.sign(
       {
         // account: user.account, 沒用到帳號先註解測試
-        id:user.id,
+        id: user.id,
         name: user.name,
         email: user.email,
         avatar: user.avatar,
       },
       accessTokenSecret,
       //token 認證的時長原為30m
-      { expiresIn: '120m' }
-    )
+      { expiresIn: "120m" }
+    );
     res.status(200).json({
-      status: 'success',
+      status: "success",
       token,
-    })
+    });
   } else {
     res.status(400).json({
-      status: 'error',
-      message: '使用者帳號或密碼錯誤。',
-    })
+      status: "error",
+      message: "使用者帳號或密碼錯誤。",
+    });
   }
-})
+});
 
-router.post('/logout', checkToken, (req, res) => {
+router.post("/logout", checkToken, (req, res) => {
   // console.log(req.decoded)
-  const user = userData.find((u) => u.email === req.decoded.email)
+  const user = userData.find((u) => u.email === req.decoded.email);
   if (user) {
     const token = jwt.sign(
       {
-        id:user.id,
+        id: user.id,
         name: user.name,
         email: user.email,
         avatar: user.avatar,
       },
       accessTokenSecret,
-      { expiresIn: '-10s' }
-    )
+      { expiresIn: "-10s" }
+    );
     res.status(200).json({
-      status: 'logout success',
+      status: "logout success",
       token,
-    })
+    });
   } else {
     res.status(401).json({
-      status: 'error',
-      message: '登出失敗，請稍後重整頁面再試。',
-    })
+      status: "error",
+      message: "登出失敗，請稍後重整頁面再試。",
+    });
   }
-})
+});
 
-router.post('/status', checkToken, (req, res) => {
-  const user = userData.find((u) => u.email === req.decoded.email)
+router.post("/status", checkToken, (req, res) => {
+  const user = userData.find((u) => u.email === req.decoded.email);
   if (user) {
     const token = jwt.sign(
       {
-        id:user.id,
+        id: user.id,
         name: user.name,
         mail: user.mail,
         head: user.head,
       },
       accessTokenSecret,
-      { expiresIn: '30m' }
-    )
+      { expiresIn: "30m" }
+    );
     res.json({
-      status: 'token ok',
+      status: "token ok",
       token,
-    })
+    });
   } else {
     res.status(401).json({
-      status: 'error',
-      message: '請登入',
-    })
+      status: "error",
+      message: "請登入",
+    });
   }
-})
+});
 
 // GET - 得到單筆會員資料資料(注意，有動態參數時要寫在GET區段最後面)
-router.get('/:id', checkToken, async function (req, res) {
-  
+router.get("/:id", checkToken, async function (req, res) {
   const id = req.params.id;
   //沒用 後端抓不到localStorage
   // const token = localStorage.getItem(appKey)
@@ -133,13 +132,15 @@ router.get('/:id', checkToken, async function (req, res) {
   // const [singerUser] =  await db.execute(`SELECT * FROM \`user\` WHERE \`id\` = ? AND \`valid\` = 1`, [id]);
 
   // 不回傳密碼跟創建時間的版本
-  const [singerUser] =  await db.execute(`SELECT \`id\` ,\`name\` ,\`email\`,\`phone\`,\`postcode\`,\`country\`,\`township\`,\`address\`,\`birthday\`,\`genre_like\`,\`play_instrument\`,\`info\`,\`img\`,\`gender\`,\`nickname\`,\`google_uid\`,\`photo_url\`,\`privacy\`,\`my_lesson\` FROM \`user\` WHERE \`id\` = ? AND \`valid\` = 1`, [id]);
-  
+  const [singerUser] = await db.execute(
+    `SELECT \`id\` ,\`name\` ,\`email\`,\`phone\`,\`postcode\`,\`country\`,\`township\`,\`address\`,\`birthday\`,\`genre_like\`,\`play_instrument\`,\`info\`,\`img\`,\`gender\`,\`nickname\`,\`google_uid\`,\`photo_url\`,\`privacy\`,\`my_lesson\` FROM \`user\` WHERE \`id\` = ? AND \`valid\` = 1`,
+    [id]
+  );
+
   const resUser = singerUser[0];
 
-  return res.json( resUser )
-})
-
+  return res.json(resUser);
+});
 
 // 註冊 = 檢查資料庫是否有此email及密碼 ,如果沒有 就增加sql
 router.post('/', (req, res) => {
@@ -193,7 +194,4 @@ function checkToken(req, res, next) {
   }
 }
 
-
-
-
-export default router
+export default router;
