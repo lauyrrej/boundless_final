@@ -256,6 +256,44 @@ router.post("/form", upload.none(), async (req, res) => {
     });
 });
 
+// 發起JAM表單
+router.post("/apply", upload.none(), async (req, res) => {
+  // console.log(req.body);
+  const {
+    title,
+    degree,
+    genre,
+    former,
+    players,
+    region,
+    condition,
+    description,
+  } = req.body;
+  const tureDegree = parseInt(degree);
+  const juid = generateUid();
+  await db
+    .execute(
+      "INSERT INTO `jam` (`id`, `juid`, `title`, `degree`, `genre`, `former`, `players`, `region`, `band_condition`, `description`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      [
+        juid,
+        title,
+        tureDegree,
+        genre,
+        former,
+        players,
+        region,
+        condition,
+        description,
+      ]
+    )
+    .then(() => {
+      res.status(200).json({ status: "success", juid });
+    })
+    .catch((error) => {
+      res.status(409).json({ status: "error", error });
+    });
+});
+
 function generateUid() {
   let characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

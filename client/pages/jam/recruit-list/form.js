@@ -79,7 +79,7 @@ export default function Form() {
   const [complete, setComplete] = useState(2)
   // 檢查不雅字詞
   const checkBadWords = debounce(() => {
-    const badWords = /幹|屎|尿|屁|糞|靠北|靠腰|雞掰|王八|你媽|妳媽/g
+    const badWords = /幹|屎|尿|屁|糞|靠北|靠腰|雞掰|王八|你媽|妳媽|淫/g
     setTitleCheck(title.search(badWords) < 0 ? true : false)
     setConditionCheck(condition.search(badWords) < 0 ? true : false)
     setDescriptionCheck(description.search(badWords) < 0 ? true : false)

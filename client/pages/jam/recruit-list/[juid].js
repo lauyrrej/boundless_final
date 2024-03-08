@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import { debounce } from 'lodash'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
@@ -14,6 +17,7 @@ import Head from 'next/head'
 
 export default function Info() {
   const router = useRouter()
+  const mySwal = withReactContent(Swal)
 
   // ---------------------- 手機版本  ----------------------
   // 主選單
@@ -37,13 +41,6 @@ export default function Info() {
     former: {},
     member: [],
   })
-
-  // ----------------------------- 入團申請表單 -----------------------------
-  // ---------------------- 擔任職位 ----------------------
-  // 控制表單狀態
-  const [myPlayer, setMyPlayer] = useState('')
-  // 表單實際送出的內容
-  const [finalMyPlayer, setFinalMyPlayer] = useState('')
 
   // ----------------------------- 讓player代碼對應樂器種類 -----------------------------
   const playerName = jam.player.map((p) => {
@@ -132,6 +129,76 @@ export default function Info() {
     }
   }
 
+  // ----------------------------- 入團申請表單 -----------------------------
+  const [complete, setComplete] = useState(2)
+  // ---------------------- 擔任職位 ----------------------
+  // 控制表單狀態
+  const [myPlayer, setMyPlayer] = useState('')
+  // 表單實際送出的內容
+  const [finalMyPlayer, setFinalMyPlayer] = useState('')
+  // ---------------------- 描述 ----------------------
+  const [message, setMessage] = useState('')
+  const [messageCheck, setMessageCheck] = useState(true)
+
+  const checkBadWords = debounce(() => {
+    const badWords = /幹|屎|尿|屁|糞|靠北|靠腰|雞掰|王八|你媽|妳媽|淫/g
+    setMessageCheck(message.search(badWords) < 0 ? true : false)
+  }, 250)
+
+  // 檢查表單是否填妥
+  const checkComplete = () => {
+    if (messageCheck === false || message === '') {
+      setComplete(0)
+      return false
+    }
+    setComplete(1)
+    return true
+  }
+  // 送出表單
+  const sendForm = async (finalMyPlayer, message) => {
+    // checkComplete()
+    // console.log(complete)
+    if (!checkComplete()) {
+      return false
+    }
+    let formData = new FormData()
+    formData.append('former', finalMyPlayer)
+    formData.append('message', message)
+    // 確認formData內容
+    // for (let [key, value] of formData.entries()) {
+    //   console.log(`${key}: ${value}`)
+    // }
+    const res = await fetch('http://localhost:3005/api/jam/apply', {
+      method: 'POST',
+      body: formData,
+      credentials: 'include',
+    })
+    const result = await res.json()
+    if (result.status === 'success') {
+      notifySuccess(result.juid)
+    } else {
+      console.log(result.error)
+    }
+  }
+  // 發起成功後，彈出訊息框，並跳轉到資訊頁面
+  const notifySuccess = (juid) => {
+    mySwal
+      .fire({
+        position: 'center',
+        icon: 'success',
+        iconColor: '#1581cc',
+        title: '發起成功，將為您跳轉到資訊頁',
+        showConfirmButton: false,
+        timer: 3000,
+      })
+      .then(
+        setTimeout(() => {
+          router.push(`/jam/recruit-list/${juid}`)
+        }, 3000)
+      )
+  }
+
+  // ----------------------------- useEffect -----------------------------
   // 初次渲染後，向伺服器要求資料，設定到狀態中
   useEffect(() => {
     if (router.isReady) {
@@ -140,9 +207,9 @@ export default function Info() {
     }
   }, [router.isReady])
 
+  // 期限倒數
   useEffect(() => {
     setCountDown(calcTimeLeft())
-
     // 每秒更新一次倒數計時
     const timer = setInterval(() => {
       setCountDown(calcTimeLeft())
@@ -151,6 +218,15 @@ export default function Info() {
     // 清除計時器
     return () => clearInterval(timer)
   }, [jam.created_time])
+
+  // 申請表單填寫
+  useEffect(() => {
+    // 跳出未填寫完畢警告後再次輸入，消除警告
+    setComplete(2)
+    // 檢查不雅字詞
+    checkBadWords.cancel() // 取消上一次的延遲
+    checkBadWords()
+  }, [genre, myPlayer, message])
 
   return (
     <>
@@ -372,6 +448,41 @@ export default function Info() {
                     })}
                   </select>
                 </div>
+              </div>
+              {/* -------------------------- 想說的話 -------------------------- */}
+              <div className={`${styles.formItem} row`}>
+                <div className={`${styles.itemTitle} col-12 col-sm-2`}>
+                  想說的話
+                </div>
+                <div className={`${styles.itemInputWrapper} col-12 col-sm-10`}>
+                  <textarea
+                    className={`${styles.textArea} form-control`}
+                    placeholder="建議可以提到自己喜歡的音樂、入團動機等，並請注意禮貌，限150字"
+                    name="message"
+                    maxLength={150}
+                    onChange={(e) => {
+                      setMessage(e.target.value)
+                    }}
+                  />
+                  {messageCheck ? (
+                    ''
+                  ) : (
+                    <div
+                      className={`${styles.warningText} mt-1 d-none d-sm-block`}
+                    >
+                      偵測到不雅字詞
+                    </div>
+                  )}
+                </div>
+                {messageCheck ? (
+                  ''
+                ) : (
+                  <div
+                    className={`${styles.warningText} d-block d-sm-none p-0`}
+                  >
+                    偵測到不雅字詞
+                  </div>
+                )}
               </div>
 
               <div className="d-flex justify-content-center">
