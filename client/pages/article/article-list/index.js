@@ -209,14 +209,10 @@ export default function ArticleList() {
                   </Link>
                 </li>
                 <li>
-                  <Link href={`/article/article-list/article-rate`}>
-                    音樂評論
-                  </Link>
+                  <Link href={`/article/article-list`}>音樂評論</Link>
                 </li>
                 <li>
-                  <Link href={`/article/article-list/article-tec`}>
-                    技術分享
-                  </Link>
+                  <Link href={`/article/article-list`}>技術分享</Link>
                 </li>
               </ul>
             </div>
@@ -241,10 +237,10 @@ export default function ArticleList() {
               <Link href={`/article/article-list`} className="sm-item active">
                 全部
               </Link>
-              <Link href={`/article/article-rate`} className="sm-item">
+              <Link href={`/article/article-list`} className="sm-item">
                 樂評
               </Link>
-              <Link href={`/article/article-tec`} className="sm-item">
+              <Link href={`/article/article-list`} className="sm-item">
                 技術分享
               </Link>
             </div>
@@ -255,6 +251,10 @@ export default function ArticleList() {
                 <ul className="d-flex align-items-center p-0 m-0">
                   <IoHome size={20} />
                   <li style={{ marginLeft: '8px' }}>樂友論壇</li>
+                  <FaChevronRight />
+                  <Link href="/article/article-list">
+                    <li style={{ marginLeft: '10px' }}>文章資訊</li>
+                  </Link>
                 </ul>
               </div>
 

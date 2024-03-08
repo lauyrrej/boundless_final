@@ -14,8 +14,45 @@ import { IoClose } from 'react-icons/io5'
 import { IoCloseOutline } from 'react-icons/io5'
 import { IoIosArrowForward } from 'react-icons/io'
 import { IoMdHome } from 'react-icons/io'
+import axios from 'axios'
 
-export default function Test() {
+export default function Publish() {
+  // ----------------------上傳圖片  ----------------------
+  // const uploadFileToServer = (file) => {
+  //   // 構造 FormData 對象，用於將文件上傳到服務器
+  //   const formData = new FormData()
+  //   formData.append('file', file)
+
+  //   // 發送 POST 請求到服務器，將文件上傳
+  //   return fetch('http://localhost:3005/api/upload', {
+  //     method: 'POST',
+  //     body: formData,
+  //   }).then((response) => {
+  //     // 檢查響應是否成功，如果不成功則拋出錯誤
+  //     if (!response.ok) {
+  //       throw new Error('File upload failed')
+  //     }
+  //     // 返回響應
+  //     return response.json()
+  //   })
+  // }
+  const [file, setFile] = useState()
+  const upload = () => {
+    const formData = new FormData()
+    formData.append('file', file)
+    axios
+      .post('http://localhost:3005/api/upload', formData)
+      .then((response) => {
+        // 檢查響應是否成功，如果不成功則拋出錯誤
+        if (!response.ok) {
+          throw new Error('File upload failed')
+        }
+        // 返回響應
+        return response.json()
+      })
+      .catch((error) => console.log(error))
+  }
+
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -91,14 +128,13 @@ export default function Test() {
           <div className="breadcrumb-wrapper-ns">
             <ul className="d-flex align-items-center p-0 m-0">
               <IoHome size={20} />
-              <li style={{ marginLeft: '8px' }}>Let&apos;s JAM!</li>
+              <li style={{ marginLeft: '8px' }}>樂友論壇</li>
               <FaChevronRight />
-              <Link href="/jam/recruit-list">
-                <li style={{ marginLeft: '10px' }}>團員募集</li>
+              <Link href="/article/article-list">
+                <li style={{ marginLeft: '10px' }}>文章資訊</li>
               </Link>
-
               <FaChevronRight />
-              <li style={{ marginLeft: '10px' }}>JAM 資訊</li>
+              <li style={{ marginLeft: '10px' }}>文章發布</li>
             </ul>
           </div>
           <div className="">
@@ -139,7 +175,7 @@ export default function Test() {
                   <label
                     htmlFor="exampleFormControlTextarea1"
                     className="form-label"
-                  />
+                  ></label>
                   <textarea
                     className="form-control"
                     id="exampleFormControlTextarea1"
@@ -167,7 +203,22 @@ export default function Test() {
                     width={150}
                     height={150}
                   />
-                  <h5 className="text-secondary ms-5">上傳圖片</h5>
+                  <form
+                    action="/upload"
+                    method="post"
+                    encType="multipart/form-data"
+                  >
+                    <input
+                      type="file"
+                      name="myFile"
+                      id="myFile"
+                      onChange={(e) => setFile(e.target.files[0])}
+                    />
+                    <button type="button" onClick={upload}>
+                      送出
+                    </button>
+                  </form>
+                  {/* <h5 className="text-secondary ms-5">上傳圖片</h5> */}
                 </div>
                 <h5 className="text-secondary mt-4">
                   建議尺寸: 寬1200 x 高630 像素的等比例圖片 <br />

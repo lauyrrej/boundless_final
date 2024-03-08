@@ -136,14 +136,15 @@ export default function Auid({
           <div className="breadcrumb-wrapper-ns">
             <ul className="d-flex align-items-center p-0 m-0">
               <IoHome size={20} />
-              <li style={{ marginLeft: '8px' }}>Let&apos;s JAM!</li>
+              <li style={{ marginLeft: '8px' }}>樂友論壇</li>
               <FaChevronRight />
-              <Link href="/jam/recruit-list">
-                <li style={{ marginLeft: '10px' }}>團員募集</li>
+              <Link href="/article/article-list">
+                <li style={{ marginLeft: '10px' }}>文章資訊</li>
               </Link>
-
               <FaChevronRight />
-              <li style={{ marginLeft: '10px' }}>JAM 資訊</li>
+              <Link href="/article/article-list">
+                <li style={{ marginLeft: '10px' }}>文章內文</li>
+              </Link>
             </ul>
           </div>
           <div className="">
