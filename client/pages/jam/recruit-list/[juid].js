@@ -35,8 +35,15 @@ export default function Info() {
     condition: '',
     description: '',
     former: {},
-    member: {},
+    member: [],
   })
+
+  // ----------------------------- 入團申請表單 -----------------------------
+  // ---------------------- 擔任職位 ----------------------
+  // 控制表單狀態
+  const [myPlayer, setMyPlayer] = useState('')
+  // 表單實際送出的內容
+  const [finalMyPlayer, setFinalMyPlayer] = useState('')
 
   // ----------------------------- 讓player代碼對應樂器種類 -----------------------------
   const playerName = jam.player.map((p) => {
@@ -107,18 +114,11 @@ export default function Info() {
     25
       ? true
       : false
-  // ----------------------------- useEffect -----------------------------
-  // 檢查是否從發起頁面跳轉進入，表示發起成功，需顯示成功訊息
-  // useEffect(() => {
-  //   if (location.state.status) {
-  //     console.log('發起成功')
-  //   }
-  // }, [])
 
   // 向伺服器要求資料，設定到狀態中用的函式
   const getSingleData = async (juid) => {
     try {
-      const res = await fetch(`http://localhost:3005/api/jam/${juid}`)
+      const res = await fetch(`http://localhost:3005/api/jam/singleJam/${juid}`)
       // res.json()是解析res的body的json格式資料，得到JS的資料格式
       const data = await res.json()
       if (data) {
@@ -150,6 +150,7 @@ export default function Info() {
     // 清除計時器
     return () => clearInterval(timer)
   }, [jam.created_time])
+
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
@@ -331,6 +332,47 @@ export default function Info() {
                   {jam.description}
                 </div>
               </div>
+              <hr style={{ margin: '6px' }} />
+              <div className={`${styles.jamTitle}`}>
+                入團申請
+                <div
+                  className={`${styles.noticeText}`}
+                  style={{ color: '#5a5a5a' }}
+                >
+                  ※ 可同時申請多個 JAM，但加入的 JAM
+                  以一個為限，請考慮清楚再提出申請。
+                </div>
+              </div>
+              {/* -------------------------- 擔任職位 -------------------------- */}
+              <div className={`${styles.formItem} row`}>
+                <div className={`${styles.itemTitle} col-12 col-sm-2`}>
+                  擔任職位
+                </div>
+                <div className={`${styles.itemInputWrapper} col-12 col-sm-10`}>
+                  <select
+                    className="form-select"
+                    style={{ width: 'auto' }}
+                    value={myPlayer}
+                    name="myPlayer"
+                    onChange={(e) => {
+                      setMyPlayer(e.target.value)
+                      setFinalMyPlayer(
+                        '{"id": 1, "play": ' + e.target.value + '}'
+                      )
+                    }}
+                  >
+                    <option value="">請選擇</option>
+                    {player.map((v) => {
+                      return (
+                        <option key={v.id} value={v.id}>
+                          {v.name}
+                        </option>
+                      )
+                    })}
+                  </select>
+                </div>
+              </div>
+
               <div className="d-flex justify-content-center">
                 <div
                   className="b-btn b-btn-primary"
@@ -353,6 +395,12 @@ export default function Info() {
                 }}
               >
                 {`${countDown.day} 天 ${countDown.hour} 小時 ${countDown.minute} 分 ${countDown.second} 秒`}
+              </div>
+              <div
+                className={`${styles.jamTitle}`}
+                style={{ marginTop: '12px' }}
+              >
+                成員名單
               </div>
             </div>
           </div>

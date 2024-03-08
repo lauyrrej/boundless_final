@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
 import { debounce } from 'lodash'
+// sweetalert
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 //data
 import CityCountyData from '@/data/CityCountyData.json'
 import playerData from '@/data/player.json'
@@ -17,8 +21,10 @@ import { FaCirclePlus } from 'react-icons/fa6'
 // scss
 import styles from '@/pages/jam/jam.module.scss'
 
+const mySwal = withReactContent(Swal)
+
 export default function Form() {
-  // const navigate = useNavigate()
+  const router = useRouter()
   // ---------------------- 手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -160,12 +166,27 @@ export default function Form() {
     })
     const result = await res.json()
     if (result.status === 'success') {
-      // 跳轉路由，並攜帶成功狀態物件
-      // navigate(`/jam/recruit-list/${result.juid}`, { status: true })
-      console.log('發起成功')
+      notifySuccess(result.juid)
     } else {
       console.log(result.error)
     }
+  }
+  // 發起成功後，彈出訊息框，並跳轉到資訊頁面
+  const notifySuccess = (juid) => {
+    mySwal
+      .fire({
+        position: 'center',
+        icon: 'success',
+        iconColor: '#1581cc',
+        title: '發起成功，將為您跳轉到資訊頁',
+        showConfirmButton: false,
+        timer: 3000,
+      })
+      .then(
+        setTimeout(() => {
+          router.push(`/jam/recruit-list/${juid}`)
+        }, 3000)
+      )
   }
   // ---------------------- 偵測表單輸入變化，並執行檢查
   useEffect(() => {
@@ -257,14 +278,17 @@ export default function Form() {
                 <div className={`${styles.jamTitle} col-12 col-sm-2`}>
                   發起表單
                 </div>
-                <div className="col-12 col-sm-10 mt-sm-0">
-                  (提示: 點擊&nbsp;
+                <div
+                  className="col-12 col-sm-10 mt-sm-0"
+                  style={{ color: '#5a5a5a' }}
+                >
+                  ※ 點擊&nbsp;
                   <FaCirclePlus
                     size={18}
                     style={{ color: '#18a1ff' }}
                     className="mb-1"
                   />
-                  &nbsp;可增加項目)
+                  &nbsp;可增加項目
                 </div>
               </div>
 
