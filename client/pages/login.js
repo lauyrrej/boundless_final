@@ -221,6 +221,7 @@ export default function Test() {
 
   // ----------------------會員登入  ----------------------
 
+  //登出功能
   const { handleLogout } = useAuth()
   // const [redirectToIndex, setRedirectToIndex] = useState(false)
 
@@ -299,11 +300,18 @@ export default function Test() {
             <div className="login-logoText">音樂無國界，學習無邊界</div>
             <div className="login-form">
               <div className="login-titleText">登入</div>
+              <button className="btn btn-primary" onClick={getUser}>
+                取得使用者清單JSON
+              </button>
+              <button className="btn btn-primary" onClick={handleLogout}>
+                登出
+              </button>
+              <button className="btn btn-primary" onClick={handleLoginStatus}>
+                檢測登入狀態
+              </button>
               <div className="login-google-API">
                 <div className="google-icon">圖</div>
-                <button onClick={getUser}>取得使用者清單JSON</button>
-                <button onClick={handleLogout}>登出</button>
-                <button onClick={handleLoginStatus}>檢測登入狀態</button>
+
                 <div className="google-text">使用Google登入</div>
               </div>
               <div className="hr-content">
