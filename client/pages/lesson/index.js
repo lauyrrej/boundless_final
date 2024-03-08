@@ -216,7 +216,7 @@ export default function Test({ onSearch }) {
           `http://localhost:3005/api/Lesson/category/${selectedCategory}`
         )
         const data = await response.json()
-        console.log(data)
+        // console.log(data)
 
         setData(data) //連回渲染特定分類課程
       } catch (error) {
@@ -309,7 +309,7 @@ export default function Test({ onSearch }) {
                   return (
                     <Link
                       key={index}
-                      href={'/lesson/lesson-data?category${v.id}'}
+                      href={'/lesson/?${v.id}'}
                     >
                       <li onClick={() => handleCategoryChange(v.id)}>
                         {v.name}
@@ -587,14 +587,16 @@ export default function Test({ onSearch }) {
                           id={v.id}
                           course-card
                           name={v.name}
-                          price={v.price}
+                                      price={v.price}
+                                      
                           teacher_id={v.teacher_id}
                           img={v.img}
                           length={v.length}
                           sales={v.sales}
                         />
                       )}
-                      <Link href={`/lesson/${v.id}`}></Link>
+                          <Link href={`/lesson/${v.id}`}></Link>
+                          
                     </div>
                   )
                 })}
