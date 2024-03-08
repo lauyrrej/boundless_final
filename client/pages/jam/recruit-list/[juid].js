@@ -121,7 +121,6 @@ export default function Info() {
       const res = await fetch(`http://localhost:3005/api/jam/${juid}`)
       // res.json()是解析res的body的json格式資料，得到JS的資料格式
       const data = await res.json()
-
       if (data) {
         setPlayer(data.playerData)
         setGenre(data.genreData)

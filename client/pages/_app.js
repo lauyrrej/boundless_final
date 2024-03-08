@@ -17,8 +17,7 @@ export default function MyApp({ Component, pageProps }) {
 
   return (
     <CartProvider>
-      <AuthProvider>{getLayout(
-      <Component {...pageProps} />)}</AuthProvider>
+      <AuthProvider>{getLayout(<Component {...pageProps} />)}</AuthProvider>
     </CartProvider>
   )
 }
