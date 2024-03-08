@@ -28,10 +28,9 @@ router.get("/", async (req, res) => {
 router.get("/categories", async (req, res) => {
   try {
     let [couponData] = await db.execute(
-      // "SELECT * FROM `coupon` ORDER BY id ASC"
-      "SELECT * FROM `coupon` WHERE `type` = 1 AND valid=1"
-      //   "SELECT * FROM `coupon` WHERE `type` = 2 AND valid=1"
-      // "SELECT * FROM `coupon` WHERE `valid` = 0 ORDER BY id ASC"
+      // "SELECT * FROM `coupon` WHERE `type` = 1 AND valid=1  "
+      // "SELECT * FROM `coupon` WHERE `type` = 2 AND valid=1"
+      "SELECT * FROM `coupon` WHERE `valid` = 0 ORDER BY id ASC"
     );
     if (couponData) {
       res.json(couponData);
@@ -43,7 +42,5 @@ router.get("/categories", async (req, res) => {
     res.json("res.json發生錯誤");
   }
 });
-//取得coupon資料-條件篩選：品牌?
-// ("SELECT * FROM `brand` WHERE `name` = 1 ORDER BY id ASC");
 
 export default router;
