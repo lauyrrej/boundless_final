@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import jamHero from '@/assets/jam-hero.png'
 // icons
+import { MdNoteAdd } from 'react-icons/md'
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
 import { IoIosSearch } from 'react-icons/io'
@@ -73,17 +74,17 @@ export default function ArticleList() {
     })
   }, [article, search])
 
-  // const categorySearch = () => {
-  //   let newData
-  //   if (category === 'all') {
-  //     newData = ArticleJson
-  //   } else {
-  //     newData = data.filter((v, i) => {
-  //       return v.category_id === category
-  //     })
-  //   }
-  //   setData(newData)
-  // }
+  // ------------------分類category_id的資料庫------------------------
+  // const filterArticle = useMemo(() => {
+  //   return article.filter((v) => {
+  //     // 檢查文章的標題是否包含搜尋關鍵字
+  //     const titleMatch = v.title.includes(search)
+  //     // 檢查文章的 category_id 是否為 2
+  //     const categoryIdMatch = v.category_id === 2
+  //     // 將上述條件組合起來，若兩者皆符合則返回 true，否則返回 false
+  //     return titleMatch && categoryIdMatch
+  //   })
+  // }, [article, search])
 
   // ----------------------分類功能  ----------------------
 
@@ -96,10 +97,6 @@ export default function ArticleList() {
     setArticle(newArticles)
   }
   // ----------------------假資料  ----------------------
-
-  // sidebar假資料
-  const sidebarData = ['全部', '技術分享', '音樂評論']
-
   // 資料排序
   const [dataSort, setDataSort] = useState('latest')
   // ----------------------條件篩選  ----------------------
@@ -217,7 +214,9 @@ export default function ArticleList() {
                   </Link>
                 </li>
                 <li>
-                  <Link href={`/article/Q&A`}>技術分享</Link>
+                  <Link href={`/article/article-list/article-tec`}>
+                    技術分享
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -239,14 +238,14 @@ export default function ArticleList() {
                   }}
                 />
               </div>
-              <Link href={`/article/recruit-list`} className="sm-item active">
-                團員募集
+              <Link href={`/article/article-list`} className="sm-item active">
+                全部
               </Link>
-              <Link href={`/article/article-list`} className="sm-item">
-                活動中的article
+              <Link href={`/article/article-rate`} className="sm-item">
+                樂評
               </Link>
-              <Link href={`/article/Q&A`} className="sm-item">
-                什麼是article？
+              <Link href={`/article/article-tec`} className="sm-item">
+                技術分享
               </Link>
             </div>
             {/*  ---------------------- 頂部功能列  ---------------------- */}
@@ -467,7 +466,15 @@ export default function ArticleList() {
             </div>
             {/* 主內容 */}
             <main className="content me-2">
-              <h4 className="text-primary pt-2">熱門文章</h4>
+              <div className="d-flex justify-content-between align-items-center">
+                <h4 className="text-primary pt-2">熱門文章</h4>
+                <Link href={`/article/article-publish`} className="icon-btn">
+                  <MdNoteAdd
+                    size={35}
+                    style={{ color: 'gray', cursor: 'pointer' }}
+                  />
+                </Link>
+              </div>
               <div className="content-pop d-flex flex-wrap">
                 {filterArticle.slice(0, 4).map((v, i) => {
                   {

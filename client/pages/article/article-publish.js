@@ -11,9 +11,9 @@ import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
-import { IoCloseOutline } from "react-icons/io5";
-import { IoIosArrowForward } from "react-icons/io";
-import { IoMdHome } from "react-icons/io";
+import { IoCloseOutline } from 'react-icons/io5'
+import { IoIosArrowForward } from 'react-icons/io'
+import { IoMdHome } from 'react-icons/io'
 
 export default function Test() {
   // ----------------------手機版本  ----------------------
@@ -47,8 +47,9 @@ export default function Test() {
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
         <div
-          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${showMenu ? 'menu-mb-show' : ''
-            }`}
+          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${
+            showMenu ? 'menu-mb-show' : ''
+          }`}
         >
           {/* 用戶資訊 */}
           <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
@@ -104,7 +105,9 @@ export default function Test() {
             {/* 主內容 */}
             {/* XLg */}
             <div className="x-lg text-end pb-3">
-              <IoCloseOutline size={50} />
+              <Link href={`/article/article-list`} className="icon-btn">
+                <IoCloseOutline size={50} />
+              </Link>
             </div>
             {/* setting category */}
             <div className="set-category d-flex justify-content-between row">
@@ -112,7 +115,10 @@ export default function Test() {
                 <h3>設定文章分類</h3>
               </div>
               <div className="col-8">
-                <select className="form-select" aria-label="Default select example">
+                <select
+                  className="form-select"
+                  aria-label="Default select example"
+                >
                   <option value={1}>技術</option>
                   <option value={2}>樂評</option>
                   <option value={3}>公告</option>
@@ -130,13 +136,16 @@ export default function Test() {
                   上限150個字，系統已經先擷取，你也可以自行修改摘要說明。(140/150)
                 </h5>
                 <div>
-                  <label htmlFor="exampleFormControlTextarea1" className="form-label" />
+                  <label
+                    htmlFor="exampleFormControlTextarea1"
+                    className="form-label"
+                  />
                   <textarea
                     className="form-control"
                     id="exampleFormControlTextarea1"
                     rows={3}
                     placeholder="輸入內容..."
-                    defaultValue={""}
+                    defaultValue={''}
                   />
                 </div>
               </div>
@@ -152,7 +161,12 @@ export default function Test() {
                   選擇或上傳照片作為文章縮圖(同時也是社群分享文章連結時的縮圖)。
                 </h5>
                 <div className="upload-img d-flex align-items-center mt-4">
-                  <Image src="/article/singer.png" alt="" width={150} height={150} />
+                  <Image
+                    src="/article/singer.png"
+                    alt=""
+                    width={150}
+                    height={150}
+                  />
                   <h5 className="text-secondary ms-5">上傳圖片</h5>
                 </div>
                 <h5 className="text-secondary mt-4">
@@ -268,47 +282,49 @@ export default function Test() {
       </div>
       <Footer />
 
-      <style jsx>{`.wrapper {
-        min-height: calc(100vh);
-        padding: 0 35px;
+      <style jsx>{`
+        .wrapper {
+          min-height: calc(100vh);
+          padding: 0 35px;
         }
-      .set-content button {
-        background-color: white;
-        color: var(--secondary);
-        font-weight: 500;
-        border-color: var(--secondary);
-        border-width: 2px;
+        .set-content button {
+          background-color: white;
+          color: var(--secondary);
+          font-weight: 500;
+          border-color: var(--secondary);
+          border-width: 2px;
         }
-      /* set-content,set-img, set-tag */
-      .set-rwd{
-    display: flex;
-    flex-direction: row;
-}
-.rwd-title{
-    width: calc(60%);
-}
-.rwd-content{
-    width: calc(60%);
-}
-.tag-btns{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: start;
-    .btn{
-        margin-right: 20px;
-    }
-}
-@media screen and (max-width: 576px) {
-    .set-rwd{
-        flex-direction: column;
-    }
-    .rwd-title{
-        width: 100%;
-    }
-    .rwd-content{
-        width: 100%;
-    }
-}`}</style>
+        /* set-content,set-img, set-tag */
+        .set-rwd {
+          display: flex;
+          flex-direction: row;
+        }
+        .rwd-title {
+          width: calc(60%);
+        }
+        .rwd-content {
+          width: calc(60%);
+        }
+        .tag-btns {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: start;
+          .btn {
+            margin-right: 20px;
+          }
+        }
+        @media screen and (max-width: 576px) {
+          .set-rwd {
+            flex-direction: column;
+          }
+          .rwd-title {
+            width: 100%;
+          }
+          .rwd-content {
+            width: 100%;
+          }
+        }
+      `}</style>
     </>
   )
 }
