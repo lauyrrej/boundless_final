@@ -58,6 +58,28 @@ router.get("/category/:category", async (req, res) => {
   }
 });
 
+
+
+// 獲得單筆課程資料
+router.get("/:id", async (req, res, next) => {
+  let luid = req.params.id;
+  console.log(luid);
+  let [data] = await db
+    .execute("SELECT * FROM `product` WHERE `puid` = ? ", [luid])
+    .catch(() => {
+      return undefined;
+    });
+
+  if (data) {
+    console.log(data);
+    res.status(200).json(data);
+  } else {
+    res.status(400).send("發生錯誤");
+  }
+});
+
+
+
  // 取得資料總筆數，用於製作分頁
 //   let [dataCount] = await db
 //     .execute(
@@ -76,41 +98,5 @@ router.get("/category/:category", async (req, res) => {
 
 //   // 排序用
 //   let orderDirection = req.query.order || "ASC";
-
-// 商品列表路由，根據分類返回相應商品列表
-// router.get("/:categoryId", async (req, res) => {
-//   const { category } = req.query.categoryId;
-//   let [data] = await db
-//     .execute("SELECT * FROM `product` WHERE `lesson_category_id` = ? ", [
-//       category,
-//     ])
-//     .catch(() => {
-//       return undefined;
-//     });
-//   if (data) {
-//     console.log(data);
-//     res.status(200).json(data);
-//   } else {
-//     res.status(400).send("發生錯誤");
-//   }
-// });
-
-// 獲得單筆課程資料
-router.get("/:id", async (req, res, next) => {
-  let lid = req.params.id;
-  console.log(lid);
-  let [data] = await db
-    .execute("SELECT * FROM `product` WHERE `id` = ? ", [lid])
-    .catch(() => {
-      return undefined;
-    });
-
-  if (data) {
-    console.log(data);
-    res.status(200).json(data);
-  } else {
-    res.status(400).send("發生錯誤");
-  }
-});
 
 export default router;

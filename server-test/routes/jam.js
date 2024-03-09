@@ -66,16 +66,16 @@ router.get("/", async (req, res) => {
         : "";
     const player =
       req.query.player !== "all"
-        ? " AND (`player` LIKE '%," +
+        ? " AND (`players` LIKE '%," +
         req.query.player +
         "]'" +
-        " OR `player` LIKE '[" +
+        " OR `players` LIKE '[" +
         req.query.player +
         ",%'" +
-        " OR `player` LIKE '%," +
+        " OR `players` LIKE '%," +
         req.query.player +
         ",%'" +
-        " OR `player` = '[" +
+        " OR `players` = '[" +
         req.query.player +
         "]')"
         : "";

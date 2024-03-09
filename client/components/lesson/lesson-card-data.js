@@ -2,13 +2,11 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 // import Lesson from '@/data/Lesson.json'
 
-export default function CourseCard({ id, name, price, teacher_id, img,length, sales }) {
+export default function CourseCard({ luid, name, price, teacher_id, img, length, sales,discount}) {
+     const [isDiscount, setIsDiscount] = useState(false)
   return (
     <>
-      <Link
-        href={`/lesson/${id}`}
-       
-      >
+      <Link href={`/lesson/${luid}`}>
         <article className="course-card">
           <section className="course-image-wrapper">
             <img
@@ -52,21 +50,26 @@ export default function CourseCard({ id, name, price, teacher_id, img,length, sa
               </div>
             </div>
             <div className="course-price">${price}</div>
-            <div className="enrolled-students">
-              <img
-                loading="lazy"
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/6d3076872f8f7cffe3e64f324e5f3c6851c51802240e5b7749e95a5dcbb6ab69?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&"
-                alt="User icon"
-                className="user-icon"
-              />
-              <span className="enrollment-count">{sales}</span>
-            </div>
           </section>
+          <div className="enrolled-students">
+            <img
+              loading="lazy"
+              src="https://cdn.builder.io/api/v1/image/assets/TEMP/6d3076872f8f7cffe3e64f324e5f3c6851c51802240e5b7749e95a5dcbb6ab69?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&"
+              alt="User icon"
+              className="user-icon"
+            />
+            <span className="enrollment-count">{sales}</span>
+          </div>
         </article>
 
         <style jsx>{`
           .course-card {
+            position:relative;
             max-width: 240px;
+            height: 100%;
+             {
+              /* 保證卡片高度和內容一致 */
+            }
             border-radius: 5px;
             border: 1px solid #b9b9b9;
             background-color: #fff;
@@ -82,17 +85,18 @@ export default function CourseCard({ id, name, price, teacher_id, img,length, sa
             position: relative;
             aspect-ratio: 1.33;
             width: 100%;
+            height: 200px; /*設定希望高度 */
           }
-          .course-image,
-          .icon-image {
+          .course-image {
             width: 100%;
-            object-fit: cover;
+            height: 100%;
+            object-fit: contain;
             object-position: center;
           }
           .icon-image {
             position: absolute;
             width: 20px;
-            bottom: 12px;
+            bottom: 5px;
             right: 12px;
           }
           .course-info {
@@ -125,7 +129,9 @@ export default function CourseCard({ id, name, price, teacher_id, img,length, sa
             margin-top: 11px;
           }
           .enrolled-students {
-            text-align: right;
+            position:absolute;
+        right:10px;
+        bottom:10px;
             color: #5a5a5a;
             font-size: 14px;
             font-family: Noto Sans TC, sans-serif;
