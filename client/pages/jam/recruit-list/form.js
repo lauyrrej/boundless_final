@@ -75,7 +75,7 @@ export default function Form() {
   const [descriptionCheck, setDescriptionCheck] = useState(true)
 
   // ---------------------- 表單填寫 ----------------------
-  // 表單完成狀態 0: 送出時有欄位尚未填寫, 1: 填寫完成, 2: 初次進入頁面 or 從未填寫完必狀態繼續填寫
+  // 表單完成狀態 0: 有欄位尚未填寫或不符規定, 1: 填寫完成, 2: 填寫中
   const [complete, setComplete] = useState(2)
   // 檢查不雅字詞
   const checkBadWords = debounce(() => {
@@ -280,7 +280,7 @@ export default function Form() {
                 </div>
                 <div
                   className="col-12 col-sm-10 mt-sm-0"
-                  style={{ color: '#5a5a5a' }}
+                  style={{ color: '#666666' }}
                 >
                   ※ 點擊&nbsp;
                   <FaCirclePlus

@@ -30,6 +30,7 @@ export default function Info() {
   const [player, setPlayer] = useState([])
   const [jam, setJam] = useState({
     id: 0,
+    juid: '',
     title: '',
     degree: 0,
     created_time: '',
@@ -150,6 +151,10 @@ export default function Info() {
       setComplete(0)
       return false
     }
+    if (finalMyPlayer === '') {
+      setComplete(0)
+      return false
+    }
     setComplete(1)
     return true
   }
@@ -160,24 +165,24 @@ export default function Info() {
     if (!checkComplete()) {
       return false
     }
-    let formData = new FormData()
-    formData.append('former', finalMyPlayer)
-    formData.append('message', message)
-    // 確認formData內容
-    // for (let [key, value] of formData.entries()) {
-    //   console.log(`${key}: ${value}`)
+    // let formData = new FormData()
+    // formData.append('former', finalMyPlayer)
+    // formData.append('message', message)
+    // // 確認formData內容
+    // // for (let [key, value] of formData.entries()) {
+    // //   console.log(`${key}: ${value}`)
+    // // }
+    // const res = await fetch('http://localhost:3005/api/jam/apply', {
+    //   method: 'POST',
+    //   body: formData,
+    //   credentials: 'include',
+    // })
+    // const result = await res.json()
+    // if (result.status === 'success') {
+    //   notifySuccess(result.juid)
+    // } else {
+    //   console.log(result.error)
     // }
-    const res = await fetch('http://localhost:3005/api/jam/apply', {
-      method: 'POST',
-      body: formData,
-      credentials: 'include',
-    })
-    const result = await res.json()
-    if (result.status === 'success') {
-      notifySuccess(result.juid)
-    } else {
-      console.log(result.error)
-    }
   }
   // 發起成功後，彈出訊息框，並跳轉到資訊頁面
   const notifySuccess = (juid) => {
@@ -413,7 +418,7 @@ export default function Info() {
                 入團申請
                 <div
                   className={`${styles.noticeText}`}
-                  style={{ color: '#5a5a5a' }}
+                  style={{ color: '#666666' }}
                 >
                   ※ 可同時申請多個 JAM，但最終只能擇一加入。
                 </div>
@@ -487,10 +492,26 @@ export default function Info() {
                 <div
                   className="b-btn b-btn-primary"
                   style={{ paddingInline: '38px' }}
+                  role="presentation"
+                  onClick={() => {
+                    sendForm(finalMyPlayer, message)
+                  }}
                 >
                   提交
                 </div>
               </div>
+              {complete === 0 ? (
+                <div
+                  className="d-flex justify-content-center"
+                  style={{ marginTop: '-8px' }}
+                >
+                  <div className={`${styles.warningText}`}>
+                    請遵照規則，並填寫所有必填內容
+                  </div>
+                </div>
+              ) : (
+                ''
+              )}
             </div>
           </div>
 

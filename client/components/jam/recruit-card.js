@@ -75,7 +75,6 @@ export default function RecruitCard({
           style={{ gap: '6px' }}
         >
           <div className={`${styles.former}`}>
-            {/* <span style={{ color: '#5a5a5a', fontWeight: '500' }}>發起人</span> */}
             {/* 發起人頭像 */}
             <div className={`${styles.userPhotoWrapper}`}>
               <Image

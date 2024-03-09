@@ -367,7 +367,7 @@ export default function RecruitList() {
                         <div className="filter-item">
                           <div
                             className="filter-title"
-                            style={{ color: '#5a5a5a' }}
+                            style={{ color: '#666666' }}
                           >
                             技術程度
                           </div>
