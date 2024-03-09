@@ -5,10 +5,10 @@ import Image from 'next/image'
 //react icons
 import { FaTrash } from 'react-icons/fa6'
 
-export default function LessonList({ items = [], remove = () => {} }) {
-  const lessonData = items.filter((v, i) => {
-    return v.type == 2
-  })
+export default function LessonList({ items, lessonData, remove }) {
+  //   const lessonData = items.filter((v, i) => {
+  //     return v.type == 2
+  //   })
   return (
     <>
       <div className={`${Lesson.cartItemGroup}`}>

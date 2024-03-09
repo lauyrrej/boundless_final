@@ -28,52 +28,64 @@ export default function InstrumentCard({
   return (
     <>
       <div className="product-card">
-        <div className="product-image-wrapper">
-          {/* <Image
-            loading="lazy"
-            srcSet={img_small}
-            alt={name}
-            className="product-image"
-            fill
-          /> */}
-          <FaHeart />
-          <Image
-            src={`/instrument/${category_name}/small/${img_small}`}
-            alt={name}
-            className="product-image"
-            fill
-          />
+        <FaHeart
+          size={24}
+          style={{
+            position: 'absolute',
+            zIndex: '30',
+            color: '#b9b9b9',
+            right: '14px',
+            top: '8px',
+          }}
+        />
+        <div style={{ padding: '10px', width: '100%', height: '100%' }}>
+          <div className="product-image-wrapper">
+            <img
+              src={`/instrument/${category_name}/small/${img_small}`}
+              alt={name}
+              className="product-image"
+            />
+          </div>
         </div>
+
         <div className="product-details">
           <h3 className="product-title">{name}</h3>
-          <p className="product-price">{}</p>
-          <p className="product-sold mt-sm-4 mt-1">已售出 {}</p>
+          <p className="product-price">NT${price}</p>
+          <p className="product-sold">已售出 {}</p>
         </div>
       </div>
       <style jsx>{`
         .product-card {
           max-width: 240px;
-          width: 100%;
+          width: 240px;
+          height: 350px; /* 保證卡片高度和內容一致 */
           border-radius: 5px;
           border: 1px solid #b9b9b9;
           background-color: #fff;
           display: flex;
           flex-direction: column;
-          padding: 8px;
+          overflow: hidden;
+          position: relative;
           @media screen and (max-width: 576px) {
             width: 190px;
           }
         }
         .product-image-wrapper {
           display: flex;
-          flex-direction: column;
-          align-items: center;
+          justify-content: center;
           overflow: hidden;
           position: relative;
-          height: 166px;
+          height: 160px;
+          width: 200px;
+           {
+            /* width: 100%; */
+          }
         }
         .product-image {
+          width: 100%;
+          height: 100%; /* 保證圖片填充整個容器 */
           object-fit: contain;
+          object-position: center;
         }
         .icon-image {
           position: absolute;
@@ -84,6 +96,7 @@ export default function InstrumentCard({
         .product-details {
           display: flex;
           flex-direction: column;
+          gap: 6px;
           color: #1d1d1d;
           font-weight: 400;
           padding: 14px 12px;
@@ -97,7 +110,7 @@ export default function InstrumentCard({
           font-size: 18px;
           font-family: Noto Sans TC, sans-serif;
           font-weight: 700;
-          margin-top: 11px;
+          height: 60px;
         }
         .product-sold {
           color: #5a5a5a;
