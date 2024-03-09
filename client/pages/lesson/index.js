@@ -637,7 +637,6 @@ export default function Test({ onSearch }) {
                           />
                         ) : (
                           <Card
-                            course-card
                             id={id}
                             luid={puid}
                             name={name}

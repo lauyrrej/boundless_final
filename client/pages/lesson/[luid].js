@@ -15,7 +15,7 @@ import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 import { FaHeart } from 'react-icons/fa'
 
-import Card from '@/components/lesson/lesson-card'
+import Card from '@/components/lesson/lesson-card-data'
 import HoriCard from '@/components/lesson/lesson-card-hori'
 import ProductCard from '@/components/lesson/lesson-productbrief-card'
 
