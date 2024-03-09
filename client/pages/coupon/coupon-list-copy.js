@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
@@ -18,9 +18,11 @@ import { IoClose } from 'react-icons/io5'
 // coupon
 import styles from '@/pages/coupon/userCoupon.module.scss'
 import Coupon from '@/components/coupon/coupon.js'
-import Data from '@/data/coupon.json'
+
+import CouponClass from '@/API/Coupon'
 
 export default function Test() {
+  const [data, setData] = useState([])
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -90,7 +92,16 @@ export default function Test() {
     setSales(false)
   }
   // 分頁
-  const [kind, setKind] = useState('全部')
+  // 0: 全部 ， 1: 樂器，2: 課程
+  const [kind, setKind] = useState(0)
+
+  // 真正來自資料庫的東西!!!!
+  useEffect(() => {
+    // component did mounted 呼叫api，這樣就只會做一遍
+    CouponClass.FindAll().then(async (res) => {
+      setData(res)
+    })
+  }, [])
 
   return (
     <>
@@ -257,17 +268,17 @@ export default function Test() {
                     <nav aria-label="breadcrumb sort d-flex justify-content-between align-items-center">
                       <ol className="breadcrumb">
                         <li className="h6 breadcrumb-item">
-                          <a href="#" onClick={() => setKind('全部')}>
+                          <a href="#" onClick={() => setKind(0)}>
                             全部
                           </a>
                         </li>
                         <li className="h6 breadcrumb-item" aria-current="page">
-                          <a href="#" onClick={() => setKind('樂器')}>
+                          <a href="#" onClick={() => setKind(1)}>
                             樂器
                           </a>
                         </li>
                         <li className="h6 breadcrumb-item" aria-current="page">
-                          <a href="#" onClick={() => setKind('課程')}>
+                          <a href="#" onClick={() => setKind(2)}>
                             課程
                           </a>
                         </li>
@@ -409,21 +420,29 @@ export default function Test() {
                       </div>
                       {/* components */}
                       <div className="couponImage">
-                        {Data.filter((item) =>
-                          kind === '全部' ? true : item.kind === kind
-                        ).map((v, i) => {
-                          const { id, name, discount, kind, limit_time } = v
-                          return (
-                            <Coupon
-                              key={id}
-                              name={name}
-                              discount={discount}
-                              kind={kind}
-                              limit_time={limit_time}
-                              className={`${styles.couponItem} `}
-                            />
-                          )
-                        })}
+                        {data
+                          .filter((i) => (kind !== 0 ? i.kind === kind : true))
+                          .map((v, i) => {
+                            const {
+                              id,
+                              name,
+                              type,
+                              discount,
+                              kind,
+                              limit_time,
+                            } = v
+                            return (
+                              <Coupon
+                                key={id}
+                                name={name}
+                                type={type}
+                                discount={discount}
+                                kind={kind}
+                                limit_time={limit_time}
+                                className={`${styles.couponItem} `}
+                              />
+                            )
+                          })}
                       </div>
 
                       {/*pagination*/}

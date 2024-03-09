@@ -130,7 +130,6 @@ export function CartProvider({ children }) {
     setinstrumentDiscount(e)
   }
 
-
   return (
     <CartContext.Provider
       value={{
@@ -161,4 +160,4 @@ export function CartProvider({ children }) {
 }
 
 export const useCart = () => useContext(CartContext)
-export const useCart = () => useContext(CartContext)
+// export const useCart = () => useContext(CartContext)
