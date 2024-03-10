@@ -97,6 +97,23 @@ export default function Test({ onSearch }) {
     setScore('all')
     setSales(false)
   }
+    
+    
+  // ------------------------------------- 製作分頁
+  const [page, setPage] = useState(1)
+  const [pageTotal, setPageTotal] = useState(0)
+  // 資料排序
+  const [order, setOrder] = useState('ASC')
+  // 點按分頁時，要送至伺服器的query string參數
+  const handlePageClick = (event) => {
+    router.push({
+      pathname: router.pathname,
+
+      query: {
+        page: event.selected + 1,  
+      },
+    })
+  }
 
   //-------------------連資料庫
 
@@ -656,8 +673,11 @@ export default function Test({ onSearch }) {
         </div>
       </div>
       <div className="d-flex justify-content-center">
-        <BS5Pagination />
-        {/* //FIXME 沒有頁碼細節 */}
+        <BS5Pagination
+          forcePage={page - 1}
+          onPageChange={handlePageClick}
+          pageCount={pageTotal}
+        />
       </div>
       <Footer />
       <style jsx>{`

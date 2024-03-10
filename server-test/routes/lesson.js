@@ -17,6 +17,19 @@ router.get("/", async (req, res) => {
     console.error("發生錯誤：", error);
     res.json("發生錯誤");
   }
+
+  // 取得資料總筆數，用於製作分頁
+  let [dataCount] = await db
+    .execute("SELECT * FROM `product` WHERE `valid` = 1")
+    .catch(() => {
+      return undefined;
+    });
+
+  let page = Number(req.query.page) || 1; // 目前頁碼
+  let dataPerpage = 12; // 每頁 12 筆
+  let offset = (page - 1) * dataPerpage; // 取得下一批資料
+  let pageTotal = Math.ceil(dataCount.length / dataPerpage); // 計算總頁數
+  let pageString = " LIMIT " + offset + "," + dataPerpage;
 });
 
 //lesson_category
@@ -80,21 +93,7 @@ router.get("/:id", async (req, res, next) => {
 
 
 
- // 取得資料總筆數，用於製作分頁
-//   let [dataCount] = await db
-//     .execute(
-//       "SELECT * FROM `jam` WHERE `valid` = 1 AND DATE_ADD(`created_time`, INTERVAL 30 DAY) > ? AND (`formed_time` IS NULL OR `formed_time` = '0000-00-00 00:00:00')",
-//       [now]
-//     )
-//     .catch(() => {
-//       return undefined;
-//     });
-
-//   let page = Number(req.query.page) || 1; // 目前頁碼
-//   let dataPerpage = 10; // 每頁 10 筆
-//   let offset = (page - 1) * dataPerpage; // 取得下一批資料
-//   let pageTotal = Math.ceil(dataCount.length / dataPerpage); // 計算總頁數
-//   let pageString = " LIMIT " + offset + "," + dataPerpage;
+ 
 
 //   // 排序用
 //   let orderDirection = req.query.order || "ASC";

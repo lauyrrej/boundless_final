@@ -21,7 +21,7 @@ export default function CourseCard({ luid, name, price, teacher_id, img, length,
               alt="Course Preview"
               className="course-image"
             />
-                      <FaHeart className="icon-image" color="#B9B9B9" size={24} style={{position:'absolute', bottom: '12px',
+                      <FaHeart className="icon-image" color="#B9B9B9" size={24} style={{position:'absolute', bottom: '-1px',
             right: '12px'} } />
             {/* <img
               loading="lazy"
@@ -89,7 +89,6 @@ export default function CourseCard({ luid, name, price, teacher_id, img, length,
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            padding: 8px;
           }
           .course-image-wrapper {
             display: flex;
