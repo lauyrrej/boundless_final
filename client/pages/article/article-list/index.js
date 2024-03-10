@@ -8,13 +8,14 @@ import jamHero from '@/assets/jam-hero.png'
 // icons
 import { MdNoteAdd } from 'react-icons/md'
 import { IoHome } from 'react-icons/io5'
-import { FaChevronRight, FaFilter } from 'react-icons/fa6'
+import { FaChevronRight } from 'react-icons/fa6'
 import { IoIosSearch } from 'react-icons/io'
-import { IoClose } from 'react-icons/io5'
+import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
 import bookmarkIconFill from '@/assets/fillbookmark.svg'
 import bookmarkIcon from '@/assets/emptybookmark.svg'
 import { ImExit } from 'react-icons/im'
+import { IoClose } from 'react-icons/io5'
 import ArticleCard from '@/components/article/article-card'
 
 export default function ArticleList() {
@@ -23,6 +24,7 @@ export default function ArticleList() {
   const [article, setArticle] = useState([])
   const [search, setSearch] = useState('')
 
+  // 全部article資料
   useEffect(() => {
     const getDatas = async () => {
       try {
@@ -30,7 +32,7 @@ export default function ArticleList() {
         const datas = await res.json()
         if (datas) {
           setArticle(datas) // 設定獲取的文章數據到狀態中
-          // console.log(datas)
+          console.log(datas)
         }
       } catch (e) {
         console.error(e)
@@ -38,6 +40,33 @@ export default function ArticleList() {
     }
     getDatas() // 在元件渲染後立即獲取文章數據
   }, []) // 空的依賴陣列表示只在元件第一次渲染時執行一次
+
+  // article-category資料
+  const [articleCategory, setArticleCategory] = useState([])
+  function getArticleCategory() {
+    return new Promise((resolve, reject) => {
+      let url = 'http://localhost:3005/api/article/categories'
+      fetch(url, {
+        method: 'GET',
+        credentials: 'include',
+      })
+        .then((response) => {
+          return response.json()
+        })
+        .then((result) => {
+          resolve(result)
+          //   console.log(result)
+          setArticleCategory(result)
+        })
+        .catch((error) => {
+          console.log(error)
+          reject()
+        })
+    })
+  }
+  useEffect(() => {
+    getArticleCategory()
+  }, [])
 
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -482,6 +511,7 @@ export default function ArticleList() {
                   }
                   const {
                     id,
+                    auid,
                     title,
                     content,
                     img,
@@ -496,6 +526,7 @@ export default function ArticleList() {
                     <ArticleCard
                       key={id}
                       id={id}
+                      auid={auid}
                       user_id={user_id}
                       title={title}
                       content={content}
@@ -515,6 +546,7 @@ export default function ArticleList() {
                 {filterArticle.map((v, i) => {
                   const {
                     id,
+                    auid,
                     title,
                     content,
                     img,
@@ -528,17 +560,18 @@ export default function ArticleList() {
                   return (
                     <ArticleCard
                       key={id}
-                      user_id={user_id}
                       id={id}
+                      auid={auid}
                       title={title}
                       content={content}
                       img={img}
+                      user_id={user_id}
                       author={author}
-                      category_id={category_id}
                       published_time={published_time}
                       articles={articles}
-                      handleToggleFav={handleToggleFav}
                       fav={fav}
+                      category_id={category_id}
+                      handleToggleFav={handleToggleFav}
                     />
                   )
                 })}
