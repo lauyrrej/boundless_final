@@ -380,6 +380,12 @@ header {
     background-color: $secondary;
   }
 }
+.b-btn-danger {
+  background-color: $red;
+  &:hover {
+    background-color: #c72e2e;
+  }
+}
 
 .pagination {
   gap: 3px;

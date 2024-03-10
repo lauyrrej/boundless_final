@@ -141,8 +141,6 @@ export default function Form() {
     condition,
     description
   ) => {
-    // checkComplete()
-    // console.log(complete)
     if (!checkComplete()) {
       return false
     }
@@ -271,7 +269,7 @@ export default function Form() {
               <li style={{ marginLeft: '10px' }}>發起JAM</li>
             </ul>
           </div>
-          <div className="col-12 col-sm-8" style={{ padding: 0 }}>
+          <section className="col-12 col-sm-8" style={{ padding: 0 }}>
             {/* 主內容 */}
             <div className={`${styles.jamLeft}`}>
               <div className="row align-items-center">
@@ -633,10 +631,10 @@ export default function Form() {
                 ''
               )}
             </div>
-          </div>
+          </section>
 
           {/*   ---------------------- 發起須知  ---------------------- */}
-          <div className={`${styles.jamRightWrapper} col-12 col-sm-4`}>
+          <section className={`${styles.jamRightWrapper} col-12 col-sm-4`}>
             <div className={`${styles.jamRight}`}>
               <div className={`${styles.jamTitle}`}>發起須知</div>
               <ol className={`${styles.rules}`}>
@@ -666,7 +664,7 @@ export default function Form() {
                 <li>發起人得視招募情況解散或以當下成員成團。</li>
               </ol>
             </div>
-          </div>
+          </section>
         </div>
       </div>
       <Footer />

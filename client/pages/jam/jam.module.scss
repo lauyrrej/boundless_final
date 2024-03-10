@@ -34,6 +34,14 @@
     gap: 12px;
   }
 }
+.jamLeftSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  @media screen and (max-width: 576px) {
+    gap: 12px;
+  }
+}
 
 .formItem {
   padding-inline: 14px;
@@ -44,7 +52,7 @@
 .itemTitle {
   padding: 0;
   color: var(--deep-primary);
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
 }
 .itemInputWrapper {
@@ -127,7 +135,7 @@
   padding-inline: 10px;
   padding-block: 4px;
   border-radius: 5px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   user-select: none;
   display: flex;
@@ -146,7 +154,7 @@
 .infoText {
   padding: 0;
   color: var(--dark);
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 400;
 }
 
@@ -156,4 +164,19 @@
   color: var(--dark);
   font-size: 16px;
   font-weight: 400;
+}
+
+.userPhotoWrapper {
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+}
+.userPhoto {
+  object-fit: cover;
+}
+.memberName {
+  font-size: 16px;
+  font-weight: 500;
+  text-wrap: wrap;
+  text-decoration: underline;
 }

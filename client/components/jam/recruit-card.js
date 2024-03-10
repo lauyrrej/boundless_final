@@ -86,7 +86,7 @@ export default function RecruitCard({
               />
             </div>
             <span style={{ color: '#124365', fontWeight: '500' }}>
-              {former.name}
+              {former.nickname ? former.nickname : former.name}
             </span>
             <span className="ms-2" style={{ color: '#1d1d1d' }}>
               {combineDate}
