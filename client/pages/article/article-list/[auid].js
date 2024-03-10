@@ -14,18 +14,7 @@ import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 
-export default function Auid({
-  id,
-  auid,
-  title,
-  user_id,
-  content,
-  img,
-  published_time,
-  fav,
-  handleToggleFav,
-  category_id,
-}) {
+export default function Auid() {
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -42,7 +31,7 @@ export default function Auid({
   // 2. router.isReady(布林值)，true代表本元件已完成水合作用(hydration)，可以取得router.query的值
   const router = useRouter()
 
-  const [articleDetail, setArticleDetail] = useState()
+  const [articleDetail, setArticleDetail] = useState({})
   const getSingleDetail = async (auid) => {
     try {
       const res = await fetch(`http://localhost:3005/api/article/${auid}`)
@@ -52,8 +41,8 @@ export default function Auid({
       // 設定到state中，觸發重新渲染(re-render)，會進入到update階段
       // 進入狀態前檢查資料類型有值，以避免錯誤
       if (data) {
-        setArticleDetail(data)
-        console.log(articleDetail[0].title)
+        setArticleDetail(data[0])
+        // console.log(articleDetail.title)
       }
     } catch (e) {
       console.error(e)
@@ -93,8 +82,9 @@ export default function Auid({
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
         <div
-          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${showMenu ? 'menu-mb-show' : ''
-            }`}
+          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${
+            showMenu ? 'menu-mb-show' : ''
+          }`}
         >
           {/* 用戶資訊 */}
           <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
@@ -150,7 +140,7 @@ export default function Auid({
           <div className="">
             {/* 主內容 */}
             <main className="content">
-              <h1 className="text-center">亞細亞功夫世代介紹</h1>
+              <h1 className="text-center">{articleDetail.title}</h1>
               <p className="pt-2">
                 前言
                 <br />

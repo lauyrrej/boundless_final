@@ -4,10 +4,10 @@ import cors from "cors";
 import formidable from "formidable";
 import { dirname, resolve, extname } from "path";
 import { fileURLToPath } from "url";
-import { renameSync } from 'fs'
+import { renameSync } from "fs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 import multer from "multer";
-const upload = multer({ dest: resolve(__dirname, "public/Images") })
+const upload = multer({ dest: resolve(__dirname, "public/Images") });
 // 上傳內容放public
 
 const router = express.Router();
@@ -34,7 +34,7 @@ router.get("/:id", async (req, res, next) => {
   let auid = req.params.id;
   console.log(auid);
   let [data] = await db
-    .execute("SELECT * FROM `article` WHERE `id` = ? ", [auid])
+    .execute("SELECT * FROM `article` WHERE `auid` = ? ", [auid])
     .catch(() => {
       return undefined;
     });
@@ -55,6 +55,6 @@ router.post("/api/upload", upload.single("myFile"), (req, res) => {
   renameSync(req.file.path, resolve(__dirname, "public/upload", newFileName));
   res.json({ body: req.body, file: req.file });
   // bug 上傳bug
-})
+});
 
 export default router;

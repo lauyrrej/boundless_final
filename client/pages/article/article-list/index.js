@@ -148,7 +148,7 @@ export default function ArticleList() {
   // 全部的篩選條件
   const allCondition = ''
   const [condition, setCondition] = useState(allCondition)
-  useEffect(() => { }, [allCondition])
+  useEffect(() => {}, [allCondition])
 
   return (
     <>
@@ -159,8 +159,9 @@ export default function ArticleList() {
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
         <div
-          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${showMenu ? 'menu-mb-show' : ''
-            }`}
+          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${
+            showMenu ? 'menu-mb-show' : ''
+          }`}
         >
           {/* 用戶資訊 */}
           <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
@@ -222,8 +223,9 @@ export default function ArticleList() {
           <div className="col-12 col-sm-10 page-control">
             {/* 手機版sidebar */}
             <div
-              className={`sidebar-mb d-sm-none ${showSidebar ? 'sidebar-mb-show' : ''
-                }`}
+              className={`sidebar-mb d-sm-none ${
+                showSidebar ? 'sidebar-mb-show' : ''
+              }`}
             >
               <div className="sm-close">
                 <IoClose
@@ -311,8 +313,9 @@ export default function ArticleList() {
                       條件篩選
                       <FaFilter size={13} />
                       <div
-                        className={`filter ${filterVisible === false ? 'd-none' : 'd-block'
-                          }`}
+                        className={`filter ${
+                          filterVisible === false ? 'd-none' : 'd-block'
+                        }`}
                         onClick={stopPropagation}
                         role="presentation"
                       >
@@ -437,8 +440,9 @@ export default function ArticleList() {
                       <FaSortAmountDown size={14} />
                     </div>
                     <div
-                      className={`sort-item ${dataSort === 'latest' ? 'active' : ''
-                        }`}
+                      className={`sort-item ${
+                        dataSort === 'latest' ? 'active' : ''
+                      }`}
                       role="presentation"
                       onClick={(e) => {
                         setDataSort('latest')
@@ -447,8 +451,9 @@ export default function ArticleList() {
                       新到舊
                     </div>
                     <div
-                      className={`sort-item ${dataSort === 'oldest' ? 'active' : ''
-                        }`}
+                      className={`sort-item ${
+                        dataSort === 'oldest' ? 'active' : ''
+                      }`}
                       role="presentation"
                       onClick={(e) => {
                         setDataSort('oldest')
@@ -478,6 +483,7 @@ export default function ArticleList() {
                   }
                   const {
                     id,
+                    auid,
                     title,
                     content,
                     img,
@@ -492,6 +498,7 @@ export default function ArticleList() {
                     <ArticleCard
                       key={id}
                       id={id}
+                      auid={auid}
                       user_id={user_id}
                       title={title}
                       content={content}
@@ -511,6 +518,7 @@ export default function ArticleList() {
                 {filterArticle.map((v, i) => {
                   const {
                     id,
+                    auid,
                     title,
                     content,
                     img,
@@ -524,17 +532,18 @@ export default function ArticleList() {
                   return (
                     <ArticleCard
                       key={id}
-                      user_id={user_id}
                       id={id}
+                      auid={auid}
                       title={title}
                       content={content}
                       img={img}
+                      user_id={user_id}
                       author={author}
-                      category_id={category_id}
                       published_time={published_time}
                       articles={articles}
-                      handleToggleFav={handleToggleFav}
                       fav={fav}
+                      category_id={category_id}
+                      handleToggleFav={handleToggleFav}
                     />
                   )
                 })}
