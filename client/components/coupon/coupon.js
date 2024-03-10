@@ -1,10 +1,7 @@
 import React from 'react'
 import styles from '@/components/coupon/coupon.module.scss'
-import Data from '@/data/coupon.json'
 
 export default function Coupon({ id, name, type, kind, discount, limit_time }) {
-  // console.log(Data)
-
   return (
     <>
       <div className={`${styles.couponCard} card mb-3`}>

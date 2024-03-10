@@ -2,6 +2,7 @@ import db from "../db.js";
 
 class Coupon {
   constructor() {
+    // 定義優惠券的屬性
     this.id = 0;
     this.name = "";
     // 折扣金額
@@ -22,7 +23,7 @@ class Coupon {
     this.valid = true;
   }
 
-  // FindAll，代表找全部
+  // FindAll，代表查找所有優惠券
   async FindAll() {
     try {
       const queryString = `Select * From coupon`;
@@ -30,25 +31,28 @@ class Coupon {
       const [target, useless] = await db.execute(queryString);
       return target.map((i) => {
         return {
+          // 將查詢結果映射為更符合應用需求的格式，同時將 discount 屬性格式化為小數點後2位數
           ...i,
           discount: parseFloat(parseFloat(i.discount).toFixed(2)),
         };
       });
     } catch (err) {
       console.error(err);
-      // 防止環境(整個網頁)崩潰
+      // 防止環境(整個網頁)崩潰，如果有錯誤發生，回傳空陣列
       return [];
     }
   }
-  // 將未使用轉成已使用的方法(1->0)
-  async Delete() {
+  // 將優惠券從未使用更新為已使用的方法(1->0)
+  async Update() {
     try {
       const queryString = "Update coupon Set valid = 0 Where id = ?";
       const [target, useless] = await db.query(queryString, this.id);
       console.log(target);
+      // 回傳更新成功
       return true;
     } catch (err) {
       console.error(err);
+      // 回傳更新失敗
       return false;
     }
   }
