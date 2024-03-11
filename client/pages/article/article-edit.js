@@ -17,9 +17,9 @@ export default function Test() {
   const [editorLoaded, setEditorLoaded] = useState(false)
 
   // 顯示編輯表
-  const [showEditor, setShowEditor] = useState(false)
+  const [showEditor, setShowEditor] = useState(true)
   const handleMainClick = () => {
-    setShowEditor(!showEditor)
+    setShowEditor(false)
   }
 
   const [data, setData] = useState('')
@@ -125,16 +125,19 @@ export default function Test() {
                 editorLoaded={editorLoaded}
                 value={initContent}
               />
-              <Editor
-                name="description"
-                onChange={(data) => {
-                  setData(data)
-                }}
-                editorLoaded={editorLoaded}
-                value={initContent}
-              />
+              {/* 這裡嘗試新的 */}
+              <div onClick={handleMainClick}>
+                <Editor
+                  name="description"
+                  onChange={(data) => {
+                    setData(data)
+                  }}
+                  disabled={!showEditor}
+                  editorLoaded={editorLoaded}
+                  value={initContent}
+                />
+              </div>
             </main>
-            {/* 這裡嘗試新的 */}
           </div>
         </div>
       </div>

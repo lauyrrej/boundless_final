@@ -75,7 +75,6 @@ export default function RecruitCard({
           style={{ gap: '6px' }}
         >
           <div className={`${styles.former}`}>
-            {/* <span style={{ color: '#5a5a5a', fontWeight: '500' }}>發起人</span> */}
             {/* 發起人頭像 */}
             <div className={`${styles.userPhotoWrapper}`}>
               <Image
@@ -87,7 +86,7 @@ export default function RecruitCard({
               />
             </div>
             <span style={{ color: '#124365', fontWeight: '500' }}>
-              {former.name}
+              {former.nickname ? former.nickname : former.name}
             </span>
             <span className="ms-2" style={{ color: '#1d1d1d' }}>
               {combineDate}
