@@ -29,7 +29,7 @@ export default function Navbar({ menuMbToggle }) {
               <Link href="/jam/recruit-list">Let&apos;s JAM!</Link>
             </li>
             <li>
-              <Link href="/article">樂友論壇</Link>
+              <Link href="/article/article-list">樂友論壇</Link>
             </li>
             <li className="ms-3">
               <Link href="/cart">
