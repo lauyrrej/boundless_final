@@ -550,37 +550,41 @@ export default function RecruitList() {
             </div>
             {/* 主內容 */}
             <main className="content">
-              {jams.map((v, i) => {
-                const {
-                  id,
-                  juid,
-                  former,
-                  member,
-                  title,
-                  degree,
-                  genre,
-                  player,
-                  region,
-                  created_time,
-                } = v
-                return (
-                  <RecruitCard
-                    key={id}
-                    id={id}
-                    juid={juid}
-                    former={former}
-                    member={member}
-                    title={title}
-                    degree={degree}
-                    genre={genre}
-                    player={player}
-                    region={region}
-                    created_time={created_time}
-                    genreData={genreData}
-                    playerData={playerData}
-                  />
-                )
-              })}
+              {jams.length > 0 ? (
+                jams.map((v, i) => {
+                  const {
+                    id,
+                    juid,
+                    former,
+                    member,
+                    title,
+                    degree,
+                    genre,
+                    player,
+                    region,
+                    created_time,
+                  } = v
+                  return (
+                    <RecruitCard
+                      key={id}
+                      id={id}
+                      juid={juid}
+                      former={former}
+                      member={member}
+                      title={title}
+                      degree={degree}
+                      genre={genre}
+                      player={player}
+                      region={region}
+                      created_time={created_time}
+                      genreData={genreData}
+                      playerData={playerData}
+                    />
+                  )
+                })
+              ) : (
+                <div className="no-result">查無資料</div>
+              )}
             </main>
             <div className="d-flex justify-content-center">
               <BS5Pagination

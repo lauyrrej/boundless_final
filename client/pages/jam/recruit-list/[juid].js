@@ -17,6 +17,7 @@ import { FaChevronRight } from 'react-icons/fa6'
 import { ImExit } from 'react-icons/im'
 // scss
 import styles from '@/pages/jam/jam.module.scss'
+import { redirect } from 'next/dist/server/api-utils'
 
 export default function Info() {
   const router = useRouter()
@@ -50,6 +51,12 @@ export default function Info() {
     former: {},
     member: [],
   })
+  const [applies, setApplies] = useState([])
+  const applied = applies.find((v) => {
+    return v.applier.id === LoginUserData.id
+  })
+    ? true
+    : false
 
   // ---------------------- 手機版本  ----------------------
   // 主選單
@@ -59,6 +66,15 @@ export default function Info() {
   }
 
   // ----------------------------- 讓player代碼對應樂器種類 -----------------------------
+  // 設定本頁可選的職位選項
+  const playerOption = player.filter((v) => {
+    return (
+      v.id ===
+      jam.player.find((jv) => {
+        return jv === v.id
+      })
+    )
+  })
   const playerName = jam.player.map((p) => {
     const matchedPlayer = player.find((pd) => pd.id === p) // 物件
     return matchedPlayer.name
@@ -153,7 +169,7 @@ export default function Info() {
       setComplete(0)
       return false
     }
-    if (finalMyPlayer === '') {
+    if (myPlayer === '') {
       setComplete(0)
       return false
     }
@@ -181,21 +197,27 @@ export default function Info() {
     })
     const result = await res.json()
     if (result.status === 'success') {
-      notifySuccess(result.juid)
+      notifySuccess()
     } else {
       console.log(result.error)
     }
   }
   // 發起成功後，彈出訊息框
   const notifySuccess = () => {
-    mySwal.fire({
-      position: 'center',
-      icon: 'success',
-      iconColor: '#1581cc',
-      title: '申請成功，請靜候審核結果',
-      showConfirmButton: false,
-      timer: 3000,
-    })
+    mySwal
+      .fire({
+        position: 'center',
+        icon: 'success',
+        iconColor: '#1581cc',
+        title: '申請成功，請靜候審核結果',
+        showConfirmButton: false,
+        timer: 3000,
+      })
+      .then(
+        setTimeout(() => {
+          window.location.reload()
+        }, 3000)
+      )
   }
 
   // 向伺服器要求資料，設定到狀態中用的函式
@@ -208,6 +230,7 @@ export default function Info() {
         setPlayer(data.playerData)
         setGenre(data.genreData)
         setJam(data.jamData)
+        setApplies(data.applyData)
       }
     } catch (e) {
       console.error(e)
@@ -443,7 +466,17 @@ export default function Info() {
                           <hr style={{ margin: '6px' }} />
                           <section className={`${styles.jamLeftSection} mt-2`}>
                             <div className={`${styles.jamTitle}`}>申請一覽</div>
-                            <Apply />
+                            {applies.map((v) => {
+                              return (
+                                <Apply
+                                  key={v.id}
+                                  applier={v.applier}
+                                  message={v.message}
+                                  play={v.play}
+                                  created_time={v.created_time}
+                                />
+                              )
+                            })}
                           </section>
                         </>
                       ) : (
@@ -495,15 +528,18 @@ export default function Info() {
                           style={{ width: 'auto' }}
                           value={myPlayer}
                           name="myPlayer"
+                          disabled={applied}
                           onChange={(e) => {
                             setMyPlayer(e.target.value)
                             setFinalMyPlayer(
-                              '{"id": 1, "play": ' + e.target.value + '}'
+                              `{"id": ${LoginUserData.id}, "play": ${e.target.value}}`
                             )
                           }}
                         >
-                          <option value="">請選擇</option>
-                          {player.map((v) => {
+                          <option value="" disabled>
+                            請選擇
+                          </option>
+                          {playerOption.map((v) => {
                             return (
                               <option key={v.id} value={v.id}>
                                 {v.name}
@@ -526,6 +562,7 @@ export default function Info() {
                           placeholder="建議可以提到自己喜歡的音樂、入團動機等，上限150字"
                           name="message"
                           maxLength={150}
+                          disabled={applied}
                           onChange={(e) => {
                             setMessage(e.target.value)
                           }}
@@ -552,16 +589,29 @@ export default function Info() {
                     </div>
 
                     <div className="d-flex justify-content-center">
-                      <div
-                        className="b-btn b-btn-primary"
-                        style={{ paddingInline: '38px' }}
-                        role="presentation"
-                        onClick={() => {
-                          sendForm(finalMyPlayer, message)
-                        }}
-                      >
-                        提交
-                      </div>
+                      {applied ? (
+                        <div
+                          className="b-btn-disable"
+                          style={{
+                            paddingInline: '38px',
+                            backgroundColor: '#666666',
+                          }}
+                          role="presentation"
+                        >
+                          已送出申請
+                        </div>
+                      ) : (
+                        <div
+                          className="b-btn b-btn-primary"
+                          style={{ paddingInline: '38px' }}
+                          role="presentation"
+                          onClick={() => {
+                            sendForm(finalMyPlayer, message)
+                          }}
+                        >
+                          提交
+                        </div>
+                      )}
                     </div>
                     {complete === 0 ? (
                       <div

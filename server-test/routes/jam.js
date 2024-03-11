@@ -96,7 +96,7 @@ router.get("/allJam", async (req, res) => {
     [dataCount] = await db.execute(sqlString).catch(() => {
       return undefined;
     });
-    console.log(sqlString);
+    // console.log(sqlString);
 
     page = Number(req.query.page) || 1; // 目前頁碼
     dataPerpage = 10; // 每頁 10 筆
@@ -156,7 +156,7 @@ router.get("/allJam", async (req, res) => {
     let [formerData] = await db.execute(formerSql).catch(() => {
       return [];
     });
-    console.log(formerData);
+    // console.log(formerData);
 
     res.status(200).json({
       genreData,
@@ -174,7 +174,7 @@ router.get("/allJam", async (req, res) => {
 
 // 組團資訊頁，獲得單筆資料
 router.get("/singleJam/:juid", async (req, res) => {
-  // 取得組團資訊中所需的曲風、樂手資料
+  // -------------------------------------- 取得組團資訊中所需的曲風、樂手資料 --------------------------------------
   const [genreData] = await db.execute("SELECT * FROM `genre`").catch(() => {
     return undefined;
   });
@@ -204,7 +204,81 @@ router.get("/singleJam/:juid", async (req, res) => {
       genre: JSON.parse(trueData.genre),
     };
 
-    // 撈取對應的發起人&成員資料
+    // -------------------------------------- 撈取該樂團的申請資料 --------------------------------------
+    let [applyData] = await db
+      .execute("SELECT * FROM `jam_apply` WHERE `juid` = ? AND `state` = 0", [juid])
+      .catch(() => {
+        return [];
+      });
+
+    // -------------------------------------- 若存在申請資料，進行資料整理
+    if (applyData.length > 0) {
+      applyData = applyData.map((v) => {
+        const createdDate = new Date(v.created_time)
+          .toLocaleString()
+          .split(" ")[0]
+          .replace(/\//g, "-");
+        return {
+          ...v,
+          applier: JSON.parse(v.applier),
+          created_time: createdDate,
+        };
+      });
+      applyData = applyData.map((v) => {
+        const matchPlay = playerData.find((pv) => {
+          return pv.id === v.applier.play
+        }).name
+        return {
+          ...v,
+          play: matchPlay
+        };
+      });
+      // -------------------------------------- 合併對應的會員資料
+      let appliersID = "";
+      let appliersSql =
+        "SELECT `id`, `uid`, `name`, `img`, `nickname` FROM `user` WHERE `id` IN ";
+      applyData.map((v, i) => {
+        if (i < applyData.length - 1) {
+          appliersID += v.applier.id + ",";
+        } else {
+          appliersID += v.applier.id;
+        }
+      });
+      appliersSql += `(${appliersID})`;
+      // console.log(formerSql);
+      const [appliers] = await db.execute(appliersSql).catch(() => {
+        return undefined;
+      });
+      applyData = applyData.map((v) => {
+        let matchUser = appliers.find((av) => {
+          return av.id === v.applier.id
+        })
+        return {
+          ...v,
+          applier: matchUser
+        };
+      });
+      // [
+      //   {
+      //     id: 1,
+      //     juid: '6q3SoqnuPEXJ',
+      //     former_uid: 'n500ef48Ibat',
+      //     applier: {
+      //       id: 111,
+      //       uid: 'n500ef48Ibat11',
+      //       name: '安迪2號',
+      //       img: null,
+      //       nickname: null
+      //     },
+      //     message: '好想加入!',
+      //     state: 0,
+      //     created_time: '2024-3-11',
+      //     play: '人聲'
+      //   }
+      // ]
+    }
+
+    // -------------------------------------- 撈取對應的發起人&成員資料 --------------------------------------
     const formerID = jamData.former.id;
     const [formerData] = await db
       .execute(
@@ -230,6 +304,7 @@ router.get("/singleJam/:juid", async (req, res) => {
     };
     // console.log(formerData);
 
+    // -------------------------------------- 成員資料
     if (jamData.member[0]) {
       let membersID = "";
       let memberSql =
@@ -273,6 +348,7 @@ router.get("/singleJam/:juid", async (req, res) => {
       genreData,
       playerData,
       jamData,
+      applyData,
     });
   } else {
     res.status(400).json({ status: "error", message: "無指定資料" });
@@ -331,7 +407,7 @@ router.post("/form", upload.none(), async (req, res) => {
     });
 });
 
-// 發起JAM表單
+// 申請入團
 router.post("/apply", upload.none(), async (req, res) => {
   // console.log(req.body);
   const { juid, former_uid, applier, message } = req.body;

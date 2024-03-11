@@ -109,15 +109,15 @@ export default function Form() {
       setComplete(0)
       return false
     }
-    if (genreCheck === false || finalgenre === '') {
+    if (genreCheck === false || finalgenre === '' || finalgenre === '[]') {
       setComplete(0)
       return false
     }
-    if (finalMyPlayer === '') {
+    if (myPlayer === '') {
       setComplete(0)
       return false
     }
-    if (finalPlayers === '') {
+    if (finalPlayers === '' || finalPlayers === '[]') {
       setComplete(0)
       return false
     }
@@ -349,7 +349,9 @@ export default function Form() {
                       setDegree(e.target.value)
                     }}
                   >
-                    <option value="">請選擇</option>
+                    <option value="" disabled>
+                      請選擇
+                    </option>
                     <option value="1">新手練功</option>
                     <option value="2">老手同樂</option>
                   </select>
@@ -376,7 +378,9 @@ export default function Form() {
                             setgenre(newgenre)
                           }}
                         >
-                          <option value="">請選擇</option>
+                          <option value="" disabled>
+                            請選擇
+                          </option>
                           {genreData.map((v) => {
                             return (
                               <option key={v.id} value={v.id}>
@@ -444,7 +448,9 @@ export default function Form() {
                       )
                     }}
                   >
-                    <option value="">請選擇</option>
+                    <option value="" disabled>
+                      請選擇
+                    </option>
                     {playerData.map((v) => {
                       return (
                         <option key={v.id} value={v.id}>
@@ -476,7 +482,9 @@ export default function Form() {
                             setplayers(newplayer)
                           }}
                         >
-                          <option value="">請選擇</option>
+                          <option value="" disabled>
+                            請選擇
+                          </option>
                           {playerData.map((v) => {
                             return (
                               <option key={v.id} value={v.id}>
@@ -522,7 +530,9 @@ export default function Form() {
                       setRegion(e.target.value)
                     }}
                   >
-                    <option value="">請選擇</option>
+                    <option value="" disabled>
+                      請選擇
+                    </option>
                     {cityData.map((v, i) => {
                       return (
                         <option key={i} value={v}>
