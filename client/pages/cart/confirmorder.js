@@ -112,7 +112,7 @@ export default function Test() {
             </div>
           </div>
           <div className="d-flex">
-            <div className="w-100 p-0 cart-main" style={{ height: '' }}>
+            <div className="w-100 p-0 cart-main">
               <div className="cart-lesson">
                 <div className="cart-title">訂單內容</div>
                 <div className="cart-thead">
