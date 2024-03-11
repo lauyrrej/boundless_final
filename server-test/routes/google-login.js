@@ -75,12 +75,12 @@ router.post('/', upload.none(), async function (req, res, next) {
     // 新增會員資料
     // const newUser = await User.create(user)
     const newUser = await db.execute('INSERT INTO user (name, email, google_uid, photo_url, valid) VALUES (?, ?, ?, ? , 1);', [displayName, email, google_uid, photoURL]);
-    const lastInsertIdResult = await db.execute('SELECT LAST_INSERT_ID() AS inserted_id');
+    // const lastInsertIdResult = await db.execute('SELECT LAST_INSERT_ID() AS inserted_id');
     // const lastInsertId = await db.execute('SELECT id, name, email, google_uid, photo_url FROM user WHERE id = ?;' ,[lastInsertIdResult.inserted_id]);
 
     
-    console.log(lastInsertIdResult)
-    console.log(lastInsertIdResult.inserted_id)
+    // console.log(lastInsertIdResult)
+    // console.log(lastInsertIdResult.inserted_id)
     // console.log(lastInsertId)
     // 回傳給前端的資料
     returnUser = {
