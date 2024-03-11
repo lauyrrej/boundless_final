@@ -12,9 +12,12 @@ import withReactContent from 'sweetalert2-react-content'
 
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
+//google登入
+import useFirebase from '@/hooks/user/use-firebase'
 
 export default function Navbar({ menuMbToggle }) {
   const [showMenu, setShowMenu] = useState(false)
+  const { logoutFirebase } = useFirebase()
 
   // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
@@ -102,7 +105,13 @@ export default function Navbar({ menuMbToggle }) {
                   onClick={handleClick}
                   role="presentation"
                 >
-                  <Image src={avatarImage} alt="user-photo" fill={true} />
+                  <Image
+                    src={
+                      LoginUserData.img !== null ? avatarImage : avatarDefault
+                    }
+                    alt="user-photo"
+                    fill={true}
+                  />
                 </div>
               ) : (
                 <Link className="" href="/login">
@@ -161,6 +170,7 @@ export default function Navbar({ menuMbToggle }) {
             <div
               onClick={() => {
                 handleLogout()
+                logoutFirebase()
                 logoutAlert()
               }}
               //onclick 要加這個 不然ES會跳沒有給身障人士使用
