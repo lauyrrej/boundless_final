@@ -13,7 +13,7 @@ const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 const router = express.Router();
 const upload = multer();
 //得到所有會員資料
-let [userData] = await db.execute("SELECT * FROM `user` WHERE `valid` = 1");
+// let [userData] = await db.execute("SELECT * FROM `user` WHERE `valid` = 1");
 // console.log(userData)
 
 //GET 測試 - 得到所有會員資料
@@ -34,7 +34,8 @@ router.get("/", async (req, res, next) => {
 });
 
 //登入 目前設定 email 就是帳號 不可更改
-router.post("/login", upload.none(), (req, res) => {
+router.post("/login", upload.none(), async(req, res) => {
+  let [userData] = await db.execute("SELECT * FROM `user` WHERE `valid` = 1");
   const { email, password } = req.body;
   const user = userData.find(
     (u) => u.email === email && u.password === password
@@ -65,8 +66,9 @@ router.post("/login", upload.none(), (req, res) => {
   }
 });
 
-router.post("/logout", checkToken, (req, res) => {
+router.post("/logout", checkToken, async(req, res) => {
   // console.log(req.decoded)
+  let [userData] = await db.execute("SELECT * FROM `user` WHERE `valid` = 1");
   const user = userData.find((u) => u.email === req.decoded.email);
   if (user) {
     const token = jwt.sign(
@@ -92,7 +94,8 @@ router.post("/logout", checkToken, (req, res) => {
   }
 });
 
-router.post("/status", checkToken, (req, res) => {
+router.post("/status", checkToken, async(req, res) => {
+  let [userData] = await db.execute("SELECT * FROM `user` WHERE `valid` = 1");
   const user = userData.find((u) => u.email === req.decoded.email);
   if (user) {
     const token = jwt.sign(
@@ -188,7 +191,7 @@ router.post('/', async (req, res) => {
     return res.json({ status: 'error 2', message: '該帳號已存在' })
   } else {
     // 用戶不存在，插入新用戶
-    const [result] = await db.execute('INSERT INTO user (email, password, created_time) VALUES (?, ?, ?);', [newUser.email, newUser.password, YYYYMMDDTime]);
+    const [result] = await db.execute('INSERT INTO user (email, password, created_time ,valid ) VALUES (?, ?, ?, 1);', [newUser.email, newUser.password, YYYYMMDDTime]);
     // console.log('User inserted:', result);
   }
 
