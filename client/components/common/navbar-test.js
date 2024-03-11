@@ -33,9 +33,15 @@ export default function Navbar({ menuMbToggle }) {
 
   //檢查是否獲取資料
   // console.log(LoginUserData)
-  //   讀取使用者資料後 定義大頭貼路徑   再觀察一下 大頭貼目前有bad 錯誤訊息
-  const avatarImage = `/user/${LoginUserData.img}`
-  const avatarDefault = `/user/avatar_userDefault.jpg`
+  //   讀取使用者資料後 定義大頭貼路徑
+  let avatarImage
+  if (LoginUserData.img) {
+    avatarImage = `/user/${LoginUserData.img}`
+  } else if (LoginUserData.photo_url) {
+    avatarImage = `${LoginUserData.photo_url}`
+  } else {
+    avatarImage = `/user/avatar_userDefault.jpg`
+  }
 
   //--------------------------登入狀態下 點擊右上角叫出小視窗-------------------
   // 定義狀態來追蹤 className
@@ -105,13 +111,7 @@ export default function Navbar({ menuMbToggle }) {
                   onClick={handleClick}
                   role="presentation"
                 >
-                  <Image
-                    src={
-                      LoginUserData.img !== null ? avatarImage : avatarDefault
-                    }
-                    alt="user-photo"
-                    fill={true}
-                  />
+                  <Image src={avatarImage} alt="user-photo" fill={true} />
                 </div>
               ) : (
                 <Link className="" href="/login">

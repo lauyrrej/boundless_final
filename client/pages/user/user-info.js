@@ -36,9 +36,19 @@ export default function Test() {
 
   //檢查是否獲取資料
   // console.log(LoginUserData)
-  //   讀取使用者資料後 定義大頭貼路徑   再觀察一下 大頭貼目前有bad 錯誤訊息
-  const avatarImage = `/user/${LoginUserData.img}`
-  const avatarDefault = `/user/avatar_userDefault.jpg`
+  //   讀取使用者資料後 定義大頭貼路徑
+  let avatarImage
+  if (LoginUserData.img) {
+    avatarImage = `/user/${LoginUserData.img}`
+  } else if (LoginUserData.photo_url) {
+    avatarImage = `${LoginUserData.photo_url}`
+  } else {
+    avatarImage = `/user/avatar_userDefault.jpg`
+  }
+  // 舊版會警告 因為先渲染但沒路徑 bad
+  // const avatarImage = `/user/${LoginUserData.img}`
+  // const avatargoogle = `${LoginUserData.photo_url}`
+  // const avatarDefault = `/user/avatar_userDefault.jpg`
 
   // ----------------------會員登入狀態  ----------------------
 
@@ -177,9 +187,7 @@ export default function Test() {
               <div className="sidebar-user-info">
                 <div className="sidebar-user-info-imgBox">
                   <Image
-                    src={
-                      LoginUserData.img !== null ? avatarImage : avatarDefault
-                    }
+                    src={avatarImage}
                     alt="user photo mb"
                     fill
                     priority="default" //不加的話Next 會問是否要加優先級

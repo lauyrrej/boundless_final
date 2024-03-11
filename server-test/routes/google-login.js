@@ -76,23 +76,38 @@ router.post('/', upload.none(), async function (req, res, next) {
     // const newUser = await User.create(user)
     const newUser = await db.execute('INSERT INTO user (name, email, google_uid, photo_url, valid) VALUES (?, ?, ?, ? , 1);', [displayName, email, google_uid, photoURL]);
     // const lastInsertIdResult = await db.execute('SELECT LAST_INSERT_ID() AS inserted_id');
-    // const lastInsertId = await db.execute('SELECT id, name, email, google_uid, photo_url FROM user WHERE id = ?;' ,[lastInsertIdResult.inserted_id]);
+
+
+
+
+    const [lastInsertIdResult] = await db.execute('SELECT LAST_INSERT_ID() AS inserted_id');
+    const lastInsertId = lastInsertIdResult[0].inserted_id;
+    
+    // const lastInsertIdResult = await db.execute('SELECT id, name, email, google_uid, photo_url FROM user id = LAST_INSERT_ID() AS inserted_id ');
+    const [newId] = await db.execute('SELECT id, name, email, google_uid, photo_url FROM user WHERE id = ?;' ,[lastInsertId]);
 
     
-    // console.log(lastInsertIdResult)
+    // console.log(lastInsertId)
+    // console.log(newId)
+    console.log(newId[0].id)
+    console.log(newId[0].google_uid)
+    console.log(newId[0].email)
+    console.log(newId[0].photo_url)
+
+
     // console.log(lastInsertIdResult.inserted_id)
     // console.log(lastInsertId)
     // 回傳給前端的資料
     returnUser = {
-      id: newUser.id,
-      name: '',
-      email: newUser.email,
-      google_uid: newUser.google_uid,
+      id: newId[0].id,
+      name: newId[0].name,
+      email: newId[0].email,
+      google_uid: newId[0].google_uid,
       // line_uid: newUser.line_uid,
     }
   }
 
-  console.log(returnUser )
+  // console.log(returnUser )
   // 產生存取令牌(access token)，其中包含會員資料
   // const accessToken = jsonwebtoken.sign(returnUser, accessTokenSecret, {
   //   expiresIn: '3d',
