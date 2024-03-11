@@ -150,7 +150,7 @@ router.get("/:id", checkToken, async function (req, res) {
 
 // 註冊 = 檢查資料庫是否有此email及密碼 ,如果沒有 就增加sql
 router.post('/', async (req, res) => {
-
+  const uuid = generateUid()
   // req.body資料範例
   // {
   //     "name":"金妮",
@@ -191,7 +191,7 @@ router.post('/', async (req, res) => {
     return res.json({ status: 'error 2', message: '該帳號已存在' })
   } else {
     // 用戶不存在，插入新用戶
-    const [result] = await db.execute('INSERT INTO user (email, password, created_time ,valid ) VALUES (?, ?, ?, 1);', [newUser.email, newUser.password, YYYYMMDDTime]);
+    const [result] = await db.execute('INSERT INTO user (email, uid, password, created_time ,valid ) VALUES (?,?, ?, ?, 1);', [newUser.email, uuid,newUser.password, YYYYMMDDTime]);
     // console.log('User inserted:', result);
   }
 
@@ -229,6 +229,28 @@ function checkToken(req, res, next) {
       .status(401)
       .json({ status: "error", message: "無登入驗證資料，請重新登入。" });
   }
+}
+
+function generateUid() {
+  let characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let codeLength = 12;
+  let createdCodes = [];
+  let createCodes = "";
+
+  let Code = "";
+  do {
+    Code = "";
+    for (let i = 0; i < codeLength; i++) {
+      let randomIndex = Math.floor(Math.random() * characters.length);
+      //   回傳characters當中的隨機一值
+      Code += characters.charAt(randomIndex);
+    }
+  } while (createdCodes.includes(Code));
+
+  createdCodes.push(Code);
+  createCodes += Code;
+  return createCodes;
 }
 
 export default router;
