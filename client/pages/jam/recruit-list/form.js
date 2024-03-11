@@ -75,11 +75,11 @@ export default function Form() {
   const [descriptionCheck, setDescriptionCheck] = useState(true)
 
   // ---------------------- 表單填寫 ----------------------
-  // 表單完成狀態 0: 送出時有欄位尚未填寫, 1: 填寫完成, 2: 初次進入頁面 or 從未填寫完必狀態繼續填寫
+  // 表單完成狀態 0: 有欄位尚未填寫或不符規定, 1: 填寫完成, 2: 填寫中
   const [complete, setComplete] = useState(2)
   // 檢查不雅字詞
   const checkBadWords = debounce(() => {
-    const badWords = /幹|屎|尿|屁|糞|靠北|靠腰|雞掰|王八|你媽|妳媽/g
+    const badWords = /幹|屎|尿|屁|糞|靠北|靠腰|雞掰|王八|你媽|妳媽|淫/g
     setTitleCheck(title.search(badWords) < 0 ? true : false)
     setConditionCheck(condition.search(badWords) < 0 ? true : false)
     setDescriptionCheck(description.search(badWords) < 0 ? true : false)
@@ -141,8 +141,6 @@ export default function Form() {
     condition,
     description
   ) => {
-    // checkComplete()
-    // console.log(complete)
     if (!checkComplete()) {
       return false
     }
@@ -271,7 +269,7 @@ export default function Form() {
               <li style={{ marginLeft: '10px' }}>發起JAM</li>
             </ul>
           </div>
-          <div className="col-12 col-sm-8" style={{ padding: 0 }}>
+          <section className="col-12 col-sm-8" style={{ padding: 0 }}>
             {/* 主內容 */}
             <div className={`${styles.jamLeft}`}>
               <div className="row align-items-center">
@@ -280,7 +278,7 @@ export default function Form() {
                 </div>
                 <div
                   className="col-12 col-sm-10 mt-sm-0"
-                  style={{ color: '#5a5a5a' }}
+                  style={{ color: '#666666' }}
                 >
                   ※ 點擊&nbsp;
                   <FaCirclePlus
@@ -303,7 +301,7 @@ export default function Form() {
                   <input
                     type="text"
                     className={`${styles.itemInput} form-control`}
-                    placeholder="發起動機或目的，限20字"
+                    placeholder="發起動機或目的，上限20字"
                     maxLength={20}
                     onChange={(e) => {
                       setTitle(e.target.value)
@@ -537,7 +535,7 @@ export default function Form() {
                   <input
                     type="text"
                     className={`form-control`}
-                    placeholder="事先說好要求，有助於玩團和樂哦~ 限30字"
+                    placeholder="事先說好要求，有助於玩團和樂哦～上限30字"
                     maxLength={30}
                     onChange={(e) => {
                       setCondition(e.target.value)
@@ -571,7 +569,7 @@ export default function Form() {
                 <div className={`${styles.itemInputWrapper} col-12 col-sm-10`}>
                   <textarea
                     className={`${styles.textArea} form-control`}
-                    placeholder="輸入清楚、吸引人的描述，讓大家瞭解你的成團動機吧！限150字"
+                    placeholder="輸入清楚、吸引人的描述，讓大家瞭解你的成團動機吧！上限150字"
                     name="description"
                     maxLength={150}
                     onChange={(e) => {
@@ -633,10 +631,10 @@ export default function Form() {
                 ''
               )}
             </div>
-          </div>
+          </section>
 
           {/*   ---------------------- 發起須知  ---------------------- */}
-          <div className={`${styles.jamRightWrapper} col-12 col-sm-4`}>
+          <section className={`${styles.jamRightWrapper} col-12 col-sm-4`}>
             <div className={`${styles.jamRight}`}>
               <div className={`${styles.jamTitle}`}>發起須知</div>
               <ol className={`${styles.rules}`}>
@@ -666,7 +664,7 @@ export default function Form() {
                 <li>發起人得視招募情況解散或以當下成員成團。</li>
               </ol>
             </div>
-          </div>
+          </section>
         </div>
       </div>
       <Footer />
