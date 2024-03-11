@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
+import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
@@ -18,11 +19,11 @@ import CardIns from '@/components/instrument/card'
 import ProductCardIns from '@/components/instrument/instrument-productbrief-card'
 
 //試抓資料區
-import Lesson from '@/data/Lesson.json'
+import Instrument from '@/data/instrument/instrument.json'
 
-export default function Test() {
+export default function InstrumentDetailPage() {
   // -------試抓資料區----------
-  console.log(Lesson)
+  console.log(Instrument)
 
   // ----------------------手機版本  ----------------------
   // 主選單
@@ -56,6 +57,48 @@ export default function Test() {
     //按按鍵切換狀態
     setcolorChange(!colorChange)
   }
+
+  const router = useRouter()
+
+  const [InstrumentDetail, setInstrumentDetail] = useState()
+  // const prevLidRef = useRef(null)
+  // 向伺服器要求資料，設定到狀態中用的函式
+  const getInstrumentDetail = async (puid) => {
+    try {
+      const res = await fetch(`http://localhost:3005/api/instrument/${puid}`)
+
+      // res.json()是解析res的body的json格式資料，得到JS的資料格式
+      const data = await res.json()
+
+      console.log(data)
+
+      // 設定到state中，觸發重新渲染(re-render)，會進入到update階段
+      // 進入狀態前檢查資料類型有值，以避免錯誤
+      if (data) {
+        setInstrumentDetail(data)
+        console.log(InstrumentDetail[0].name)
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  // 初次渲染"之後(After)"+router.isReady改變時，執行其中程式碼
+  useEffect(() => {
+    // 如果isReady是true，確保能得到query的值
+    if (router.isReady) {
+      const { puid } = router.query
+      console.log(puid)
+      // 如果lid與上一次的不同，觸發getLessonDetail
+      // if (puid !== prevLidRef.current) {
+      //   getInstrumentDetail(puid)
+      //   prevLidRef.current = puid
+      // }
+    }
+  }, [router.isReady])
+
+  console.log('render')
+  console.log(router.query, ' isReady=', router.isReady)
 
   return (
     <>
@@ -104,19 +147,26 @@ export default function Test() {
         </div>
         {/* 麵包屑 */}
         <div
-          className="breadcrumb-wrapper"
+          className="breadcrumb-wrapper-ms"
           style={{ paddingBlock: '20px 30px' }}
         >
           <ul className="d-flex align-items-center p-0 m-0">
             <IoHome size={20} />
-            <li style={{ marginLeft: '8px' }}>Let&apos;s JAM!</li>
+
+            <li style={{ marginLeft: '8px' }}>樂器商城</li>
             <FaChevronRight />
-            <Link href="/jam/recruit-list">
-              <li style={{ marginLeft: '10px' }}>團員募集</li>
+            <Link href="/instrument">
+              <li style={{ marginLeft: '10px' }}>音響設備</li>
             </Link>
 
             <FaChevronRight />
-            <li style={{ marginLeft: '10px' }}>JAM 資訊</li>
+            <li style={{ marginLeft: '10px' }}>音箱頭</li>
+
+            {InstrumentDetail && InstrumentDetail.length > 0 && (
+              <li style={{ marginLeft: '10px' }}>
+                {InstrumentDetail[0].instrument_category_id}
+              </li>
+            )}
           </ul>
         </div>
         <div className="row">
@@ -219,8 +269,8 @@ export default function Test() {
                             loading="lazy"
                             src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
                             className="cartIcon"
-                                                  />
-                                                  //FIXME
+                          />
+                          //FIXME
                           <div className="cart">加入購物車</div>
                         </div>
                         <div className="buyBtn">

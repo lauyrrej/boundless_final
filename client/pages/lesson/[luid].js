@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef} from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
@@ -82,16 +82,12 @@ export default function LessonDetailPage() {
   const router = useRouter()
 
   const [LessonDetail, setLessonDetail] = useState()
- const prevLidRef = useRef(null)
+  const prevLidRef = useRef(null)
   // 向伺服器要求資料，設定到狀態中用的函式
   const getLessonDetail = async (luid) => {
     try {
-<<<<<<< HEAD:client/pages/lesson/[luid].js
       const res = await fetch(`http://localhost:3005/api/lesson/${luid}`)
 
-=======
-      const res = await fetch(`http://localhost:3005/api/lesson/${lid}`)
->>>>>>> f199fd212cc0110d2a8f6e9075bb1cbf16c913ce:client/pages/lesson/[lid].js
       // res.json()是解析res的body的json格式資料，得到JS的資料格式
       const data = await res.json()
 
@@ -171,7 +167,10 @@ export default function LessonDetailPage() {
         </div>
         <div className="row">
           {/* 麵包屑 */}
-          <div className="breadcrumb-wrapper-ns" style={{ paddingBlock: '20px' }}>
+          <div
+            className="breadcrumb-wrapper-ns"
+            style={{ paddingBlock: '20px' }}
+          >
             <ul className="d-flex align-items-center p-0 m-0">
               <IoHome size={20} />
               <Link href="/lesson">
@@ -189,196 +188,205 @@ export default function LessonDetailPage() {
           <div className="col-12 col-sm-6">
             {/* 主內容 */}
             <main className="content">
-              <div className="Left">
-                {/* prodBriefingArea */}
-                <div className="prodBriefingArea d-flex">
-                  {LessonDetail && LessonDetail.length > 0 && (
-                    <img
-                      src={`/課程與師資/lesson_img/${LessonDetail[0].img}`}
-                      className="prodImg"
-                    />
-                  )}
-                </div>
-                {/* 手機版productbrief-card放這 */}
-                <div className="Right-mobile">
-                  <div className="prodBriefing sticky-top">
+              <div>
+                <div className="Left">
+                  {/* prodBriefingArea */}
+                  <div className="prodBriefingArea d-flex">
                     {LessonDetail && LessonDetail.length > 0 && (
-                      <div className="prodMainName">
-                        {LessonDetail[0].name}Logic Pro X 從零開始
-                      </div>
+                      <img
+                        src={`/課程與師資/lesson_img/${LessonDetail[0].img}`}
+                        className="prodImg"
+                      />
                     )}
+                  </div>
+                  {/* 手機版productbrief-card放這 */}
+                  <div className="Right-mobile">
+                    <div className="prodBriefing sticky-top">
+                      {LessonDetail && LessonDetail.length > 0 && (
+                        <div className="prodMainName">
+                          {LessonDetail[0].name}Logic Pro X 從零開始
+                        </div>
+                      )}
 
-                    <div className="Rating">
-                      <div className="star">
-                        <img
-                          loading="lazy"
-                          src="https://cdn.builder.io/api/v1/image/assets/TEMP/84522f0e347edba7963eb335fd5301feca031f8d880bba21dd9760a01286c3a5?"
-                          className="starImg"
-                        />
-                        <div className="ratingNumber">4.9</div>
-                        <div className="commentNumber">(10)</div>
+                      <div className="Rating">
+                        <div className="star">
+                          <img
+                            loading="lazy"
+                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/84522f0e347edba7963eb335fd5301feca031f8d880bba21dd9760a01286c3a5?"
+                            className="starImg"
+                          />
+                          <div className="ratingNumber">4.9</div>
+                          <div className="commentNumber">(10)</div>
+                        </div>
+                        <div className="sales">購買人數 50</div>
                       </div>
-                      <div className="sales">購買人數 50</div>
-                    </div>
-                    <div className="productPrice">
-                      <div className="price">NT$ 1,800</div>
-                      <div className="likesIcon icon-container ">
-                        <FaHeart
-                          className="likesIcon"
-                          size="32px"
-                          style={{ color: `${colorChange ? 'red' : ''}` }}
-                          onClick={colorToggle}
-                        />
-                      </div>
-                      {/* <img
+                      <div className="productPrice">
+                        <div className="price">NT$ 1,800</div>
+                        <div className="likesIcon icon-container ">
+                          <FaHeart
+                            className="likesIcon"
+                            size="32px"
+                            style={{ color: `${colorChange ? 'red' : ''}` }}
+                            onClick={colorToggle}
+                          />
+                        </div>
+                        {/* <img
                         loading="lazy"
                         src="https://cdn.builder.io/api/v1/image/assets/TEMP/5ed2e715f1421a33de89ac321d6dcc6d56fbac40a7d43dfe2cf0ecb15054bd3f?"
                         className="likesIcon"
                         style={{ color: `${colorChange ? 'red' : ''}` }}
                         onClick={colorToggle}
                       /> */}
-                    </div>
-                    <div className="lengthHomeworkArea">
-                      <div className="lengthhomework">
-                        <img
-                          loading="lazy"
-                          src="https://cdn.builder.io/api/v1/image/assets/TEMP/81a1d10e78e821775737fe4938ae726e8de4a80804b01bdda9876d9f86f9b1bb?"
-                          className="lengthIcon"
-                        />
-                        <div className="lengthHomeworkWord">5小時</div>
                       </div>
-                      <div className="lengthhomework">
-                        <img
-                          loading="lazy"
-                          src="https://cdn.builder.io/api/v1/image/assets/TEMP/4552b4fc37047176a87577807414005cf8e8466b4ef23329066c1c39e5dad447?"
-                          className="img-10"
-                        />
-                        <div className="lengthHomeworkWord">1份作業</div>
+                      <div className="lengthHomeworkArea">
+                        <div className="lengthhomework">
+                          <img
+                            loading="lazy"
+                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/81a1d10e78e821775737fe4938ae726e8de4a80804b01bdda9876d9f86f9b1bb?"
+                            className="lengthIcon"
+                          />
+                          <div className="lengthHomeworkWord">5小時</div>
+                        </div>
+                        <div className="lengthhomework">
+                          <img
+                            loading="lazy"
+                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/4552b4fc37047176a87577807414005cf8e8466b4ef23329066c1c39e5dad447?"
+                            className="img-10"
+                          />
+                          <div className="lengthHomeworkWord">1份作業</div>
+                        </div>
                       </div>
-                    </div>
-                    <div className="lessonIntro">
-                      Logic Pro
-                      為數位音樂編曲入門的必學軟體，從錄音、編曲到混音一次包辦，帶你認識錄音介面、多重效果器，以及豐富的內建素材庫，是對音樂創作有興趣的你不可錯過的專業音樂編曲課程。
+                      <div className="lessonIntro">
+                        Logic Pro
+                        為數位音樂編曲入門的必學軟體，從錄音、編曲到混音一次包辦，帶你認識錄音介面、多重效果器，以及豐富的內建素材庫，是對音樂創作有興趣的你不可錯過的專業音樂編曲課程。
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/*商品細節 */}
-                <div className="detail">
-                  {/* 單元一覽 */}
-                  <div className="outline detail-wrapp  mt40">
-                    <div className="detail-title">單元一覽</div>
-                    <div className="list">
-                      {LessonDetail && LessonDetail.length > 0 && (
-                        <ul>
-                          {LessonDetail[0].outline}
-                          //FIXME做斷行
-                          <li>Logic Pro X 從零開始</li>
-                          <li>正式課程開始</li>
-                          <li>編曲Arrange</li>
-                          <li>數位錄音Recording</li>
-                          <li>混音Mixing</li>
-                          <li>專題課程</li>
-                          <li>【 iPad 版】Logic Pro</li>
-                        </ul>
-                      )}
+                  {/*商品細節 */}
+                  <div className="detail">
+                    {/* 單元一覽 */}
+                    <div className="outline detail-wrapp  mt40">
+                      <div className="detail-title">單元一覽</div>
+                      <div className="list">
+                        {LessonDetail && LessonDetail.length > 0 && (
+                          <ul>
+                            {LessonDetail[0].outline}
+                            //FIXME做斷行
+                            <li>Logic Pro X 從零開始</li>
+                            <li>正式課程開始</li>
+                            <li>編曲Arrange</li>
+                            <li>數位錄音Recording</li>
+                            <li>混音Mixing</li>
+                            <li>專題課程</li>
+                            <li>【 iPad 版】Logic Pro</li>
+                          </ul>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  {/* 適合對象 */}
-                  <div className="suitable   mt40">
-                    <div className="detail-title">適合對象</div>
-                    <div className="list">
-                      {LessonDetail && LessonDetail.length > 0 && (
-                        <ul>
-                          {LessonDetail[0].suitable}
-                          <li>本身熱愛音樂，但從沒機會學習過。</li>
-                          <li>
-                            會至少一樣樂器，但不會音樂製作，想學錄音編曲和混音。
-                          </li>
-                          <li>
-                            本身有接觸過數位音樂，但沒使用過 Logic Pro X。
-                          </li>
-                        </ul>
-                      )}
+                    {/* 適合對象 */}
+                    <div className="suitable   mt40">
+                      <div className="detail-title">適合對象</div>
+                      <div className="list">
+                        {LessonDetail && LessonDetail.length > 0 && (
+                          <ul>
+                            {LessonDetail[0].suitable}
+                            <li>本身熱愛音樂，但從沒機會學習過。</li>
+                            <li>
+                              會至少一樣樂器，但不會音樂製作，想學錄音編曲和混音。
+                            </li>
+                            <li>
+                              本身有接觸過數位音樂，但沒使用過 Logic Pro X。
+                            </li>
+                          </ul>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  {/* 你將學到 */}
-                  <div className="achievement  -secondary mt40">
-                    <div className="detail-title">你將學到</div>
-                    <div className="list">
-                      {LessonDetail && LessonDetail.length > 0 && (
-                        <ol>
-                          {LessonDetail[0].achievement}
-                          <li>
-                            用Logic Pro X 獨立完成一首或更多首屬於自己的音樂。
-                          </li>
-                          <li>
-                            了解音樂製作完整的步驟流程，若有興趣可再專精音樂方面的造詣。
-                          </li>
-                        </ol>
-                      )}
+                    {/* 你將學到 */}
+                    <div className="achievement  -secondary mt40">
+                      <div className="detail-title">你將學到</div>
+                      <div className="list">
+                        {LessonDetail && LessonDetail.length > 0 && (
+                          <ol>
+                            {LessonDetail[0].achievement}
+                            <li>
+                              用Logic Pro X 獨立完成一首或更多首屬於自己的音樂。
+                            </li>
+                            <li>
+                              了解音樂製作完整的步驟流程，若有興趣可再專精音樂方面的造詣。
+                            </li>
+                          </ol>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  {/* 學員回饋 */}
-                  <div className="reviews  -secondary mt40">
-                    <div className="detail-title">學員回饋</div>
-                    <div className="list">
-                      <div className="review">
-                        <div className="review-area">
-                          <div className="review-title">
-                            <img
-                              loading="lazy"
-                              srcSet="..."
-                              className="review-avatar"
-                            />
-                            <div className="review-user">
-                              <div className="review-Name">
-                                <div className="user-Name">John Mayer</div>
-                                <div className="review-Date">2024-01-25</div>
-                              </div>
-                              <div className="review-Star">
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                  className="img-13"
-                                />
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                  className="img-13"
-                                />
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                  className="img-13"
-                                />
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                  className="img-13"
-                                />
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                  className="img-13"
-                                />
+                    {/* 學員回饋 */}
+                    <div className="reviews  -secondary mt40">
+                      <div className="detail-title">學員回饋</div>
+                      <div className="list">
+                        {/* 評論 */}
+                        <div className="review">
+                          <div className="review-area">
+                            <div className="review-title">
+                              <img
+                                loading="lazy"
+                                srcSet="..."
+                                className="review-avatar"
+                              />
+                              <div className="review-user">
+                                <div className="review-Name">
+                                  {LessonDetail && LessonDetail.length > 0 && (
+                                    <div className="user-Name">
+                                      {LessonDetail[0].user_id}
+                                    </div>
+                                  )}
+                                  {LessonDetail && LessonDetail.length > 0 && (
+                                    <div className="review-Date">
+                                      {LessonDetail[0].created_time}
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="review-Star">
+                                  <img
+                                    loading="lazy"
+                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                    className="img-13"
+                                  />
+                                  <img
+                                    loading="lazy"
+                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                    className="img-13"
+                                  />
+                                  <img
+                                    loading="lazy"
+                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                    className="img-13"
+                                  />
+                                  <img
+                                    loading="lazy"
+                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                    className="img-13"
+                                  />
+                                  <img
+                                    loading="lazy"
+                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                    className="img-13"
+                                  />
+                                </div>
                               </div>
                             </div>
+                            {LessonDetail && LessonDetail.length > 0 && (
+                              <div className="review-content">
+                                {LessonDetail[0].content}
+                              </div>
+                            )}
                           </div>
-                          <div className="review-content">
-                            初次見到這套軟體 全是英文 完全不知從何下手
-                            去Youtube上查了很多教學影片 也去網路上搜了各種資料
-                            還是不知道該從何著手。不過還好有在Youtu上看到這門課的宣傳影片
-                            就進到Ｈahow這網站裡買下了第一堂課
-                            原本只是想了解Logic的基本操作
-                            沒想到竟然連簡單的編曲技術也學會了（目前剛上完第三章）受益良多！！
-                            非常期待上完這堂課以後能做出什麼樣作品
-                            我會繼續力學習的！！非常感謝老師開這堂課！！
-                          </div>
+
                           <div className="comment-Like">
-                            <div className="comment-Like-Number">
-                              1人覺得有幫助
-                            </div>
+                            {LessonDetail && LessonDetail.length > 0 && (
+                              <div className="comment-Like-Number">
+                                {LessonDetail[0].likes}人覺得有幫助
+                              </div>
+                            )}
                             <div className="comment-Like-Icon">
                               <img
                                 loading="lazy"
@@ -390,140 +398,7 @@ export default function LessonDetailPage() {
                           </div>
                         </div>
                       </div>
-                      <div className="review">
-                        <div className="review-area">
-                          <div className="review-title">
-                            <img
-                              loading="lazy"
-                              srcSet="..."
-                              className="review-avatar"
-                            />
-                            <div className="review-user">
-                              <div className="review-Name">
-                                <div className="user-Name">John Mayer</div>
-                                <div className="review-Date">2024-01-25</div>
-                              </div>
-                              <div className="review-Star">
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                  className="img-13"
-                                />
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                  className="img-13"
-                                />
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                  className="img-13"
-                                />
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                  className="img-13"
-                                />
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                  className="img-13"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                          <div className="review-content">
-                            初次見到這套軟體 全是英文 完全不知從何下手
-                            去Youtube上查了很多教學影片 也去網路上搜了各種資料
-                            還是不知道該從何著手。不過還好有在Youtu上看到這門課的宣傳影片
-                            就進到Ｈahow這網站裡買下了第一堂課
-                            原本只是想了解Logic的基本操作
-                            沒想到竟然連簡單的編曲技術也學會了（目前剛上完第三章）受益良多！！
-                            非常期待上完這堂課以後能做出什麼樣作品
-                            我會繼續力學習的！！非常感謝老師開這堂課！！
-                          </div>
-                          <div className="comment-Like">
-                            <div className="comment-Like-Number">
-                              1人覺得有幫助
-                            </div>
-                            <div className="comment-Like-Icon">
-                              <img
-                                loading="lazy"
-                                src="https://cdn.builder.io/api/v1/image/assets/TEMP/b33573d1006caa2dd045129e591ff98dd975245bb9b1f9ad55c74a65c6a47d58?"
-                                className="comment-like-icon-img"
-                              />
-                              <div className="comment-Like-Word">有幫助</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="review">
-                        <div className="review-area">
-                          <div className="review-title">
-                            <img
-                              loading="lazy"
-                              srcSet="..."
-                              className="review-avatar"
-                            />
-                            <div className="review-user">
-                              <div className="review-Name">
-                                <div className="user-Name">John Mayer</div>
-                                <div className="review-Date">2024-01-25</div>
-                              </div>
-                              <div className="review-Star">
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                  className="img-13"
-                                />
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                  className="img-13"
-                                />
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                  className="img-13"
-                                />
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                  className="img-13"
-                                />
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                  className="img-13"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                          <div className="review-content">
-                            初次見到這套軟體 全是英文 完全不知從何下手
-                            去Youtube上查了很多教學影片 也去網路上搜了各種資料
-                            還是不知道該從何著手。不過還好有在Youtu上看到這門課的宣傳影片
-                            就進到Ｈahow這網站裡買下了第一堂課
-                            原本只是想了解Logic的基本操作
-                            沒想到竟然連簡單的編曲技術也學會了（目前剛上完第三章）受益良多！！
-                            非常期待上完這堂課以後能做出什麼樣作品
-                            我會繼續力學習的！！非常感謝老師開這堂課！！
-                          </div>
-                          <div className="comment-Like">
-                            <div className="comment-Like-Number">
-                              1人覺得有幫助
-                            </div>
-                            <div className="comment-Like-Icon">
-                              <img
-                                loading="lazy"
-                                src="https://cdn.builder.io/api/v1/image/assets/TEMP/b33573d1006caa2dd045129e591ff98dd975245bb9b1f9ad55c74a65c6a47d58?"
-                                className="comment-like-icon-img"
-                              />
-                              <div className="comment-Like-Word">有幫助</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                      {/* 更多按鈕 */}
                       <div className="more-review">
                         <div className="more-review-word">更多回饋</div>
                         <img

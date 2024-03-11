@@ -102,7 +102,7 @@ export default function ProductBriefCard() {
       <style jsx>
         {`
           .Right {
-            padding-top: 80px;
+            top: 80px;
           }
 
           .prodBriefing {

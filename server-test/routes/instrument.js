@@ -13,7 +13,7 @@ router.get("/", async (req, res, next) => {
     
         if (instrument) {
           res.json(instrument);
-          console.log(instrument);
+         // console.log(instrument);
         } else {
           res.json("沒有找到相應的資訊");
         }
@@ -37,6 +37,7 @@ if (Object.keys(req.query).length !== 0) {
     req.query.brandSelect !== "all"
       ? " AND `brandSelect` = " + parseInt(req.query.brandSelect)
       : "";
+      
   
   sqlString += brandSelect;
   
@@ -47,12 +48,14 @@ if (Object.keys(req.query).length !== 0) {
     
     // 計算總頁數
     page = Number(req.query.page) || 1;
-    dataPerpage = 10; // 每頁 10 筆
+    dataPerpage = 20; // 每頁 20 筆
     offset = (page - 1) * dataPerpage; // 取得下一批資料
     pageTotal = Math.ceil(dataCount / dataPerpage); // 計算總頁數
     pageString = " LIMIT " + offset + "," + dataPerpage;
     
     sqlString += pageString;
+
+    console.log(sqlString);
     
     [data] = await db.execute(sqlString).catch(() => {
       return undefined;
@@ -68,8 +71,27 @@ if (Object.keys(req.query).length !== 0) {
   });
 }
 
-console.log(data);
+// console.log(data);
 }
 
 );
+
+// 獲得單筆樂器資料
+router.get("/:id", async (req, res, next) => {
+  let puid = req.params.id;
+  console.log(puid);
+  let [data] = await db
+    .execute("SELECT * FROM `product` WHERE `puid` = ? ", [puid])
+    .catch(() => {
+      return [];
+    });
+
+  if (data) {
+    console.log(data);
+    res.status(200).json(data);
+  } else {
+    res.status(400).send("發生錯誤");
+  }
+});
+
 export default router;
