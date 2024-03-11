@@ -15,7 +15,7 @@ import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 import { FaHeart } from 'react-icons/fa'
 
-import Card from '@/components/lesson/lesson-card'
+import Card from '@/components/lesson/lesson-card-data'
 import HoriCard from '@/components/lesson/lesson-card-hori'
 import ProductCard from '@/components/lesson/lesson-productbrief-card'
 
@@ -84,9 +84,14 @@ export default function LessonDetailPage() {
   const [LessonDetail, setLessonDetail] = useState()
  const prevLidRef = useRef(null)
   // 向伺服器要求資料，設定到狀態中用的函式
-  const getLessonDetail = async (lid) => {
+  const getLessonDetail = async (luid) => {
     try {
+<<<<<<< HEAD:client/pages/lesson/[luid].js
+      const res = await fetch(`http://localhost:3005/api/lesson/${luid}`)
+
+=======
       const res = await fetch(`http://localhost:3005/api/lesson/${lid}`)
+>>>>>>> f199fd212cc0110d2a8f6e9075bb1cbf16c913ce:client/pages/lesson/[lid].js
       // res.json()是解析res的body的json格式資料，得到JS的資料格式
       const data = await res.json()
 
@@ -107,12 +112,12 @@ export default function LessonDetailPage() {
   useEffect(() => {
     // 如果isReady是true，確保能得到query的值
     if (router.isReady) {
-      const { lid } = router.query
-      console.log(lid)
+      const { luid } = router.query
+      console.log(luid)
       // 如果lid與上一次的不同，觸發getLessonDetail
-      if (lid !== prevLidRef.current) {
-        getLessonDetail(lid)
-        prevLidRef.current = lid
+      if (luid !== prevLidRef.current) {
+        getLessonDetail(luid)
+        prevLidRef.current = luid
       }
     }
   }, [router.isReady])
@@ -166,10 +171,10 @@ export default function LessonDetailPage() {
         </div>
         <div className="row">
           {/* 麵包屑 */}
-          <div className="breadcrumb-wrapper" style={{ paddingBlock: '20px' }}>
+          <div className="breadcrumb-wrapper-ns" style={{ paddingBlock: '20px' }}>
             <ul className="d-flex align-items-center p-0 m-0">
               <IoHome size={20} />
-              <Link href="/lesson/lesson-data">
+              <Link href="/lesson">
                 <li style={{ marginLeft: '8px' }}>探索課程</li>
               </Link>
               <FaChevronRight />
