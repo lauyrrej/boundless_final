@@ -1,7 +1,7 @@
 import express, { json } from "express";
 import db from "../db.js";
 import cors from "cors";
-import formidable from "formidable";
+// import formidable from "formidable";
 import { dirname, resolve, extname } from "path";
 import { fileURLToPath } from "url";
 import { renameSync } from "fs";
@@ -16,8 +16,7 @@ router.use(cors());
 // 文章列表
 router.get("/", async (req, res) => {
   try {
-    let [articleData] = await db.execute("SELECT * FROM `article`");
-    // console.log(article)
+    let [articleData] = await db.execute("SELECT article.*, article_category.name AS category_name,article_comment.likes AS comment_likes, user.name AS user_name, user.img AS user_img, article_user.name AS article_author_name, article_user.img AS article_author_img FROM article JOIN article_category ON article.category_id = article_category.id LEFT JOIN article_comment ON article.id = article_comment.article_id LEFT JOIN user ON article_comment.user_id = user.id LEFT JOIN user AS article_user ON article.user_id = article_user.id ORDER BY article.id");
     if (articleData) {
       res.json(articleData);
     } else {
@@ -29,17 +28,16 @@ router.get("/", async (req, res) => {
   }
 });
 
-// 獲得單篇文章資料
 router.get("/:id", async (req, res, next) => {
   let auid = req.params.id;
   let [data] = await db
-    .execute("SELECT * FROM `article` WHERE `auid` = ? ", [auid])
+    .execute("SELECT article.*, article_category.name AS category_name, article_comment.content AS comment_content,article_comment.created_time AS comment_created_time,article_comment.likes AS comment_likes, user.name AS user_name, user.img AS user_img FROM article JOIN article_category ON article.category_id = article_category.id LEFT JOIN article_comment ON article.id = article_comment.article_id LEFT JOIN user ON article_comment.user_id = user.id WHERE article.auid = ?", [auid])
     .catch(() => {
       return undefined;
     });
   if (data) {
-    console.log(data);
     res.status(200).json(data);
+    console.log(data)
   } else {
     res.status(400).send("發生錯誤");
   }

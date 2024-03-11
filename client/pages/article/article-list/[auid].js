@@ -13,6 +13,7 @@ import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
+import Datetime from '@/components/article/datetime'
 
 export default function Auid() {
   // ----------------------手機版本  ----------------------
@@ -43,6 +44,7 @@ export default function Auid() {
       // 進入狀態前檢查資料類型有值，以避免錯誤
       if (data) {
         setArticleDetail(data[0])
+        // 只拿第一筆資料
         // console.log(articleDetail.title)
       }
     } catch (e) {
@@ -156,7 +158,7 @@ export default function Auid() {
                   標籤
                 </div>
                 <div className="pt-1 pb-1 ps-2 pe-2">
-                  {articleDetail.category_id}
+                  {articleDetail.category_name}
                 </div>
               </div>
               {/* Reader Comment */}
@@ -164,23 +166,25 @@ export default function Auid() {
               <div className="reader-comment pt-3 d-flex align-items-center">
                 <Image
                   className="article-author"
-                  src="/article/empty.png"
+                  src={`/user/${articleDetail.user_img}`}
                   alt="空的圖"
                   width={50}
                   height={50}
                 />
                 <span className="ps-3 info-p text-primary">
-                  {articleDetail.user_id}
+                  {articleDetail.user_name}
                 </span>
-                <span className="ps-2 info-p text-secondary">2023/11/27</span>
+                <span className="ps-2 info-p text-secondary">
+                  <Datetime
+                    published_time={articleDetail.comment_created_time}
+                  />
+                </span>
               </div>
-              <p className="pt-1">
-                上完全部課程後覺得幸好自己做了這個決定，因為以初學者會使用到的功能其實兩款軟體跟控制器都全部支援，頂多就是一些按鍵配置不太一樣，完全不影響學習跟練習。
-              </p>
+              <p className="pt-1">{articleDetail.comment_content}</p>
               <div className="reader-like d-flex justify-content-between">
                 <div />
                 <div className="d-flex align-items-center">
-                  <div>1人認同</div>
+                  <div>{articleDetail.comment_likes}人認同</div>
                   <button
                     type="button"
                     className="btn btn-outline-primary ms-1"
