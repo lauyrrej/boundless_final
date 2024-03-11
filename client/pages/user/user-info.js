@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import Navbar from '@/components/common/navbar-test'
+import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
+import Head from 'next/head'
 
 //圖片
 import jamHero from '@/assets/jam-hero.png'
@@ -35,9 +36,19 @@ export default function Test() {
 
   //檢查是否獲取資料
   // console.log(LoginUserData)
-  //   讀取使用者資料後 定義大頭貼路徑   再觀察一下 大頭貼目前有bad 錯誤訊息
-  const avatarImage = `/user/${LoginUserData.img}`
-  const avatarDefault = `/user/avatar_userDefault.jpg`
+  //   讀取使用者資料後 定義大頭貼路徑
+  let avatarImage
+  if (LoginUserData.img) {
+    avatarImage = `/user/${LoginUserData.img}`
+  } else if (LoginUserData.photo_url) {
+    avatarImage = `${LoginUserData.photo_url}`
+  } else {
+    avatarImage = `/user/avatar_userDefault.jpg`
+  }
+  // 舊版會警告 因為先渲染但沒路徑 bad
+  // const avatarImage = `/user/${LoginUserData.img}`
+  // const avatargoogle = `${LoginUserData.photo_url}`
+  // const avatarDefault = `/user/avatar_userDefault.jpg`
 
   // ----------------------會員登入狀態  ----------------------
 
@@ -113,6 +124,9 @@ export default function Test() {
 
   return (
     <>
+      <Head>
+        <title>會員資訊</title>
+      </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       {/* 先把HEROSECTION隱藏 */}
       {/* <div
@@ -173,18 +187,18 @@ export default function Test() {
               <div className="sidebar-user-info">
                 <div className="sidebar-user-info-imgBox">
                   <Image
-                    src={avatarImage || avatarDefault}
+                    src={avatarImage}
                     alt="user photo mb"
                     fill
                     priority="default" //不加的話Next 會問是否要加優先級
-                    sizes="(max-width: 150px) 150px, 50vw"
+                    sizes="(max-width: 150px)"
                   ></Image>
                 </div>
                 <div className="sidebar-user-info-text">
                   <div className="sidebar-user-info-name">
                     {LoginUserData.nickname}
                   </div>
-                  <div className="sidebar-user-info-band">樂團名稱</div>
+                  <div className="sidebar-user-info-band">樂團名稱七個字</div>
                 </div>
                 {/* 更換大頭貼的功能暫定併回會員資訊 故不再sidebar顯示 */}
                 {/* <div className="sidebar-user-info-Camera-img">
@@ -491,14 +505,12 @@ export default function Test() {
           }
           .sidebar-user-info-text {
             display: flex;
-
-            /* width: 150px; */
-
+            width: 140px;
             flex-direction: column;
             align-items: flex-start;
             gap: 6px;
             color: var(--dark, #1d1d1d);
-            text-align: center;
+            text-align: start;
 
             /* h5 */
             font-family: 'Noto Sans TC';

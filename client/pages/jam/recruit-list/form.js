@@ -25,6 +25,11 @@ const mySwal = withReactContent(Swal)
 
 export default function Form() {
   const router = useRouter()
+  const [fakeUser, setFakeUser] = useState({
+    id: 110,
+    uid: 'n500ef48Ibat',
+    juid: '6q3SoqnuPEXJ',
+  })
   // ---------------------- 手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -132,6 +137,7 @@ export default function Form() {
     return true
   }
   const sendForm = async (
+    uid,
     title,
     degree,
     finalgenre,
@@ -145,6 +151,7 @@ export default function Form() {
       return false
     }
     let formData = new FormData()
+    formData.append('uid', uid)
     formData.append('title', title)
     formData.append('degree', degree)
     formData.append('genre', finalgenre)
@@ -433,7 +440,7 @@ export default function Form() {
                     onChange={(e) => {
                       setMyPlayer(e.target.value)
                       setFinalMyPlayer(
-                        '{"id": 1, "play": ' + e.target.value + '}'
+                        `{"id": ${fakeUser.id}, "play": ${e.target.value}}`
                       )
                     }}
                   >
@@ -604,6 +611,7 @@ export default function Form() {
                   role="presentation"
                   onClick={() => {
                     sendForm(
+                      fakeUser.uid,
                       title,
                       degree,
                       finalgenre,

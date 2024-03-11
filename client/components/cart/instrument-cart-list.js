@@ -16,7 +16,6 @@ export default function InstrumentList({
   decrement,
   remove,
 }) {
-
   const instruments = items.filter((v, i) => {
     return v.type == 1
   })
