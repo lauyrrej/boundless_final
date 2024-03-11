@@ -1,7 +1,7 @@
 import express, { json } from "express";
 import db from "../db.js";
 import cors from "cors";
-import formidable from "formidable";
+// import formidable from "formidable";
 import { dirname, resolve, extname } from "path";
 import { fileURLToPath } from "url";
 import { renameSync } from "fs";
@@ -13,21 +13,21 @@ const upload = multer({ dest: resolve(__dirname, "public/Images") });
 const router = express.Router();
 router.use(cors());
 
-// 文章列表
-router.get("/", async (req, res) => {
-  try {
-    let [articleData] = await db.execute("SELECT * FROM `article`");
-    // console.log(article)
-    if (articleData) {
-      res.json(articleData);
-    } else {
-      res.json("沒有找到相應的資訊");
-    }
-  } catch (error) {
-    console.error("發生錯誤：", error);
-    res.json("發生錯誤" + error);
-  }
-});
+// // 文章列表
+// router.get("/", async (req, res) => {
+//   try {
+//     let [articleData] = await db.execute("SELECT * FROM `article`");
+//     // console.log(article)
+//     if (articleData) {
+//       res.json(articleData);
+//     } else {
+//       res.json("沒有找到相應的資訊");
+//     }
+//   } catch (error) {
+//     console.error("發生錯誤：", error);
+//     res.json("發生錯誤" + error);
+//   }
+// });
 
 // 獲得單篇文章資料
 router.get("/:id", async (req, res, next) => {
