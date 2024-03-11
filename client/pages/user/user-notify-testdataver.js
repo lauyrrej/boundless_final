@@ -33,7 +33,8 @@ export default function Test() {
   //登出功能
 
   //檢查是否獲取資料
-  // console.log(LoginUserData)
+  useEffect(console.log(LoginUserData), [LoginUserData])
+
   //   讀取使用者資料後 定義大頭貼路徑
   let avatarImage
   if (LoginUserData.img) {
@@ -118,7 +119,7 @@ export default function Test() {
   return (
     <>
       <Head>
-        <title>我的文章</title>
+        <title>我的通知</title>
       </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       {/* 先把HEROSECTION隱藏 */}
@@ -274,7 +275,7 @@ export default function Test() {
                   <IoHome size={20} />
                   <li style={{ marginLeft: '8px' }}>會員中心</li>
                   <FaChevronRight />
-                  <li style={{ marginLeft: '10px' }}>我的文章</li>
+                  <li style={{ marginLeft: '10px' }}>我的通知</li>
                 </ul>
               </div>
 
@@ -486,80 +487,121 @@ export default function Test() {
                   >
                     <div className="user-content col-12">
                       <div className="user-content-top">
-                        <div className="user-title-userInfo">我的文章</div>
-                        <div className="user-acticle-newBtn btn  btn-primary">
-                          <div>新文章</div>
-                        </div>
+                        <div className="user-title-userInfo">我的訊息</div>
                       </div>
 
-                      <div className="user-acticleList ">
-                        <div className="user-acticleList-item-title d-flex row mb-2">
-                          <div className="form-check col-sm-6 col-6 ">
-                            <input
-                              className="form-check-input user-acticleList-item-title-acticleCheck"
-                              type="checkbox"
-                              defaultValue=""
-                              id="user-acticleList-item-title-acticleCheck"
-                            />
-                            <label
-                              className="form-check-label user-acticleList-item-title-acticleLabel"
-                              htmlFor="user-acticleList-item-title-acticleCheck"
+                      <div className="user-notifyList ">
+                        <div className="user-notifyList-item d-flex row mb-2">
+                          <div className=" col-sm-auto col-12 ">
+                            <div
+                              className=" user-notifyList-item-notifyLabel"
+                              htmlFor="user-notifyList-item-content"
                             >
-                              文章標題
-                            </label>
-                          </div>
-                          <div className="user-acticleList-item-title-time col-sm-2 col-2">
-                            時間
-                          </div>
-                          <div className="user-acticleList-item-title-message col-sm-1 col-1 px-2">
-                            留言數
-                          </div>
-                          <div className="user-acticleList-item-title-btnGroup col-sm-3 col-4 row ">
-                            <div className=" btn btn-primary user-acticleList-item-title-newBtn col-sm-5 col-9">
-                              新文章
+                              那些在買七弦吉他前，需要注意的調 Tone 撇步！
                             </div>
-                            <div className=" btn btn-primary user-acticleList-item-title-btn col-sm-5 col-9">
-                              刪除
-                            </div>
+                          </div>
+
+                          <div className="user-notifyList-item-type col-sm-4 col-12">
+                            <span className="user-notifyList-item-message">
+                              有新的留言！
+                            </span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10分鐘前
                           </div>
                         </div>
                         <hr />
 
-                        <div className="user-acticleList-item d-flex row mb-2">
-                          <div className="form-check col-sm-6 col-6 ">
-                            <input
-                              className="form-check-input user-acticleList-item-acticleCheck"
-                              type="checkbox"
-                              defaultValue=""
-                              id="user-acticleList-item-acticleCheck"
-                            />
-                            <label
-                              className="form-check-label user-acticleList-item-acticleLabel"
-                              htmlFor="user-acticleList-item-acticleCheck"
+                        {/* ----------------重複內容 測試-------------------- */}
+                        <div className="user-notifyList-item d-flex row mb-2">
+                          <div className=" col-sm-auto col-12 ">
+                            <div
+                              className=" user-notifyList-item-notifyLabel"
+                              htmlFor="user-notifyList-item-content"
                             >
-                              那些在買七弦吉他前，需要注意的調 Tone
-                              撇步！那些在買七弦吉他前，需要注意的調 Tone
-                              撇步！那些在買七弦吉他前，需要注意的調 Tone
-                              撇步！那些在買七弦吉他前，需要注意的調 Tone
-                              撇步！那些在買七弦吉他前，需要注意的調 Tone 撇步！
-                            </label>
-                          </div>
-                          <div className="user-acticleList-item-time col-sm-2 col-2">
-                            2024/01/14
-                          </div>
-                          <div className="user-acticleList-item-message col-sm-1 col-1 px-2">
-                            10
-                          </div>
-                          <div className="user-acticleList-item-btnGroup col-sm-3 col-4 row ">
-                            <div className="user-acticleList-item-text   col-sm-5 col-9 ">
-                              已發布
+                              那些在買七弦吉他前，需要注意的調 Tone 撇步！
                             </div>
-                            <div className=" btn btn-primary user-acticleList-item-btn col-sm-5 col-9">
-                              編輯
-                            </div>
+                          </div>
+
+                          <div className="user-notifyList-item-type col-sm-4 col-12">
+                            <span className="user-notifyList-item-message">
+                              有新的留言！
+                            </span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10分鐘前
                           </div>
                         </div>
                         <hr />
+                        <div className="user-notifyList-item d-flex row mb-2">
+                          <div className=" col-sm-auto col-12 ">
+                            <div
+                              className=" user-notifyList-item-notifyLabel"
+                              htmlFor="user-notifyList-item-content"
+                            >
+                              那些在買七弦吉他前，需要注意的調 Tone 撇步！
+                            </div>
+                          </div>
+
+                          <div className="user-notifyList-item-type col-sm-4 col-12">
+                            <span className="user-notifyList-item-message">
+                              有新的留言！
+                            </span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10分鐘前
+                          </div>
+                        </div>
+                        <hr />
+                        <div className="user-notifyList-item d-flex row mb-2">
+                          <div className=" col-sm-auto col-12 ">
+                            <div
+                              className=" user-notifyList-item-notifyLabel"
+                              htmlFor="user-notifyList-item-content"
+                            >
+                              那些在買七弦吉他前，需要注意的調 Tone 撇步！
+                            </div>
+                          </div>
+
+                          <div className="user-notifyList-item-type col-sm-4 col-12">
+                            <span className="user-notifyList-item-message">
+                              有新的留言！
+                            </span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10分鐘前
+                          </div>
+                        </div>
+                        <hr />
+                        <div className="user-notifyList-item d-flex row mb-2">
+                          <div className=" col-sm-auto col-12 ">
+                            <div
+                              className=" user-notifyList-item-notifyLabel"
+                              htmlFor="user-notifyList-item-content"
+                            >
+                              那些在買七弦吉他前，需要注意的調 Tone 撇步！
+                            </div>
+                          </div>
+
+                          <div className="user-notifyList-item-type col-sm-4 col-12">
+                            <span className="user-notifyList-item-message">
+                              有新的留言！
+                            </span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10分鐘前
+                          </div>
+                        </div>
+                        <hr />
+                        <div className="user-notifyList-item d-flex row mb-2">
+                          <div className=" col-sm-auto col-12 ">
+                            <div
+                              className=" user-notifyList-item-notifyLabel"
+                              htmlFor="user-notifyList-item-content"
+                            >
+                              那些在買七弦吉他前，需要注意的調 Tone 撇步！
+                            </div>
+                          </div>
+
+                          <div className="user-notifyList-item-type col-sm-4 col-12">
+                            <span className="user-notifyList-item-message">
+                              有新的留言！
+                            </span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10分鐘前
+                          </div>
+                        </div>
+                        <hr />
+                        {/* ----------------重複內容 測試-------------------- */}
                       </div>
 
                       <div className="user-orderList-pagination">
@@ -599,6 +641,7 @@ export default function Test() {
           }
           .sidebar-user-info-text {
             display: flex;
+
             width: 140px;
             flex-direction: column;
             align-items: flex-start;
@@ -628,13 +671,9 @@ export default function Test() {
         }
 
         /* -------------------user sidebar-------------------- */
-        /* --------------- user-contect-acticle--------------- */
+        /* --------------- user-contect-notify--------------- */
         hr {
           margin: 10px;
-        }
-
-        .btn-primary {
-          background-color: #18a1ff;
         }
         .custom-container {
           padding: 0;
@@ -693,88 +732,36 @@ export default function Test() {
             font-weight: 700;
             line-height: normal;
 
-            .user-acticle-newBtn {
+            .user-notify-newBtn {
               display: none;
             }
           }
-          /*----------------------acticle css----------------------- */
-          .user-acticleList {
+          /*----------------------notify css----------------------- */
+          .user-notifyList {
             width: 100%;
           }
 
-          .user-acticleList-item {
+          .user-notifyList-item {
             align-items: center;
             padding-left: 25px;
             margin-inline: auto;
             /*height: 60px; */
 
-            .user-acticleList-item-acticleCheck {
-            }
-            .user-acticleList-item-acticleLabel {
+            .user-notifyList-item-notifyLabel {
               display: -webkit-box;
               -webkit-box-orient: vertical;
               -webkit-line-clamp: 1;
               overflow: hidden;
             }
-
-            .user-acticleList-item-time {
+            .user-notifyList-item-type {
+              /*text-align: end;*/
             }
-
-            .user-acticleList-item-message {
-            }
-
-            .user-acticleList-item-btnGroup {
-              /* width: 200px; */
-              gap: 10px;
-              align-items: center;
-              justify-content: end;
-
-              .user-acticleList-item-text {
-                color: var(--primary-deep, #124365);
-                font-weight: bold;
-                font-size: 20px;
-              }
-              .user-acticleList-item-btn {
-                align-items: self-end;
-              }
+            .user-notifyList-item-message {
+              color: var(--primary-deep, #124365);
             }
           }
 
-          .user-acticleList-item-title {
-            align-items: center;
-            margin-inline: auto;
-            padding-left: 25px;
-            .user-acticleList-item-title-acticleCheck {
-            }
-            .user-acticleList-item-title-acticleLabel {
-              display: -webkit-box;
-              -webkit-box-orient: vertical;
-              -webkit-line-clamp: 1;
-              overflow: hidden;
-            }
-
-            .user-acticleList-item-title-time {
-            }
-
-            .user-acticleList-item-title-message {
-            }
-
-            .user-acticleList-item-title-btnGroup {
-              /* width: 200px; */
-              gap: 10px;
-              justify-content: end;
-
-              .user-acticleList-item-title-text {
-                color: var(--primary-deep, #124365);
-                font-weight: bold;
-              }
-              .user-acticleList-item-title-btn {
-                align-items: self-end;
-              }
-            }
-          }
-
-          /*----------------------acticle css----------------------- */
+          /*----------------------notify css----------------------- */
 
           .user-orderList-pagination {
             display: flex;
@@ -784,8 +771,6 @@ export default function Test() {
             align-self: stretch;
           }
         }
-
-        /* RWD未生效 */
 
         /* RWD讓SIDEBAR消失 測試用記得刪 */
         @media screen and (max-width: 576px) {
@@ -800,82 +785,20 @@ export default function Test() {
               width: 390px;
               padding: 10px;
               overflow: hidden;
-
-              .user-acticle-newBtn {
-                display: flex;
-                margin-right: 25px;
-              }
             }
           }
 
           .user-content {
-            .user-acticleList-item-title {
-              padding-left: 15px;
-              .user-acticleList-item-title-acticleCheck {
-              }
-              .user-acticleList-item-title-acticleLabel {
+            .user-notifyList-item {
+              padding-left: 0px;
+              font-size: 20px;
+
+              .user-notifyList-item-notifyLabel {
                 -webkit-line-clamp: 2;
               }
-              .user-acticleList-item-title-message {
-                display: none;
-              }
-              .user-acticleList-item-title-time {
-                text-align: right;
-                font-size: 12px;
 
-                /* display: none; */
-              }
-
-              .user-acticleList-item-title-btnGroup {
-                justify-content: flex-end;
-                font-size: 12px;
-
-                .user-acticleList-item-title-newBtn {
-                  display: none;
-                }
-                .user-acticleList-item-title-text {
-                  text-align: right;
-                  font-size: 12px;
-                  padding: 3px;
-                }
-
-                .user-acticleList-item-title-btn {
-                  font-size: 12px;
-                  padding: 3px;
-                }
-              }
-            }
-
-            .user-acticleList-item {
-              padding-left: 15px;
-              .user-acticleList-item-acticleCheck {
-                margin-top: 15px;
-              }
-              .user-acticleList-item-acticleLabel {
-                -webkit-line-clamp: 2;
-              }
-              .user-acticleList-item-message {
-                display: none;
-              }
-              .user-acticleList-item-time {
-                font-size: 12px;
-                /* display: none; */
-              }
-
-              .user-acticleList-item-btnGroup {
-                justify-content: flex-end;
-                font-size: 12px;
-
-                .user-acticleList-item-text {
-                  text-align: right;
-                  font-size: 20px;
-                  padding: 3px;
-                }
-
-                .user-acticleList-item-btn {
-                  font-size: 12px;
-                  padding: 3px;
-                }
+              .user-notifyList-item-type {
+                font-size: 16px;
               }
             }
           }

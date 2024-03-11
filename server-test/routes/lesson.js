@@ -96,6 +96,28 @@ router.get("/:id", async (req, res, next) => {
 
 
 
+
+
+// 獲得單筆課程資料
+router.get("/:id", async (req, res, next) => {
+  let luid = req.params.id;
+  console.log(luid);
+  let [data] = await db
+    .execute("SELECT * FROM `product` WHERE `puid` = ? ", [luid])
+    .catch(() => {
+      return undefined;
+    });
+
+  if (data) {
+    console.log(data);
+    res.status(200).json(data);
+  } else {
+    res.status(400).send("發生錯誤");
+  }
+});
+
+
+
  
 
 //   // 排序用

@@ -13,7 +13,7 @@ const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 const router = express.Router();
 const upload = multer();
 //得到所有會員資料
-let [userData] = await db.execute("SELECT * FROM `user` WHERE `valid` = 1");
+// let [userData] = await db.execute("SELECT * FROM `user` WHERE `valid` = 1");
 // console.log(userData)
 
 //GET 測試 - 得到所有會員資料
@@ -34,7 +34,8 @@ router.get("/", async (req, res, next) => {
 });
 
 //登入 目前設定 email 就是帳號 不可更改
-router.post("/login", upload.none(), (req, res) => {
+router.post("/login", upload.none(), async(req, res) => {
+  let [userData] = await db.execute("SELECT * FROM `user` WHERE `valid` = 1");
   const { email, password } = req.body;
   const user = userData.find(
     (u) => u.email === email && u.password === password
@@ -47,7 +48,7 @@ router.post("/login", upload.none(), (req, res) => {
         name: user.name,
         email: user.email,
         img: user.img,
-        my_jam:user.my_jam,
+        my_jam: user.my_jam,
       },
       accessTokenSecret,
       //token 認證的時長原為30m
@@ -65,8 +66,9 @@ router.post("/login", upload.none(), (req, res) => {
   }
 });
 
-router.post("/logout", checkToken, (req, res) => {
+router.post("/logout", checkToken, async(req, res) => {
   // console.log(req.decoded)
+  let [userData] = await db.execute("SELECT * FROM `user` WHERE `valid` = 1");
   const user = userData.find((u) => u.email === req.decoded.email);
   if (user) {
     const token = jwt.sign(
@@ -75,7 +77,7 @@ router.post("/logout", checkToken, (req, res) => {
         name: user.name,
         email: user.email,
         img: user.img,
-        my_jam:user.my_jam,
+        my_jam: user.my_jam,
       },
       accessTokenSecret,
       { expiresIn: "-10s" }
@@ -92,7 +94,8 @@ router.post("/logout", checkToken, (req, res) => {
   }
 });
 
-router.post("/status", checkToken, (req, res) => {
+router.post("/status", checkToken, async(req, res) => {
+  let [userData] = await db.execute("SELECT * FROM `user` WHERE `valid` = 1");
   const user = userData.find((u) => u.email === req.decoded.email);
   if (user) {
     const token = jwt.sign(
@@ -101,7 +104,7 @@ router.post("/status", checkToken, (req, res) => {
         name: user.name,
         mail: user.mail,
         img: user.img,
-        my_jam:user.my_jam,
+        my_jam: user.my_jam,
       },
       accessTokenSecret,
       { expiresIn: "30m" }
@@ -147,7 +150,7 @@ router.get("/:id", checkToken, async function (req, res) {
 
 // 註冊 = 檢查資料庫是否有此email及密碼 ,如果沒有 就增加sql
 router.post('/', async (req, res) => {
-
+  const uuid = generateUid()
   // req.body資料範例
   // {
   //     "name":"金妮",
@@ -158,52 +161,46 @@ router.post('/', async (req, res) => {
 
   // 給予註冊當下時間 台北時區
   const currentTime = new Date();
-  const taipeiTime = new Date(currentTime.getTime() + 8 * 60 * 60 * 1000)
+  const taipeiTime = new Date(currentTime.getTime() + 8 * 60 * 60 * 1000);
   const YYYYMMDDTime = taipeiTime.toISOString().slice(0, 19).replace("T", " "); // 將時間轉換為 'YYYY-MM-DD HH:mm:ss' 格式
-  
+
   // 要新增的會員資料
-  const newUser = req.body
+  const newUser = req.body;
 
   // 檢查從前端來的資料哪些為必要(name, username...)
-  if (
-    !newUser.email ||
-    !newUser.password ||
-    !newUser.passwordCheck 
-  ) {
-    return res.json({ status: 'error', message: '缺少必要資料' })
+  if (!newUser.email || !newUser.password || !newUser.passwordCheck) {
+    return res.json({ status: "error", message: "缺少必要資料" });
   }
 
   // 密碼請由英數8~20位組成  --先註解方便測試
   // if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/.test(newUser.password)) {
   //   return res.json({ status: 'error', message: '密碼請由英數8~20位組成' });
   // }
-  
 
   // return res.json({ status: 'success 2', message: '成功' })
 
   // 先查詢是否已存在該用戶
-  const [users] = await db.execute('SELECT * FROM user WHERE email = ?;', [newUser.email]);
+  const [users] = await db.execute("SELECT * FROM user WHERE email = ?;", [
+    newUser.email,
+  ]);
   if (users.length > 0) {
     // 用戶已存在
-    return res.json({ status: 'error 2', message: '該帳號已存在' })
+    return res.json({ status: "error 2", message: "該帳號已存在" });
   } else {
     // 用戶不存在，插入新用戶
     const [result] = await db.execute('INSERT INTO user (email, password, created_time) VALUES (?, ?, ?);', [newUser.email, newUser.password, YYYYMMDDTime]);
     // console.log('User inserted:', result);
   }
 
-  
   // 成功建立會員的回應
   // 狀態`201`是建立資料的標準回應，
   // 如有必要可以加上`Location`會員建立的uri在回應標頭中，或是回應剛建立的資料
   // res.location(`/users/${user.id}`)
   return res.status(201).json({
-    status: 'success',
+    status: "success",
     data: null,
-  })
-
-})
-
+  });
+});
 
 //檢查token 當作中介使用
 function checkToken(req, res, next) {
@@ -226,6 +223,28 @@ function checkToken(req, res, next) {
       .status(401)
       .json({ status: "error", message: "無登入驗證資料，請重新登入。" });
   }
+}
+
+function generateUid() {
+  let characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let codeLength = 12;
+  let createdCodes = [];
+  let createCodes = "";
+
+  let Code = "";
+  do {
+    Code = "";
+    for (let i = 0; i < codeLength; i++) {
+      let randomIndex = Math.floor(Math.random() * characters.length);
+      //   回傳characters當中的隨機一值
+      Code += characters.charAt(randomIndex);
+    }
+  } while (createdCodes.includes(Code));
+
+  createdCodes.push(Code);
+  createCodes += Code;
+  return createCodes;
 }
 
 export default router;

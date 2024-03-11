@@ -97,8 +97,7 @@ export default function Test({ onSearch }) {
     setScore('all')
     setSales(false)
   }
-    
-    
+
   // ------------------------------------- 製作分頁
   const [page, setPage] = useState(1)
   const [pageTotal, setPageTotal] = useState(0)
@@ -110,7 +109,7 @@ export default function Test({ onSearch }) {
       pathname: router.pathname,
 
       query: {
-        page: event.selected + 1,  
+        page: event.selected + 1,
       },
     })
   }

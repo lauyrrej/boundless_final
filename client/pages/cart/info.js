@@ -153,7 +153,7 @@ export default function Test() {
             </div>
           </div>
           <div className="d-flex">
-            <div className="w-100 p-0 cart-main" style={{ height: '' }}>
+            <div className="w-100 p-0 cart-main">
               <div className="consumer-info">
                 <div className="cart-title">寄送資訊</div>
                 <div className="consumer-info-group">
@@ -260,6 +260,7 @@ export default function Test() {
                         id="credit-card"
                         value={'credit-card'}
                         name="paymethods"
+                        checked={true}
                       />
                       <label htmlFor="credit-card">信用卡</label>
                       <div className="credit-card-pic">

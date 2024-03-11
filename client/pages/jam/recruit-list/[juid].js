@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { debounce } from 'lodash'
+import { useAuth } from '@/hooks/user/use-auth'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import MemberInfo from '@/components/jam/member-info'
+import Apply from '@/components/jam/apply'
 import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
@@ -18,12 +20,19 @@ import styles from '@/pages/jam/jam.module.scss'
 
 export default function Info() {
   const router = useRouter()
+  // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
+  //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
+  const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
+    useAuth()
+  // console.log(LoginUserData)
+  //檢查token
+  useEffect(() => {
+    handleLoginStatus()
+    //獲得資料
+    getLoginUserData()
+  }, [])
+  //登出功能
   const mySwal = withReactContent(Swal)
-  const [fakeUser, setFakeUser] = useState({
-    id: 28,
-    uid: 'N500ef48IbaT',
-    juid: '',
-  })
 
   const [genre, setGenre] = useState([])
   const [player, setPlayer] = useState([])
@@ -421,30 +430,46 @@ export default function Info() {
                   </div>
                 </div>
               </section>
-              <hr style={{ margin: '6px' }} />
               {/* -------------------------- 入團申請 -------------------------- */}
-              {fakeUser.juid ? (
+              {LoginUserData.my_jam ? (
                 <div>
-                  {fakeUser.id === jam.former.id ? (
-                    <div>有所屬樂團</div>
+                  {LoginUserData.my_jam === jam.juid ? (
+                    <>
+                      {LoginUserData.id === jam.former.id ? (
+                        <>
+                          {/* 發起人進入所屬樂團頁面 */}
+                          <hr style={{ margin: '6px' }} />
+                          <section className={`${styles.jamLeftSection} mt-2`}>
+                            <div className={`${styles.jamTitle}`}>申請一覽</div>
+                            <Apply />
+                          </section>
+                        </>
+                      ) : (
+                        <>
+                          <hr style={{ margin: '6px' }} />
+                          <div className="d-flex justify-content-center">
+                            <div
+                              className="b-btn b-btn-danger mt-1"
+                              style={{ paddingInline: '38px' }}
+                              role="presentation"
+                              onClick={() => {
+                                sendForm(finalMyPlayer, message)
+                              }}
+                            >
+                              退出
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </>
                   ) : (
-                    <div className="d-flex justify-content-center">
-                      <div
-                        className="b-btn b-btn-danger"
-                        style={{ paddingInline: '38px' }}
-                        role="presentation"
-                        onClick={() => {
-                          sendForm(finalMyPlayer, message)
-                        }}
-                      >
-                        退出
-                      </div>
-                    </div>
+                    ''
                   )}
                 </div>
               ) : (
                 <>
                   {/* 無所屬樂團，顯示申請表單 */}
+                  <hr style={{ margin: '6px' }} />
                   <section className={`${styles.jamLeftSection}`}>
                     <div className={`${styles.jamTitle}`}>
                       入團申請

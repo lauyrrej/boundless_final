@@ -1,6 +1,7 @@
 import styles from '@/components/jam/recruit-card.module.scss'
 import Image from 'next/image'
 import Link from 'next/link'
+import { FaUser } from 'react-icons/fa'
 
 export default function RecruitCard({
   id,
@@ -77,13 +78,19 @@ export default function RecruitCard({
           <div className={`${styles.former}`}>
             {/* 發起人頭像 */}
             <div className={`${styles.userPhotoWrapper}`}>
-              <Image
-                src={`/user/${former.img}`}
-                alt={`${former.name}'s photo`}
-                width={32}
-                height={32}
-                className={`${styles.userPhoto}`}
-              />
+              {former.img ? (
+                <Image
+                  src={`/user/${former.img}`}
+                  alt={`${former.name}'s photo`}
+                  width={32}
+                  height={32}
+                  className={`${styles.userPhoto}`}
+                />
+              ) : (
+                <div className={`${styles.userPhotoDefault}`}>
+                  <FaUser size={24} className={`${styles.userDefaultIcon}`} />
+                </div>
+              )}
             </div>
             <span style={{ color: '#124365', fontWeight: '500' }}>
               {former.nickname ? former.nickname : former.name}
