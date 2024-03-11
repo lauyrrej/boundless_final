@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useState, useEffect } from 'react'
 import CartData from '@/data/cart/cart.json'
 import CouponData from '@/data/cart/coupons.json'
 
@@ -7,6 +7,10 @@ export const CartContext = createContext()
 export function CartProvider({ children }) {
   //加入到購物車的項目
   let [items, setItems] = useState(CartData)
+
+  useEffect(() => {
+    localStorage.setItem('CartData', JSON.stringify(items))
+  }, [items])
 
   const addItem = (item) => {
     //擴充item的屬性多一個qty
@@ -23,6 +27,10 @@ export function CartProvider({ children }) {
     })
 
     setItems(newItems)
+
+    localStorage.setItem('CartData', JSON.stringify(newItems))
+
+
   }
 
   //遞增某商品id數量
@@ -154,8 +162,6 @@ export function CartProvider({ children }) {
     total = parseInt(calcInstrumentDiscount()) + parseInt(calcLessonDiscount())
     return total
   }
-
-  
 
   return (
     <CartContext.Provider
