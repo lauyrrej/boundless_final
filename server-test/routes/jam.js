@@ -69,7 +69,6 @@ router.get("/allJam", async (req, res) => {
     const player =
       req.query.player !== "all"
         ? " AND (`players` LIKE '%," +
-<<<<<<< HEAD
         req.query.player +
         "]'" +
         " OR `players` LIKE '[" +
@@ -81,19 +80,6 @@ router.get("/allJam", async (req, res) => {
         " OR `players` = '[" +
         req.query.player +
         "]')"
-=======
-          req.query.player +
-          "]'" +
-          " OR `players` LIKE '[" +
-          req.query.player +
-          ",%'" +
-          " OR `players` LIKE '%," +
-          req.query.player +
-          ",%'" +
-          " OR `players` = '[" +
-          req.query.player +
-          "]')"
->>>>>>> f199fd212cc0110d2a8f6e9075bb1cbf16c913ce
         : "";
     const region =
       req.query.region !== "all"
@@ -297,6 +283,7 @@ router.get("/singleJam/:juid", async (req, res) => {
 router.post("/form", upload.none(), async (req, res) => {
   // console.log(req.body);
   const {
+    uid,
     title,
     degree,
     genre,
@@ -308,6 +295,22 @@ router.post("/form", upload.none(), async (req, res) => {
   } = req.body;
   const tureDegree = parseInt(degree);
   const juid = generateUid();
+  // 更新會員所屬的JAM
+  let returnNum = await db
+    .execute(
+      "UPDATE `user` SET `my_jam` = ? WHERE `uid` = ?;",
+      [juid, uid]
+    )
+    .then(() => {
+      return 1;
+    })
+    .catch(() => {
+      return 0;
+    });
+  if(returnNum === 0) {
+    console.log("新增失敗");
+    return
+  }
   await db
     .execute(
       "INSERT INTO `jam` (`id`, `juid`, `title`, `degree`, `genre`, `former`, `players`, `region`, `band_condition`, `description`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)",

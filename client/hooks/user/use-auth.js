@@ -95,7 +95,7 @@ export function AuthProvider({ children }) {
       })
 
       const statusData = await response.json()
-      console.log('Response from server:', statusData)
+      // console.log('Response from server:', statusData)
 
       // console.log(userData)
 
@@ -143,6 +143,7 @@ export function AuthProvider({ children }) {
       // setUserData(LoginUserData)
       console.log(LoginUserData)
       setLoginUserData(LoginUserData)
+      // console.log(LoginUserData)
       // 在這裡處理後端返回的資料
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error)

@@ -16,6 +16,7 @@ let [userData] = await db.execute("SELECT * FROM `user` WHERE `valid` = 1");
 
 
 router.post('/', upload.none(), async function (req, res, next) {
+  const uuid =  generateUid()
   // providerData =  req.body
   // console.log(JSON.stringify(req.body))
   
@@ -74,7 +75,7 @@ router.post('/', upload.none(), async function (req, res, next) {
     }
     // 新增會員資料
     // const newUser = await User.create(user)
-    const newUser = await db.execute('INSERT INTO user (name, email, google_uid, photo_url, valid) VALUES (?, ?, ?, ? , 1);', [displayName, email, google_uid, photoURL]);
+    const newUser = await db.execute('INSERT INTO user (name,uid, email, google_uid, photo_url, valid) VALUES (?,?, ?, ?, ? , 1);', [displayName, uuid, email, google_uid, photoURL]);
     // const lastInsertIdResult = await db.execute('SELECT LAST_INSERT_ID() AS inserted_id');
 
 
@@ -150,6 +151,29 @@ router.post('/', upload.none(), async function (req, res, next) {
   //   status: 'success',
   //   token,
   // })
+
+  //uid
+function generateUid() {
+  let characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let codeLength = 12;
+  let createdCodes = [];
+  let createCodes = "";
+
+  let Code = "";
+  do {
+    Code = "";
+    for (let i = 0; i < codeLength; i++) {
+      let randomIndex = Math.floor(Math.random() * characters.length);
+      //   回傳characters當中的隨機一值
+      Code += characters.charAt(randomIndex);
+    }
+  } while (createdCodes.includes(Code));
+
+  createdCodes.push(Code);
+  createCodes += Code;
+  return createCodes;
+}
 })
 
 export default router
