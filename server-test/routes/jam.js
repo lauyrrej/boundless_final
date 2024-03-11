@@ -22,7 +22,7 @@ router.get("/allJam", async (req, res) => {
   // 取得資料總筆數，用於製作分頁
   let [dataCount] = await db
     .execute(
-      "SELECT * FROM `jam` WHERE `valid` = 1 AND DATE_ADD(`created_time`, INTERVAL 30 DAY) > ? AND (`formed_time` IS NULL OR `formed_time` = '0000-00-00 00:00:00')",
+      "SELECT * FROM `jam` WHERE `valid` = 1 AND DATE_ADD(`created_time`, INTERVAL 30 DAY) > ? AND `state` = 0",
       [now]
     )
     .catch((error) => {
@@ -43,7 +43,7 @@ router.get("/allJam", async (req, res) => {
   if (Object.keys(req.query).length !== 0) {
     // 所有篩選條件
     let sqlString =
-      "SELECT * FROM `jam` WHERE `valid` = 1 AND (`formed_time` IS NULL OR `formed_time` = '0000-00-00 00:00:00') AND DATE_ADD(`created_time`, INTERVAL 30 DAY) > '" +
+      "SELECT * FROM `jam` WHERE `valid` = 1 AND `state` = 0 AND DATE_ADD(`created_time`, INTERVAL 30 DAY) > '" +
       now +
       "'";
     const degree =
@@ -114,7 +114,7 @@ router.get("/allJam", async (req, res) => {
     // 沒有篩選條件
     [data] = await db
       .execute(
-        "SELECT * FROM `jam` WHERE `valid` = 1 AND DATE_ADD(`created_time`, INTERVAL 30 DAY) > ? AND (`formed_time` IS NULL OR `formed_time` = '0000-00-00 00:00:00') ORDER BY `created_time` ASC LIMIT 0, 10",
+        "SELECT * FROM `jam` WHERE `valid` = 1 AND DATE_ADD(`created_time`, INTERVAL 30 DAY) > ? AND `state` = 0 ORDER BY `created_time` ASC LIMIT 0, 10",
         [now]
       )
       .catch(() => {
@@ -206,7 +206,9 @@ router.get("/singleJam/:juid", async (req, res) => {
 
     // -------------------------------------- 撈取該樂團的申請資料 --------------------------------------
     let [applyData] = await db
-      .execute("SELECT * FROM `jam_apply` WHERE `juid` = ? AND `state` = 0", [juid])
+      .execute("SELECT * FROM `jam_apply` WHERE `juid` = ? AND `state` = 0", [
+        juid,
+      ])
       .catch(() => {
         return [];
       });
@@ -226,11 +228,11 @@ router.get("/singleJam/:juid", async (req, res) => {
       });
       applyData = applyData.map((v) => {
         const matchPlay = playerData.find((pv) => {
-          return pv.id === v.applier.play
-        }).name
+          return pv.id === v.applier.play;
+        }).name;
         return {
           ...v,
-          play: matchPlay
+          play: matchPlay,
         };
       });
       // -------------------------------------- 合併對應的會員資料
@@ -251,11 +253,11 @@ router.get("/singleJam/:juid", async (req, res) => {
       });
       applyData = applyData.map((v) => {
         let matchUser = appliers.find((av) => {
-          return av.id === v.applier.id
-        })
+          return av.id === v.applier.id;
+        });
         return {
           ...v,
-          applier: matchUser
+          applier: matchUser,
         };
       });
       // [

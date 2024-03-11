@@ -147,30 +147,14 @@ export default function Navbar({ menuMbToggle }) {
             className={`avatar-menu d-none  d-sm-flex  flex-column align-items-center ${avatarActivestatus}`}
           >
             {/* 用戶資訊 */}
-            <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
-              {/* <div className="mb-photo-wrapper mb-2">
-            <Image src={avatarImage} alt="user photo mb" fill></Image>
-          </div>
-          <div>{LoginUserData.nickname}</div> */}
+            <div className="mm-user-info">
+              歡迎，
+              {LoginUserData.nickname
+                ? LoginUserData.nickname
+                : LoginUserData.name}
             </div>
-            <Link
-              className="mm-item-right"
-              href="/user/user-info"
-              style={{ borderTop: '1px solid #b9b9b9' }}
-            >
+            <Link className="mm-item-right" href="/user/user-info">
               會員中心
-            </Link>
-            <Link className="mm-item-right" href="/lesson">
-              探索課程
-            </Link>
-            <Link className="mm-item-right" href="/instrument">
-              樂器商城
-            </Link>
-            <Link className="mm-item-right" href="/jam/recruit-list">
-              Let &apos;s JAM!
-            </Link>
-            <Link className="mm-item-right" href="/article/article-list">
-              樂友論壇
             </Link>
             {/*eslint-disable-next-line jsx-a11y/click-events-have-key-events*/}
             <div
@@ -185,7 +169,7 @@ export default function Navbar({ menuMbToggle }) {
               style={{ color: '#1581cc' }}
             >
               登出
-              <ImExit size={20} className="ms-2" />
+              <ImExit size={16} className="ms-2 mt-1" />
             </div>
           </div>
         </nav>
@@ -197,32 +181,48 @@ export default function Navbar({ menuMbToggle }) {
           z-index: 120; /* 設置 z-index */
         }
         .avatar-menu {
-          width: 300px;
-          z-index: 80; /*沒生效*/
+          width: 160px;
           position: absolute;
-          top: 60px;
-          right: 0px;
+          top: 59px;
+          right: -20px;
           background-color: #fff;
-          /*transition: all 0.5s;*/
-
+          border-inline: 1px solid;
+          border-bottom: 1px solid;
+          border-color: #b9b9b9;
+          border-radius: 0 0 3px 3px;
           a {
             color: #1581cc;
+          }
+
+          .mm-user-info {
+            border-radius: 0px;
+            width: 100%;
+            padding-block: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 400;
+            color: #000;
+            font-size: 16px;
           }
           .mm-item-right {
             border-radius: 0px;
             width: 100%;
-            padding-block: 16px;
-            border-bottom: 1px solid #b9b9b9;
+            padding-block: 8px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-weight: bold;
+            font-weight: 600;
             color: var($primary);
             cursor: pointer;
+            font-size: 16px;
+            &:hover {
+              background-color: #ececec;
+            }
           }
 
           .logout-btn {
-            font-size: 20px;
+            font-size: 16px;
           }
         }
         .menu-active {
