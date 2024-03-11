@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { FaEye } from 'react-icons/fa'
 import bookmarkIconFill from '@/assets/fillbookmark.svg'
 import bookmarkIcon from '@/assets/emptybookmark.svg'
 import { FaBookmark } from 'react-icons/fa'
 import Image from 'next/image'
 import Link from 'next/link'
+import Datetime from '@/components/article/datetime'
 
 export default function Articlecard({
   id,
@@ -16,36 +16,11 @@ export default function Articlecard({
   published_time,
   fav,
   handleToggleFav,
-  category_id,
+  category_name,
+  comment_likes,
+  article_author_name,
+  article_author_img,
 }) {
-  // const [discount, setDiscount] = useState('1')
-  console.log(auid)
-  // console.log(products)
-
-  // // 擴充收藏功能
-  // const initState = data.map((v, i) => {
-  //   return { ...v, fav: false }
-  // })
-  // // 擴充後的物件陣列作為初始值
-  // const [articles, setArticles] = useState(initState)
-
-  // // 純func
-  // const handleToggleFav = (id) => {
-  //   const newArticles = articles.map((v, i) => {
-  //     if (v.id === id) return { ...v, fav: !v.fav }
-  //     else return v
-  //   })
-  //   setArticles(newArticles)
-  // }
-
-  // 組合日期8
-  const createdYear = new Date(published_time).getFullYear()
-  // console.log(createdYear)
-  const createdMonth = new Date(published_time).getMonth() + 1
-  const createdDate = new Date(published_time).getDate()
-  const combineDate = `${createdYear}-${createdMonth}-${createdDate}`
-  // console.log(combineDate)
-
   return (
     <>
       <div className="article-card">
@@ -56,11 +31,13 @@ export default function Articlecard({
         >
           <img
             className="article-author"
-            src="/article/empty.png"
+            src={`/user/${article_author_img}`}
             alt="空的圖"
           />
-          <span className="info-p text-secondary">{user_id}</span>
-          <span className="info-p text-secondary">{combineDate}</span>
+          <span className="info-p text-secondary">{article_author_name}</span>
+          <span className="info-p text-secondary">
+            <Datetime published_time={published_time} />
+          </span>
         </div>
         {/* article區塊 */}
         <Link href={`/article/article-list/${auid}`}>
@@ -73,20 +50,18 @@ export default function Articlecard({
           </div>
         </Link>
         {/* views-like */}
-        <div className="views-like d-flex">
-          <div className="views d-flex">
-            <FaEye />
-            <p className="text-secondary ms-1">50</p>
-          </div>
-          <div className="saves d-flex ms-4">
+        <div className="views-like">
+          <div className="saves d-flex align-items-center">
             <FaBookmark />
-            <p className="text-secondary ms-1">50</p>
+            <span className="text-secondary text-center ms-1">
+              {comment_likes}
+            </span>
           </div>
         </div>
         {/* kind-bookmark */}
         <div className="kind-bookmark d-flex justify-content-between align-items-center">
           <div className="article-kind text-black bg-body px-2 pt-1 pb-1">
-            {category_id}
+            {category_name}
           </div>
           <div className="bookmark">
             <Image
