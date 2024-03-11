@@ -1,68 +1,21 @@
 import React, { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
+import Head from 'next/head'
 // 會員認證
 import { useAuth } from '@/hooks/user/use-auth'
 import { jwtDecode } from 'jwt-decode'
 
+// sweetalert
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+
+//google登入
+import useFirebase from '@/hooks/user/use-firebase'
+
 export default function Test() {
-  // const parseJwt = (token) => {
-  //   try {
-  //     const base64Payload = token.split('.')[1]
-  //     const payload = Buffer.from(base64Payload, 'base64')
-  //     return JSON.parse(payload.toString())
-  //   } catch (error) {
-  //     console.error('Error during login:', error)
-  //   }
-  // }
-
-  // const App = () => {
-  //   // 使用狀態來存儲 token
-  //   const [token, setToken] = useState('')
-
-  //   // 假設這是一個登入的函數，後端返回了包含 token 的 response
-  //   const handleLogin = async () => {
-  //     try {
-  //       const response = await fetch('http://localhost:3005/api/user/login', {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify({ username: 'user', password: 'pass' }),
-  //       })
-
-  //       if (response.ok) {
-  //         const data = await response.json()
-  //         // 從 response 中獲取 token
-  //         const { token } = data
-  //         // 將 token 存儲到狀態中
-  //         setToken(token)
-  //       } else {
-  //         console.error('Login failed')
-  //       }
-  //     } catch (error) {
-  //       console.error('Error during login:', error)
-  //     }
-  //   }
-
-  //   return (
-  //     <div>
-  //       <h1>React App</h1>
-  //       {token ? (
-  //         // 如果有 token，顯示一些帶有 token 的內容
-  //         <div>
-  //           <p>Token: {token}</p>
-  //           {/* 在這裡你可以進行其他需要 token 的操作 */}
-  //         </div>
-  //       ) : (
-  //         // 如果沒有 token，顯示登入按鈕
-  //         <button onClick={handleLogin}>Login</button>
-  //       )}
-  //     </div>
-  //   )
-  // }
-
   // ----------------------測試用 獲得所有使用者清單 ----------------------
   const getUser = async () => {
     try {
@@ -115,7 +68,6 @@ export default function Test() {
   // }
 
   const [user, setUser] = useState({ email: '', password: '' })
-
   const [token, setToken] = useState('')
 
   // 隨便字串 先照老師的設定
@@ -144,53 +96,20 @@ export default function Test() {
       console.log('Response from server:', loginData)
 
       const token = loginData.token
-
       userData = jwtDecode(token)
-
       // 先將 token 字串存入 localStorage
       localStorage.setItem(appKey, token)
-
       // 更新 React state 中的 token
       setToken(token)
-
       console.log(userData)
-
       return token, userData
       // 在這裡處理後端返回的資料
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error)
     }
   }
-  // 登出
-  // const handleLogout = async (e) => {
-  //   //取消表單預設submit跳頁
-  //   e.preventDefault()
-  //   // console.log(token)
-  //   const usertoken = token
-  //   console.log(token)
-  //   try {
-  //     const response = await fetch('http://localhost:3005/api/user/logout', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         Authorization: `Bearer ${usertoken}`,
-  //       },
-  //       body: JSON.stringify(),
-  //     })
-
-  //     const logoutData = await response.json()
-  //     console.log('Response from server:', logoutData)
-  //     setToken(null)
-  //     const userData = undefined
-  //     localStorage.removeItem(appKey)
-
-  //     // console.log(userData)
-
-  //     // 在這裡處理後端返回的資料
-  //   } catch (error) {
-  //     console.error('There was a problem with the fetch operation:', error)
-  //   }
-  // }
+  //登出功能
+  const { handleLogout } = useAuth()
 
   // 檢查登入狀態
   const handleLoginStatus = async (e) => {
@@ -219,10 +138,145 @@ export default function Test() {
     }
   }
 
-  // ----------------------會員登入  ----------------------
+  //----------------------------sweetalert--------------------------------------
+  //登入 跳轉 還沒加入判定 應該要先判斷再跳轉
+  const router = useRouter()
+  const mySwal = withReactContent(Swal)
+  const loginAlert = (e) => {
+    e.preventDefault()
+    mySwal
+      .fire({
+        position: 'center',
+        icon: 'success',
+        iconColor: '#1581cc',
+        title: '登入成功，將為您跳轉到首頁',
+        showConfirmButton: false,
+        timer: 2000,
+      })
+      .then(
+        setTimeout(() => {
+          router.push(`/user/user-info`)
+        }, 2000)
+      )
+  }
 
-  //登出功能
-  const { handleLogout } = useAuth()
+  // ----------------------google登入  ----------------------
+  /**
+   * Google Login(Firebase)登入用，providerData為登入後得到的資料
+   */
+  const googleLogin = async (providerData = {}) => {
+    try {
+      const response = await fetch('http://localhost:3005/api/google-login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(providerData), // 將 providerData 轉為 JSON 字串並加入請求主體
+      })
+
+      if (!response.ok) {
+        console.error('Error during fetch')
+      }
+
+      const data = await response.json()
+      return data
+    } catch (error) {
+      console.error('Error during fetch:', error)
+      throw error
+    }
+  }
+
+  //------------------------------------------------
+  // loginGoogleRedirect無callback，要改用initApp在頁面初次渲染後監聽google登入狀態
+  const { logoutFirebase, loginGoogleRedirect, initApp } = useFirebase()
+  //   const { auth, setAuth } = useAuth()
+
+  // 這裡要設定initApp，讓這個頁面能監聽firebase的google登入狀態
+  useEffect(() => {
+    initApp(callbackGoogleLoginRedirect)
+  }, [])
+
+  // 處理google登入後，要向伺服器進行登入動作
+  const callbackGoogleLoginRedirect = async (providerData) => {
+    console.log(providerData)
+
+    // 如果目前react(next)已經登入中，不需要再作登入動作
+    // if (auth.isAuth) return
+
+    // 向伺服器進行登入動作
+    const res = await googleLogin(providerData)
+    console.log(res)
+
+    if (res.status === 'success') {
+      // 從JWT存取令牌中解析出會員資料
+      // 注意JWT存取令牌中只有id, username, google_uid, 在登入時可以得到
+      const googletoken = res.token
+      userData = jwtDecode(googletoken)
+      // 先將 token 字串存入 localStorage
+      localStorage.setItem(appKey, googletoken)
+      // 更新 React state 中的 token
+      setToken(googletoken)
+
+      // console.log(googletoken)
+      console.log(userData)
+      alert('已成功登入')
+      // setTimeout(() => {
+      //   router.push(`/user/user-info`)
+      // }, 2000)
+      return googletoken, userData
+
+      //老師的
+      //   const res1 = await getUserById(jwtUser.id)
+      //console.log(res1.data)
+
+      //   if (res1.data.status === 'success') {
+      // 只需要initUserData中的定義屬性值，詳見use-auth勾子
+      // const dbUser = res1.data.user
+      // const userData = { ...initUserData }
+
+      // for (const key in userData) {
+      //   if (Object.hasOwn(dbUser, key)) {
+      //     userData[key] = dbUser[key] || ''
+      //   }
+      // }
+
+      // 設定到全域狀態中
+      // setAuth({
+      //   isAuth: true,
+      //   userData,
+      // })
+
+      //   } else {
+      //     alert('登入後無法得到會員資料')
+      //     // 這裡可以讓會員登出，因為這也算登入失敗，有可能會造成資料不統一
+      //   }
+    } else {
+      alert(`登入失敗`)
+    }
+  }
+
+  // 處理google登出
+  const handlegooogleLogout = async (res, req) => {
+    // firebase logout(注意，這並不會登出google帳號，是登出firebase的帳號)
+    logoutFirebase()
+
+    handleLogout()
+
+    // 成功登出後，回復初始會員狀態
+    // if (res.status === 'success') {
+    //   alert('已成功登出')
+
+    //   //   setAuth({
+    //   //     isAuth: false,
+    //   //     userData: initUserData,
+    //   //   })
+    // } else {
+    //   alert(`登出失敗`)
+    // }
+  }
+
+  // ----------------------會員登入(舊)  ----------------------
+
   // const [redirectToIndex, setRedirectToIndex] = useState(false)
 
   // // 登入後導頁到使用者資訊頁面
@@ -237,10 +291,13 @@ export default function Test() {
   //     window.location.href = 'http://localhost:3000/user/user-info'
   //   }
   // }, [redirectToIndex])
-  // ----------------------會員登入  ----------------------
+  // ----------------------會員登入(舊) ----------------------
   return (
     <>
       {/* 頁面內容 */}
+      <Head>
+        <title>登入</title>
+      </Head>
 
       <>
         <div className="bg-login">
@@ -309,6 +366,8 @@ export default function Test() {
               <button className="btn btn-primary" onClick={handleLoginStatus}>
                 檢測登入狀態
               </button>
+              <button onClick={() => loginGoogleRedirect()}>Google登入</button>
+              <button onClick={() => handlegooogleLogout()}>Google登出</button>
               <div className="login-google-API">
                 <div className="google-icon">圖</div>
 
@@ -319,7 +378,13 @@ export default function Test() {
                 <div className="hr-text">以E-mail登入</div>
                 <div className="hr-line" />
               </div>
-              <form className="loginByEmail-form" onSubmit={handleLogin}>
+              <form
+                className="loginByEmail-form"
+                onSubmit={(e) => {
+                  handleLogin(e)
+                  loginAlert(e)
+                }}
+              >
                 <div className="loginByEmail-form-box">
                   <label htmlFor="InputAccount">帳號 / E-mail</label>
                   <input

@@ -1,53 +1,82 @@
 import express from "express";
 import db from "../db.js";
+// 用於處理文件上傳
+import multer from "multer";
+import Coupon from "../controller/coupon.js";
 
 const router = express.Router();
+// 創建一個 multer 中間件，用於處理文件上傳
+const upload = multer();
 
-//coupon資料
-router.get("/", async (req, res) => {
+// #region 宇哲的
+// //取得coupon資料-升降冪：ID、價格/百分比、日期排序
+// router.get("/", async (req, res) => {
+//   try {
+//     let [couponData] = await db.execute(
+//       "SELECT * FROM `coupon` WHERE `valid` = 1 ORDER BY id ASC"
+//       // "SELECT * FROM `coupon` ORDER BY discount DESC",
+//       // "SELECT * FROM `coupon` ORDER BY limit_time ASC"
+//     );
+//     if (couponData) {
+//       res.json(couponData);
+//     } else {
+//       res.json("沒有找到相應的資訊");
+//     }
+//   } catch (error) {
+//     console.error("發生錯誤：", error);
+//     res.json("res.json發生錯誤");
+//   }
+// });
+
+// //取得coupon資料-分頁：全部、樂器、課程、已使用
+// router.get("/categories", async (req, res) => {
+//   try {
+//     let [couponData] = await db.execute(
+//       // "SELECT * FROM `coupon` WHERE `type` = 1 AND valid=1  "
+//       // "SELECT * FROM `coupon` WHERE `type` = 2 AND valid=1"
+//       "SELECT * FROM `coupon` WHERE `valid` = 0 ORDER BY id ASC"
+//     );
+//     if (couponData) {
+//       res.json(couponData);
+//     } else {
+//       res.json("沒有找到相應的資訊");
+//     }
+//   } catch (error) {
+//     console.error("發生錯誤：", error);
+//     res.json("res.json發生錯誤");
+//   }
+// });
+// #endregion
+
+// 處理 GET 請求，路徑為 /public/coupon/FindAll
+router.get("/FindAll", async (req, res) => {
   try {
-    let [couponData] = await db.execute("SELECT * FROM `coupon`");
-
-    if (couponData) {
-      res.json(couponData);
-    } else {
-      res.json("沒有找到相應的資訊");
-    }
-  } catch (error) {
-    console.error("發生錯誤：", error);
-    res.json("發生錯誤");
+    // 創建 Coupon 控制器的實例
+    const obj = new Coupon();
+    // 呼叫 Coupon 控制器中的 FindAll 方法來查詢所有優惠券
+    const result = await obj.FindAll();
+    // 將查詢結果以 JSON 格式返回給客戶端
+    res.status(200).json(result);
+  } catch (err) {
+    console.error(err);
+    // 如果發生錯誤，返回 500 狀態碼和錯誤訊息
+    res.status(500).json(err.message);
   }
 });
 
-//lesson_category?/categories=kind券類別
-router.get("/kinds", async (req, res) => {
+router.post("/Update", async (req, res) => {
   try {
-    let [coupon_kind] = await db.execute("SELECT * FROM `coupon`");
-    if (coupon_kind) {
-      res.json(coupon_kind);
-    } else {
-      res.json("沒有找到相應的資訊");
-    }
-  } catch (error) {
-    console.error("發生錯誤：", error);
-    res.json("發生錯誤");
+    // 從請求的 body 中獲取 id 參數
+    const param = req.body.id;
+    const obj = new Coupon();
+    // 設置 Coupon 控制器的實例的 id 屬性為從請求中獲取的 id
+    obj.id = param;
+    // 呼叫 Coupon 控制器中的 Update 方法來刪除指定的優惠券
+    const result = await obj.Update();
+
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(500).json(err);
   }
 });
-
-//lesson_category?/categories=type券打折方式
-router.get("/types", async (req, res) => {
-  try {
-    let [coupon_type] = await db.execute("SELECT * FROM `coupon` ");
-
-    if (coupon_type) {
-      res.json(coupon_type);
-    } else {
-      res.json("沒有找到相應的資訊");
-    }
-  } catch (error) {
-    console.error("發生錯誤：", error);
-    res.json("發生錯誤");
-  }
-});
-
 export default router;

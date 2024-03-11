@@ -17,16 +17,14 @@ import { FaMinus } from 'react-icons/fa'
 import { FaTrash } from 'react-icons/fa6'
 
 //css module
-import Lesson from '@/pages/cart/lesson-item.module.scss'
-import Instrument from '@/pages/cart/instrument-item.module.scss'
 
 //cart-list
 import LessonList from '@/components/cart/lesson-cart-list.js'
 import InstrumentList from '@/components/cart/instrument-cart-list.js'
+import InstrumentCouponList from '@/components/cart/instrument-coupons.js'
+import LessonCouponList from '@/components/cart/lesson-coupons.js'
 
 //cart-data
-import CartData from '@/data/cart/cart.json'
-import CouponData from '@/data/cart/coupon.json'
 
 //hook
 import { useCart } from '@/hooks/use-cart'
@@ -36,14 +34,21 @@ export default function Test() {
   const {
     items,
     instrumentData,
+    instrumentCoupons,
     lessonData,
+    lessonCoupons,
     increment,
     decrement,
     remove,
     calcInstrumentItems,
     calcInstrumentPrice,
+    calcInstrumentDiscount,
+    handleInstrumentSelector,
     calcLessonItems,
     calcLessonPrice,
+    calcLessonDiscount,
+    handleLessonSelector,
+    calcTotalDiscount,
     calcTotalPrice,
   } = useCart()
   // ----------------------手機版本  ----------------------
@@ -70,29 +75,6 @@ export default function Test() {
     setFilterVisible(!filterVisible)
   }
 
-  // --------------------- 購物車 -----------------------
-
-  // const exItems = items.map((item,i)=>{
-  //   const newItem = { ...item, qty: 1 }
-  //   return newItem
-  // })
-
-  // items = exItems
-
-  // //如果有找到，做數量遞增
-  // if (foundIndex > -1) {
-  //   increment(items, item.id)
-  // } else {
-  //   const newItem = { ...item, qty: 1 }
-  //   const newItems = [...items, newItem]
-  //   setItems(newItems)
-  // }
-
-  // //擴充item屬性
-  // const newItem = { ...item, qty: 1 }
-  // const newItems = [...items, newItem]
-
-  // setItems(newItems)
 
   return (
     <>
@@ -180,7 +162,11 @@ export default function Test() {
                   <div className="lesson-product">商品</div>
                   <div className="lesson-price">售價</div>
                 </div>
-                <LessonList items={items} lessonData={lessonData} remove={remove} />
+                <LessonList
+                  items={items}
+                  lessonData={lessonData}
+                  remove={remove}
+                />
                 <div className="cart-subtotal h6">
                   原價 NT$ {calcLessonPrice()}
                 </div>
@@ -188,24 +174,21 @@ export default function Test() {
                   <div className="coupon-selector">
                     <div className="cart-coupon-text">優惠券</div>
                     <div>
-                      <select
-                        className="form-select"
-                        aria-label="Default select example"
-                        defaultValue={'Default'}
-                      >
-                        <option value={'Default'} disabled>
-                          Open this select menu
-                        </option>
-                        <option value={1}>One</option>
-                        <option value={2}>Two</option>
-                        <option value={3}>Three</option>
-                      </select>
+                      <LessonCouponList
+                        lessonCoupons={lessonCoupons}
+                        handleLessonSelector={handleLessonSelector}
+                      />
                     </div>
                   </div>
-                  <div className="cart-discount h6">折扣 -NT$ 1400000</div>
+                  <div className="cart-discount h6">
+                    折扣 -NT$
+                    {calcLessonDiscount()}
+                  </div>
                 </div>
                 <div className="cart-total">
-                  <div className="cart-total-text">小計 NT$ 300000</div>
+                  <div className="cart-total-text">
+                    小計 NT$ {calcLessonPrice() - calcLessonDiscount()}
+                  </div>
                 </div>
               </div>
               <div className="cart-instrument">
@@ -230,24 +213,20 @@ export default function Test() {
                   <div className="coupon-selector">
                     <div className="cart-coupon-text">優惠券</div>
                     <div>
-                      <select
-                        className="form-select"
-                        aria-label="Default select example"
-                        defaultValue={'Default'}
-                      >
-                        <option value={'Default'} disabled>
-                          Open this select menu
-                        </option>
-                        <option value={1}>One</option>
-                        <option value={2}>Two</option>
-                        <option value={3}>Three</option>
-                      </select>
+                      <InstrumentCouponList
+                        instrumentCoupons={instrumentCoupons}
+                        handleInstrumentSelector={handleInstrumentSelector}
+                      />
                     </div>
                   </div>
-                  <div className="cart-discount h6">折扣 -NT$ 1400000</div>
+                  <div className="cart-discount h6">
+                    折扣 -NT$ {calcInstrumentDiscount()}
+                  </div>
                 </div>
                 <div className="cart-total">
-                  <div className="cart-total-text">小計 NT$ 300000</div>
+                  <div className="cart-total-text">
+                    小計 NT$ {calcInstrumentPrice() - calcInstrumentDiscount()}
+                  </div>
                 </div>
               </div>
             </div>
@@ -262,19 +241,21 @@ export default function Test() {
                 <div className="total d-flex flex-column" style={{ gap: 20 }}>
                   <div className="d-flex justify-content-between carttext">
                     <div>商品數量</div>
-                    <div>樂器*3 課程*2</div>
+                    <div>
+                      樂器*{calcInstrumentItems()} 課程*{calcLessonItems()}
+                    </div>
                   </div>
                   <div className="d-flex justify-content-between carttext">
                     <div>原價合計</div>
-                    <div>NT $864000</div>
+                    <div>NT ${calcTotalPrice()}</div>
                   </div>
                   <div className="d-flex justify-content-between carttext discount">
                     <div>折扣合計</div>
-                    <div>-NT $3400</div>
+                    <div>-NT ${calcTotalDiscount()}</div>
                   </div>
                   <div className="d-flex justify-content-between h3">
                     <div>合計</div>
-                    <div>NT $790000</div>
+                    <div>NT ${calcTotalPrice()}</div>
                   </div>
                 </div>
                 <div className="cart-btn">
@@ -308,7 +289,7 @@ export default function Test() {
             </div>
             <div className="d-flex justify-content-between carttext discount">
               <div>折扣合計</div>
-              <div>-NT $3400</div>
+              <div>-NT ${calcTotalDiscount()}</div>
             </div>
             <div className="d-flex justify-content-between h3">
               <div>合計</div>

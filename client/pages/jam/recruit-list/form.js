@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
 import { debounce } from 'lodash'
+// sweetalert
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 //data
 import CityCountyData from '@/data/CityCountyData.json'
 import playerData from '@/data/player.json'
@@ -17,8 +21,10 @@ import { FaCirclePlus } from 'react-icons/fa6'
 // scss
 import styles from '@/pages/jam/jam.module.scss'
 
+const mySwal = withReactContent(Swal)
+
 export default function Form() {
-  // const navigate = useNavigate()
+  const router = useRouter()
   // ---------------------- 手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -34,12 +40,8 @@ export default function Form() {
   // ---------------------- 曲風 ----------------------
   // 儲存選擇的曲風
   const [genre, setgenre] = useState([])
-<<<<<<< HEAD
-  // 儲存曲風下拉選單的數量
-=======
   const [genreCheck, setGenreCheck] = useState(true)
   // 變更曲風下拉選單的數量時，陣列會多一個元素
->>>>>>> acf878cd00e0634b1c107dd2bb7455e88c551f71
   const [genreSelect, setgenreSelect] = useState([1])
   // 實際使用的曲風陣列，避免使用者未照順序新增樂手
   const [finalgenre, setFinalgenre] = useState('')
@@ -47,13 +49,9 @@ export default function Form() {
   // ---------------------- 擔任職位 ----------------------
   // 控制表單狀態
   const [myPlayer, setMyPlayer] = useState('')
-<<<<<<< HEAD
-  console.log(myPlayer)
-=======
   // 表單實際送出的內容
   const [finalMyPlayer, setFinalMyPlayer] = useState('')
   // console.log(finalMyPlayers)
->>>>>>> acf878cd00e0634b1c107dd2bb7455e88c551f71
 
   // ---------------------- 徵求樂手 ----------------------
   const [players, setplayers] = useState([])
@@ -74,41 +72,14 @@ export default function Form() {
   const [conditionCheck, setConditionCheck] = useState(true)
   // ---------------------- 描述 ----------------------
   const [description, setDescription] = useState('')
-<<<<<<< HEAD
-
-  const checkForm = (
-    title,
-    degree,
-    finalgenre,
-    myPlayer,
-    finalPlayers,
-    region,
-    description
-  ) => {}
-
-  const sendForm = () => {
-    let formData = new FormData()
-    // title === '' ?
-    // formData.append('userID', document.querySelector('[name=userID]').value)
-
-    // for (let [key, value] of formData.entries()) {
-    //   console.log(`${key}: ${value}`)
-    // }
-  }
-  useEffect(() => {
-    // 檢查不雅字詞
-    if (title.includes('幹' || '屎' || '糞' || '尿' || '屁')) {
-      setTitleCheck(false)
-    }
-=======
   const [descriptionCheck, setDescriptionCheck] = useState(true)
 
   // ---------------------- 表單填寫 ----------------------
-  // 表單完成狀態 0: 送出時有欄位尚未填寫, 1: 填寫完成, 2: 初次進入頁面 or 從未填寫完必狀態繼續填寫
+  // 表單完成狀態 0: 有欄位尚未填寫或不符規定, 1: 填寫完成, 2: 填寫中
   const [complete, setComplete] = useState(2)
   // 檢查不雅字詞
   const checkBadWords = debounce(() => {
-    const badWords = /幹|屎|尿|屁|糞|靠北|靠腰|雞掰|王八|你媽|妳媽/g
+    const badWords = /幹|屎|尿|屁|糞|靠北|靠腰|雞掰|王八|你媽|妳媽|淫/g
     setTitleCheck(title.search(badWords) < 0 ? true : false)
     setConditionCheck(condition.search(badWords) < 0 ? true : false)
     setDescriptionCheck(description.search(badWords) < 0 ? true : false)
@@ -170,8 +141,6 @@ export default function Form() {
     condition,
     description
   ) => {
-    // checkComplete()
-    // console.log(complete)
     if (!checkComplete()) {
       return false
     }
@@ -195,12 +164,27 @@ export default function Form() {
     })
     const result = await res.json()
     if (result.status === 'success') {
-      // 跳轉路由，並攜帶成功狀態物件
-      // navigate(`/jam/recruit-list/${result.juid}`, { status: true })
-      console.log('發起成功')
+      notifySuccess(result.juid)
     } else {
       console.log(result.error)
     }
+  }
+  // 發起成功後，彈出訊息框，並跳轉到資訊頁面
+  const notifySuccess = (juid) => {
+    mySwal
+      .fire({
+        position: 'center',
+        icon: 'success',
+        iconColor: '#1581cc',
+        title: '發起成功，將為您跳轉到資訊頁',
+        showConfirmButton: false,
+        timer: 3000,
+      })
+      .then(
+        setTimeout(() => {
+          router.push(`/jam/recruit-list/${juid}`)
+        }, 3000)
+      )
   }
   // ---------------------- 偵測表單輸入變化，並執行檢查
   useEffect(() => {
@@ -212,27 +196,13 @@ export default function Form() {
     // 檢查無重複的曲風
     checkGenre.cancel()
     checkGenre()
->>>>>>> acf878cd00e0634b1c107dd2bb7455e88c551f71
     // 把曲風&徵求樂手轉換成表單實際接收的字串格式
     const fgArr = genre.filter((v) => v != (null || undefined))
     setFinalgenre(`[${fgArr.toString()}]`)
     const fpArr = players.filter((v) => v != (null || undefined))
     setFinalPlayers(`[${fpArr.toString()}]`)
-<<<<<<< HEAD
-    checkForm(
-      title,
-      degree,
-      finalgenre,
-      myPlayer,
-      finalPlayers,
-      region,
-      description
-    )
-  }, [title, degree, genre, myPlayer, players, region, description])
-=======
     // 檢查表單是否完成
   }, [title, degree, genre, myPlayer, players, region, condition, description])
->>>>>>> acf878cd00e0634b1c107dd2bb7455e88c551f71
   return (
     <>
       <Head>
@@ -299,21 +269,24 @@ export default function Form() {
               <li style={{ marginLeft: '10px' }}>發起JAM</li>
             </ul>
           </div>
-          <div className="col-12 col-sm-8" style={{ padding: 0 }}>
+          <section className="col-12 col-sm-8" style={{ padding: 0 }}>
             {/* 主內容 */}
             <div className={`${styles.jamLeft}`}>
               <div className="row align-items-center">
                 <div className={`${styles.jamTitle} col-12 col-sm-2`}>
                   發起表單
                 </div>
-                <div className="col-12 col-sm-10 mt-sm-0">
-                  (提示: 點擊&nbsp;
+                <div
+                  className="col-12 col-sm-10 mt-sm-0"
+                  style={{ color: '#666666' }}
+                >
+                  ※ 點擊&nbsp;
                   <FaCirclePlus
                     size={18}
                     style={{ color: '#18a1ff' }}
                     className="mb-1"
                   />
-                  &nbsp;可增加項目)
+                  &nbsp;可增加項目
                 </div>
               </div>
 
@@ -328,15 +301,12 @@ export default function Form() {
                   <input
                     type="text"
                     className={`${styles.itemInput} form-control`}
-                    placeholder="發起動機或目的，限20字"
+                    placeholder="發起動機或目的，上限20字"
                     maxLength={20}
                     onChange={(e) => {
                       setTitle(e.target.value)
                     }}
                   />
-<<<<<<< HEAD
-                  {titleCheck ? '' : <div>偵測到不雅字詞，請重新輸入</div>}
-=======
                   {titleCheck ? (
                     ''
                   ) : (
@@ -346,7 +316,6 @@ export default function Form() {
                       偵測到不雅字詞
                     </div>
                   )}
->>>>>>> acf878cd00e0634b1c107dd2bb7455e88c551f71
                 </div>
                 {titleCheck ? (
                   ''
@@ -412,11 +381,7 @@ export default function Form() {
                       )
                     })}
                     {genreSelect.length < 3 ? (
-<<<<<<< HEAD
-                      <div className={`${styles.plusBtn}`}>
-=======
                       <div className={`${styles.plusBtnWrapper}`}>
->>>>>>> acf878cd00e0634b1c107dd2bb7455e88c551f71
                         <FaCirclePlus
                           size={24}
                           className={`${styles.plusBtn}`}
@@ -425,11 +390,7 @@ export default function Form() {
                             setgenreSelect(newArr)
                           }}
                         />
-<<<<<<< HEAD
-                        <span style={{ color: '#1d1d1d' }}>
-=======
                         <span className="mb-1" style={{ color: '#1d1d1d' }}>
->>>>>>> acf878cd00e0634b1c107dd2bb7455e88c551f71
                           (剩餘 {3 - genreSelect.length})
                         </span>
                       </div>
@@ -470,14 +431,10 @@ export default function Form() {
                     value={myPlayer}
                     name="myPlayer"
                     onChange={(e) => {
-<<<<<<< HEAD
-                      setMyPlayer('{"id": 1, "play": ' + e.target.value + '}')
-=======
                       setMyPlayer(e.target.value)
                       setFinalMyPlayer(
                         '{"id": 1, "play": ' + e.target.value + '}'
                       )
->>>>>>> acf878cd00e0634b1c107dd2bb7455e88c551f71
                     }}
                   >
                     <option value="">請選擇</option>
@@ -578,7 +535,7 @@ export default function Form() {
                   <input
                     type="text"
                     className={`form-control`}
-                    placeholder="事先說好要求，有助於玩團和樂哦~ 限30字"
+                    placeholder="事先說好要求，有助於玩團和樂哦～上限30字"
                     maxLength={30}
                     onChange={(e) => {
                       setCondition(e.target.value)
@@ -612,7 +569,7 @@ export default function Form() {
                 <div className={`${styles.itemInputWrapper} col-12 col-sm-10`}>
                   <textarea
                     className={`${styles.textArea} form-control`}
-                    placeholder="輸入清楚、吸引人的描述，讓大家瞭解你的成團動機吧！限150字"
+                    placeholder="輸入清楚、吸引人的描述，讓大家瞭解你的成團動機吧！上限150字"
                     name="description"
                     maxLength={150}
                     onChange={(e) => {
@@ -645,9 +602,6 @@ export default function Form() {
                   className="b-btn b-btn-primary"
                   style={{ paddingInline: '38px' }}
                   role="presentation"
-<<<<<<< HEAD
-                  onClick={sendForm}
-=======
                   onClick={() => {
                     sendForm(
                       title,
@@ -660,7 +614,6 @@ export default function Form() {
                       description
                     )
                   }}
->>>>>>> acf878cd00e0634b1c107dd2bb7455e88c551f71
                 >
                   提交
                 </div>
@@ -678,10 +631,10 @@ export default function Form() {
                 ''
               )}
             </div>
-          </div>
+          </section>
 
           {/*   ---------------------- 發起須知  ---------------------- */}
-          <div className={`${styles.jamRightWrapper} col-12 col-sm-4`}>
+          <section className={`${styles.jamRightWrapper} col-12 col-sm-4`}>
             <div className={`${styles.jamRight}`}>
               <div className={`${styles.jamTitle}`}>發起須知</div>
               <ol className={`${styles.rules}`}>
@@ -711,7 +664,7 @@ export default function Form() {
                 <li>發起人得視招募情況解散或以當下成員成團。</li>
               </ol>
             </div>
-          </div>
+          </section>
         </div>
       </div>
       <Footer />

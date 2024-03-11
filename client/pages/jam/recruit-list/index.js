@@ -141,7 +141,7 @@ export default function RecruitList() {
 
     try {
       const res = await fetch(
-        `http://localhost:3005/api/jam?${searchParams.toString()}`
+        `http://localhost:3005/api/jam/allJam?${searchParams.toString()}`
       )
 
       // res.json()是解析res的body的json格式資料，得到JS的資料格式
@@ -149,13 +149,23 @@ export default function RecruitList() {
 
       // 設定到state中，觸發重新渲染(re-render)，會進入到update階段
       // 進入狀態前檢查資料類型為陣列，以避免錯誤
-      console.log(datas)
+      // console.log(datas)
       if (datas) {
+        // const genreName = jam.genre.map((g) => {
+        //   const matchedgenre = genre.find((gd) => gd.id === g)
+        //   return matchedgenre.name
+        // })
+        const combineData = datas.jamData.map((v) => {
+          const matchFormer = datas.formerData.find(
+            (fv) => fv.id === v.former.id
+          )
+          return { ...v, former: matchFormer }
+        })
         // 設定獲取頁數總合
         setPageTotal(datas.pageTotal)
         // 設定獲取項目
         setPage(datas.page)
-        setJams(datas.jamData)
+        setJams(combineData)
         setGenreData(datas.genreData)
         setPlayerData(datas.playerData)
       }
@@ -170,7 +180,7 @@ export default function RecruitList() {
       const { order, page, genre, player, degree, region } = router.query
       // 要送至伺服器的query string參數
 
-      console.log(router.query)
+      // console.log(router.query)
 
       // 設定回所有狀態(注意所有從查詢字串來都是字串類型)，都要給預設值
       setPage(Number(page) || 1)
@@ -285,6 +295,13 @@ export default function RecruitList() {
                 什麼是JAM？
               </Link>
             </div>
+            {/* 手機版 發起/我的JAM 按鍵 */}
+            <Link
+              href="/jam/recruit-list/form"
+              className="fixed-btn b-btn b-btn-primary d-block d-sm-none"
+            >
+              發起JAM
+            </Link>
             {/*  ---------------------- 頂部功能列  ---------------------- */}
             <div className="top-function-container">
               {/*  ---------------------- 麵包屑  ---------------------- */}
@@ -308,8 +325,11 @@ export default function RecruitList() {
                   >
                     選單
                   </div>
-                  <Link href="/jam/recruit-list/form">
-                    <div className="b-btn b-btn-primary px-3">發起JAM</div>
+                  <Link
+                    href="/jam/recruit-list/form"
+                    className="b-btn b-btn-primary px-3 d-none d-sm-block"
+                  >
+                    發起JAM
                   </Link>
                 </div>
 
@@ -347,7 +367,7 @@ export default function RecruitList() {
                         <div className="filter-item">
                           <div
                             className="filter-title"
-                            style={{ color: '#5a5a5a' }}
+                            style={{ color: '#666666' }}
                           >
                             技術程度
                           </div>

@@ -3,6 +3,7 @@ import Navbar from '@/components/common/navbar-test'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
+import Head from 'next/head'
 
 //圖片
 import jamHero from '@/assets/jam-hero.png'
@@ -20,18 +21,6 @@ import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 
 export default function Test() {
-  // ----------------------測試用 獲得所有使用者清單 ----------------------
-  const getUser = async () => {
-    try {
-      const res = await fetch('http://localhost:3005/api/user')
-
-      // 使用 res.json() 來解析 response 的 JSON 格式資料
-      const usersData = await res.json()
-      //   console.log(usersData)
-    } catch (error) {
-      console.error('There was a problem with the fetch operation:', error)
-    }
-  }
   // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
   const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
@@ -51,21 +40,6 @@ export default function Test() {
   const avatarImage = `/user/${LoginUserData.img}`
   const avatarDefault = `/user/avatar_userDefault.jpg`
 
-  //以下為觀察錯誤訊息  先註解掉
-  // Uncaught (in promise) Error: A listener indicated an asynchronous response by returning true, but the message channel closed before a response was received
-  // useEffect(() => {
-  //   let isMounted = true // 判斷組件是否還在掛載
-
-  //   handleLoginStatus() // 做一些同步的操作
-
-  //   if (isMounted) {
-  //     getLoginUserData() // 異步操作
-  //   }
-
-  //   return () => {
-  //     isMounted = false // 組件卸載時更新狀態
-  //   }
-  // }, [handleLoginStatus, getLoginUserData])
   // ----------------------會員登入狀態  ----------------------
 
   // ----------------------手機版本  ----------------------
@@ -81,16 +55,16 @@ export default function Test() {
   }
   // ----------------------假資料  ----------------------
   // sidebar假資料
-  const sidebarData = [
-    '會員資訊',
-    '我的樂團',
-    '我的訂單',
-    '我的文章',
-    '我的收藏',
-    '我的優惠券 ',
-    '我的課程',
-    '我的訊息',
-  ]
+  // const sidebarData = [
+  //   '會員資訊',
+  //   '我的樂團',
+  //   '我的訂單',
+  //   '我的文章',
+  //   '我的收藏',
+  //   '我的優惠券 ',
+  //   '我的課程',
+  //   '我的訊息',
+  // ]
 
   // 資料排序
   const [dataSort, setDataSort] = useState('latest')
@@ -140,6 +114,9 @@ export default function Test() {
 
   return (
     <>
+      <Head>
+        <title>會員資訊</title>
+      </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       {/* 先把HEROSECTION隱藏 */}
       {/* <div
@@ -164,7 +141,7 @@ export default function Test() {
           </div>
           <Link
             className="mm-item"
-            href="/user"
+            href="/user/user-info"
             style={{ borderTop: '1px solid #b9b9b9' }}
           >
             會員中心
@@ -200,7 +177,9 @@ export default function Test() {
               <div className="sidebar-user-info">
                 <div className="sidebar-user-info-imgBox">
                   <Image
-                    src={avatarImage || avatarDefault}
+                    src={
+                      LoginUserData.img !== null ? avatarImage : avatarDefault
+                    }
                     alt="user photo mb"
                     fill
                     priority="default" //不加的話Next 會問是否要加優先級
@@ -211,7 +190,7 @@ export default function Test() {
                   <div className="sidebar-user-info-name">
                     {LoginUserData.nickname}
                   </div>
-                  <div className="sidebar-user-info-band">樂團名稱</div>
+                  <div className="sidebar-user-info-band">樂團名稱七個字</div>
                 </div>
                 {/* 更換大頭貼的功能暫定併回會員資訊 故不再sidebar顯示 */}
                 {/* <div className="sidebar-user-info-Camera-img">
@@ -237,15 +216,18 @@ export default function Test() {
                   <Link href="/user/user-order">我的訂單</Link>
                 </li>
                 <li key={4}>
-                  <Link href="/user/user-favorite">我的收藏</Link>
+                  <Link href="/user/user-acticle">我的文章</Link>
                 </li>
                 <li key={5}>
-                  <Link href="/coupon/userCoupon">我的優惠券</Link>
+                  <Link href="/user/user-favorite">我的收藏</Link>
                 </li>
                 <li key={6}>
-                  <Link href="/user/user-lesson">我的課程</Link>
+                  <Link href="/coupon/userCoupon">我的優惠券</Link>
                 </li>
                 <li key={7}>
+                  <Link href="/user/user-lesson">我的課程</Link>
+                </li>
+                <li key={8}>
                   <Link href="/user/user-notify">我的訊息</Link>
                 </li>
               </ul>
@@ -335,7 +317,11 @@ export default function Test() {
                         <div className="user-title-userInfo">會員資訊</div>
                         <div className="user-btnGroup">
                           <div className="user-btnGroup-btn1">
-                            <div>預覽個人首頁</div>
+                            <div>
+                              <Link href="/user/user-homepage">
+                                預覽個人首頁
+                              </Link>
+                            </div>
                           </div>
                           <div className="user-btnGroup-btn2">
                             <div>編輯資訊</div>
@@ -511,14 +497,12 @@ export default function Test() {
           }
           .sidebar-user-info-text {
             display: flex;
-
-            /* width: 150px; */
-
+            width: 140px;
             flex-direction: column;
             align-items: flex-start;
             gap: 6px;
             color: var(--dark, #1d1d1d);
-            text-align: center;
+            text-align: start;
 
             /* h5 */
             font-family: 'Noto Sans TC';
