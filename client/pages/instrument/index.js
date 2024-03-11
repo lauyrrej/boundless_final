@@ -18,7 +18,9 @@ import Data from '@/data/instrument/instrument.json'
 // 自製元件
 import BS5Pagination from '@/components/common/pagination'
 
-export default function Test() {
+import { useParams } from 'react-router-dom'
+
+export default function Test({ onSearch }) {
   const router = useRouter()
   //a
   // console.log(Data)
@@ -39,9 +41,9 @@ export default function Test() {
   useEffect(() => {
     document.addEventListener('click', () => {
       setFilterVisible(false)
-    })
-  }, [])
-  // 阻止事件冒泡造成篩選表單關閉
+    }) //鉤子在組件渲染完成後註冊了一個點擊事件監聽器。當點擊事件發生時，會調用一個函數來將 filterVisible 設置為 false，從而隱藏篩選表單。
+  }, []) //這個事件監聽器只會在組件首次渲染時被註冊，並且在組件卸載時被清理。
+  // 阻止事件冒泡造成篩選表單關閉//防止觸發組件外部的點擊事件，進而導致篩選表單被關閉。
   const stopPropagation = (e) => {
     e.stopPropagation()
   }
@@ -123,7 +125,7 @@ export default function Test() {
   //-------------------連資料庫
 
   const [instrument, setInstrument] = useState([])
-  const [brandData, setbrandData] = useState('')
+  const [brandData, setBrandData] = useState('')
   const getDatas = async (params) => {
     // 用URLSearchParams產生查詢字串
     const searchParams = new URLSearchParams(params)
@@ -247,6 +249,48 @@ export default function Test() {
   //       })
   //   })
   // }
+  //-------------------搜尋功能
+  const [data, setData] = useState(instrument)
+
+  // 在組件中定義 isFiltered 狀態，並提供一個函數來更新它的值
+  const [isFiltered, setIsFiltered] = useState(false)
+
+  const [search, setSearch] = useState('')
+  const handleSearch = () => {
+    // console.log('按鈕被點擊了')
+    let newData
+    if (search.trim() === '') {
+      newData = instrument
+      //   console.log(newData)
+    } else {
+      newData = instrument.filter((v, i) => {
+        return v.name.includes(search)
+      })
+    }
+
+    setData(newData)
+    setIsFiltered(true)
+  }
+
+  //-------------------排序功能
+  //最熱銷
+  const sortBySales = () => {
+    const sortedProducts = [...instrument].sort((a, b) => b.sales - a.sales)
+    setData(sortedProducts)
+    setIsFiltered(true)
+  }
+  //最高價
+  const sortBypriceHigh = () => {
+    const sortedProducts = [...instrument].sort((a, b) => b.price - a.price)
+    setData(sortedProducts)
+    setIsFiltered(true)
+  }
+  //最低價
+  const sortBypriceLow = () => {
+    const sortedProducts = [...instrument].sort((a, b) => a.price - b.price)
+    setData(sortedProducts)
+    setIsFiltered(true)
+  }
 
   // 設定sidebar下拉狀態
   const [openAccordion, setOpenAccordion] = useState(null)
@@ -254,6 +298,19 @@ export default function Test() {
   const handleAccordionToggle = (index) => {
     setOpenAccordion(openAccordion === index ? null : index)
   }
+
+  const { category } = useParams() // 从URL参数中获取category值
+  const [showHotProducts, setShowHotProducts] = useState(true) // 控制是否显示热门课程部分
+
+  useEffect(() => {
+    //   如果URL中存在category參數，則隱藏熱銷商品部分
+    if ('category') {
+      setShowHotProducts(false)
+    } else {
+      // 否则顯示热门课程部分
+      setShowHotProducts(true)
+    }
+  }, [category])
 
   return (
     <>
@@ -314,7 +371,7 @@ export default function Test() {
             <div className="sidebar">
               <ul className="d-flex flex-column">
                 <li>
-                  <Link href={'/instrument/all'} className="active">
+                  <Link href={'/instrument'} className="active">
                     全部
                   </Link>
                 </li>
@@ -418,7 +475,7 @@ export default function Test() {
                   }}
                 />
               </div>
-              <Link href={`/instrument/instrument`} className="sm-item active">
+              <Link href={`/instrument`} className="sm-item active">
                 全部
               </Link>
               <Link href={`/instrument/instrument`} className="sm-item">
@@ -472,13 +529,18 @@ export default function Test() {
                       type="text"
                       className="form-control"
                       placeholder="請輸入關鍵字..."
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
                     />
-                    <div className="search-btn btn d-flex justify-content-center align-items-center p-0">
+                    <div
+                      onClick={handleSearch}
+                      className="search-btn btn d-flex justify-content-center align-items-center p-0"
+                    >
                       <IoIosSearch size={25} />
                     </div>
                   </div>
                 </div>
-
+                {/* 手機版排序 */}
                 <div className="filter-sort d-flex justify-content-between">
                   <div className="sort-mb d-block d-sm-none">
                     <select
@@ -631,9 +693,15 @@ export default function Test() {
                       <FaSortAmountDown size={14} />
                     </div>
 
-                    <div className="sort-item active">最熱銷</div>
-                    <div className="sort-item">最高價</div>
-                    <div className="sort-item">最低價</div>
+                    <div className="sort-item active" onClick={sortBySales}>
+                      最熱銷
+                    </div>
+                    <div className="sort-item" onClick={sortBypriceHigh}>
+                      最高價
+                    </div>
+                    <div className="sort-item" onClick={sortBypriceLow}>
+                      最低價
+                    </div>
                   </div>
                 </div>
               </div>
@@ -641,46 +709,46 @@ export default function Test() {
 
             {/* 主內容 */}
             <main className="content">
-              <div className="hot-instrument">
-                <h4 className="text-primary">熱銷商品</h4>
-                <div className="hot-instrument-card">
-                  {Array.isArray(instrument) &&
-                    instrument.slice(0, 4).map((v, i) => {
-                      const {
-                        id,
-                        name,
-                        price,
-                        discount,
-                        category_name,
-                        img_small,
-                        sales,
-                      } = v
-
-                      return (
-                        <div key={id} className="">
-                          {/* 寫discount的判斷式 */}
-                          <Card
-                            id={id}
-                            name={name}
-                            price={price}
-                            discount={discount}
-                            category_name={category_name}
-                            img_small={img_small}
-                            sales={sales}
-                          />
-                        </div>
-                      )
-                    })}
+              {showHotProducts && (
+                <div className="hot-instrument">
+                  <h4 className="text-primary">熱銷商品</h4>
+                  <div className="hot-instrument-card">
+                    {instrument
+                      .slice() // Create a copy of data array to avoid mutating original array
+                      .sort((a, b) => b.sales - a.sales) // Sort courses based on sales volume
+                      .slice(0, 4) // Get top 4 courses */
+                      .map((v, i) => {
+                        return (
+                          <div className="" key={i}>
+                            {/* 寫discount的判斷式 */}
+                            <Card
+                              instrument-card
+                              id={v.id}
+                              puid={v.puid}
+                              name={v.name}
+                              price={v.price}
+                              discount={v.discount}
+                              category_name={v.category_name}
+                              img_small={v.img_small}
+                              sales={v.sales}
+                            />
+                          </div>
+                        )
+                      })}
+                  </div>
                 </div>
-              </div>
+              )}
               <hr />
 
               <div className="instrument-card-group">
-                {/* 用json套資料 */}
-                {Array.isArray(instrument) &&
-                  instrument.map((v, i) => {
+                {/* 更改為搜尋過後篩選出來的樂器 */}
+
+                {isFiltered &&
+                  // 如果已經進行了篩選或搜索，渲染篩選後的instrument數據
+                  data.map((v, i) => {
                     const {
                       id,
+                      puid,
                       name,
                       price,
                       discount,
@@ -689,10 +757,39 @@ export default function Test() {
                       sales,
                     } = v
                     return (
-                      <div key={id} className="">
-                        {/* 寫discount的判斷式 */}
+                      <div className="mb-4" key={id}>
                         <Card
                           id={id}
+                          puid={puid}
+                          name={name}
+                          price={price}
+                          discount={discount}
+                          category_name={category_name}
+                          img_small={img_small}
+                          sales={sales}
+                        />
+                      </div>
+                    )
+                  })}
+
+                {!isFiltered &&
+                  // 如果没有進行篩選或搜索，渲染原始的instrument數據
+                  instrument.map((v, i) => {
+                    const {
+                      id,
+                      puid,
+                      name,
+                      price,
+                      discount,
+                      category_name,
+                      img_small,
+                      sales,
+                    } = v
+                    return (
+                      <div key={id} className="mb-4">
+                        <Card
+                          id={id}
+                          puid={puid}
                           name={name}
                           price={price}
                           discount={discount}
