@@ -67,13 +67,8 @@ export default function Test() {
     { id: 9, parent_id: 1, name: '木吉他' },
   ]
   // filter假資料
-  const brandData = [
-    { id: 1, name: 'YAMAHA' },
-    { id: 2, name: 'Roland' },
-    { id: 3, name: 'Fender' },
-    { id: 4, name: 'Gibson' },
-  ]
-  const [brandSelect, setBrandSelect] = useState('all')
+
+  const [brandSelect, setBrandSelect] = useState('')
 
   const [priceLow, setPriceLow] = useState('')
   const [priceHigh, setPriceHigh] = useState('')
@@ -95,9 +90,18 @@ export default function Test() {
 
   // ------------------------------------------------------- 製作分頁
   const [page, setPage] = useState(1)
-  const [pageTotal, setPageTotal] = useState(1)
+  const [pageTotal, setPageTotal] = useState(0)
   // 資料排序
   const [order, setOrder] = useState('ASC')
+  // 條件品牌
+  const [brand, setBrand] = useState('all')
+  // 條件關鍵字
+  const [keyword, setKeyword] = useState(' ')
+  // 商品資料
+  const [products, setProducts] = useState([])
+
+  // 在 Test 函數中
+  const [dataPerpage, setDataPerpage] = useState(20)
   // 點按分頁時，要送至伺服器的query string參數
   const handlePageClick = (event) => {
     router.push({
@@ -105,14 +109,72 @@ export default function Test() {
 
       query: {
         page: event.selected + 1,
-        // order: order,
-        // genre: genre,
-        // player: player,
-        // degree: degree,
-        // region: region,
+        order: order,
+        brandSelect: brandSelect,
+        priceLow: priceLow,
+        priceHigh: priceHigh,
+        score: score,
+        sales: sales,
       },
     })
   }
+
+  // const hotSales = Data.sort
+  //-------------------連資料庫
+
+  const [instrument, setInstrument] = useState([])
+  const [brandData, setbrandData] = useState('')
+  const getDatas = async (params) => {
+    // 用URLSearchParams產生查詢字串
+    const searchParams = new URLSearchParams(params)
+
+    try {
+      const res = await fetch(
+        `http://localhost:3005/api/instrument?${searchParams.toString()}`
+      )
+
+      // res.json()是解析res的body的json格式資料，得到JS的資料格式
+      const datas = await res.json()
+
+      // 在這裡處理獲取的資料，例如更新狀態
+      setInstrument(datas)
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
+  }
+
+  useEffect(() => {
+    if (router.isReady) {
+      // 從router.query得到所有查詢字串參數
+      const {
+        order,
+        page,
+        brandSelect,
+        priceLow,
+        priceHigh,
+        score,
+        sales,
+        keyword,
+      } = router.query
+      // 要送至伺服器的query string參數
+
+      // console.log(router.query)
+
+      // 設定回所有狀態(注意所有從查詢字串來都是字串類型)，都要給預設值
+      setPage(Number(page) || 1)
+      setOrder(order || 'ASC')
+      setBrandSelect(brandSelect || 'all')
+      setPriceLow(priceLow || '')
+      setPriceHigh(priceHigh || '')
+      setScore(score || 'all')
+      setKeyword(keyword || '')
+      setSales(sales || 'false')
+      // 載入資料
+      getDatas(router.query)
+    }
+
+    // eslint-disable-next-line
+  }, [router.query, router.isReady])
 
   const handleLoadData = () => {
     // 要送至伺服器的query string參數
@@ -120,11 +182,13 @@ export default function Test() {
     // 註: 重新載入資料需要跳至第一頁
     const params = {
       page: 1, // 跳至第一頁
-      // order: order,
-      // genre: genre,
-      // player: player,
-      // degree: degree,
-      // region: region,
+      order: order,
+      brandSelect: brandSelect,
+      priceLow: priceLow,
+      priceHigh: priceHigh,
+      score: score,
+      sales: sales,
+      keyword: keyword,
     }
 
     // console.log(params)
@@ -134,52 +198,57 @@ export default function Test() {
       query: params,
     })
   }
-  const handleOrder = (order) => {
-    setOrder(order)
-    const params = {
-      page: 1,
-      order: order,
-      // genre: genre,
-      // player: player,
-      // degree: degree,
-      // region: region,
-    }
 
-    router.push({
-      pathname: router.pathname,
-      query: params,
-    })
-  }
+  // useEffect(() => {
+  //   if (router.isReady) {
+  //     // 從router.query得到所有查詢字串參數
+  //     const { order, page, brandSelect, priceLow, priceHigh, score, sales } =
+  //       router.query
+  //     // 要送至伺服器的query string參數
 
-  // const hotSales = Data.sort
-  //-------------------連資料庫
+  //     // console.log(router.query)
 
-  const [instrument, setInstrument] = useState([])
-  console.log(instrument)
-  useEffect(async () => {
-    await getInstrument()
-  }, [])
-  function getInstrument() {
-    return new Promise((resolve, reject) => {
-      let url = 'http://localhost:3005/api/instrument'
-      fetch(url, {
-        method: 'GET',
-        credentials: 'include',
-      })
-        .then((response) => {
-          return response.json()
-        })
-        .then((result) => {
-          resolve(result)
-          console.log(result)
-          setInstrument(result)
-        })
-        .catch((error) => {
-          console.log(error)
-          reject()
-        })
-    })
-  }
+  //     // 設定回所有狀態(注意所有從查詢字串來都是字串類型)，都要給預設值
+  //     setPage(Number(page) || 1)
+  //     setOrder(order || 'ASC')
+  //     setBrandSelect(brandSelect || 'all')
+  //     setPriceLow(priceLow || 'all')
+  //     setPriceHigh(priceHigh || 'all')
+  //     setScore(score || 'all')
+  //     setSales(sales || 'all')
+  //   }
+
+  //   // eslint-disable-next-line
+  // }, [router.query, router.isReady])
+
+  //下面是精簡前的寫法
+  // console.log(instrument)
+  // useEffect(async () => {
+  //   await getInstrument()
+  // }, [])
+  // function getInstrument() {
+  //   return new Promise((resolve, reject) => {
+  //     let url = 'http://localhost:3005/api/instrument'
+  //     fetch(url, {
+  //       method: 'GET',
+  //       credentials: 'include',
+  //     })
+  //       .then((response) => {
+  //         return response.json()
+  //       })
+  //       .then((result) => {
+  //         resolve(result)
+  //         console.log(result)
+  //         setInstrument(result)
+  //       })
+  //       .catch((error) => {
+  //         console.log(error)
+  //         reject()
+  //       })
+  //   })
+  // }
+
+  // 設定sidebar下拉狀態
   const [openAccordion, setOpenAccordion] = useState(null)
 
   const handleAccordionToggle = (index) => {
@@ -458,13 +527,13 @@ export default function Test() {
                             <option selected value="all">
                               全部
                             </option>
-                            {brandData.map((v) => {
-                              return (
+                            {brandData &&
+                              Array.isArray(brandData) &&
+                              brandData.map((v) => (
                                 <option key={v.id} value={v.id}>
                                   {v.name}
                                 </option>
-                              )
-                            })}
+                              ))}
                           </select>
                         </div>
                         {/* 價格區間 */}
@@ -575,7 +644,41 @@ export default function Test() {
               <div className="hot-instrument">
                 <h4 className="text-primary">熱銷商品</h4>
                 <div className="hot-instrument-card">
-                  {instrument.slice(0, 4).map((v, i) => {
+                  {Array.isArray(instrument) &&
+                    instrument.slice(0, 4).map((v, i) => {
+                      const {
+                        id,
+                        name,
+                        price,
+                        discount,
+                        category_name,
+                        img_small,
+                        sales,
+                      } = v
+
+                      return (
+                        <div key={id} className="">
+                          {/* 寫discount的判斷式 */}
+                          <Card
+                            id={id}
+                            name={name}
+                            price={price}
+                            discount={discount}
+                            category_name={category_name}
+                            img_small={img_small}
+                            sales={sales}
+                          />
+                        </div>
+                      )
+                    })}
+                </div>
+              </div>
+              <hr />
+
+              <div className="instrument-card-group">
+                {/* 用json套資料 */}
+                {Array.isArray(instrument) &&
+                  instrument.map((v, i) => {
                     const {
                       id,
                       name,
@@ -585,7 +688,6 @@ export default function Test() {
                       img_small,
                       sales,
                     } = v
-
                     return (
                       <div key={id} className="">
                         {/* 寫discount的判斷式 */}
@@ -601,37 +703,6 @@ export default function Test() {
                       </div>
                     )
                   })}
-                </div>
-              </div>
-              <hr />
-
-              <div className="instrument-card-group">
-                {/* 用json套資料 */}
-                {instrument.map((v, i) => {
-                  const {
-                    id,
-                    name,
-                    price,
-                    discount,
-                    category_name,
-                    img_small,
-                    sales,
-                  } = v
-                  return (
-                    <div key={id} className="">
-                      {/* 寫discount的判斷式 */}
-                      <Card
-                        id={id}
-                        name={name}
-                        price={price}
-                        discount={discount}
-                        category_name={category_name}
-                        img_small={img_small}
-                        sales={sales}
-                      />
-                    </div>
-                  )
-                })}
               </div>
             </main>
             <div className="d-flex justify-content-center">
@@ -654,7 +725,7 @@ export default function Test() {
         .instrument-card-group {
           display: flex;
           margin-block: 30px;
-          gap: 10px;
+          gap: 35px;
           flex-wrap: wrap;
         }
 
