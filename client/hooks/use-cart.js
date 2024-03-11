@@ -155,8 +155,6 @@ export function CartProvider({ children }) {
     return total
   }
 
-  
-
   return (
     <CartContext.Provider
       value={{
