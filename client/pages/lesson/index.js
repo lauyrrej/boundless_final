@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 //試抓資料區
-import Card from '@/components/lesson/lesson-card-data'
+import Card from '@/components/lesson/lesson-card'
 import Cardrwd from '@/components/lesson/lesson-card-rwd-data'
 // import Lesson from '@/data/Lesson.json'
 
@@ -607,6 +607,7 @@ export default function Test({ onSearch }) {
                             img={img}
                             sales={sales}
                             length={length}
+                            user_id={user_id}
                           />
                         ) : (
                           <Card
