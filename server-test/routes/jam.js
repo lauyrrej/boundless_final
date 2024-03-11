@@ -154,7 +154,7 @@ router.get("/allJam", async (req, res) => {
     formerSql += `(${formerID})`;
     // console.log(formerSql);
     let [formerData] = await db.execute(formerSql).catch(() => {
-      return undefined;
+      return [];
     });
     // console.log(formerData);
 

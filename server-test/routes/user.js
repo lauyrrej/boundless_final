@@ -230,7 +230,7 @@ function checkToken(req, res, next) {
       .json({ status: "error", message: "無登入驗證資料，請重新登入。" });
   }
 }
-
+//uid
 function generateUid() {
   let characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

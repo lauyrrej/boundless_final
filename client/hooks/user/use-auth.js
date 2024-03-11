@@ -95,7 +95,7 @@ export function AuthProvider({ children }) {
       })
 
       const statusData = await response.json()
-      // console.log('Response from server:', statusData)
+      console.log('Response from server:', statusData)
 
       // console.log(userData)
 

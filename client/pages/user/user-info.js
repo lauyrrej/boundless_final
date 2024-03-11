@@ -52,6 +52,15 @@ export default function Test() {
 
   // ----------------------會員登入狀態  ----------------------
 
+  // ----------------------會員資料處理  ----------------------
+  // 處理生日
+  let birthday
+  if (LoginUserData.birthday) {
+    birthday = LoginUserData.birthday.split('T')[0]
+  }
+  // console.log(birthday)
+  // ----------------------會員資料處理  ----------------------
+
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -145,7 +154,12 @@ export default function Test() {
           {/* 用戶資訊 */}
           <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
             <div className="mb-photo-wrapper mb-2">
-              <Image src={avatarImage} alt="user photo mb" fill></Image>
+              <Image
+                src={avatarImage}
+                alt="user photo mb"
+                fill
+                sizes="(max-width: 150px)"
+              ></Image>
             </div>
             <div>{LoginUserData.nickname}</div>
           </div>
@@ -430,7 +444,7 @@ export default function Test() {
                         <div className="user-info-item-titleText">生日</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            {LoginUserData.birthday}
+                            {birthday}
                           </div>
                         </div>
                       </div>
@@ -454,7 +468,7 @@ export default function Test() {
                         <div className="user-info-item-titleText">地址</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            {LoginUserData.postcode}
+                            {LoginUserData.postcode}&nbsp;
                             {LoginUserData.country}
                             {LoginUserData.township}
                             {LoginUserData.address}
