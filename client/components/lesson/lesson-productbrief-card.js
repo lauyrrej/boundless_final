@@ -36,7 +36,7 @@ export default function ProductBriefCard({ name, homework, sales, price, length,
   return (
     <>
       <div className=" Right sticky-top ">
-        <div className="prodBriefing sticky-top ">
+        <div className="prodBriefing naughty-sticky " style={{ top: '80px' }}>
           <div className="prodMainName">{name}</div>
           <div className="Rating">
             <div className="star">
@@ -113,6 +113,13 @@ export default function ProductBriefCard({ name, homework, sales, price, length,
       </div>
       <style jsx>
         {`
+          .naughty-sticky {
+          
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+          }
+
           .icon-container {
             display: flex;
             padding: 1px 1px; /* 可选：添加一些内边距以使边框与图标之间有空间 */
@@ -123,10 +130,10 @@ export default function ProductBriefCard({ name, homework, sales, price, length,
           }
           .Right {
             margin-left: 45px;
+            top:80px;
           }
 
           .prodBriefing {
-            padding-top: 60px;
           }
           .prodMainName {
             color: var(--dark, #1d1d1d);
