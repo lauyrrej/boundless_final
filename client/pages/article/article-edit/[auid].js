@@ -14,6 +14,7 @@ import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 import Datetime from '@/components/article/datetime'
+import Editor from '@/components/article/editor'
 
 export default function Auid() {
   // ----------------------手機版本  ----------------------
@@ -60,6 +61,19 @@ export default function Auid() {
     }
   }, [router.isReady])
 
+  //---------------------------CKEditor------------------
+  const [editorLoaded, setEditorLoaded] = useState(false)
+  // 顯示編輯表
+  const [showEditor, setShowEditor] = useState(true)
+  const handleMainClick = () => {
+    setShowEditor(false)
+  }
+  const [data, setData] = useState('')
+  const initContent = { articleDetail.title }
+
+  useEffect(() => {
+    setEditorLoaded(true)
+  }, [])
   // ----------------------假資料  ----------------------
 
   const [filterVisible, setFilterVisible] = useState(false)
@@ -142,6 +156,14 @@ export default function Auid() {
           <div className="">
             {/* 主內容 */}
             <main className="content">
+              <Editor
+                name="description"
+                onChange={(data) => {
+                  setData(data)
+                }}
+                editorLoaded={editorLoaded}
+                value={initContent}
+              />
               <h1 className="text-center">{articleDetail.title}</h1>
               <p className="pt-2">{articleDetail.content}</p>
               <div className="main-img">

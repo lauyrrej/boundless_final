@@ -33,10 +33,16 @@ export default function Test() {
   //登出功能
 
   //檢查是否獲取資料
-  // console.log(LoginUserData)
-  //   讀取使用者資料後 定義大頭貼路徑   再觀察一下 大頭貼目前有bad 錯誤訊息
-  const avatarImage = `/user/${LoginUserData.img}`
-  const avatarDefault = `/user/avatar_userDefault.jpg`
+  console.log(LoginUserData)
+  //   讀取使用者資料後 定義大頭貼路徑
+  let avatarImage
+  if (LoginUserData.img) {
+    avatarImage = `/user/${LoginUserData.img}`
+  } else if (LoginUserData.photo_url) {
+    avatarImage = `${LoginUserData.photo_url}`
+  } else {
+    avatarImage = `/user/avatar_userDefault.jpg`
+  }
 
   // ----------------------會員登入狀態  ----------------------
   // ----------------------手機版本  ----------------------
@@ -132,7 +138,12 @@ export default function Test() {
           {/* 用戶資訊 */}
           <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
             <div className="mb-photo-wrapper mb-2">
-              <Image src={avatarImage} alt="user photo mb" fill></Image>
+              <Image
+                src={avatarImage}
+                alt="user photo mb"
+                fill
+                sizes="(max-width: 150px)"
+              ></Image>
             </div>
             <div>{LoginUserData.nickname}</div>
           </div>
@@ -174,11 +185,11 @@ export default function Test() {
               <div className="sidebar-user-info">
                 <div className="sidebar-user-info-imgBox">
                   <Image
-                    src={avatarImage || avatarDefault}
+                    src={avatarImage}
                     alt="user photo mb"
                     fill
                     priority="default" //不加的話Next 會問是否要加優先級
-                    sizes="(max-width: 150px) 150px, 50vw"
+                    sizes="(max-width: 150px)"
                   ></Image>
                 </div>
                 <div className="sidebar-user-info-text">
