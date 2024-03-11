@@ -78,7 +78,7 @@ export default function ProductBriefCard({ name, homework, sales, price, length,
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/81a1d10e78e821775737fe4938ae726e8de4a80804b01bdda9876d9f86f9b1bb?"
                 className="lengthIcon"
               />
-              <div className="lengthHomeworkWord">{length}分鐘</div>
+              <div className="lengthHomeworkWord">{length}小時</div>
             </div>
             <div className="lengthhomework">
               <img
