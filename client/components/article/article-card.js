@@ -51,9 +51,11 @@ export default function Articlecard({
         </Link>
         {/* views-like */}
         <div className="views-like">
-          <div className="saves d-flex">
+          <div className="saves d-flex align-items-center">
             <FaBookmark />
-            <p className="text-secondary ms-1">{comment_likes}</p>
+            <span className="text-secondary text-center ms-1">
+              {comment_likes}
+            </span>
           </div>
         </div>
         {/* kind-bookmark */}
