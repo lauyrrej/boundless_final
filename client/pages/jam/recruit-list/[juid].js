@@ -1,31 +1,35 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import { debounce } from 'lodash'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
+import MemberInfo from '@/components/jam/member-info'
 import Link from 'next/link'
 import Image from 'next/image'
+import Head from 'next/head'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
 import { ImExit } from 'react-icons/im'
 // scss
 import styles from '@/pages/jam/jam.module.scss'
-import Head from 'next/head'
 
 export default function Info() {
   const router = useRouter()
-
-  // ---------------------- 手機版本  ----------------------
-  // 主選單
-  const [showMenu, setShowMenu] = useState(false)
-  const menuMbToggle = () => {
-    setShowMenu(!showMenu)
-  }
+  const mySwal = withReactContent(Swal)
+  const [fakeUser, setFakeUser] = useState({
+    id: 28,
+    uid: 'N500ef48IbaT',
+    juid: '',
+  })
 
   const [genre, setGenre] = useState([])
   const [player, setPlayer] = useState([])
   const [jam, setJam] = useState({
     id: 0,
+    juid: '',
     title: '',
     degree: 0,
     created_time: '',
@@ -38,12 +42,12 @@ export default function Info() {
     member: [],
   })
 
-  // ----------------------------- 入團申請表單 -----------------------------
-  // ---------------------- 擔任職位 ----------------------
-  // 控制表單狀態
-  const [myPlayer, setMyPlayer] = useState('')
-  // 表單實際送出的內容
-  const [finalMyPlayer, setFinalMyPlayer] = useState('')
+  // ---------------------- 手機版本  ----------------------
+  // 主選單
+  const [showMenu, setShowMenu] = useState(false)
+  const menuMbToggle = () => {
+    setShowMenu(!showMenu)
+  }
 
   // ----------------------------- 讓player代碼對應樂器種類 -----------------------------
   const playerName = jam.player.map((p) => {
@@ -81,6 +85,13 @@ export default function Info() {
     .split(' ')[0]
     .replace(/\//g, '-')
   // ----------------------------- 計算倒數時間 -----------------------------
+  const [countDown, setCountDown] = useState({
+    day: 0,
+    hour: 0,
+    minute: 0,
+    second: 0,
+  })
+
   function calcTimeLeft() {
     let countDownObj = {}
     const now = Date.now()
@@ -101,12 +112,7 @@ export default function Info() {
     }
     return countDownObj
   }
-  const [countDown, setCountDown] = useState({
-    day: 0,
-    hour: 0,
-    minute: 0,
-    second: 0,
-  })
+
   // ----------------------------- 剩餘時間是否小於5天 -----------------------------
   const timeWarningState =
     (Date.now() - new Date(jam.created_time).getTime()) /
@@ -114,6 +120,72 @@ export default function Info() {
     25
       ? true
       : false
+
+  // ----------------------------- 入團申請表單 -----------------------------
+  const [complete, setComplete] = useState(2)
+  // ---------------------- 擔任職位 ----------------------
+  // 控制表單狀態
+  const [myPlayer, setMyPlayer] = useState('')
+  // 表單實際送出的內容
+  const [finalMyPlayer, setFinalMyPlayer] = useState('')
+  // ---------------------- 描述 ----------------------
+  const [message, setMessage] = useState('')
+  const [messageCheck, setMessageCheck] = useState(true)
+
+  // 檢查不雅字詞
+  const checkBadWords = debounce(() => {
+    const badWords = /幹|屎|尿|屁|糞|靠北|靠腰|雞掰|王八|你媽|妳媽|淫/g
+    setMessageCheck(message.search(badWords) < 0 ? true : false)
+  }, 250)
+
+  // 檢查表單是否填妥
+  const checkComplete = () => {
+    if (messageCheck === false || message === '') {
+      setComplete(0)
+      return false
+    }
+    if (finalMyPlayer === '') {
+      setComplete(0)
+      return false
+    }
+    setComplete(1)
+    return true
+  }
+  // 送出表單
+  const sendForm = async (finalMyPlayer, message) => {
+    if (!checkComplete()) {
+      return false
+    }
+    let formData = new FormData()
+    formData.append('applier', finalMyPlayer)
+    formData.append('message', message)
+    // 確認formData內容
+    // for (let [key, value] of formData.entries()) {
+    //   console.log(`${key}: ${value}`)
+    // }
+    const res = await fetch('http://localhost:3005/api/jam/apply', {
+      method: 'POST',
+      body: formData,
+      credentials: 'include',
+    })
+    const result = await res.json()
+    if (result.status === 'success') {
+      notifySuccess(result.juid)
+    } else {
+      console.log(result.error)
+    }
+  }
+  // 發起成功後，彈出訊息框
+  const notifySuccess = () => {
+    mySwal.fire({
+      position: 'center',
+      icon: 'success',
+      iconColor: '#1581cc',
+      title: '申請成功，請靜候審核結果',
+      showConfirmButton: false,
+      timer: 3000,
+    })
+  }
 
   // 向伺服器要求資料，設定到狀態中用的函式
   const getSingleData = async (juid) => {
@@ -131,6 +203,7 @@ export default function Info() {
     }
   }
 
+  // ----------------------------- useEffect -----------------------------
   // 初次渲染後，向伺服器要求資料，設定到狀態中
   useEffect(() => {
     if (router.isReady) {
@@ -139,9 +212,9 @@ export default function Info() {
     }
   }, [router.isReady])
 
+  // 期限倒數
   useEffect(() => {
     setCountDown(calcTimeLeft())
-
     // 每秒更新一次倒數計時
     const timer = setInterval(() => {
       setCountDown(calcTimeLeft())
@@ -150,6 +223,15 @@ export default function Info() {
     // 清除計時器
     return () => clearInterval(timer)
   }, [jam.created_time])
+
+  // 申請表單填寫
+  useEffect(() => {
+    // 跳出未填寫完畢警告後再次輸入，消除警告
+    setComplete(2)
+    // 檢查不雅字詞
+    checkBadWords.cancel() // 取消上一次的延遲
+    checkBadWords()
+  }, [myPlayer, message])
 
   return (
     <>
@@ -217,170 +299,258 @@ export default function Info() {
               <li style={{ marginLeft: '10px' }}>JAM資訊</li>
             </ul>
           </div>
-          <div className="col-12 col-sm-8" style={{ padding: 0 }}>
-            {/* 主內容 */}
+          {/*   ---------------------- 主要內容  ---------------------- */}
+          <div className={`${styles.jamMain} col-12 col-sm-8`}>
             <div className={`${styles.jamLeft}`}>
-              <div
-                className={`${styles.jamTitle} d-flex justify-content-between align-items-center`}
-              >
-                <div>JAM資訊</div>
-                <div className={`${styles.cardBadge} ${styles.degree}`}>
-                  {jam.degree == '1' ? '新手練功' : '老手同樂'}
-                </div>
-              </div>
-              {/* -------------------------- 主旨 -------------------------- */}
-              <div className={`${styles.formItem} row`}>
-                <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                  主旨
-                </div>
-                <div className={`${styles.infoText} col-12 col-sm-10`}>
-                  {jam.title}
-                </div>
-              </div>
-              {/* -------------------------- 發起日期 -------------------------- */}
-              <div className={`${styles.formItem} row`}>
-                <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                  發起日期
-                </div>
-                <div className={`${styles.infoText} col-12 col-sm-10`}>
-                  {createdDate}
-                </div>
-              </div>
-              {/* -------------------------- 音樂風格 -------------------------- */}
-              <div className={`${styles.formItem} row`}>
-                <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                  音樂風格
-                </div>
-                <div className={`${styles.itemInputWrapper} col-12 col-sm-10`}>
-                  <div
-                    className="d-flex flex-wrap"
-                    style={{ gap: '8px', flex: '1 0 0' }}
-                  >
-                    {genreName.map((v, i) => {
-                      return (
-                        <div
-                          key={i}
-                          className={`${styles.cardBadge} ${styles.genere}`}
-                        >
-                          {v}
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
-              </div>
-              {/* -------------------------- 徵求樂手 -------------------------- */}
-              <div className={`${styles.formItem} row`}>
-                <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                  徵求樂手
-                </div>
-                <div className={`${styles.itemInputWrapper} col-12 col-sm-10`}>
-                  <div
-                    className="d-flex flex-wrap"
-                    style={{ gap: '8px', flex: '1 0 0' }}
-                  >
-                    {playerResult.map((v, i) => {
-                      return (
-                        <div
-                          key={i}
-                          className={`${styles.cardBadge} ${styles.player}`}
-                        >
-                          {v}
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
-              </div>
-              {/* -------------------------- 預計人數 -------------------------- */}
-              <div className={`${styles.formItem} row`}>
-                <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                  預計人數
-                </div>
-                <div className={`${styles.infoText} col-12 col-sm-10`}>
-                  <span style={{ color: '#1581cc' }}>{nowNumber}</span> /{' '}
-                  {totalNumber} 人
-                </div>
-              </div>
-              {/* -------------------------- 地區 -------------------------- */}
-              <div className={`${styles.formItem} row`}>
-                <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                  地區
-                </div>
-                <div className={`${styles.infoText} col-12 col-sm-10`}>
-                  {jam.region}
-                </div>
-              </div>
-              {/* -------------------------- 其他條件 -------------------------- */}
-              <div className={`${styles.formItem} row`}>
-                <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                  其他條件
-                </div>
-                <div className={`${styles.infoText} col-12 col-sm-10`}>
-                  {jam.band_condition == '' ? '無' : jam.band_condition}
-                </div>
-              </div>
-              {/* -------------------------- 描述 -------------------------- */}
-              <div className={`${styles.formItem} row`}>
-                <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                  描述
-                </div>
+              {/*   ---------------------- 樂團資訊  ---------------------- */}
+              <section className={`${styles.jamLeftSection}`}>
                 <div
-                  className={`${styles.infoText} col-12 col-sm-10`}
-                  style={{ textAlign: 'justify' }}
+                  className={`${styles.jamTitle} d-flex justify-content-between align-items-center`}
                 >
-                  {jam.description}
+                  <div>JAM資訊</div>
+                  <div className={`${styles.cardBadge} ${styles.degree}`}>
+                    {jam.degree == '1' ? '新手練功' : '老手同樂'}
+                  </div>
                 </div>
-              </div>
+                {/* -------------------------- 主旨 -------------------------- */}
+                <div className={`${styles.formItem} row`}>
+                  <div className={`${styles.itemTitle} col-12 col-sm-2`}>
+                    主旨
+                  </div>
+                  <div className={`${styles.infoText} col-12 col-sm-10`}>
+                    {jam.title}
+                  </div>
+                </div>
+                {/* -------------------------- 發起日期 -------------------------- */}
+                <div className={`${styles.formItem} row`}>
+                  <div className={`${styles.itemTitle} col-12 col-sm-2`}>
+                    發起日期
+                  </div>
+                  <div className={`${styles.infoText} col-12 col-sm-10`}>
+                    {createdDate}
+                  </div>
+                </div>
+                {/* -------------------------- 音樂風格 -------------------------- */}
+                <div className={`${styles.formItem} row`}>
+                  <div className={`${styles.itemTitle} col-12 col-sm-2`}>
+                    音樂風格
+                  </div>
+                  <div
+                    className={`${styles.itemInputWrapper} col-12 col-sm-10`}
+                  >
+                    <div
+                      className="d-flex flex-wrap"
+                      style={{ gap: '8px', flex: '1 0 0' }}
+                    >
+                      {genreName.map((v, i) => {
+                        return (
+                          <div
+                            key={i}
+                            className={`${styles.cardBadge} ${styles.genere}`}
+                          >
+                            {v}
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                </div>
+                {/* -------------------------- 徵求樂手 -------------------------- */}
+                <div className={`${styles.formItem} row`}>
+                  <div className={`${styles.itemTitle} col-12 col-sm-2`}>
+                    徵求樂手
+                  </div>
+                  <div
+                    className={`${styles.itemInputWrapper} col-12 col-sm-10`}
+                  >
+                    <div
+                      className="d-flex flex-wrap"
+                      style={{ gap: '8px', flex: '1 0 0' }}
+                    >
+                      {playerResult.map((v, i) => {
+                        return (
+                          <div
+                            key={i}
+                            className={`${styles.cardBadge} ${styles.player}`}
+                          >
+                            {v}
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                </div>
+                {/* -------------------------- 預計人數 -------------------------- */}
+                <div className={`${styles.formItem} row`}>
+                  <div className={`${styles.itemTitle} col-12 col-sm-2`}>
+                    預計人數
+                  </div>
+                  <div className={`${styles.infoText} col-12 col-sm-10`}>
+                    <span style={{ color: '#1581cc' }}>{nowNumber}</span> /{' '}
+                    {totalNumber} 人
+                  </div>
+                </div>
+                {/* -------------------------- 地區 -------------------------- */}
+                <div className={`${styles.formItem} row`}>
+                  <div className={`${styles.itemTitle} col-12 col-sm-2`}>
+                    地區
+                  </div>
+                  <div className={`${styles.infoText} col-12 col-sm-10`}>
+                    {jam.region}
+                  </div>
+                </div>
+                {/* -------------------------- 其他條件 -------------------------- */}
+                <div className={`${styles.formItem} row`}>
+                  <div className={`${styles.itemTitle} col-12 col-sm-2`}>
+                    其他條件
+                  </div>
+                  <div className={`${styles.infoText} col-12 col-sm-10`}>
+                    {jam.band_condition == '' ? '無' : jam.band_condition}
+                  </div>
+                </div>
+                {/* -------------------------- 描述 -------------------------- */}
+                <div className={`${styles.formItem} row`}>
+                  <div className={`${styles.itemTitle} col-12 col-sm-2`}>
+                    描述
+                  </div>
+                  <div
+                    className={`${styles.infoText} col-12 col-sm-10`}
+                    style={{ textAlign: 'justify' }}
+                  >
+                    {jam.description}
+                  </div>
+                </div>
+              </section>
               <hr style={{ margin: '6px' }} />
-              <div className={`${styles.jamTitle}`}>
-                入團申請
-                <div
-                  className={`${styles.noticeText}`}
-                  style={{ color: '#5a5a5a' }}
-                >
-                  ※ 可同時申請多個 JAM，但加入的 JAM
-                  以一個為限，請考慮清楚再提出申請。
+              {/* -------------------------- 入團申請 -------------------------- */}
+              {fakeUser.juid ? (
+                <div>
+                  {fakeUser.id === jam.former.id ? (
+                    <div>有所屬樂團</div>
+                  ) : (
+                    <div className="d-flex justify-content-center">
+                      <div
+                        className="b-btn b-btn-danger"
+                        style={{ paddingInline: '38px' }}
+                        role="presentation"
+                        onClick={() => {
+                          sendForm(finalMyPlayer, message)
+                        }}
+                      >
+                        退出
+                      </div>
+                    </div>
+                  )}
                 </div>
-              </div>
-              {/* -------------------------- 擔任職位 -------------------------- */}
-              <div className={`${styles.formItem} row`}>
-                <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                  擔任職位
-                </div>
-                <div className={`${styles.itemInputWrapper} col-12 col-sm-10`}>
-                  <select
-                    className="form-select"
-                    style={{ width: 'auto' }}
-                    value={myPlayer}
-                    name="myPlayer"
-                    onChange={(e) => {
-                      setMyPlayer(e.target.value)
-                      setFinalMyPlayer(
-                        '{"id": 1, "play": ' + e.target.value + '}'
-                      )
-                    }}
-                  >
-                    <option value="">請選擇</option>
-                    {player.map((v) => {
-                      return (
-                        <option key={v.id} value={v.id}>
-                          {v.name}
-                        </option>
-                      )
-                    })}
-                  </select>
-                </div>
-              </div>
+              ) : (
+                <>
+                  {/* 無所屬樂團，顯示申請表單 */}
+                  <section className={`${styles.jamLeftSection}`}>
+                    <div className={`${styles.jamTitle}`}>
+                      入團申請
+                      <div
+                        className={`${styles.noticeText}`}
+                        style={{ color: '#666666' }}
+                      >
+                        ※ 可同時申請多個 JAM，但最終只能擇一加入。
+                      </div>
+                    </div>
+                    {/* -------------------------- 擔任職位 -------------------------- */}
+                    <div className={`${styles.formItem} row`}>
+                      <div className={`${styles.itemTitle} col-12 col-sm-2`}>
+                        擔任職位
+                      </div>
+                      <div
+                        className={`${styles.itemInputWrapper} col-12 col-sm-10`}
+                      >
+                        <select
+                          className="form-select"
+                          style={{ width: 'auto' }}
+                          value={myPlayer}
+                          name="myPlayer"
+                          onChange={(e) => {
+                            setMyPlayer(e.target.value)
+                            setFinalMyPlayer(
+                              '{"id": 1, "play": ' + e.target.value + '}'
+                            )
+                          }}
+                        >
+                          <option value="">請選擇</option>
+                          {player.map((v) => {
+                            return (
+                              <option key={v.id} value={v.id}>
+                                {v.name}
+                              </option>
+                            )
+                          })}
+                        </select>
+                      </div>
+                    </div>
+                    {/* -------------------------- 想說的話 -------------------------- */}
+                    <div className={`${styles.formItem} row`}>
+                      <div className={`${styles.itemTitle} col-12 col-sm-2`}>
+                        想說的話
+                      </div>
+                      <div
+                        className={`${styles.itemInputWrapper} col-12 col-sm-10`}
+                      >
+                        <textarea
+                          className={`${styles.textArea} form-control`}
+                          placeholder="建議可以提到自己喜歡的音樂、入團動機等，上限150字"
+                          name="message"
+                          maxLength={150}
+                          onChange={(e) => {
+                            setMessage(e.target.value)
+                          }}
+                        />
+                        {messageCheck ? (
+                          ''
+                        ) : (
+                          <div
+                            className={`${styles.warningText} mt-1 d-none d-sm-block`}
+                          >
+                            偵測到不雅字詞
+                          </div>
+                        )}
+                      </div>
+                      {messageCheck ? (
+                        ''
+                      ) : (
+                        <div
+                          className={`${styles.warningText} d-block d-sm-none p-0`}
+                        >
+                          偵測到不雅字詞
+                        </div>
+                      )}
+                    </div>
 
-              <div className="d-flex justify-content-center">
-                <div
-                  className="b-btn b-btn-primary"
-                  style={{ paddingInline: '38px' }}
-                >
-                  提交
-                </div>
-              </div>
+                    <div className="d-flex justify-content-center">
+                      <div
+                        className="b-btn b-btn-primary"
+                        style={{ paddingInline: '38px' }}
+                        role="presentation"
+                        onClick={() => {
+                          sendForm(finalMyPlayer, message)
+                        }}
+                      >
+                        提交
+                      </div>
+                    </div>
+                    {complete === 0 ? (
+                      <div
+                        className="d-flex justify-content-center"
+                        style={{ marginTop: '-8px' }}
+                      >
+                        <div className={`${styles.warningText}`}>
+                          請遵照規則，並填寫所有必填內容
+                        </div>
+                      </div>
+                    ) : (
+                      ''
+                    )}
+                  </section>
+                </>
+              )}
             </div>
           </div>
 
@@ -398,9 +568,40 @@ export default function Info() {
               </div>
               <div
                 className={`${styles.jamTitle}`}
-                style={{ marginTop: '12px' }}
+                style={{ marginBlock: '10px' }}
               >
                 成員名單
+              </div>
+              <div className="d-flex align-items-center mb-2">
+                <div className={`${styles.itemTitle} me-3`}>發起人</div>
+                <MemberInfo
+                  uid={jam.former.uid}
+                  name={jam.former.name}
+                  nickname={jam.former.nickname}
+                  img={jam.former.img}
+                  play={jam.former.play}
+                />
+              </div>
+              <div className="d-flex">
+                <div className={`${styles.itemTitle} me-3`}>參加者</div>
+                <div className="d-flex flex-column gap-2">
+                  {jam.member[0] ? (
+                    jam.member.map((v) => {
+                      return (
+                        <MemberInfo
+                          key={v.uid}
+                          uid={v.uid}
+                          name={v.name}
+                          nickname={v.nickname}
+                          img={v.img}
+                          play={v.play}
+                        />
+                      )
+                    })
+                  ) : (
+                    <span className="fw-medium">尚無人參加</span>
+                  )}
+                </div>
               </div>
             </div>
           </div>
