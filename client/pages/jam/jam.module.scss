@@ -56,28 +56,28 @@
   font-weight: bold;
 }
 .itemInputWrapper {
-    padding: 0;
+  padding: 0;
 }
 .itemInput {
-    width: 50%;
-    @media screen and (max-width: 576px) {
-        width: 100%;
-    }
+  width: 50%;
+  @media screen and (max-width: 576px) {
+    width: 100%;
+  }
 }
 .selectGroup {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    @media screen and (max-width: 576px) {
-        width: 100%;
-        gap: 4px;
-    }
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  @media screen and (max-width: 576px) {
+    width: 100%;
+    gap: 4px;
+  }
 }
 .plusBtnWrapper {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-left: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 8px;
 }
 .plusBtn {
   color: #18a1ff;
@@ -87,11 +87,11 @@
   }
 }
 .textArea {
-    resize: none;
-    height: 120px;
-    @media screen and (max-width: 576px) {
-        height: 210px;
-    }
+  resize: none;
+  height: 120px;
+  @media screen and (max-width: 576px) {
+    height: 210px;
+  }
 }
 .warningText {
   color: #ec3f3f;
@@ -114,19 +114,19 @@
   }
 }
 .rules {
-    padding-left: 20px;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    text-align: justify;
-    color: var(--dark);
-    & li {
-      margin-bottom: 5px;
-    }
+  padding-left: 20px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  text-align: justify;
+  color: var(--dark);
+  & li {
+    margin-bottom: 5px;
+  }
 }
 .point {
-    color: var(--primary);
-    font-weight: 500;
+  color: var(--primary);
+  font-weight: 500;
 }
 
 // ----------------------------- 資訊頁面
@@ -174,9 +174,23 @@
 .userPhoto {
   object-fit: cover;
 }
+.userPhotoDefault {
+  width: 32px;
+  height: 32px;
+  background-color: #1581cc;
+  overflow: hidden;
+  position: relative;
+}
+.userDefaultIcon {
+  color: #fff;
+  position: absolute;
+  bottom: 0;
+  left: calc(50% - 12px);
+}
 .memberName {
   font-size: 16px;
   font-weight: 500;
-  text-wrap: wrap;
+  text-overflow: ellipsis;
   text-decoration: underline;
+  flex: 1 0 0;
 }

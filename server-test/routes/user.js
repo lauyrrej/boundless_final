@@ -13,7 +13,7 @@ const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 const router = express.Router();
 const upload = multer();
 //得到所有會員資料
-let [userData] = await db.execute("SELECT * FROM `user` WHERE `valid` = 1");
+// let [userData] = await db.execute("SELECT * FROM `user` WHERE `valid` = 1");
 // console.log(userData)
 
 //GET 測試 - 得到所有會員資料
@@ -34,7 +34,8 @@ router.get("/", async (req, res, next) => {
 });
 
 //登入 目前設定 email 就是帳號 不可更改
-router.post("/login", upload.none(), (req, res) => {
+router.post("/login", upload.none(), async(req, res) => {
+  let [userData] = await db.execute("SELECT * FROM `user` WHERE `valid` = 1");
   const { email, password } = req.body;
   const user = userData.find(
     (u) => u.email === email && u.password === password
@@ -65,8 +66,9 @@ router.post("/login", upload.none(), (req, res) => {
   }
 });
 
-router.post("/logout", checkToken, (req, res) => {
+router.post("/logout", checkToken, async(req, res) => {
   // console.log(req.decoded)
+  let [userData] = await db.execute("SELECT * FROM `user` WHERE `valid` = 1");
   const user = userData.find((u) => u.email === req.decoded.email);
   if (user) {
     const token = jwt.sign(
@@ -92,7 +94,8 @@ router.post("/logout", checkToken, (req, res) => {
   }
 });
 
-router.post("/status", checkToken, (req, res) => {
+router.post("/status", checkToken, async(req, res) => {
+  let [userData] = await db.execute("SELECT * FROM `user` WHERE `valid` = 1");
   const user = userData.find((u) => u.email === req.decoded.email);
   if (user) {
     const token = jwt.sign(
@@ -146,7 +149,8 @@ router.get("/:id", checkToken, async function (req, res) {
 });
 
 // 註冊 = 檢查資料庫是否有此email及密碼 ,如果沒有 就增加sql
-router.post("/", async (req, res) => {
+router.post('/', async (req, res) => {
+  const uuid = generateUid()
   // req.body資料範例
   // {
   //     "name":"金妮",
@@ -184,10 +188,7 @@ router.post("/", async (req, res) => {
     return res.json({ status: "error 2", message: "該帳號已存在" });
   } else {
     // 用戶不存在，插入新用戶
-    const [result] = await db.execute(
-      "INSERT INTO user (email, password, created_time) VALUES (?, ?, ?);",
-      [newUser.email, newUser.password, YYYYMMDDTime]
-    );
+    const [result] = await db.execute('INSERT INTO user (email, password, created_time) VALUES (?, ?, ?);', [newUser.email, newUser.password, YYYYMMDDTime]);
     // console.log('User inserted:', result);
   }
 
@@ -222,6 +223,28 @@ function checkToken(req, res, next) {
       .status(401)
       .json({ status: "error", message: "無登入驗證資料，請重新登入。" });
   }
+}
+
+function generateUid() {
+  let characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let codeLength = 12;
+  let createdCodes = [];
+  let createCodes = "";
+
+  let Code = "";
+  do {
+    Code = "";
+    for (let i = 0; i < codeLength; i++) {
+      let randomIndex = Math.floor(Math.random() * characters.length);
+      //   回傳characters當中的隨機一值
+      Code += characters.charAt(randomIndex);
+    }
+  } while (createdCodes.includes(Code));
+
+  createdCodes.push(Code);
+  createCodes += Code;
+  return createCodes;
 }
 
 export default router;
