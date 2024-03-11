@@ -3,11 +3,18 @@
   --light-primary: #18a1ff;
   --deep-primary: #124365;
   --dark: #1d1d1d;
-  --secondary: #5a5a5a;
+  --secondary: #666666;
   --body: #b9b9b9;
   --yellow: #faad14;
   --red: #ec3f3f;
   --back: rgba(185, 185, 185, 0.3);
+}
+.jamMain {
+  padding: 0;
+  margin-bottom: 60px;
+  @media screen and (max-width: 576px) {
+    margin-bottom: 0;
+  }
 }
 .jamTitle {
   color: var(--deep-primary);
@@ -27,6 +34,14 @@
     gap: 12px;
   }
 }
+.jamLeftSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  @media screen and (max-width: 576px) {
+    gap: 12px;
+  }
+}
 
 .formItem {
   padding-inline: 14px;
@@ -37,7 +52,7 @@
 .itemTitle {
   padding: 0;
   color: var(--deep-primary);
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
 }
 .itemInputWrapper {
@@ -120,14 +135,14 @@
   padding-inline: 10px;
   padding-block: 4px;
   border-radius: 5px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   user-select: none;
   display: flex;
   align-items: center;
 }
 .degree {
-  background-color: #5a5a5a;
+  background-color: #666666;
 }
 .player {
   background-color: #18a1ff;
@@ -139,7 +154,7 @@
 .infoText {
   padding: 0;
   color: var(--dark);
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 400;
 }
 
@@ -149,4 +164,19 @@
   color: var(--dark);
   font-size: 16px;
   font-weight: 400;
+}
+
+.userPhotoWrapper {
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+}
+.userPhoto {
+  object-fit: cover;
+}
+.memberName {
+  font-size: 16px;
+  font-weight: 500;
+  text-wrap: wrap;
+  text-decoration: underline;
 }
