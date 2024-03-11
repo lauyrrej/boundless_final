@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
 import jamHero from '@/assets/jam-hero.png'
+// user頭貼照????
 import avatar from '@/public/user/Meiyuyu.jpg'
 
 // icons
@@ -14,13 +15,14 @@ import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
-
 // coupon
 import styles from '@/pages/coupon/userCoupon.module.scss'
 import Coupon from '@/components/coupon/coupon.js'
-import Data from '@/data/coupon.json'
+
+import CouponClass from '@/API/Coupon'
 
 export default function Test() {
+  const [data, setData] = useState([])
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -44,8 +46,7 @@ export default function Test() {
     '我的課程',
     '我的訊息',
   ]
-  // 資料排序
-  const [dataSort, setDataSort] = useState('latest')
+
   // ----------------------條件篩選  ----------------------
   const [filterVisible, setFilterVisible] = useState(false)
   useEffect(() => {
@@ -62,53 +63,38 @@ export default function Test() {
     stopPropagation(e)
     setFilterVisible(!filterVisible)
   }
-  // filter假資料
-  const brandData = [
-    { id: 1, name: 'YAMAHA' },
-    { id: 2, name: 'Roland' },
-    { id: 3, name: 'Fender' },
-    { id: 4, name: 'Gibson' },
-  ]
-  const [brandSelect, setBrandSelect] = useState('all')
-
-  const [priceLow, setPriceLow] = useState('')
-  const [priceHigh, setPriceHigh] = useState('')
-
-  // 課程評價
-  const scoreState = ['all', '5', '4', '3']
-  const [score, setScore] = useState('all')
 
   // 活動促銷
   const [sales, setSales] = useState(false)
 
   // 清除表單內容
-  const cleanFilter = () => {
-    setBrandSelect('all')
-    setPriceLow('')
-    setPriceHigh('')
-    setScore('all')
-    setSales(false)
-  }
-
-  // 顯示分頁
-  // const [selectedCategory, setSelectedCategory] = useState([])
-  // console.log(selectedCategory)
-  // const filterCoupons = (category) => {
-  //   if (category === 'All') {
-  //     setCoupons(couponsData)
-  //   } else {
-  //     const filteredCoupons = couponsData.filter(
-  //       (coupon) => coupon.kind === category
-  //     )
-  //     setCoupons(filteredCoupons)
-  //   }
-  //   setSelectedKind(category) // 更新选中的分类
+  // const cleanFilter = () => {
+  //   setBrandSelect('all')
+  //   setPriceLow('')
+  //   setPriceHigh('')
+  //   setScore('all')
+  //   setSales(false)
   // }
+
+  // sql分類 0: 全部 ， 1: 樂器，2: 課程，3: 已使用
+  const [kind, setKind] = useState(0)
+  const [valid, setValid] = useState(0)
+  // 資料排序: 條件篩選 / 折扣幅度 / 即將到期
+  // const [discount, setDiscount] = useState('ASC')
+  const [limit_time, setLimit_time] = useState('ASC')
+
+  // 來自資料庫
+  useEffect(() => {
+    // component did mounted 呼叫api，這樣就只會做一遍
+    CouponClass.FindAll().then(async (res) => {
+      setData(res)
+    })
+  }, [])
 
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
-      {/* 先把HEROSECTION隱藏 */}
+      {/* 先把HeroSection隱藏 */}
       {/* <div
         className="page-shero d-none d-sm-block"
         style={{ paddingTop: '60px' }}
@@ -265,51 +251,35 @@ export default function Test() {
                       <IoIosSearch size={25} />
                     </div>
                   </div> */}
-                  {/* 分頁 */}
+
+                  {/* 分類 */}
                   <div className="d-none d-sm-block pt-4">
                     <nav aria-label="breadcrumb sort d-flex justify-content-between align-items-center">
                       <ol className="breadcrumb">
-                        <div
-                          role="presentation"
-                          // btn不會跑紅色警告的role
-                          className="btn breadcrumb-item"
-                          aria-current="page"
-                          onClick={() => filterCoupons('All')}
-                        >
-                          全部
-                        </div>
-                        <div
-                          role="presentation"
-                          // btn不會跑紅色警告的role
-                          className="btn breadcrumb-item"
-                          aria-current="page"
-                          onClick={() => filterCoupons('All')}
-                        >
-                          樂器
-                        </div>
-
-                        <div
-                          role="presentation"
-                          // btn不會跑紅色警告的role
-                          className="btn breadcrumb-item"
-                          aria-current="page"
-                          onClick={() => filterCoupons('All')}
-                        >
-                          課程
-                        </div>
-                        {/* <li className="h6 breadcrumb-item" aria-current="page">
-                          <a href="#">已使用</a>
-                        </li> */}
-
-                        {/* <ul>
-                          {coupons.map((coupon) => (
-                            <li key={coupon.id}>
-                              <div>Name: {coupon.name}</div>
-                              <div>Discount: {coupon.discount}</div>
-                              <div>Kind: {coupon.kind}</div>
-                            </li>
-                          ))}
-                        </ul> */}
+                        <li className="h6 breadcrumb-item">
+                          <a href="#" onClick={() => setKind(0)}>
+                            全部
+                          </a>
+                        </li>
+                        <li className="h6 breadcrumb-item" aria-current="page">
+                          <a href="#" onClick={() => setKind(2)}>
+                            樂器
+                          </a>
+                        </li>
+                        <li className="h6 breadcrumb-item" aria-current="page">
+                          <a href="#" onClick={() => setKind(1)}>
+                            課程
+                          </a>
+                        </li>
+                        <li className="h6 breadcrumb-item" aria-current="page">
+                          <a
+                            href="#"
+                            // 已過期valid=0????
+                            onClick={() => setValid(0)}
+                          >
+                            已使用
+                          </a>
+                        </li>
                       </ol>
                     </nav>
                   </div>
@@ -317,26 +287,28 @@ export default function Test() {
                 {/* 分頁RWD */}
                 <div className="filter-sort d-flex justify-content-between">
                   <div className="sort-mb d-block d-sm-none">
-                    <select
-                      className="form-select"
-                      value={dataSort}
-                      name="dataSort"
-                      onChange={(e) => {
-                        setDataSort(e.target.value)
-                      }}
-                    >
+                    <select>
                       <option selected value="latest">
+                        {/* RWD???? */}
                         全部
                       </option>
-                      <option value="oldest">樂器</option>
+                      <option value="oldest">
+                        {/* RWD???? */}
+                        樂器
+                      </option>
                       <option value="oldest">課程</option>
-                      {/* <option value="oldest">已使用</option> */}
+                      <option value="oldest">
+                        {' '}
+                        {/* 即將到期時間???? */}
+                        {/* RWD???? */}
+                        已使用
+                      </option>
                     </select>
                   </div>
                   {/*篩選*/}
                   <form className="d-flex align-items-center position-relative">
                     <div
-                      className="filter-text d-flex align-items-center me-sm-4"
+                      className="filter-text d-flex align-items-center me-sm-4 d-block d-sm-none"
                       role="presentation"
                       onClick={onshow}
                     >
@@ -349,13 +321,14 @@ export default function Test() {
                         onClick={stopPropagation}
                         role="presentation"
                       >
-                        {/*條件篩選 無法d-none d-sm-block */}
-                        <div className="filter-item">
-                          <div className="filter-title">折扣幅度</div>
-                          <div className=" filter-title">選擇品牌</div>
+                        {/*條件篩選*/}
+                        <div className="filter-item  ">
+                          <div>折扣幅度</div>
+                          <div>即將到期</div>
+                          {/* <div className=" filter-title">選擇品牌</div> */}
                         </div>
                         {/* 品牌 */}
-                        <div className="filter-item">
+                        {/* <div className="filter-item">
                           <div className="filter-title">選擇品牌</div>
                           <select
                             className="form-select"
@@ -377,9 +350,9 @@ export default function Test() {
                               )
                             })}
                           </select>
-                        </div>
+                        </div> */}
                         {/* 區間~促銷Delete */}
-                        <div
+                        {/* <div
                           className="d-flex justify-content-between gap-2 mt-2"
                           style={{ paddingInline: '10px' }}
                         >
@@ -393,7 +366,7 @@ export default function Test() {
                           <div className="filter-btn confirm-btn w-100 d-flex justify-content-center">
                             確認
                           </div>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   </form>
@@ -404,27 +377,11 @@ export default function Test() {
                       <FaSortAmountDown size={14} />
                     </div>
                     <div
-                      className={`sort-item ${
-                        dataSort === 'latest' ? 'active' : ''
-                      }`}
-                      role="presentation"
-                      onClick={(e) => {
-                        setDataSort('latest')
-                      }}
+                    // discount????
                     >
                       折扣幅度
                     </div>
-                    <div
-                      className={`sort-item ${
-                        dataSort === 'oldest' ? 'active' : ''
-                      }`}
-                      role="presentation"
-                      onClick={(e) => {
-                        setDataSort('oldest')
-                      }}
-                    >
-                      即將到期
-                    </div>
+                    <div>即將到期</div>
                   </div>
                 </div>
               </div>
@@ -445,19 +402,30 @@ export default function Test() {
                       </div>
                       {/* components */}
                       <div className="couponImage">
-                        {Data.map((v, i) => {
-                          const { id, name, discount, kind, limit_time } = v
-                          return (
-                            <Coupon
-                              key={id}
-                              name={name}
-                              discount={discount}
-                              kind={kind}
-                              limit_time={limit_time}
-                              className={`${styles.couponItem} `}
-                            />
-                          )
-                        })}
+                        {/* 如果 kind 不等於 0，則只保留具有與 kind 變數相等的 kind 屬性的元素；如果 kind 等於 0，則保留所有元素。最終返回符合條件的元素組成的新陣列。 */}
+                        {data
+                          .filter((i) => (kind !== 0 ? i.kind === kind : true))
+                          .map((v, i) => {
+                            const {
+                              id,
+                              name,
+                              type,
+                              discount,
+                              kind,
+                              limit_time,
+                            } = v
+                            return (
+                              <Coupon
+                                key={id}
+                                name={name}
+                                type={type}
+                                discount={discount}
+                                kind={kind}
+                                limit_time={limit_time}
+                                className={`${styles.couponItem} `}
+                              />
+                            )
+                          })}
                       </div>
 
                       {/*pagination*/}
@@ -511,7 +479,6 @@ export default function Test() {
         </div>
       </div>
       <Footer />
-
       <style jsx>{`
         /* -------------------user sidebar-------------------- */
         .sidebar-user-info {

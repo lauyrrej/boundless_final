@@ -18,7 +18,7 @@ export default function Coupon({ id, name, type, kind, discount, limit_time }) {
             <div className="mx-2 card-body d-flex justify-content-between">
               <div>
                 <div
-                  className="h4 p-1
+                  className="h5 p-1
                   card-title fw-bold"
                 >
                   {name}
@@ -30,7 +30,7 @@ export default function Coupon({ id, name, type, kind, discount, limit_time }) {
                 </div>
               </div>
               <div className="card-text d-flex justify-content-center align-items-center">
-                <div className="fs-2 fw-bold salesType">
+                <div className="fs-3 fw-bold salesType">
                   {type === 1 ? discount : IsINT(discount * 10) + '折'}
                   {/* 95折 */}
                 </div>
