@@ -4,7 +4,10 @@ import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
 import jamHero from '@/assets/jam-hero.png'
-import avatar from '@/public/user/Meiyuyu.jpg'
+import Head from 'next/head'
+
+// 會員認證hook
+import { useAuth } from '@/hooks/user/use-auth'
 
 // icons
 import { IoHome } from 'react-icons/io5'
@@ -16,6 +19,26 @@ import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 
 export default function Test() {
+  // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
+  //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
+  const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
+    useAuth()
+  const [userData, setUserData] = useState()
+  //檢查token
+  useEffect(() => {
+    handleLoginStatus()
+    //獲得資料
+    getLoginUserData()
+  }, [])
+  //登出功能
+
+  //檢查是否獲取資料
+  // console.log(LoginUserData)
+  //   讀取使用者資料後 定義大頭貼路徑   再觀察一下 大頭貼目前有bad 錯誤訊息
+  const avatarImage = `/user/${LoginUserData.img}`
+  const avatarDefault = `/user/avatar_userDefault.jpg`
+
+  // ----------------------會員登入狀態  ----------------------
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -29,16 +52,16 @@ export default function Test() {
   }
   // ----------------------假資料  ----------------------
   // sidebar假資料
-  const sidebarData = [
-    '會員資訊',
-    '我的樂團',
-    '我的訂單',
-    '我的文章',
-    '我的收藏',
-    '我的優惠券 ',
-    '我的課程',
-    '我的訊息',
-  ]
+  // const sidebarData = [
+  //   '會員資訊',
+  //   '我的樂團',
+  //   '我的訂單',
+  //   '我的文章',
+  //   '我的收藏',
+  //   '我的優惠券 ',
+  //   '我的課程',
+  //   '我的訊息',
+  // ]
 
   // 資料排序
   const [dataSort, setDataSort] = useState('latest')
@@ -88,6 +111,9 @@ export default function Test() {
 
   return (
     <>
+      <Head>
+        <title>我的通知</title>
+      </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       {/* 先把HEROSECTION隱藏 */}
       {/* <div
@@ -106,17 +132,13 @@ export default function Test() {
           {/* 用戶資訊 */}
           <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
             <div className="mb-photo-wrapper mb-2">
-              <Image
-                src="/jam/amazingshow.jpg"
-                alt="user photo mb"
-                fill
-              ></Image>
+              <Image src={avatarImage} alt="user photo mb" fill></Image>
             </div>
-            <div>用戶名稱</div>
+            <div>{LoginUserData.nickname}</div>
           </div>
           <Link
             className="mm-item"
-            href="/user"
+            href="/user/user-info"
             style={{ borderTop: '1px solid #b9b9b9' }}
           >
             會員中心
@@ -133,7 +155,14 @@ export default function Test() {
           <Link className="mm-item" href="/article/article-list">
             樂友論壇
           </Link>
-          <div className="mm-item" style={{ color: '#1581cc' }}>
+          {/*eslint-disable-next-line jsx-a11y/click-events-have-key-events*/}
+          <div
+            onClick={handleLogout}
+            //onclick 要加這個 不然ES會跳沒有給身障人士使用
+            role="presentation"
+            className="mm-item"
+            style={{ color: '#1581cc' }}
+          >
             登出
             <ImExit size={20} className="ms-2" />
           </div>
@@ -144,11 +173,19 @@ export default function Test() {
             <div className="sidebar">
               <div className="sidebar-user-info">
                 <div className="sidebar-user-info-imgBox">
-                  <Image src={avatar} alt="user photo mb" fill></Image>
+                  <Image
+                    src={avatarImage || avatarDefault}
+                    alt="user photo mb"
+                    fill
+                    priority="default" //不加的話Next 會問是否要加優先級
+                    sizes="(max-width: 150px) 150px, 50vw"
+                  ></Image>
                 </div>
                 <div className="sidebar-user-info-text">
-                  <div className="sidebar-user-info-name">棉悠悠</div>
-                  <div className="sidebar-user-info-band">幻獸帕魯</div>
+                  <div className="sidebar-user-info-name">
+                    {LoginUserData.nickname}
+                  </div>
+                  <div className="sidebar-user-info-band">樂團名稱</div>
                 </div>
                 {/* 更換大頭貼的功能暫定併回會員資訊 故不再sidebar顯示 */}
                 {/* <div className="sidebar-user-info-Camera-img">
@@ -156,13 +193,38 @@ export default function Test() {
                 </div> */}
               </div>
               <ul className="d-flex flex-column">
-                {sidebarData.map((item, index) => {
+                {/* {sidebarData.map((item, index) => {
                   return (
                     <li key={index}>
                       <Link href={`#`}>{item}</Link>
                     </li>
                   )
-                })}
+                })} */}
+
+                <li key={1}>
+                  <Link href="/user/user-info">會員資訊</Link>
+                </li>
+                <li key={2}>
+                  <Link href="/user/user-jam">我的樂團</Link>
+                </li>
+                <li key={3}>
+                  <Link href="/user/user-order">我的訂單</Link>
+                </li>
+                <li key={4}>
+                  <Link href="/user/user-acticle">我的文章</Link>
+                </li>
+                <li key={5}>
+                  <Link href="/user/user-favorite">我的收藏</Link>
+                </li>
+                <li key={6}>
+                  <Link href="/coupon/userCoupon">我的優惠券</Link>
+                </li>
+                <li key={7}>
+                  <Link href="/user/user-lesson">我的課程</Link>
+                </li>
+                <li key={8}>
+                  <Link href="/user/user-notify">我的訊息</Link>
+                </li>
               </ul>
             </div>
           </div>
@@ -238,9 +300,7 @@ export default function Test() {
                         setDataSort(e.target.value)
                       }}
                     >
-                      <option selected value="latest">
-                        新到舊
-                      </option>
+                      <option value="latest">新到舊</option>
                       <option value="oldest">舊到新</option>
                     </select>
                   </div>
@@ -272,9 +332,7 @@ export default function Test() {
                               setBrandSelect(e.target.value)
                             }}
                           >
-                            <option selected value="all">
-                              全部
-                            </option>
+                            <option value="all">全部</option>
                             {brandData.map((v) => {
                               return (
                                 <option key={v.id} value={v.id}>
@@ -323,7 +381,6 @@ export default function Test() {
                                 >
                                   <label className="form-check-label">
                                     <input
-                                      classname="form-check-input"
                                       type="radio"
                                       name="score"
                                       value={v}
@@ -572,12 +629,13 @@ export default function Test() {
           }
           .sidebar-user-info-text {
             display: flex;
-            width: 100px;
+
+            width: 140px;
             flex-direction: column;
             align-items: flex-start;
             gap: 6px;
             color: var(--dark, #1d1d1d);
-            text-align: center;
+            text-align: start;
 
             /* h5 */
             font-family: 'Noto Sans TC';

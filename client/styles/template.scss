@@ -107,6 +107,7 @@ header {
   align-items: center;
   font-weight: bold;
 }
+
 .sm-close {
   width: 100%;
   padding: 0 6px 8px 0;
@@ -177,6 +178,16 @@ header {
     // padding: 0 20px 0 20px;
     padding: 0;
   }
+}
+
+.fixed-btn {
+  position: fixed;
+  top: 75svh;
+  right: 10px;
+  z-index: 100;
+  width: 64px;
+  height: 64px;
+  text-align: center;
 }
 
 .top-function-flex {
@@ -368,6 +379,12 @@ header {
   background-color: $body;
   &:hover {
     background-color: $secondary;
+  }
+}
+.b-btn-danger {
+  background-color: $red;
+  &:hover {
+    background-color: #c72e2e;
   }
 }
 

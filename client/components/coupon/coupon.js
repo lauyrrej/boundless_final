@@ -1,9 +1,7 @@
 import React from 'react'
 import styles from '@/components/coupon/coupon.module.scss'
-import Data from '@/data/coupon.json'
 
-export default function Coupon({ id, name, kind, discount, limit_time }) {
-  console.log(Data)
+export default function Coupon({ id, name, type, kind, discount, limit_time }) {
   return (
     <>
       <div className={`${styles.couponCard} card mb-3`}>
@@ -27,13 +25,13 @@ export default function Coupon({ id, name, kind, discount, limit_time }) {
                   {/* 註冊禮即時領取 */}
                 </div>
                 <div className="h4 px-3 py-2">
-                  {kind}
+                  {kind === 1 ? '課程' : '樂器'}
                   {/* 課程 */}
                 </div>
               </div>
               <div className="card-text d-flex justify-content-center align-items-center">
                 <div className="fs-2 fw-bold salesType">
-                  {discount}
+                  {type === 1 ? discount : IsINT(discount * 10) + '折'}
                   {/* 95折 */}
                 </div>
               </div>
@@ -50,4 +48,11 @@ export default function Coupon({ id, name, kind, discount, limit_time }) {
       <style jsx>{``}</style>
     </>
   )
+}
+const IsINT = function (int) {
+  if (int % 10 === 0) {
+    return int / 10
+  } else {
+    return int
+  }
 }

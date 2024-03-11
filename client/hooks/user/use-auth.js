@@ -73,12 +73,12 @@ export function AuthProvider({ children }) {
     }
   }
 
-  useEffect(() => {
-    // 在這裡呼叫 handleLoginStatus，確保 token 已經有值
-    if (token) {
-      handleLogout()
-    }
-  }, [token])
+  // useEffect(() => {
+  //   // 在這裡呼叫 handleLoginStatus，確保 token 已經有值
+  //   if (token) {
+  //     handleLogout()
+  //   }
+  // }, [token])
 
   //驗證當前token
   const handleLoginStatus = async (e) => {
@@ -105,12 +105,12 @@ export function AuthProvider({ children }) {
     }
   }
 
-  useEffect(() => {
-    // 在這裡呼叫 handleLoginStatus，確保 token 已經有值
-    if (token) {
-      handleLoginStatus()
-    }
-  }, [token])
+  // useEffect(() => {
+  //   // 在這裡呼叫 handleLoginStatus，確保 token 已經有值
+  //   if (token) {
+  //     handleLoginStatus()
+  //   }
+  // }, [token])
 
   // 原本
   const getLoginUserData = async (e) => {
@@ -124,6 +124,9 @@ export function AuthProvider({ children }) {
     const userID = jwtDecode(Loginusertoken)
     const id = userID.id
 
+    //測試
+    const jam = userID.my_jam
+    // console.log(jam)
     try {
       const response = await fetch(`http://localhost:3005/api/user/${id}`, {
         method: 'get',
@@ -138,7 +141,7 @@ export function AuthProvider({ children }) {
       // console.log('Response from server:', LoginUserData)
 
       // setUserData(LoginUserData)
-      // console.log(LoginUserData)
+      console.log(LoginUserData)
       setLoginUserData(LoginUserData)
       // 在這裡處理後端返回的資料
     } catch (error) {
@@ -146,12 +149,12 @@ export function AuthProvider({ children }) {
     }
   }
 
-  useEffect(() => {
-    // 在這裡呼叫 handleLoginStatus，確保 token 已經有值
-    if (token) {
-      getLoginUserData()
-    }
-  }, [token])
+  // useEffect(() => {
+  //   // 在這裡呼叫 handleLoginStatus，確保 token 已經有值
+  //   if (token) {
+  //     getLoginUserData()
+  //   }
+  // }, [token])
 
   return (
     <AuthContext.Provider

@@ -69,6 +69,19 @@ router.get("/allJam", async (req, res) => {
     const player =
       req.query.player !== "all"
         ? " AND (`players` LIKE '%," +
+<<<<<<< HEAD
+        req.query.player +
+        "]'" +
+        " OR `players` LIKE '[" +
+        req.query.player +
+        ",%'" +
+        " OR `players` LIKE '%," +
+        req.query.player +
+        ",%'" +
+        " OR `players` = '[" +
+        req.query.player +
+        "]')"
+=======
           req.query.player +
           "]'" +
           " OR `players` LIKE '[" +
@@ -80,6 +93,7 @@ router.get("/allJam", async (req, res) => {
           " OR `players` = '[" +
           req.query.player +
           "]')"
+>>>>>>> f199fd212cc0110d2a8f6e9075bb1cbf16c913ce
         : "";
     const region =
       req.query.region !== "all"
@@ -141,25 +155,22 @@ router.get("/allJam", async (req, res) => {
     });
 
     // 搜尋對應的發起人資料
-    let formerSql = "SELECT `id`, `name`, `img` FROM `user` WHERE `id` IN ";
-    let formersID = '';
-    jamData.forEach((v,i) => {
-      if(i<jamData.length-1) {
-        formersID += v.former.id + ","
+    let formerSql =
+      "SELECT `id`, `uid`, `name`, `img`, `nickname` FROM `user` WHERE `id` IN ";
+    let formerID = "";
+    jamData.forEach((v, i) => {
+      if (i < jamData.length - 1) {
+        formerID += v.former.id + ",";
       } else {
-        formersID += v.former.id
+        formerID += v.former.id;
       }
-    })
-    formerSql += `(${formersID})`
+    });
+    formerSql += `(${formerID})`;
     // console.log(formerSql);
-    let  [formerData] = await db
-      .execute(
-        formerSql
-      )
-      .catch(() => {
-        return undefined;
-      });
-      // console.log(formerData);
+    let [formerData] = await db.execute(formerSql).catch(() => {
+      return undefined;
+    });
+    // console.log(formerData);
 
     res.status(200).json({
       genreData,
@@ -178,41 +189,104 @@ router.get("/allJam", async (req, res) => {
 // 組團資訊頁，獲得單筆資料
 router.get("/singleJam/:juid", async (req, res) => {
   // 取得組團資訊中所需的曲風、樂手資料
-  let [genreData] = await db.execute("SELECT * FROM `genre`").catch(() => {
+  const [genreData] = await db.execute("SELECT * FROM `genre`").catch(() => {
     return undefined;
   });
-  let [playerData] = await db.execute("SELECT * FROM `player`").catch(() => {
+  const [playerData] = await db.execute("SELECT * FROM `player`").catch(() => {
     return undefined;
   });
 
-  let juid = req.params.juid;
-  console.log(juid);
-  // console.log(id);
-  let [data] = await db
+  const juid = req.params.juid;
+  // console.log(juid);
+  const [data] = await db
     .execute("SELECT * FROM `jam` WHERE `juid` = ? ", [juid])
     .catch(() => {
       return undefined;
     });
-
   if (data) {
     const trueData = data[0];
-    console.log(data);
+    // console.log(data);
     let setMember = [];
     if (trueData.member !== "[]" || trueData.member) {
       setMember = JSON.parse(trueData.member);
     }
-    const jamData = {
+    let jamData = {
       ...trueData,
       member: setMember,
       former: JSON.parse(trueData.former),
       player: JSON.parse(trueData.players),
       genre: JSON.parse(trueData.genre),
     };
-    // console.log(jam);
+
+    // 撈取對應的發起人&成員資料
+    const formerID = jamData.former.id;
+    const [formerData] = await db
+      .execute(
+        "SELECT `id`, `uid`, `name`, `img`, `nickname` FROM `user` WHERE `id` = ? ",
+        [formerID]
+      )
+      .catch(() => {
+        return undefined;
+      });
+    // ------------------------------------------ 合併資料
+    // former {id, play}
+    // play對應樂器
+    jamData.former.play = playerData.find((v) => {
+      return v.id === jamData.former.play;
+    }).name;
+    // id對應會員資料
+    jamData.former = {
+      ...jamData.former,
+      uid: formerData[0].uid,
+      name: formerData[0].name,
+      img: formerData[0].img,
+      nickname: formerData[0].nickname,
+    };
+    // console.log(formerData);
+
+    if (jamData.member[0]) {
+      let membersID = "";
+      let memberSql =
+        "SELECT `id`, `uid`, `name`, `img`, `nickname` FROM `user` WHERE `id` IN ";
+      jamData.member.forEach((v, i) => {
+        if (i < jamData.member.length - 1) {
+          membersID += v.id + ",";
+        } else {
+          membersID += v.id;
+        }
+      });
+      memberSql += `(${membersID})`;
+      // console.log(formerSql);
+      const [memberData] = await db.execute(memberSql).catch(() => {
+        return undefined;
+      });
+      // ------------------------------------------ 合併資料
+      // play對應樂器
+      jamData.member = jamData.member.map((v) => {
+        const match = playerData.find((pv) => {
+          return pv.id === v.play;
+        });
+        return { ...v, play: match.name };
+      });
+      // id對應會員資料
+      jamData.member = jamData.member.map((v) => {
+        const match = memberData.find((mv) => {
+          return mv.id === v.id;
+        });
+        return {
+          ...v,
+          uid: match.uid,
+          name: match.name,
+          img: match.img,
+          nickname: match.nickname,
+        };
+      });
+    }
+
     res.status(200).json({
-      genreData: genreData,
-      playerData: playerData,
-      jamData: jamData,
+      genreData,
+      playerData,
+      jamData,
     });
   } else {
     res.status(400).json({ status: "error", message: "無指定資料" });

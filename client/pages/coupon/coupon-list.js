@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
@@ -18,9 +18,11 @@ import { IoClose } from 'react-icons/io5'
 // coupon
 import styles from '@/pages/coupon/userCoupon.module.scss'
 import Coupon from '@/components/coupon/coupon.js'
-import Data from '@/data/coupon.json'
+
+import CouponClass from '@/API/Coupon'
 
 export default function Test() {
+  const [data, setData] = useState([])
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -89,6 +91,18 @@ export default function Test() {
     setScore('all')
     setSales(false)
   }
+  // sql分類
+  // 0: 全部 ， 1: 樂器，2: 課程
+  const [kind, setKind] = useState(0)
+  const [discount, setDiscount] = useState()
+
+  // 來自資料庫的東西!!!!
+  useEffect(() => {
+    // component did mounted 呼叫api，這樣就只會做一遍
+    CouponClass.FindAll().then(async (res) => {
+      setData(res)
+    })
+  }, [])
 
   return (
     <>
@@ -255,19 +269,23 @@ export default function Test() {
                     <nav aria-label="breadcrumb sort d-flex justify-content-between align-items-center">
                       <ol className="breadcrumb">
                         <li className="h6 breadcrumb-item">
-                          <a href="#" className="active">
+                          <a href="#" onClick={() => setKind(0)}>
                             全部
                           </a>
                         </li>
                         <li className="h6 breadcrumb-item" aria-current="page">
-                          <a href="#">樂器</a>
+                          <a href="#" onClick={() => setKind(2)}>
+                            樂器
+                          </a>
                         </li>
                         <li className="h6 breadcrumb-item" aria-current="page">
-                          <a href="#">課程</a>
+                          <a href="#" onClick={() => setKind(1)}>
+                            課程
+                          </a>
                         </li>
-                        {/* <li className="h6 breadcrumb-item" aria-current="page">
+                        <li className="h6 breadcrumb-item" aria-current="page">
                           <a href="#">已使用</a>
-                        </li> */}
+                        </li>
                       </ol>
                     </nav>
                   </div>
@@ -310,10 +328,11 @@ export default function Test() {
                         {/*條件篩選 無法d-none d-sm-block */}
                         <div className="filter-item">
                           <div className="filter-title">折扣幅度</div>
-                          <div className=" filter-title">選擇品牌</div>
+                          <div className="filter-title">即將到期</div>
+                          {/* <div className=" filter-title">選擇品牌</div> */}
                         </div>
                         {/* 品牌 */}
-                        <div className="filter-item">
+                        {/* <div className="filter-item">
                           <div className="filter-title">選擇品牌</div>
                           <select
                             className="form-select"
@@ -335,9 +354,9 @@ export default function Test() {
                               )
                             })}
                           </select>
-                        </div>
+                        </div> */}
                         {/* 區間~促銷Delete */}
-                        <div
+                        {/* <div
                           className="d-flex justify-content-between gap-2 mt-2"
                           style={{ paddingInline: '10px' }}
                         >
@@ -351,7 +370,7 @@ export default function Test() {
                           <div className="filter-btn confirm-btn w-100 d-flex justify-content-center">
                             確認
                           </div>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   </form>
@@ -403,19 +422,29 @@ export default function Test() {
                       </div>
                       {/* components */}
                       <div className="couponImage">
-                        {Data.map((v, i) => {
-                          const { id, name, discount, kind, limit_time } = v
-                          return (
-                            <Coupon
-                              key={id}
-                              name={name}
-                              discount={discount}
-                              kind={kind}
-                              limit_time={limit_time}
-                              className={`${styles.couponItem} `}
-                            />
-                          )
-                        })}
+                        {data
+                          .filter((i) => (kind !== 0 ? i.kind === kind : true))
+                          .map((v, i) => {
+                            const {
+                              id,
+                              name,
+                              type,
+                              discount,
+                              kind,
+                              limit_time,
+                            } = v
+                            return (
+                              <Coupon
+                                key={id}
+                                name={name}
+                                type={type}
+                                discount={discount}
+                                kind={kind}
+                                limit_time={limit_time}
+                                className={`${styles.couponItem} `}
+                              />
+                            )
+                          })}
                       </div>
 
                       {/*pagination*/}
@@ -469,7 +498,6 @@ export default function Test() {
         </div>
       </div>
       <Footer />
-
       <style jsx>{`
         /* -------------------user sidebar-------------------- */
         .sidebar-user-info {
