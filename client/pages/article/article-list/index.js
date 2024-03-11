@@ -522,8 +522,8 @@ export default function ArticleList() {
                     fav,
                     category_name,
                     comment_likes,
-                    user_name,
-                    user_img,
+                    article_author_name,
+                    article_author_img,
                   } = v
                   return (
                     <ArticleCard
@@ -541,8 +541,8 @@ export default function ArticleList() {
                       handleToggleFav={handleToggleFav}
                       fav={fav}
                       comment_likes={comment_likes}
-                      user_name={user_name}
-                      user_img={user_img}
+                      article_author_name={article_author_name}
+                      article_author_img={article_author_img}
                     />
                   )
                 })}
@@ -563,8 +563,8 @@ export default function ArticleList() {
                     fav,
                     category_name,
                     comment_likes,
-                    user_name,
-                    user_img,
+                    article_author_name,
+                    article_author_img,
                   } = v
                   return (
                     <ArticleCard
@@ -582,8 +582,8 @@ export default function ArticleList() {
                       category_name={category_name}
                       handleToggleFav={handleToggleFav}
                       comment_likes={comment_likes}
-                      user_name={user_name}
-                      user_img={user_img}
+                      article_author_name={article_author_name}
+                      article_author_img={article_author_img}
                     />
                   )
                 })}

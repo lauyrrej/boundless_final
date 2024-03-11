@@ -18,8 +18,8 @@ export default function Articlecard({
   handleToggleFav,
   category_name,
   comment_likes,
-  user_name,
-  user_img,
+  article_author_name,
+  article_author_img,
 }) {
   return (
     <>
@@ -31,10 +31,10 @@ export default function Articlecard({
         >
           <img
             className="article-author"
-            src={`/user/${user_img}`}
+            src={`/user/${article_author_img}`}
             alt="空的圖"
           />
-          <span className="info-p text-secondary">{user_name}</span>
+          <span className="info-p text-secondary">{article_author_name}</span>
           <span className="info-p text-secondary">
             <Datetime published_time={published_time} />
           </span>
