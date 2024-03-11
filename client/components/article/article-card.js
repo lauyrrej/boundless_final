@@ -5,6 +5,7 @@ import bookmarkIcon from '@/assets/emptybookmark.svg'
 import { FaBookmark } from 'react-icons/fa'
 import Image from 'next/image'
 import Link from 'next/link'
+import Datetime from '@/components/article/datetime'
 
 export default function Articlecard({
   id,
@@ -18,34 +19,6 @@ export default function Articlecard({
   handleToggleFav,
   category_name,
 }) {
-  // const [discount, setDiscount] = useState('1')
-  console.log(auid)
-  // console.log(products)
-
-  // // 擴充收藏功能
-  // const initState = data.map((v, i) => {
-  //   return { ...v, fav: false }
-  // })
-  // // 擴充後的物件陣列作為初始值
-  // const [articles, setArticles] = useState(initState)
-
-  // // 純func
-  // const handleToggleFav = (id) => {
-  //   const newArticles = articles.map((v, i) => {
-  //     if (v.id === id) return { ...v, fav: !v.fav }
-  //     else return v
-  //   })
-  //   setArticles(newArticles)
-  // }
-
-  // 組合日期8
-  const createdYear = new Date(published_time).getFullYear()
-  // console.log(createdYear)
-  const createdMonth = new Date(published_time).getMonth() + 1
-  const createdDate = new Date(published_time).getDate()
-  const combineDate = `${createdYear}-${createdMonth}-${createdDate}`
-  // console.log(combineDate)
-
   return (
     <>
       <div className="article-card">
@@ -60,7 +33,9 @@ export default function Articlecard({
             alt="空的圖"
           />
           <span className="info-p text-secondary">{user_id}</span>
-          <span className="info-p text-secondary">{combineDate}</span>
+          <span className="info-p text-secondary">
+            <Datetime published_time={published_time} />
+          </span>
         </div>
         {/* article區塊 */}
         <Link href={`/article/article-list/${auid}`}>

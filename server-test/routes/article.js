@@ -31,21 +31,17 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res, next) => {
   let auid = req.params.id;
   let [data] = await db
-    .execute("SELECT article.*, article_category.name AS category_name FROM article JOIN article_category ON article.category_id = article_category.id WHERE article.auid = ?", [auid])
+    .execute("SELECT article.*, article_category.name AS category_name, article_comment.content AS comment_content,article_comment.created_time AS comment_created_time FROM article JOIN article_category ON article.category_id = article_category.id LEFT JOIN article_comment ON article.id = article_comment.article_id WHERE article.auid = ?", [auid])
     .catch(() => {
       return undefined;
     });
   if (data) {
     res.status(200).json(data);
+    console.log(data)
   } else {
     res.status(400).send("發生錯誤");
   }
 });
-
-// SELECT article.*, article_category.name AS category_name 
-// FROM article 
-// JOIN article_category ON article.category_id = article_category.id
-// WHERE article.auid = ?
 
 // article_category
 router.get("/categories", async (req, res) => {

@@ -13,6 +13,7 @@ import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
+import Datetime from '@/components/article/datetime'
 
 export default function Auid() {
   // ----------------------手機版本  ----------------------
@@ -173,7 +174,11 @@ export default function Auid() {
                 <span className="ps-3 info-p text-primary">
                   {articleDetail.user_id}
                 </span>
-                <span className="ps-2 info-p text-secondary">2023/11/27</span>
+                <span className="ps-2 info-p text-secondary">
+                  <Datetime
+                    published_time={articleDetail.comment_created_time}
+                  />
+                </span>
               </div>
               <p className="pt-1">
                 上完全部課程後覺得幸好自己做了這個決定，因為以初學者會使用到的功能其實兩款軟體跟控制器都全部支援，頂多就是一些按鍵配置不太一樣，完全不影響學習跟練習。
