@@ -130,6 +130,33 @@ export function CartProvider({ children }) {
     setinstrumentDiscount(e)
   }
 
+  const calcLessonDiscount = () => {
+    let total = 0
+    total =
+      lessonDiscount < 1 && lessonDiscount !== 0
+        ? calcLessonPrice() - lessonDiscount * calcLessonPrice()
+        : lessonDiscount
+    return total
+  }
+
+  const calcInstrumentDiscount = () => {
+    let total = 0
+    total =
+      instrumentDiscount < 1 && instrumentDiscount !== 0
+        ? calcInstrumentPrice() - calcInstrumentPrice() * instrumentDiscount
+        : instrumentDiscount
+    return total
+  }
+
+  const calcTotalDiscount = () => {
+    let total = 0
+    parseInt(calcInstrumentDiscount())
+    total = parseInt(calcInstrumentDiscount()) + parseInt(calcLessonDiscount())
+    return total
+  }
+
+  
+
   return (
     <CartContext.Provider
       value={{
@@ -148,10 +175,13 @@ export function CartProvider({ children }) {
         remove,
         calcInstrumentItems,
         calcInstrumentPrice,
+        calcInstrumentDiscount,
         calcLessonItems,
         calcLessonPrice,
+        calcLessonDiscount,
         calcTotalItems,
         calcTotalPrice,
+        calcTotalDiscount,
       }}
     >
       {children}
