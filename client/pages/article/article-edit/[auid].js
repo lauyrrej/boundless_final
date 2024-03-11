@@ -69,11 +69,18 @@ export default function Auid() {
     setShowEditor(false)
   }
   const [data, setData] = useState('')
-  const initContent = { articleDetail.title }
 
   useEffect(() => {
     setEditorLoaded(true)
   }, [])
+
+  // 預設CKEditor格式
+  const editorConfig = {
+    // 其他配置...
+    format_tags: 'p;h1;h2;h3;h4;h5;h6',
+    format_h1: { element: 'h1', name: 'Heading 1' },
+    // 如果您想要設置其他標題樣式，可以繼續添加 format_h2, format_h3 等等
+  }
   // ----------------------假資料  ----------------------
 
   const [filterVisible, setFilterVisible] = useState(false)
@@ -158,11 +165,13 @@ export default function Auid() {
             <main className="content">
               <Editor
                 name="description"
+                config={editorConfig}
                 onChange={(data) => {
                   setData(data)
                 }}
                 editorLoaded={editorLoaded}
-                value={initContent}
+                data={`<h1 className="text-center">${articleDetail.title}</h1>`}
+                value={articleDetail.title}
               />
               <h1 className="text-center">{articleDetail.title}</h1>
               <p className="pt-2">{articleDetail.content}</p>
