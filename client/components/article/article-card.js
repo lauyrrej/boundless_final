@@ -16,7 +16,7 @@ export default function Articlecard({
   published_time,
   fav,
   handleToggleFav,
-  category_id,
+  category_name,
 }) {
   // const [discount, setDiscount] = useState('1')
   console.log(auid)
@@ -86,7 +86,7 @@ export default function Articlecard({
         {/* kind-bookmark */}
         <div className="kind-bookmark d-flex justify-content-between align-items-center">
           <div className="article-kind text-black bg-body px-2 pt-1 pb-1">
-            {category_id}
+            {category_name}
           </div>
           <div className="bookmark">
             <Image

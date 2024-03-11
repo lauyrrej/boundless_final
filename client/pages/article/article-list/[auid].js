@@ -43,6 +43,7 @@ export default function Auid() {
       // 進入狀態前檢查資料類型有值，以避免錯誤
       if (data) {
         setArticleDetail(data[0])
+        // 只拿第一筆資料
         // console.log(articleDetail.title)
       }
     } catch (e) {
@@ -156,7 +157,7 @@ export default function Auid() {
                   標籤
                 </div>
                 <div className="pt-1 pb-1 ps-2 pe-2">
-                  {articleDetail.category_id}
+                  {articleDetail.category_name}
                 </div>
               </div>
               {/* Reader Comment */}

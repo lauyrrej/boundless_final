@@ -520,7 +520,7 @@ export default function ArticleList() {
                     published_time,
                     articles,
                     fav,
-                    category_id,
+                    category_name,
                   } = v
                   return (
                     <ArticleCard
@@ -532,7 +532,7 @@ export default function ArticleList() {
                       content={content}
                       img={img}
                       author={author}
-                      category_id={category_id}
+                      category_name={category_name}
                       published_time={published_time}
                       articles={articles}
                       handleToggleFav={handleToggleFav}
@@ -555,7 +555,7 @@ export default function ArticleList() {
                     published_time,
                     articles,
                     fav,
-                    category_id,
+                    category_name,
                   } = v
                   return (
                     <ArticleCard
@@ -570,7 +570,7 @@ export default function ArticleList() {
                       published_time={published_time}
                       articles={articles}
                       fav={fav}
-                      category_id={category_id}
+                      category_name={category_name}
                       handleToggleFav={handleToggleFav}
                     />
                   )

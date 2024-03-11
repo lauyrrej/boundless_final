@@ -16,8 +16,7 @@ router.use(cors());
 // 文章列表
 router.get("/", async (req, res) => {
   try {
-    let [articleData] = await db.execute("SELECT * FROM `article`");
-    // console.log(article)
+    let [articleData] = await db.execute("SELECT article.*, article_category.name AS category_name FROM article JOIN article_category ON article.category_id = article_category.id");
     if (articleData) {
       res.json(articleData);
     } else {
@@ -29,21 +28,24 @@ router.get("/", async (req, res) => {
   }
 });
 
-// 獲得單篇文章資料
 router.get("/:id", async (req, res, next) => {
   let auid = req.params.id;
   let [data] = await db
-    .execute("SELECT * FROM `article` WHERE `auid` = ? ", [auid])
+    .execute("SELECT article.*, article_category.name AS category_name FROM article JOIN article_category ON article.category_id = article_category.id WHERE article.auid = ?", [auid])
     .catch(() => {
       return undefined;
     });
   if (data) {
-    console.log(data);
     res.status(200).json(data);
   } else {
     res.status(400).send("發生錯誤");
   }
 });
+
+// SELECT article.*, article_category.name AS category_name 
+// FROM article 
+// JOIN article_category ON article.category_id = article_category.id
+// WHERE article.auid = ?
 
 // article_category
 router.get("/categories", async (req, res) => {
