@@ -18,7 +18,8 @@ export default function Articlecard({
   handleToggleFav,
   category_id,
 }) {
-  const [discount, setDiscount] = useState('1')
+  // const [discount, setDiscount] = useState('1')
+  console.log(auid)
   // console.log(products)
 
   // // 擴充收藏功能

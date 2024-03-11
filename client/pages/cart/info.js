@@ -17,7 +17,38 @@ import { FaMinus } from 'react-icons/fa'
 import { FaTrash } from 'react-icons/fa6'
 import { FiMinus } from 'react-icons/fi'
 
+//hook
+import { useCart } from '@/hooks/use-cart'
+
 export default function Test() {
+  //hook
+  const {
+    calcInstrumentItems,
+    calcInstrumentPrice,
+    calcInstrumentDiscount,
+    handleInstrumentSelector,
+    calcLessonItems,
+    calcLessonPrice,
+    calcLessonDiscount,
+    handleLessonSelector,
+    calcTotalDiscount,
+    calcTotalPrice,
+  } = useCart()
+
+  //form
+  const handleSubmit = (e) => {
+    //取消表單預設行為，因為要使用js做進一步檢查
+    e.preventDefault()
+    console.log(e.target);
+    const formData = new FormData(e.target)
+
+    //取得欄位的的名稱
+    console.log(FormData);
+
+
+    console.log(e.target);
+  }
+
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -128,7 +159,7 @@ export default function Test() {
                 <div className="consumer-info-group">
                   <div className="row g-3 align-items-center">
                     <label
-                      htmlfor="name"
+                      htmlFor="name"
                       className="col-form-label col-sm-2 h6"
                     >
                       購買者姓名
@@ -139,7 +170,7 @@ export default function Test() {
                   </div>
                   <div className="row g-3 align-items-center">
                     <label
-                      htmlfor="phone"
+                      htmlFor="phone"
                       className="col-form-label col-sm-2 h6"
                     >
                       電話號碼
@@ -150,7 +181,7 @@ export default function Test() {
                   </div>
                   <div className="row g-3 align-items-center">
                     <label
-                      htmlfor="email"
+                      htmlFor="email"
                       className="col-form-label col-sm-2 h6"
                     >
                       電子信箱
@@ -161,7 +192,7 @@ export default function Test() {
                   </div>
                   <div className="row g-3">
                     <label
-                      htmlfor="address"
+                      htmlFor="address"
                       className="col-form-label col-sm-2 h6"
                     >
                       寄送地址
@@ -395,19 +426,21 @@ export default function Test() {
                 <div className="total d-flex flex-column" style={{ gap: 20 }}>
                   <div className="d-flex justify-content-between carttext">
                     <div>商品數量</div>
-                    <div>樂器*3 課程*2</div>
+                    <div>
+                      樂器*{calcInstrumentItems()} 課程*{calcLessonItems()}
+                    </div>
                   </div>
                   <div className="d-flex justify-content-between carttext">
                     <div>原價合計</div>
-                    <div>NT $864000</div>
+                    <div>NT ${calcTotalPrice()}</div>
                   </div>
                   <div className="d-flex justify-content-between carttext discount">
                     <div>折扣合計</div>
-                    <div>-NT $3400</div>
+                    <div>-NT ${calcTotalDiscount()}</div>
                   </div>
                   <div className="d-flex justify-content-between h3">
                     <div>合計</div>
-                    <div>NT $790000</div>
+                    <div>NT ${calcTotalPrice()}</div>
                   </div>
                 </div>
                 <div className="cart-btn">
@@ -437,19 +470,21 @@ export default function Test() {
           <div className="total d-flex flex-column" style={{ gap: 20 }}>
             <div className="d-flex justify-content-between carttext">
               <div>商品數量</div>
-              <div>樂器*3 課程*2</div>
+              <div>
+                樂器*{calcInstrumentItems()} 課程*{calcLessonItems()}
+              </div>{' '}
             </div>
             <div className="d-flex justify-content-between carttext">
               <div>原價合計</div>
-              <div>NT $864000</div>
+              <div>NT ${calcTotalPrice()}</div>
             </div>
-            <div className="d-flex justify-content-between carttext discount">
+         ˋ   <div className="d-flex justify-content-between carttext discount">
               <div>折扣合計</div>
-              <div>-NT $3400</div>
+              <div>NT ${calcTotalDiscount()}</div>{' '}
             </div>
             <div className="d-flex justify-content-between h3">
               <div>合計</div>
-              <div>NT $790000</div>
+              <div>NT ${calcTotalPrice()}</div>
             </div>
           </div>
           <div className="cart-btn">

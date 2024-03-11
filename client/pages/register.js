@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, ffect } from 'react'
 import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
+import Head from 'next/head'
 // 會員認證
 import { useAuth } from '@/hooks/user/use-auth'
 import { jwtDecode } from 'jwt-decode'
@@ -12,6 +13,8 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 
 export default function Test() {
+  const router = useRouter()
+
   const [user, setUser] = useState({
     email: '',
     password: '',
@@ -27,106 +30,59 @@ export default function Test() {
     // 阻擋表單預設送出行為
     e.preventDefault()
 
-    const res = await fetch('http://localhost:3005/api/user', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(user),
-    })
-    const registerMessage = await res.json()
-    console.log(registerMessage)
+    if (user.password === user.passwordCheck) {
+      const res = await fetch('http://localhost:3005/api/user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+      })
+      const registerMessage = await res.json()
+      console.log(registerMessage)
 
-    if (registerMessage.status === 'success') {
-      alert('資訊 - 會員註冊成功')
+      if (registerMessage.status === 'success') {
+        alert('會員註冊成功！將跳轉至登入頁面。')
+        setTimeout(() => {
+          router.push(`/login`)
+        }, 2000)
+      } else if (registerMessage.status === 'error 2') {
+        alert(`錯誤 - 該E-mail已經註冊過。`)
+      } else {
+        alert(`錯誤 - 請填寫全部資料。`)
+      }
     } else {
-      alert(`錯誤 - 會員註冊失敗`)
+      alert(`錯誤 - 密碼不一致。`)
     }
   }
 
-  // 登入 POST表單來進行
-  //   const handleregister = async (e) => {
-  //     //取消表單預設submit跳頁
-  //     e.preventDefault()
-
-  //     try {
-  //       const response = await fetch('http://localhost:3005/api/user/login', {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify(user),
-  //       })
-
-  //       const loginData = await response.json()
-  //       console.log('Response from server:', loginData)
-
-  //       //   const token = loginData.token
-  //       //   userData = jwtDecode(token)
-  //       //   // 先將 token 字串存入 localStorage
-  //       //   localStorage.setItem(appKey, token)
-  //       //   // 更新 React state 中的 token
-  //       //   setToken(token)
-  //       //   console.log(userData)
-  //       //   return token, userData
-  //       // 在這裡處理後端返回的資料
-  //     } catch (error) {
-  //       console.error('There was a problem with the fetch operation:', error)
-  //     }
-  //   }
-
-  // 檢查登入狀態
-  //   const handleLoginStatus = async (e) => {
-  //     //取消表單預設submit跳頁
-  //     e.preventDefault()
-  //     console.log(token)
-  //     const usertoken = localStorage.getItem(appKey)
-  //     try {
-  //       const response = await fetch('http://localhost:3005/api/user/status', {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //           Authorization: `Bearer ${usertoken}`,
-  //         },
-  //         body: JSON.stringify(),
-  //       })
-
-  //       const statusData = await response.json()
-  //       console.log('Response from server:', statusData)
-
-  //       // console.log(userData)
-
-  //       // 在這裡處理後端返回的資料
-  //     } catch (error) {
-  //       console.error('There was a problem with the fetch operation:', error)
-  //     }
-  //   }
-
   //----------------------------sweetalert--------------------------------------
   //登入 跳轉 還沒加入判定 應該要先判斷再跳轉
-  const router = useRouter()
-  const mySwal = withReactContent(Swal)
-  const loginAlert = (e) => {
-    e.preventDefault()
-    mySwal
-      .fire({
-        position: 'center',
-        icon: 'success',
-        iconColor: '#1581cc',
-        title: '登入成功，將為您跳轉到首頁',
-        showConfirmButton: false,
-        timer: 2000,
-      })
-      .then(
-        setTimeout(() => {
-          router.push(`/user/user-info`)
-        }, 2000)
-      )
-  }
+  // const mySwal = withReactContent(Swal)
+  // const loginAlert = (e) => {
+  //   e.preventDefault()
+  //   mySwal
+  //     .fire({
+  //       position: 'center',
+  //       icon: 'success',
+  //       iconColor: '#1581cc',
+  //       title: '登入成功，將為您跳轉到首頁',
+  //       showConfirmButton: false,
+  //       timer: 2000,
+  //     })
+  //     .then(
+  //       setTimeout(() => {
+  //         router.push(`/user/user-info`)
+  //       }, 2000)
+  //     )
+  // }
 
   return (
     <>
       {/* 頁面內容 */}
+      <Head>
+        <title>註冊</title>
+      </Head>
       <>
         <div className="bg-register ">
           {/* contnet */}
@@ -196,7 +152,7 @@ export default function Test() {
               </div>
               <form className="registerByEmail-form" onSubmit={handleregister}>
                 <div className="registerByEmail-form-box">
-                  <label htmlFor="InputAccount">帳號 / E-mail</label>
+                  <label htmlFor="InputAccount">電子信箱/E-mail</label>
                   <input
                     className="registerByEmail-input "
                     type="email"
