@@ -69,19 +69,6 @@ router.get("/allJam", async (req, res) => {
     const player =
       req.query.player !== "all"
         ? " AND (`players` LIKE '%," +
-<<<<<<< HEAD
-        req.query.player +
-        "]'" +
-        " OR `players` LIKE '[" +
-        req.query.player +
-        ",%'" +
-        " OR `players` LIKE '%," +
-        req.query.player +
-        ",%'" +
-        " OR `players` = '[" +
-        req.query.player +
-        "]')"
-=======
           req.query.player +
           "]'" +
           " OR `players` LIKE '[" +
@@ -93,7 +80,6 @@ router.get("/allJam", async (req, res) => {
           " OR `players` = '[" +
           req.query.player +
           "]')"
->>>>>>> f199fd212cc0110d2a8f6e9075bb1cbf16c913ce
         : "";
     const region =
       req.query.region !== "all"
@@ -168,9 +154,9 @@ router.get("/allJam", async (req, res) => {
     formerSql += `(${formerID})`;
     // console.log(formerSql);
     let [formerData] = await db.execute(formerSql).catch(() => {
-      return undefined;
+      return [];
     });
-    // console.log(formerData);
+    console.log(formerData);
 
     res.status(200).json({
       genreData,
@@ -311,19 +297,16 @@ router.post("/form", upload.none(), async (req, res) => {
   const juid = generateUid();
   // 更新會員所屬的JAM
   let returnNum = await db
-    .execute(
-      "UPDATE `user` SET `my_jam` = ? WHERE `uid` = ?;",
-      [juid, uid]
-    )
+    .execute("UPDATE `user` SET `my_jam` = ? WHERE `uid` = ?;", [juid, uid])
     .then(() => {
       return 1;
     })
     .catch(() => {
       return 0;
     });
-  if(returnNum === 0) {
+  if (returnNum === 0) {
     console.log("新增失敗");
-    return
+    return;
   }
   await db
     .execute(
@@ -351,35 +334,14 @@ router.post("/form", upload.none(), async (req, res) => {
 // 發起JAM表單
 router.post("/apply", upload.none(), async (req, res) => {
   // console.log(req.body);
-  const {
-    title,
-    degree,
-    genre,
-    former,
-    players,
-    region,
-    condition,
-    description,
-  } = req.body;
-  const tureDegree = parseInt(degree);
-  const juid = generateUid();
+  const { juid, former_uid, applier, message } = req.body;
   await db
     .execute(
-      "INSERT INTO `jam` (`id`, `juid`, `title`, `degree`, `genre`, `former`, `players`, `region`, `band_condition`, `description`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-      [
-        juid,
-        title,
-        tureDegree,
-        genre,
-        former,
-        players,
-        region,
-        condition,
-        description,
-      ]
+      "INSERT INTO `jam_apply` (`id`, `juid`, `former_uid`, `applier`, `message`) VALUES (NULL, ?, ?, ?, ?)",
+      [juid, former_uid, applier, message]
     )
     .then(() => {
-      res.status(200).json({ status: "success", juid });
+      res.status(200).json({ status: "success" });
     })
     .catch((error) => {
       res.status(409).json({ status: "error", error });

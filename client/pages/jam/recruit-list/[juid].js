@@ -166,6 +166,8 @@ export default function Info() {
       return false
     }
     let formData = new FormData()
+    formData.append('juid', jam.juid)
+    formData.append('former_uid', jam.former.uid)
     formData.append('applier', finalMyPlayer)
     formData.append('message', message)
     // 確認formData內容
