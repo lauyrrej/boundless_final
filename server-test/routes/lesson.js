@@ -17,6 +17,19 @@ router.get("/", async (req, res) => {
     console.error("發生錯誤：", error);
     res.json("發生錯誤");
   }
+
+  // 取得資料總筆數，用於製作分頁
+  let [dataCount] = await db
+    .execute("SELECT * FROM `product` WHERE `valid` = 1")
+    .catch(() => {
+      return undefined;
+    });
+
+  let page = Number(req.query.page) || 1; // 目前頁碼
+  let dataPerpage = 12; // 每頁 12 筆
+  let offset = (page - 1) * dataPerpage; // 取得下一批資料
+  let pageTotal = Math.ceil(dataCount.length / dataPerpage); // 計算總頁數
+  let pageString = " LIMIT " + offset + "," + dataPerpage;
 });
 
 //lesson_category
@@ -58,49 +71,14 @@ router.get("/category/:category", async (req, res) => {
   }
 });
 
- // 取得資料總筆數，用於製作分頁
-//   let [dataCount] = await db
-//     .execute(
-//       "SELECT * FROM `jam` WHERE `valid` = 1 AND DATE_ADD(`created_time`, INTERVAL 30 DAY) > ? AND (`formed_time` IS NULL OR `formed_time` = '0000-00-00 00:00:00')",
-//       [now]
-//     )
-//     .catch(() => {
-//       return undefined;
-//     });
 
-//   let page = Number(req.query.page) || 1; // 目前頁碼
-//   let dataPerpage = 10; // 每頁 10 筆
-//   let offset = (page - 1) * dataPerpage; // 取得下一批資料
-//   let pageTotal = Math.ceil(dataCount.length / dataPerpage); // 計算總頁數
-//   let pageString = " LIMIT " + offset + "," + dataPerpage;
-
-//   // 排序用
-//   let orderDirection = req.query.order || "ASC";
-
-// 商品列表路由，根據分類返回相應商品列表
-// router.get("/:categoryId", async (req, res) => {
-//   const { category } = req.query.categoryId;
-//   let [data] = await db
-//     .execute("SELECT * FROM `product` WHERE `lesson_category_id` = ? ", [
-//       category,
-//     ])
-//     .catch(() => {
-//       return undefined;
-//     });
-//   if (data) {
-//     console.log(data);
-//     res.status(200).json(data);
-//   } else {
-//     res.status(400).send("發生錯誤");
-//   }
-// });
 
 // 獲得單筆課程資料
 router.get("/:id", async (req, res, next) => {
-  let lid = req.params.id;
-  console.log(lid);
+  let luid = req.params.id;
+  console.log(luid);
   let [data] = await db
-    .execute("SELECT * FROM `product` WHERE `id` = ? ", [lid])
+    .execute("SELECT * FROM `product` WHERE `puid` = ? ", [luid])
     .catch(() => {
       return undefined;
     });
@@ -112,5 +90,34 @@ router.get("/:id", async (req, res, next) => {
     res.status(400).send("發生錯誤");
   }
 });
+
+
+
+
+
+// 獲得單筆課程資料
+router.get("/:id", async (req, res, next) => {
+  let luid = req.params.id;
+  console.log(luid);
+  let [data] = await db
+    .execute("SELECT * FROM `product` WHERE `puid` = ? ", [luid])
+    .catch(() => {
+      return undefined;
+    });
+
+  if (data) {
+    console.log(data);
+    res.status(200).json(data);
+  } else {
+    res.status(400).send("發生錯誤");
+  }
+});
+
+
+
+ 
+
+//   // 排序用
+//   let orderDirection = req.query.order || "ASC";
 
 export default router;

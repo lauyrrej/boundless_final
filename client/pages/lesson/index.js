@@ -97,6 +97,23 @@ export default function Test({ onSearch }) {
     setScore('all')
     setSales(false)
   }
+
+  // ------------------------------------- 製作分頁
+  const [page, setPage] = useState(1)
+  const [pageTotal, setPageTotal] = useState(0)
+  // 資料排序
+  const [order, setOrder] = useState('ASC')
+  // 點按分頁時，要送至伺服器的query string參數
+  const handlePageClick = (event) => {
+    router.push({
+      pathname: router.pathname,
+
+      query: {
+        page: event.selected + 1,
+      },
+    })
+  }
+
   //-------------------連資料庫
 
   const [Lesson, setLesson] = useState([])
@@ -122,17 +139,16 @@ export default function Test({ onSearch }) {
         })
     })
   }
-
   useEffect(() => {
     getLesson()
   }, [])
-
-  useEffect(() => {
-    setData(Lesson) // 未搜尋時顯示完整列表
-  }, [Lesson])
-
   //-------------------搜尋功能
   const [data, setData] = useState(Lesson)
+  //-----------所有過濾資料功能傳回來的地方
+
+  // 在组件中定义 isFiltered 状态，并提供一个函数来更新它的值
+  const [isFiltered, setIsFiltered] = useState(false)
+
   const [search, setSearch] = useState('')
   const handleSearch = () => {
     // console.log('按鈕被點擊了')
@@ -145,32 +161,31 @@ export default function Test({ onSearch }) {
         return v.name.includes(search)
       })
     }
+
     setData(newData)
+    setIsFiltered(true)
   }
-  useEffect(() => {
-    getLesson()
-  }, []) //FIXME不太懂這裡加這個的意思 少加了這個所以沒辦法在未搜尋狀態下顯示完整列表
+  //  useEffect(() => {
+  //    getLesson()
+  //  }, []) //FIXME不太懂這裡加這個的意思 少加了這個所以沒辦法在未搜尋狀態下顯示完整列表
 
   //-------------------排序功能
-  //FIXME升冪降冪
   //最熱門
   const sortBySales = () => {
     const sortedProducts = [...Lesson].sort((a, b) => b.sales - a.sales)
     setData(sortedProducts)
+    setIsFiltered(true)
   }
-  useEffect(() => {
-    getLesson()
-  }, [])
+
   //依評價
   //FIXME沒有資料？
   //依時數
   const sortBylength = () => {
     const sortedProducts = [...Lesson].sort((a, b) => b.length - a.length)
     setData(sortedProducts)
+    setIsFiltered(true)
   }
-  useEffect(() => {
-    getLesson()
-  }, [])
+
   //-------------------渲染分類功能li
   const [LessonCategory, setLessonCategory] = useState([])
   function getLessonCategory() {
@@ -216,12 +231,13 @@ export default function Test({ onSearch }) {
           `http://localhost:3005/api/Lesson/category/${selectedCategory}`
         )
         const data = await response.json()
-        // console.log(data)
+        console.log(data)
 
         setData(data) //連回渲染特定分類課程
       } catch (error) {
         console.error('Error fetching products:', error)
       }
+      setIsFiltered(true)
     }
     //当selectedCategory变化时重新获取商品数据
     if (selectedCategory !== '') {
@@ -229,20 +245,19 @@ export default function Test({ onSearch }) {
     }
   }, [selectedCategory])
 
-  //-------------------選定特定分類後 熱門課程消失
+  //-------------------選定特定分類後 熱門課程消失 //FIXME回到原始url熱門課程出不來
   const { category } = useParams() // 从URL参数中获取category值
-    const [showHotCourses, setShowHotCourses] = useState(true) // 控制是否显示热门课程部分
-    
+  const [showHotCourses, setShowHotCourses] = useState(true) // 控制是否显示热门课程部分
+
   useEffect(() => {
-    // 如果URL中存在category参数，则显示热门课程部分
+    //   如果URL中存在category参数，则隱藏热门课程部分
     if ('category') {
       setShowHotCourses(false)
     } else {
-      // 否则隐藏热门课程部分
+      // 否则顯示热门课程部分
       setShowHotCourses(true)
     }
   }, [category])
-
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
@@ -302,15 +317,12 @@ export default function Test({ onSearch }) {
             <div className="sidebar">
               <ul className="d-flex flex-column">
                 <li>
-                  <Link href={'/lesson/lesson-data'}>全部</Link>
+                  <Link href={'/lesson'}>全部</Link>
                 </li>
                 {/* 分類功能 */}
                 {LessonCategory.map((v, index) => {
                   return (
-                    <Link
-                      key={index}
-                      href={'/lesson/?${v.id}'}
-                    >
+                    <Link key={index} href={'/lesson/?category === `${v.id}'}>
                       <li onClick={() => handleCategoryChange(v.id)}>
                         {v.name}
                       </li>
@@ -337,27 +349,21 @@ export default function Test({ onSearch }) {
                   }}
                 />
               </div>
-              <Link href={`/instrument/instrument`} className="sm-item active">
+              <Link href={`/lesson`} className="sm-item active">
                 全部
               </Link>
-              <Link href={`/instrument/instrument`} className="sm-item">
-                歌唱技巧
-              </Link>
-              <Link href={`/instrument/instrument`} className="sm-item">
-                樂器演奏
-              </Link>
-              <Link href={`/instrument/instrument`} className="sm-item">
-                音樂理論
-              </Link>
-              <Link href={`/instrument/instrument`} className="sm-item">
-                詞曲創作
-              </Link>
-              <Link href={`/instrument/instrument`} className="sm-item">
-                軟體操作
-              </Link>
-              <Link href={`/instrument/instrument`} className="sm-item">
-                活動專區
-              </Link>
+              {LessonCategory.map((v, index) => {
+                return (
+                  <Link
+                    key={index}
+                    href={`/lesson?${v.id}`}
+                    className="sm-item"
+                    onClick={() => handleCategoryChange(v.id)}
+                  >
+                    {v.name}
+                  </Link>
+                )
+              })}
             </div>
 
             {/* 頂部功能列 */}
@@ -548,21 +554,26 @@ export default function Test({ onSearch }) {
                 <div className="hot-lesson">
                   <h4 className="text-primary">熱門課程</h4>
                   <div className="hot-lesson-card-group">
-                    {/* //FIXME還沒寫熱門課程邏輯sales最高的前4筆 */}
-                    {data.slice(0, 4).map((v, i) => (
-                      <div className="hot-lesson-card" key={i}>
-                        <Card
-                          id={v.id}
-                          course-card
-                          name={v.name}
-                          price={v.price}
-                          teacher_id={v.teacher_id}
-                          img={v.img}
-                          length={v.length}
-                          sales={v.sales}
-                        />
-                      </div>
-                    ))}
+                    {Lesson.slice() // Create a copy of data array to avoid mutating original array
+                      .sort((a, b) => b.sales - a.sales) // Sort courses based on sales volume
+                      .slice(0, 4) // Get top 4 courses */
+                      .map((v, i) => {
+                        return (
+                          <div className="hot-lesson-card" key={i}>
+                            <Card
+                              course-card
+                              id={v.id}
+                              luid={v.puid}
+                              name={v.name}
+                              price={v.price}
+                              teacher_id={v.teacher_id}
+                              img={v.img}
+                              length={v.length}
+                              sales={v.sales}
+                            />
+                          </div>
+                        )
+                      })}
                   </div>
                 </div>
               )}
@@ -570,44 +581,102 @@ export default function Test({ onSearch }) {
               {/*-------- 列表頁卡片迴圈------- */}
               <div className="lesson-card-group">
                 {/* 更改為搜尋過後篩選出來的課程 */}
-                {data.map((v, i) => {
-                  return (
-                    <div className="mb-4 " key={v.id}>
-                      {isSmallScreen ? (
-                        <Cardrwd
-                          id={v.id}
-                          name={v.name}
-                          price={v.price}
-                          teacher_id={v.teacher_id}
-                          img={v.img}
-                          sales={v.sales}
-                        />
-                      ) : (
-                        <Card
-                          id={v.id}
-                          course-card
-                          name={v.name}
-                                      price={v.price}
-                                      
-                          teacher_id={v.teacher_id}
-                          img={v.img}
-                          length={v.length}
-                          sales={v.sales}
-                        />
-                      )}
-                          <Link href={`/lesson/${v.id}`}></Link>
-                          
-                    </div>
-                  )
-                })}
+
+                {isFiltered &&
+                  // 如果已经进行了筛选或搜索，渲染筛选后的 Lesson 数据
+                  data.map((v, i) => {
+                    const {
+                      id,
+                      puid,
+                      name,
+                      price,
+                      teacher_id,
+                      img,
+                      sales,
+                      length,
+                    } = v
+                    return (
+                      <div className="mb-4" key={id}>
+                        {isSmallScreen ? (
+                          <Cardrwd
+                            id={id}
+                            luid={puid}
+                            name={name}
+                            price={price}
+                            teacher_id={teacher_id}
+                            img={img}
+                            sales={sales}
+                            length={length}
+                          />
+                        ) : (
+                          <Card
+                            course-card
+                            id={id}
+                            luid={puid}
+                            name={name}
+                            price={price}
+                            teacher_id={teacher_id}
+                            img={img}
+                            sales={sales}
+                            length={length}
+                          />
+                        )}
+                      </div>
+                    )
+                  })}
+
+                {!isFiltered &&
+                  // 如果没有进行筛选或搜索，渲染原始的 Lesson 数据
+                  Lesson.map((v, i) => {
+                    const {
+                      id,
+                      puid,
+                      name,
+                      price,
+                      teacher_id,
+                      img,
+                      sales,
+                      length,
+                    } = v
+                    return (
+                      <div className="mb-4" key={id}>
+                        {isSmallScreen ? (
+                          <Cardrwd
+                            id={id}
+                            luid={puid}
+                            name={name}
+                            price={price}
+                            teacher_id={teacher_id}
+                            img={img}
+                            sales={sales}
+                            length={length}
+                          />
+                        ) : (
+                          <Card
+                            id={id}
+                            luid={puid}
+                            name={name}
+                            price={price}
+                            teacher_id={teacher_id}
+                            img={img}
+                            sales={sales}
+                            length={length}
+                          />
+                        )}
+                      </div>
+                    )
+                  })}
               </div>
             </div>
           </div>
         </div>
       </div>
       <div className="d-flex justify-content-center">
-        <BS5Pagination />
-        {/* //FIXME 沒有頁碼細節 */}
+        <BS5Pagination
+          forcePage={page - 1}
+          onPageChange={handlePageClick}
+          pageCount={pageTotal}
+        />
       </div>
       <Footer />
       <style jsx>{`

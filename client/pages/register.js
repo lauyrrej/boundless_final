@@ -1,4 +1,4 @@
-import React, { useState, ffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
@@ -7,6 +7,10 @@ import Head from 'next/head'
 // 會員認證
 import { useAuth } from '@/hooks/user/use-auth'
 import { jwtDecode } from 'jwt-decode'
+
+//google登入
+import useFirebase from '@/hooks/user/use-firebase'
+import GoogleLogo from '@/components/icons/google-logo'
 
 // sweetalert
 import Swal from 'sweetalert2'
@@ -55,6 +59,87 @@ export default function Test() {
       alert(`錯誤 - 密碼不一致。`)
     }
   }
+
+  // ----------------------google登入  ----------------------
+
+  // const [user, setUser] = useState({ email: '', password: '' })
+  const [token, setToken] = useState('')
+
+  // 隨便字串 決定儲存在localStorage的名稱
+  const appKey = 'userToken'
+  let userData
+  /*   Google Login(Firebase)登入用，providerData為登入後得到的資料  */
+  const googleLogin = async (providerData = {}) => {
+    try {
+      const response = await fetch('http://localhost:3005/api/google-login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(providerData), // 將 providerData 轉為 JSON 字串並加入請求主體
+      })
+
+      if (!response.ok) {
+        console.error('Error during fetch')
+      }
+
+      const data = await response.json()
+      return data
+    } catch (error) {
+      console.error('Error during fetch:', error)
+      throw error
+    }
+  }
+  //------------------------------------------------
+  // loginGoogleRedirect無callback，要改用initApp在頁面初次渲染後監聽google登入狀態
+  const { logoutFirebase, loginGoogleRedirect, initApp } = useFirebase()
+  //   const { auth, setAuth } = useAuth()
+
+  // 這裡要設定initApp，讓這個頁面能監聽firebase的google登入狀態
+  useEffect(() => {
+    initApp(callbackGoogleLoginRedirect)
+  }, [])
+
+  // 處理google登入後，要向伺服器進行登入動作
+  const callbackGoogleLoginRedirect = async (providerData) => {
+    console.log(providerData)
+
+    // 如果目前react(next)已經登入中，不需要再作登入動作
+    // if (auth.isAuth) return
+
+    // 向伺服器進行登入動作
+    const res = await googleLogin(providerData)
+    console.log(res)
+
+    if (res.status === 'success') {
+      // 從JWT存取令牌中解析出會員資料
+      // 注意JWT存取令牌中只有id, username, google_uid, 在登入時可以得到
+      const googletoken = res.token
+      userData = jwtDecode(googletoken)
+      // 先將 token 字串存入 localStorage
+      localStorage.setItem(appKey, googletoken)
+      // 更新 React state 中的 token
+      setToken(googletoken)
+
+      // console.log(googletoken)
+      console.log(userData)
+      alert('已成功登入')
+      setTimeout(() => {
+        router.push(`/user/user-info`)
+      }, 2000)
+      return googletoken, userData
+    } else {
+      alert(`登入失敗`)
+    }
+  }
+
+  // 處理google登出
+  // const handlegooogleLogout = async (res, req) => {
+  //   // firebase logout(注意，這並不會登出google帳號，是登出firebase的帳號)
+  //   logoutFirebase()
+
+  //   handleLogout()
+  // }
 
   //----------------------------sweetalert--------------------------------------
   //登入 跳轉 還沒加入判定 應該要先判斷再跳轉
@@ -141,10 +226,18 @@ export default function Test() {
             <div className="register-logoText">音樂無國界，學習無邊界</div>
             <div className="register-form">
               <div className="register-titleText">註冊帳號</div>
-              <div className="register-google-API">
+              {/* <div className="register-google-API">
                 <div className="google-icon">圖</div>
                 <div className="google-text">使用Google註冊</div>
-              </div>
+              </div> */}
+              <button
+                className="register-google-API"
+                onClick={() => loginGoogleRedirect()}
+              >
+                {/* <div className="google-icon">圖</div> */}
+                <GoogleLogo />
+                <div className="google-text">使用Google註冊</div>
+              </button>
               <div className="hr-content">
                 <div className="hr-line" />
                 <div className="hr-text">以E-mail註冊</div>
@@ -225,7 +318,9 @@ export default function Test() {
                   </span>
                 </div>
                 <div className="registerByEmail-forget">
-                  <a className="forget">已有帳號?</a>
+                  <Link href="/login" className="forget">
+                    已有帳號?
+                  </Link>
                 </div>
                 <div className="registerByEmail-submit">
                   <button type="submit" className="btn btn-submit">
