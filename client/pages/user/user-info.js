@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import Navbar from '@/components/common/navbar-test'
+import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -191,7 +191,7 @@ export default function Test() {
                     alt="user photo mb"
                     fill
                     priority="default" //不加的話Next 會問是否要加優先級
-                    sizes="(max-width: 150px) 150px, 50vw"
+                    sizes="(max-width: 150px)"
                   ></Image>
                 </div>
                 <div className="sidebar-user-info-text">

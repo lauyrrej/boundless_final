@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import Navbar from '@/components/common/navbar-test'
+import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'

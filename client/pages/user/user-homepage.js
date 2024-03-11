@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from 'react'
-import Navbar from '@/components/common/navbar-test'
+import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -118,7 +118,7 @@ export default function Test() {
                       <div className="user-homePage-content-left">
                         <div className="user-homePage-topInfo">
                           <div className="user-homePage-avatar">
-                            <Image className="avatar" src={avatar} alt="" />
+                            {/* <Image className="avatar" src={avatar} alt="" /> */}
                           </div>
                           <div className="user-homePage-name">棉悠悠</div>
                           <div className="user-homePage-bandName">
