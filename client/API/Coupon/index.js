@@ -17,7 +17,7 @@ class Coupon {
         url: this.url + 'FindAll',
         success: (data) => {
           // 成功回調函式，處理從後端返回的優惠券數據
-          const formated = data.map((i) => {
+          const formatted = data.map((i) => {
             return {
               ...i,
               created_time: moment(i.created_time).format(
@@ -35,7 +35,7 @@ class Coupon {
             }
           })
           // 解析處理後的優惠券數據
-          resolve(formated)
+          resolve(formatted)
         },
         // 失敗回調函式
         fail: (err) => reject(err),
@@ -59,9 +59,7 @@ class Coupon {
 export default new Coupon()
 
 //#region 使用API的方法
-
 // 在想要使用的地方import
-
 // 由於是非同步，所以需要加上async await
 
 // 範例:
