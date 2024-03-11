@@ -3,6 +3,7 @@ import Navbar from '@/components/common/navbar-test'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
+import Head from 'next/head'
 
 //圖片
 import jamHero from '@/assets/jam-hero.png'
@@ -113,6 +114,9 @@ export default function Test() {
 
   return (
     <>
+      <Head>
+        <title>會員資訊</title>
+      </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       {/* 先把HEROSECTION隱藏 */}
       {/* <div
@@ -173,7 +177,9 @@ export default function Test() {
               <div className="sidebar-user-info">
                 <div className="sidebar-user-info-imgBox">
                   <Image
-                    src={avatarImage || avatarDefault}
+                    src={
+                      LoginUserData.img !== null ? avatarImage : avatarDefault
+                    }
                     alt="user photo mb"
                     fill
                     priority="default" //不加的話Next 會問是否要加優先級
@@ -184,7 +190,7 @@ export default function Test() {
                   <div className="sidebar-user-info-name">
                     {LoginUserData.nickname}
                   </div>
-                  <div className="sidebar-user-info-band">樂團名稱</div>
+                  <div className="sidebar-user-info-band">樂團名稱七個字</div>
                 </div>
                 {/* 更換大頭貼的功能暫定併回會員資訊 故不再sidebar顯示 */}
                 {/* <div className="sidebar-user-info-Camera-img">
@@ -491,14 +497,12 @@ export default function Test() {
           }
           .sidebar-user-info-text {
             display: flex;
-
-            /* width: 150px; */
-
+            width: 140px;
             flex-direction: column;
             align-items: flex-start;
             gap: 6px;
             color: var(--dark, #1d1d1d);
-            text-align: center;
+            text-align: start;
 
             /* h5 */
             font-family: 'Noto Sans TC';

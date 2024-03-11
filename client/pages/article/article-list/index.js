@@ -24,6 +24,7 @@ export default function ArticleList() {
   const [article, setArticle] = useState([])
   const [search, setSearch] = useState('')
 
+  // 全部article資料
   useEffect(() => {
     const getDatas = async () => {
       try {
@@ -31,7 +32,7 @@ export default function ArticleList() {
         const datas = await res.json()
         if (datas) {
           setArticle(datas) // 設定獲取的文章數據到狀態中
-          // console.log(datas)
+          console.log(datas)
         }
       } catch (e) {
         console.error(e)
@@ -39,6 +40,33 @@ export default function ArticleList() {
     }
     getDatas() // 在元件渲染後立即獲取文章數據
   }, []) // 空的依賴陣列表示只在元件第一次渲染時執行一次
+
+  // article-category資料
+  const [articleCategory, setArticleCategory] = useState([])
+  function getArticleCategory() {
+    return new Promise((resolve, reject) => {
+      let url = 'http://localhost:3005/api/article/categories'
+      fetch(url, {
+        method: 'GET',
+        credentials: 'include',
+      })
+        .then((response) => {
+          return response.json()
+        })
+        .then((result) => {
+          resolve(result)
+          //   console.log(result)
+          setArticleCategory(result)
+        })
+        .catch((error) => {
+          console.log(error)
+          reject()
+        })
+    })
+  }
+  useEffect(() => {
+    getArticleCategory()
+  }, [])
 
   // 主選單
   const [showMenu, setShowMenu] = useState(false)

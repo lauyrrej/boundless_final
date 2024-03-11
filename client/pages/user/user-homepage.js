@@ -4,7 +4,7 @@ import Navbar from '@/components/common/navbar-test'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
-import avatar from '@/public/user/Meiyuyu.jpg'
+import Head from 'next/head'
 
 // icons
 import { IoHome } from 'react-icons/io5'
@@ -44,6 +44,9 @@ export default function Test() {
 
   return (
     <>
+      <Head>
+        <title>個人首頁</title>
+      </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}

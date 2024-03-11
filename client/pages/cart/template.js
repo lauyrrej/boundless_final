@@ -34,20 +34,21 @@ export default function Test() {
   const {
     items,
     instrumentData,
-    instrumentDiscount,
     instrumentCoupons,
     lessonData,
-    lessonDiscount,
     lessonCoupons,
     increment,
     decrement,
     remove,
     calcInstrumentItems,
     calcInstrumentPrice,
+    calcInstrumentDiscount,
     handleInstrumentSelector,
     calcLessonItems,
     calcLessonPrice,
+    calcLessonDiscount,
     handleLessonSelector,
+    calcTotalDiscount,
     calcTotalPrice,
   } = useCart()
   // ----------------------手機版本  ----------------------
@@ -74,29 +75,6 @@ export default function Test() {
     setFilterVisible(!filterVisible)
   }
 
-  // --------------------- 購物車 -----------------------
-
-  // const exItems = items.map((item,i)=>{
-  //   const newItem = { ...item, qty: 1 }
-  //   return newItem
-  // })
-
-  // items = exItems
-
-  // //如果有找到，做數量遞增
-  // if (foundIndex > -1) {
-  //   increment(items, item.id)
-  // } else {
-  //   const newItem = { ...item, qty: 1 }
-  //   const newItems = [...items, newItem]
-  //   setItems(newItems)
-  // }
-
-  // //擴充item屬性
-  // const newItem = { ...item, qty: 1 }
-  // const newItems = [...items, newItem]
-
-  // setItems(newItems)
 
   return (
     <>
@@ -203,14 +181,14 @@ export default function Test() {
                     </div>
                   </div>
                   <div className="cart-discount h6">
-                    折扣 -NT${' '}
-                    {lessonDiscount < 1 && lessonDiscount !== 0
-                      ? calcLessonPrice() - lessonDiscount * calcLessonPrice()
-                      : lessonDiscount}
+                    折扣 -NT$
+                    {calcLessonDiscount()}
                   </div>
                 </div>
                 <div className="cart-total">
-                  <div className="cart-total-text">小計 NT$ 300000</div>
+                  <div className="cart-total-text">
+                    小計 NT$ {calcLessonPrice() - calcLessonDiscount()}
+                  </div>
                 </div>
               </div>
               <div className="cart-instrument">
@@ -242,15 +220,13 @@ export default function Test() {
                     </div>
                   </div>
                   <div className="cart-discount h6">
-                    折扣 -NT${' '}
-                    {instrumentDiscount < 1 && instrumentDiscount !== 0
-                      ? calcInstrumentPrice() -
-                        calcInstrumentPrice() * instrumentDiscount
-                      : instrumentDiscount}{' '}
+                    折扣 -NT$ {calcInstrumentDiscount()}
                   </div>
                 </div>
                 <div className="cart-total">
-                  <div className="cart-total-text">小計 NT$ 300000</div>
+                  <div className="cart-total-text">
+                    小計 NT$ {calcInstrumentPrice() - calcInstrumentDiscount()}
+                  </div>
                 </div>
               </div>
             </div>
@@ -265,19 +241,21 @@ export default function Test() {
                 <div className="total d-flex flex-column" style={{ gap: 20 }}>
                   <div className="d-flex justify-content-between carttext">
                     <div>商品數量</div>
-                    <div>樂器*3 課程*2</div>
+                    <div>
+                      樂器*{calcInstrumentItems()} 課程*{calcLessonItems()}
+                    </div>
                   </div>
                   <div className="d-flex justify-content-between carttext">
                     <div>原價合計</div>
-                    <div>NT $864000</div>
+                    <div>NT ${calcTotalPrice()}</div>
                   </div>
                   <div className="d-flex justify-content-between carttext discount">
                     <div>折扣合計</div>
-                    <div>-NT $3400</div>
+                    <div>-NT ${calcTotalDiscount()}</div>
                   </div>
                   <div className="d-flex justify-content-between h3">
                     <div>合計</div>
-                    <div>NT $790000</div>
+                    <div>NT ${calcTotalPrice()}</div>
                   </div>
                 </div>
                 <div className="cart-btn">
@@ -311,7 +289,7 @@ export default function Test() {
             </div>
             <div className="d-flex justify-content-between carttext discount">
               <div>折扣合計</div>
-              <div>-NT $3400</div>
+              <div>-NT ${calcTotalDiscount()}</div>
             </div>
             <div className="d-flex justify-content-between h3">
               <div>合計</div>

@@ -54,6 +54,17 @@ export default function Publish() {
     // bug 顯示error但不知道問題在哪
   }
 
+  // ----------------------設定字數150---------------
+  const [text, setText] = useState('')
+  const maxLength = 150
+
+  const handleTextChange = (e) => {
+    const inputValue = e.target.value
+    if (inputValue.length <= maxLength) {
+      setText(inputValue)
+    }
+  }
+
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -85,8 +96,9 @@ export default function Publish() {
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
         <div
-          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${showMenu ? 'menu-mb-show' : ''
-            }`}
+          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${
+            showMenu ? 'menu-mb-show' : ''
+          }`}
         >
           {/* 用戶資訊 */}
           <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
@@ -169,7 +181,8 @@ export default function Publish() {
               </div>
               <div className="rwd-content">
                 <h5 className="text-secondary">
-                  上限150個字，系統已經先擷取，你也可以自行修改摘要說明。(140/150)
+                  上限150個字，系統已經先擷取，你也可以自行修改摘要說明。(
+                  {text.length}/150)
                 </h5>
                 <div>
                   <label
@@ -180,7 +193,9 @@ export default function Publish() {
                     className="form-control"
                     id="exampleFormControlTextarea1"
                     rows={3}
+                    onChange={handleTextChange}
                     placeholder="輸入內容..."
+                    maxLength={150}
                     defaultValue={''}
                   />
                 </div>
