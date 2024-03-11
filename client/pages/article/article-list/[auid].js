@@ -180,9 +180,7 @@ export default function Auid() {
                   />
                 </span>
               </div>
-              <p className="pt-1">
-                上完全部課程後覺得幸好自己做了這個決定，因為以初學者會使用到的功能其實兩款軟體跟控制器都全部支援，頂多就是一些按鍵配置不太一樣，完全不影響學習跟練習。
-              </p>
+              <p className="pt-1">{articleDetail.comment_content}</p>
               <div className="reader-like d-flex justify-content-between">
                 <div />
                 <div className="d-flex align-items-center">
