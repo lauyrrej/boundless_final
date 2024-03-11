@@ -4,7 +4,7 @@ import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
 import jamHero from '@/assets/jam-hero.png'
-import avatar from '@/public/user/Meiyuyu.jpg'
+import Head from 'next/head'
 
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
@@ -131,6 +131,9 @@ export default function Test() {
 
   return (
     <>
+      <Head>
+        <title>我的課程</title>
+      </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       {/* 先把HEROSECTION隱藏 */}
       {/* <div
@@ -378,12 +381,12 @@ export default function Test() {
           }
           .sidebar-user-info-text {
             display: flex;
-            /* width: 100px; */
+            width: 140px;
             flex-direction: column;
             align-items: flex-start;
             gap: 6px;
             color: var(--dark, #1d1d1d);
-            text-align: center;
+            text-align: start;
 
             /* h5 */
             font-family: 'Noto Sans TC';
