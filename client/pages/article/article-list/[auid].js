@@ -166,13 +166,13 @@ export default function Auid() {
               <div className="reader-comment pt-3 d-flex align-items-center">
                 <Image
                   className="article-author"
-                  src="/article/empty.png"
+                  src={`/user/${articleDetail.user_img}`}
                   alt="空的圖"
                   width={50}
                   height={50}
                 />
                 <span className="ps-3 info-p text-primary">
-                  {articleDetail.user_id}
+                  {articleDetail.user_name}
                 </span>
                 <span className="ps-2 info-p text-secondary">
                   <Datetime
@@ -184,7 +184,7 @@ export default function Auid() {
               <div className="reader-like d-flex justify-content-between">
                 <div />
                 <div className="d-flex align-items-center">
-                  <div>1人認同</div>
+                  <div>{articleDetail.comment_likes}人認同</div>
                   <button
                     type="button"
                     className="btn btn-outline-primary ms-1"

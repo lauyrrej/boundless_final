@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { FaEye } from 'react-icons/fa'
 import bookmarkIconFill from '@/assets/fillbookmark.svg'
 import bookmarkIcon from '@/assets/emptybookmark.svg'
 import { FaBookmark } from 'react-icons/fa'
@@ -18,6 +17,9 @@ export default function Articlecard({
   fav,
   handleToggleFav,
   category_name,
+  comment_likes,
+  user_name,
+  user_img,
 }) {
   return (
     <>
@@ -29,10 +31,10 @@ export default function Articlecard({
         >
           <img
             className="article-author"
-            src="/article/empty.png"
+            src={`/user/${user_img}`}
             alt="空的圖"
           />
-          <span className="info-p text-secondary">{user_id}</span>
+          <span className="info-p text-secondary">{user_name}</span>
           <span className="info-p text-secondary">
             <Datetime published_time={published_time} />
           </span>
@@ -48,14 +50,10 @@ export default function Articlecard({
           </div>
         </Link>
         {/* views-like */}
-        <div className="views-like d-flex">
-          <div className="views d-flex">
-            <FaEye />
-            <p className="text-secondary ms-1">50</p>
-          </div>
-          <div className="saves d-flex ms-4">
+        <div className="views-like">
+          <div className="saves d-flex">
             <FaBookmark />
-            <p className="text-secondary ms-1">50</p>
+            <p className="text-secondary ms-1">{comment_likes}</p>
           </div>
         </div>
         {/* kind-bookmark */}

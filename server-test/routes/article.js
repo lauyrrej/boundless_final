@@ -16,7 +16,7 @@ router.use(cors());
 // 文章列表
 router.get("/", async (req, res) => {
   try {
-    let [articleData] = await db.execute("SELECT article.*, article_category.name AS category_name FROM article JOIN article_category ON article.category_id = article_category.id");
+    let [articleData] = await db.execute("SELECT article.*, article_category.name AS category_name,article_comment.likes AS comment_likes, user.name AS user_name, user.img AS user_img FROM article JOIN article_category ON article.category_id = article_category.id LEFT JOIN article_comment ON article.id = article_comment.article_id LEFT JOIN user ON article_comment.user_id = user.id");
     if (articleData) {
       res.json(articleData);
     } else {
@@ -31,7 +31,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res, next) => {
   let auid = req.params.id;
   let [data] = await db
-    .execute("SELECT article.*, article_category.name AS category_name, article_comment.content AS comment_content,article_comment.created_time AS comment_created_time FROM article JOIN article_category ON article.category_id = article_category.id LEFT JOIN article_comment ON article.id = article_comment.article_id WHERE article.auid = ?", [auid])
+    .execute("SELECT article.*, article_category.name AS category_name, article_comment.content AS comment_content,article_comment.created_time AS comment_created_time,article_comment.likes AS comment_likes, user.name AS user_name, user.img AS user_img FROM article JOIN article_category ON article.category_id = article_category.id LEFT JOIN article_comment ON article.id = article_comment.article_id LEFT JOIN user ON article_comment.user_id = user.id WHERE article.auid = ?", [auid])
     .catch(() => {
       return undefined;
     });
