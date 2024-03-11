@@ -8,7 +8,8 @@ const upload = multer();
 // 取得所有組團資料
 router.get("/allJam", async (req, res) => {
   // 取得組團資訊中所需的曲風、樂手資料
-  let [genreData] = await db.execute("SELECT * FROM `genre`").catch(() => {
+  let [genreData] = await db.execute("SELECT * FROM `genre`").catch((error) => {
+    console.log(error);
     return undefined;
   });
   let [playerData] = await db.execute("SELECT * FROM `player`").catch(() => {
@@ -220,6 +221,44 @@ router.get("/singleJam/:juid", async (req, res) => {
 
 // 發起JAM表單
 router.post("/form", upload.none(), async (req, res) => {
+  // console.log(req.body);
+  const {
+    title,
+    degree,
+    genre,
+    former,
+    players,
+    region,
+    condition,
+    description,
+  } = req.body;
+  const tureDegree = parseInt(degree);
+  const juid = generateUid();
+  await db
+    .execute(
+      "INSERT INTO `jam` (`id`, `juid`, `title`, `degree`, `genre`, `former`, `players`, `region`, `band_condition`, `description`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      [
+        juid,
+        title,
+        tureDegree,
+        genre,
+        former,
+        players,
+        region,
+        condition,
+        description,
+      ]
+    )
+    .then(() => {
+      res.status(200).json({ status: "success", juid });
+    })
+    .catch((error) => {
+      res.status(409).json({ status: "error", error });
+    });
+});
+
+// 發起JAM表單
+router.post("/apply", upload.none(), async (req, res) => {
   // console.log(req.body);
   const {
     title,
