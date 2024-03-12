@@ -5,19 +5,34 @@ import CouponData from '@/data/cart/coupons.json'
 export const CartContext = createContext()
 
 export function CartProvider({ children }) {
+  let cartData = CartData.map((v) => {
+    if (v.type == 1) {
+      return { ...v, qty: 1 }
+    } else {
+      return v
+    }
+  })
   //加入到購物車的項目
-  let [items, setItems] = useState(CartData)
+  let [items, setItems] = useState(cartData)
 
   useEffect(() => {
     localStorage.setItem('CartData', JSON.stringify(items))
   }, [items])
 
-  const addItem = (item) => {
+  const addInstrumentItem = (item) => {
     //擴充item的屬性多一個qty
     const newItem = { ...item, qty: 1 }
     const newItems = [...items, newItem]
 
     setItems(newItems)
+    localStorage.setItem('CartData', JSON.stringify(newItems))
+  }
+
+  const addLessonItem = (item) => {
+    const newItems = [...items, item]
+
+    setItems(newItems)
+    localStorage.setItem('CartData', JSON.stringify(newItems))
   }
 
   //在購物車中，移除某商品的id
@@ -29,8 +44,6 @@ export function CartProvider({ children }) {
     setItems(newItems)
 
     localStorage.setItem('CartData', JSON.stringify(newItems))
-
-
   }
 
   //遞增某商品id數量
@@ -41,6 +54,8 @@ export function CartProvider({ children }) {
     })
 
     setItems(newItems)
+
+    localStorage.setItem('CartData', JSON.stringify(newItems))
   }
 
   //遞減某商品id數量
@@ -49,8 +64,9 @@ export function CartProvider({ children }) {
       if (v.id === id) return { ...v, qty: v.qty - 1 }
       else return v
     })
-
     setItems(newItems)
+
+    localStorage.setItem('CartData', JSON.stringify(newItems))
   }
 
   //lessondata
@@ -135,8 +151,14 @@ export function CartProvider({ children }) {
   const [instrumentDiscount, setinstrumentDiscount] = useState(0)
 
   const handleInstrumentSelector = (e) => {
+    localStorage.setItem('InstrumentCoupon', JSON.stringify(e))
     setinstrumentDiscount(e)
   }
+
+  useEffect(()=>{
+    const lastInstrumentCoupon = 0
+  })
+  
 
   const calcLessonDiscount = () => {
     let total = 0
@@ -163,6 +185,20 @@ export function CartProvider({ children }) {
     return total
   }
 
+  function MySelect() {
+    const [selected, setSelected] = useState([])
+    const handleChange = (v) => {
+      localStorage.setItem('SelectCoupons', JSON.stringify(v))
+      setSelected(v)
+    }
+    useEffect(() => {
+      const lastSelected = JSON.parse(
+        localStorage.getItem('SelectCoupons') ?? '[]'
+      )
+      setSelected(lastSelected)
+    }, [])
+  }
+
   return (
     <CartContext.Provider
       value={{
@@ -175,7 +211,8 @@ export function CartProvider({ children }) {
         lessonDiscount,
         handleLessonSelector,
         handleInstrumentSelector,
-        addItem,
+        addLessonItem,
+        addInstrumentItem,
         increment,
         decrement,
         remove,
