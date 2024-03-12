@@ -23,7 +23,10 @@ import BS5Pagination from '@/components/common/pagination.js'
 
 import { useParams } from 'react-router-dom'
 
-export default function Test({ onSearch }) {
+import Pagination from '@/components/lesson/pagination.js'
+
+
+export default function LessonList({ onSearch }) {
   // 在電腦版或手機版時
   const [isSmallScreen, setIsSmallScreen] = useState(false)
 
@@ -98,27 +101,57 @@ export default function Test({ onSearch }) {
     setSales(false)
   }
 
-  // ------------------------------------- 製作分頁
-  const [page, setPage] = useState(1)
-  const [pageTotal, setPageTotal] = useState(0)
-  // 資料排序
-  const [order, setOrder] = useState('ASC')
-  // 點按分頁時，要送至伺服器的query string參數
-  const handlePageClick = (event) => {
-    router.push({
-      pathname: router.pathname,
+    //--------------------重新整理後url回歸原始
+    // const history = useHistory();
 
-      query: {
-        page: event.selected + 1,
-      },
-    })
-  }
+    // useEffect(() => {
+    //     return () => {
+    //         history.push();
+    //     }
+    // },[history])
+    
+    // ------------------------------------- 製作分頁
+
+     
+//   const [products, setProducts] = useState([]);
+//   const [CurrentPage, setCurrentPage] = useState(1)
+//   const [totalPages, setTotalPages] = useState(1);
+
+// //   useEffect(() => {
+// //     handlePageClick()
+// //   }, [CurrentPage])
+    
+//         useEffect(() => {
+//           handlePageClick()
+//         }, [])
+
+//   const handlePageClick = async () => {
+//     try {
+//       const response = await fetch(
+//         `http://localhost:3005/api/lesson/page/${page}`
+//       )
+//       setProducts(response.data.products);
+//       setTotalPages(response.data.totalPages);
+//     } catch (error) {
+//       console.error(error);
+//     }  
+//   };
+
+//   const handlePrevPage = () => {
+//     setCurrentPage(prevPage => prevPage - 1);
+//   };
+
+//   const handleNextPage = () => {
+//     setCurrentPage(prevPage => prevPage + 1);
+//   };
+    
+ 
 
   //-------------------連資料庫
-
+    const initialUrl = 'http://localhost:3005/api/lesson';
   const [Lesson, setLesson] = useState([])
 
-  function getLesson() {
+  function getLesson(initialUrl) {
     return new Promise((resolve, reject) => {
       let url = 'http://localhost:3005/api/lesson'
       fetch(url, {
@@ -140,8 +173,8 @@ export default function Test({ onSearch }) {
     })
   }
   useEffect(() => {
-    getLesson()
-  }, [])
+    getLesson(initialUrl)
+  }, [initialUrl])
   //-------------------搜尋功能
   const [data, setData] = useState(Lesson)
   //-----------所有過濾資料功能傳回來的地方
@@ -228,7 +261,7 @@ export default function Test({ onSearch }) {
     const fetchProducts = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3005/api/Lesson/category/${selectedCategory}`
+          `http://localhost:3005/api/lesson/category/${selectedCategory}`
         )
         const data = await response.json()
         console.log(data)
@@ -674,10 +707,15 @@ export default function Test({ onSearch }) {
       </div>
       <div className="d-flex justify-content-center">
         <BS5Pagination
-          forcePage={page - 1}
-          onPageChange={handlePageClick}
-          pageCount={pageTotal}
+        //   forcePage={CurrentPage - 1}
+        //   onPageChange={handlePageClick}
+        //   pageCount={totalPages}
         />
+        {/* <Pagination
+          totalPages={Math.ceil(filteredProducts.length / perPage)}
+                  setFilterSettings={setFilterSettings}
+                  page={setFilterSettings.page}
+        /> */}
       </div>
       <Footer />
       <style jsx>{`
