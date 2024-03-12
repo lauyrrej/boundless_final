@@ -133,7 +133,7 @@ export default function Test() {
               <div className="ball d-flex align-items-center justify-content-center active">
                 1
               </div>
-              <div className="h5 cart-process-text">確認/修改訂單</div>
+              <div className="h5 cart-process-text">修改訂單</div>
             </div>
             <div
               className="d-flex align-items-center ballbox step2"
@@ -155,7 +155,7 @@ export default function Test() {
             </div>
           </div>
           <div className="d-flex">
-            <div className="w-100 p-0 cart-main" style={{ height: '' }}>
+            <div className="w-100 p-0 cart-main">
               <div className="cart-lesson">
                 <div className="cart-title">課程</div>
                 <div className="cart-thead">
@@ -255,23 +255,24 @@ export default function Test() {
                   </div>
                   <div className="d-flex justify-content-between h3">
                     <div>合計</div>
-                    <div>NT ${calcTotalPrice()}</div>
+                    <div>NT ${calcTotalPrice() - calcTotalDiscount()}</div>
                   </div>
                 </div>
                 <div className="cart-btn">
-                  <div
+                  <Link
+                    href="/cart/info"
                     className="b-btn b-btn-primary d-flex w-100 h-100 justify-content-center"
                     style={{ padding: '14px 0' }}
                   >
                     結帳
-                  </div>
+                  </Link>
                 </div>
               </div>
             </div>
           </div>
         </>
       </div>
-      <div className="flow-cart-mb" style={{}}>
+      <div className="flow-cart-mb">
         <div
           className="d-flex flex-column position-sticky"
           style={{ gap: 20, top: 110 }}
@@ -293,16 +294,17 @@ export default function Test() {
             </div>
             <div className="d-flex justify-content-between h3">
               <div>合計</div>
-              <div>NT ${calcTotalPrice()}</div>
+              <div>NT ${calcTotalPrice() - calcTotalDiscount()}</div>
             </div>
           </div>
           <div className="cart-btn">
-            <div
+            <Link
+              href="/cart/info"
               className="b-btn b-btn-primary d-flex w-100 h-100 justify-content-center"
               style={{ padding: '14px 0' }}
             >
               結帳
-            </div>
+            </Link>
           </div>
         </div>
       </div>
@@ -499,6 +501,8 @@ export default function Test() {
               overflow: hidden;
               position: relative;
               & img {
+                width: auto;
+                height: auto;
                 object-fit: cover;
               }
               @media screen and (max-width: 576px) {

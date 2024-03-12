@@ -1,12 +1,36 @@
 import { React, useState } from 'react'
 import { FaHeart } from 'react-icons/fa'
-export default function ProductBriefCard() {
+import Instrument from '@/data/instrument/instrument.json'
+import toast, { Toaster } from 'react-hot-toast'
+//收藏的功能
+
+//跳轉頁面
+import Link from 'next/link'
+
+export default function ProductBriefCard({ name, sales, price, info }) {
   //收藏按鍵的功能
   const [colorChange, setcolorChange] = useState(false)
   const colorToggle = () => {
     //按按鍵切換狀態
     setcolorChange(!colorChange)
   }
+
+  // ----------------------加入右上角購物車的功能
+  const [cartItems, setCartItems] = useState([])
+  const [cartCount, setCartCount] = useState(0)
+
+  const addToCart = (product) => {
+    const existingItem = cartItems.find((item) => item.id === product.id)
+    if (existingItem) {
+      existingItem.quantity += 1
+    } else {
+      const newItem = { ...product, quantity: 1 }
+      setCartItems([...cartItems, newItem])
+    }
+    setCartCount(cartCount + 1)
+    toast(`${Instrument[0].name}已加入購物車中`)
+  }
+
   //數量增減功能
   const [quantity, setQuantity] = useState(1)
 
@@ -23,7 +47,7 @@ export default function ProductBriefCard() {
     <>
       <div className="Right sticky-top ">
         <div className="prodBriefing sticky-top ">
-          <div className="prodMainName">Orange Micro Terror</div>
+          <div className="prodMainName">{name}</div>
           <div className="Rating">
             <div className="star">
               <img
@@ -34,10 +58,10 @@ export default function ProductBriefCard() {
               <div className="ratingNumber">4.9</div>
               <div className="commentNumber">(3)</div>
             </div>
-            <div className="sales">已售出 10</div>
+            <div className="sales">已售出 {sales}</div>
           </div>
           <div className="productPrice">
-            <div className="price">NT$ 22,680</div>
+            <div className="price">NT$ {price}</div>
             {/* 收藏功能 */}
             {/* 做好的 onClick*/}
             <div className="likesIcon icon-container ">
@@ -102,7 +126,7 @@ export default function ProductBriefCard() {
       <style jsx>
         {`
           .Right {
-            padding-top: 80px;
+            top: 80px;
           }
 
           .prodBriefing {

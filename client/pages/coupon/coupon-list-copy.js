@@ -89,6 +89,8 @@ export default function Test() {
     setScore('all')
     setSales(false)
   }
+  // 分頁
+  const [kind, setKind] = useState('全部')
 
   return (
     <>
@@ -255,19 +257,23 @@ export default function Test() {
                     <nav aria-label="breadcrumb sort d-flex justify-content-between align-items-center">
                       <ol className="breadcrumb">
                         <li className="h6 breadcrumb-item">
-                          <a href="#" className="active">
+                          <a href="#" onClick={() => setKind('全部')}>
                             全部
                           </a>
                         </li>
                         <li className="h6 breadcrumb-item" aria-current="page">
-                          <a href="#">樂器</a>
+                          <a href="#" onClick={() => setKind('樂器')}>
+                            樂器
+                          </a>
                         </li>
                         <li className="h6 breadcrumb-item" aria-current="page">
-                          <a href="#">課程</a>
+                          <a href="#" onClick={() => setKind('課程')}>
+                            課程
+                          </a>
                         </li>
-                        {/* <li className="h6 breadcrumb-item" aria-current="page">
+                        <li className="h6 breadcrumb-item" aria-current="page">
                           <a href="#">已使用</a>
-                        </li> */}
+                        </li>
                       </ol>
                     </nav>
                   </div>
@@ -403,7 +409,9 @@ export default function Test() {
                       </div>
                       {/* components */}
                       <div className="couponImage">
-                        {Data.map((v, i) => {
+                        {Data.filter((item) =>
+                          kind === '全部' ? true : item.kind === kind
+                        ).map((v, i) => {
                           const { id, name, discount, kind, limit_time } = v
                           return (
                             <Coupon

@@ -6,9 +6,6 @@ import Image from 'next/image'
 import { FaTrash } from 'react-icons/fa6'
 
 export default function LessonList({ items, lessonData, remove }) {
-  //   const lessonData = items.filter((v, i) => {
-  //     return v.type == 2
-  //   })
   return (
     <>
       <div className={`${Lesson.cartItemGroup}`}>
@@ -20,6 +17,8 @@ export default function LessonList({ items, lessonData, remove }) {
                   className={`${Lesson.lesson_item_pic_div}`}
                   src={`/課程與師資/lesson_img/${v.img}`}
                   alt={v.name}
+                  sizes="100vw"
+                  priority={false}
                   fill
                 />
               </div>

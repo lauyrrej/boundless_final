@@ -520,7 +520,10 @@ export default function ArticleList() {
                     published_time,
                     articles,
                     fav,
-                    category_id,
+                    category_name,
+                    comment_likes,
+                    article_author_name,
+                    article_author_img,
                   } = v
                   return (
                     <ArticleCard
@@ -532,11 +535,14 @@ export default function ArticleList() {
                       content={content}
                       img={img}
                       author={author}
-                      category_id={category_id}
+                      category_name={category_name}
                       published_time={published_time}
                       articles={articles}
                       handleToggleFav={handleToggleFav}
                       fav={fav}
+                      comment_likes={comment_likes}
+                      article_author_name={article_author_name}
+                      article_author_img={article_author_img}
                     />
                   )
                 })}
@@ -555,7 +561,10 @@ export default function ArticleList() {
                     published_time,
                     articles,
                     fav,
-                    category_id,
+                    category_name,
+                    comment_likes,
+                    article_author_name,
+                    article_author_img,
                   } = v
                   return (
                     <ArticleCard
@@ -570,8 +579,11 @@ export default function ArticleList() {
                       published_time={published_time}
                       articles={articles}
                       fav={fav}
-                      category_id={category_id}
+                      category_name={category_name}
                       handleToggleFav={handleToggleFav}
+                      comment_likes={comment_likes}
+                      article_author_name={article_author_name}
+                      article_author_img={article_author_img}
                     />
                   )
                 })}

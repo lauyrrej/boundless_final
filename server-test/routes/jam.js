@@ -69,17 +69,17 @@ router.get("/allJam", async (req, res) => {
     const player =
       req.query.player !== "all"
         ? " AND (`players` LIKE '%," +
-        req.query.player +
-        "]'" +
-        " OR `players` LIKE '[" +
-        req.query.player +
-        ",%'" +
-        " OR `players` LIKE '%," +
-        req.query.player +
-        ",%'" +
-        " OR `players` = '[" +
-        req.query.player +
-        "]')"
+          req.query.player +
+          "]'" +
+          " OR `players` LIKE '[" +
+          req.query.player +
+          ",%'" +
+          " OR `players` LIKE '%," +
+          req.query.player +
+          ",%'" +
+          " OR `players` = '[" +
+          req.query.player +
+          "]')"
         : "";
     const region =
       req.query.region !== "all"

@@ -39,15 +39,34 @@ export default function Test() {
   const handleSubmit = (e) => {
     //取消表單預設行為，因為要使用js做進一步檢查
     e.preventDefault()
-    console.log(e.target);
+    console.log(e.target)
     const formData = new FormData(e.target)
-
     //取得欄位的的名稱
-    console.log(FormData);
-
-
-    console.log(e.target);
+    console.log(FormData)
+    console.log(e.target)
   }
+
+  //credit-card data
+
+  const [name, setName] = useState('')
+  const [phone, setPhone] = useState('')
+  const [email, setEmail] = useState('')
+  const [address, setAddress] = useState('')
+
+
+
+  let UserInfo = JSON.stringify([
+    { Name: name },
+    { Phone: phone },
+    { Email: email },
+    { Address: address}
+  ])
+
+  useEffect(() => {
+    localStorage.setItem('UserInfo', UserInfo)
+  }, [UserInfo])
+
+  const [creditcardNum1, setCreditcardNum1] = useState('')
 
   // ----------------------手機版本  ----------------------
   // 主選單
@@ -131,7 +150,7 @@ export default function Test() {
               <div className="ball d-flex align-items-center justify-content-center inactive">
                 1
               </div>
-              <div className="h5 cart-process-text">確認/修改訂單</div>
+              <div className="h5 cart-process-text">修改訂單</div>
             </div>
             <div
               className="d-flex align-items-center ballbox"
@@ -153,7 +172,7 @@ export default function Test() {
             </div>
           </div>
           <div className="d-flex">
-            <div className="w-100 p-0 cart-main" style={{ height: '' }}>
+            <div className="w-100 p-0 cart-main">
               <div className="consumer-info">
                 <div className="cart-title">寄送資訊</div>
                 <div className="consumer-info-group">
@@ -165,7 +184,13 @@ export default function Test() {
                       購買者姓名
                     </label>
                     <div className="col-sm-3 col-6 consumer-info-input">
-                      <input type="text" className="form-control" id="name" />
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="name"
+                        value={UserInfo.Name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
                     </div>
                   </div>
                   <div className="row g-3 align-items-center">
@@ -176,7 +201,13 @@ export default function Test() {
                       電話號碼
                     </label>
                     <div className="col-sm-3 col-6 consumer-info-input">
-                      <input type="text" className="form-control" id="phone" />
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="phone"
+                        value={UserInfo.Phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                      />
                     </div>
                   </div>
                   <div className="row g-3 align-items-center">
@@ -187,7 +218,13 @@ export default function Test() {
                       電子信箱
                     </label>
                     <div className="col-sm-5 col-10 consumer-info-input">
-                      <input type="text" className="form-control" id="email" />
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="email"
+                        value={UserInfo.Email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
                     </div>
                   </div>
                   <div className="row g-3">
@@ -234,6 +271,8 @@ export default function Test() {
                           type="text"
                           className="form-control"
                           id="addressinfo"
+                          value={UserInfo.Address}
+                          onChange={(e) => setAddress(e.target.value)}
                         />
                       </div>
                     </div>
@@ -260,6 +299,7 @@ export default function Test() {
                         id="credit-card"
                         value={'credit-card'}
                         name="paymethods"
+                        checked={true}
                       />
                       <label htmlFor="credit-card">信用卡</label>
                       <div className="credit-card-pic">
@@ -440,22 +480,24 @@ export default function Test() {
                   </div>
                   <div className="d-flex justify-content-between h3">
                     <div>合計</div>
-                    <div>NT ${calcTotalPrice()}</div>
+                    <div>NT ${calcTotalPrice() - calcTotalDiscount()}</div>
                   </div>
                 </div>
                 <div className="cart-btn">
-                  <div
+                  <Link
+                    href="/cart/check"
                     className="b-btn b-btn-body d-flex w-100 h-100 justify-content-center"
                     style={{ padding: '14px 0' }}
                   >
                     回上一步
-                  </div>
-                  <div
+                  </Link>
+                  <Link
+                    href="/cart/confirm"
                     className="b-btn b-btn-primary d-flex w-100 h-100 justify-content-center"
                     style={{ padding: '14px 0' }}
                   >
                     確認付款
-                  </div>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -478,28 +520,30 @@ export default function Test() {
               <div>原價合計</div>
               <div>NT ${calcTotalPrice()}</div>
             </div>
-         ˋ   <div className="d-flex justify-content-between carttext discount">
+            <div className="d-flex justify-content-between carttext discount">
               <div>折扣合計</div>
-              <div>NT ${calcTotalDiscount()}</div>{' '}
+              <div>-NT ${calcTotalDiscount()}</div>{' '}
             </div>
             <div className="d-flex justify-content-between h3">
               <div>合計</div>
-              <div>NT ${calcTotalPrice()}</div>
+              <div>NT ${calcTotalPrice() - calcTotalDiscount()}</div>
             </div>
           </div>
           <div className="cart-btn">
-            <div
+            <Link
+              href="/cart/check"
               className="b-btn b-btn-body d-flex w-100 h-100 justify-content-center"
               style={{ padding: '14px 0' }}
             >
               回上一步
-            </div>
-            <div
+            </Link>
+            <Link
+              href="/cart/confirm"
               className="b-btn b-btn-primary d-flex w-100 h-100 justify-content-center"
               style={{ padding: '14px 0' }}
             >
               確認付款
-            </div>
+            </Link>
           </div>
         </div>
       </div>
