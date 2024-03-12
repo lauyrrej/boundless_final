@@ -3,6 +3,20 @@ import db from "../db.js";
 import multer from "multer";
 import moment from "moment";
 
+//上傳檔案
+import {renameSync} from "fs";
+import {dirname, resolve, extname} from "path";
+import {fileURLToPath} from "url";
+//方法2
+import formidable from "formidable";
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+
+
+// const testdirname = `/`;
+console.log(__dirname)
+// console.log(testdirname)
+
 //token相關
 import jwt from "jsonwebtoken";
 import "dotenv/config.js";
@@ -12,9 +26,64 @@ const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 
 const router = express.Router();
 const upload = multer();
+
 //得到所有會員資料
 // let [userData] = await db.execute("SELECT * FROM `user` WHERE `valid` = 1");
 // console.log(userData)
+
+
+//上傳檔案-----------------------
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, resolve(__dirname, "public"));
+  },
+  filename: function (req, file, cb) {
+    if(!req.timestamp){
+      req.timestamp = Date.now();
+      req.index = 0;
+    }else{
+      req.index++;
+    }
+    let newName = (req.timestamp + req.index) + extname(file.originalname);
+    cb(null, newName)
+  }
+})
+const uploadTest = multer({ storage: storage })
+// const uploadTest = multer({ dest: resolve(__dirname, "public")})
+
+
+
+router.post("/upload1", uploadTest.single('myFile'), (req, res)=>{
+  // res.json({body: req.body, file: req.file});
+  // render("你好")
+  // res.send("處理檔案上傳");
+
+  // let timestamp = Date.now();
+  // // let newName = timestamp + extname(req.file.originalname);
+  // let newName = timestamp ;
+
+  // // renameSync(req.file.path, resolve(__dirname, "public/"));
+  // req.body.myFile = newName;
+  res.json({body: req.body, file: req.file});
+});
+
+router.post("/upload2", (req, res)=>{
+  const form = formidable({
+    uploadDir: resolve(__dirname, "public/"),
+    keepExtensions: true,
+    multiples: true})
+
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      next(err);
+      return;
+    }
+    res.json({ fields, files });
+  });
+
+  res.json({body: req.body, file: req.file});
+});
+//上傳檔案-----------------------
 
 //GET 測試 - 得到所有會員資料
 router.get("/", async (req, res, next) => {
@@ -224,7 +293,7 @@ function checkToken(req, res, next) {
       .json({ status: "error", message: "無登入驗證資料，請重新登入。" });
   }
 }
-
+//uid
 function generateUid() {
   let characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
