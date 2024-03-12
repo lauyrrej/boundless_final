@@ -15,6 +15,7 @@ import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 import Datetime from '@/components/article/datetime'
 import Editor from '@/components/article/editor'
+import EditorH1 from '@/components/article/editorh1'
 
 export default function Auid() {
   // ----------------------手機版本  ----------------------
@@ -163,7 +164,7 @@ export default function Auid() {
           <div className="">
             {/* 主內容 */}
             <main className="content">
-              <Editor
+              <EditorH1
                 name="description"
                 config={editorConfig}
                 onChange={(data) => {
@@ -172,6 +173,16 @@ export default function Auid() {
                 editorLoaded={editorLoaded}
                 data={`<h1 className="text-center">${articleDetail.title}</h1>`}
                 value={articleDetail.title}
+              />
+              <Editor
+                name="description"
+                config={editorConfig}
+                onChange={(data) => {
+                  setData(data)
+                }}
+                editorLoaded={editorLoaded}
+                data={`<h1 className="text-center">${articleDetail.title}</h1>`}
+                value={articleDetail.content}
               />
               <h1 className="text-center">{articleDetail.title}</h1>
               <p className="pt-2">{articleDetail.content}</p>
