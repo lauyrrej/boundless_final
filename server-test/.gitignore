@@ -38,3 +38,6 @@ data/test_sql
 
 #sql
 Lesson.sql
+
+#routes
+test.js

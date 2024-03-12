@@ -53,7 +53,7 @@ export default function CourseCard({
                 </span>
               </div>
             </div>
-            {isDiscount ? (
+            {/* {isDiscount ? (
               <div className="course-price">
                 <del>NT$ 4,000</del>
                 <div style={{ color: '#ec3f3f' }}>{discount}NT$ 3,800</div>
@@ -62,7 +62,10 @@ export default function CourseCard({
               <div className="course-price">
                 <div>NT$ {price}4,000</div>
               </div>
-            )}
+            )} */}
+            <div className="course-price">
+              <div>NT$ {price}</div>
+            </div>
             <div className="students">
               <MdOutlinePeopleAlt size={16} color="#5a5a5a" />
               <span>{sales}50</span>
