@@ -171,7 +171,6 @@ export default function Auid() {
                   setData(data)
                 }}
                 editorLoaded={editorLoaded}
-                data={`<h1 className="text-center">${articleDetail.title}</h1>`}
                 value={articleDetail.title}
               />
               <Editor
@@ -181,11 +180,8 @@ export default function Auid() {
                   setData(data)
                 }}
                 editorLoaded={editorLoaded}
-                data={`<h1 className="text-center">${articleDetail.title}</h1>`}
                 value={articleDetail.content}
               />
-              <h1 className="text-center">{articleDetail.title}</h1>
-              <p className="pt-2">{articleDetail.content}</p>
               <div className="main-img">
                 <Image
                   src={`/article/${articleDetail.img}`}

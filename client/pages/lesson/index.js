@@ -23,6 +23,8 @@ import BS5Pagination from '@/components/common/pagination.js'
 
 import { useParams } from 'react-router-dom'
 
+// 會員認證hook
+import { useAuth } from '@/hooks/user/use-auth'
 export default function Test({ onSearch }) {
   // 在電腦版或手機版時
   const [isSmallScreen, setIsSmallScreen] = useState(false)
@@ -97,6 +99,37 @@ export default function Test({ onSearch }) {
     setScore('all')
     setSales(false)
   }
+
+  // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
+  //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
+  const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
+    useAuth()
+  const [userData, setUserData] = useState()
+  //檢查token
+  useEffect(() => {
+    handleLoginStatus()
+    //獲得資料
+    getLoginUserData()
+  }, [])
+  //登出功能
+
+  //檢查是否獲取資料
+  console.log(LoginUserData)
+  //   讀取使用者資料後 定義大頭貼路徑
+  let avatarImage
+  if (LoginUserData.img) {
+    avatarImage = `/user/${LoginUserData.img}`
+  } else if (LoginUserData.photo_url) {
+    avatarImage = `${LoginUserData.photo_url}`
+  } else {
+    avatarImage = `/user/avatar_userDefault.jpg`
+  }
+  // 舊版會警告 因為先渲染但沒路徑 bad
+  // const avatarImage = `/user/${LoginUserData.img}`
+  // const avatargoogle = `${LoginUserData.photo_url}`
+  // const avatarDefault = `/user/avatar_userDefault.jpg`
+
+  // ----------------------會員登入狀態  ----------------------
 
   // ------------------------------------- 製作分頁
   const [page, setPage] = useState(1)
