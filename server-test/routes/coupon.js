@@ -38,7 +38,6 @@ router.post("/Update", async (req, res) => {
     obj.id = param;
     // 呼叫 Coupon 控制器中的 Update 方法來刪除指定的優惠券
     const result = await obj.Update();
-
     res.status(200).json(result);
   } catch (err) {
     res.status(500).json(err);

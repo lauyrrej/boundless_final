@@ -362,22 +362,31 @@ export default function Test() {
                   <div className="d-none d-sm-block pt-4">
                     <nav aria-label="breadcrumb sort d-flex justify-content-between align-items-center">
                       <ol className="breadcrumb">
-                        <li className="h6 breadcrumb-item">
+                        <li className="sort breadcrumb-item btn">
                           <a href="#" onClick={() => setKind(0)}>
                             全部
                           </a>
                         </li>
-                        <li className="h6 breadcrumb-item" aria-current="page">
+                        <li
+                          className="sort breadcrumb-item btn"
+                          aria-current="page"
+                        >
                           <a href="#" onClick={() => setKind(2)}>
                             樂器
                           </a>
                         </li>
-                        <li className="h6 breadcrumb-item" aria-current="page">
+                        <li
+                          className="sort breadcrumb-item btn"
+                          aria-current="page"
+                        >
                           <a href="#" onClick={() => setKind(1)}>
                             課程
                           </a>
                         </li>
-                        <li className="h6 breadcrumb-item" aria-current="page">
+                        <li
+                          className="sort breadcrumb-item btn"
+                          aria-current="page"
+                        >
                           <a
                             href="#"
                             // 已過期valid=0????
@@ -385,6 +394,9 @@ export default function Test() {
                           >
                             已使用
                           </a>
+                        </li>
+                        <li className="sort breadcrumb-item submit btn">
+                          領取Test
                         </li>
                       </ol>
                     </nav>
