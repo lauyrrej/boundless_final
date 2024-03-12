@@ -1,15 +1,30 @@
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
+//
+import { debounce } from 'lodash'
 
 //圖片
 import jamHero from '@/assets/jam-hero.png'
 
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
+
+//選項資料資料 data
+import CityCountyData from '@/data/CityCountyData.json'
+import playerData from '@/data/player.json'
+import genreData from '@/data/genre.json'
+
+// sweetalert
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+
+// scss
+import styles from '@/pages/user/edit.module.scss'
 
 // icons
 import { IoHome } from 'react-icons/io5'
@@ -19,6 +34,7 @@ import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
+import { FaCirclePlus } from 'react-icons/fa6'
 
 export default function Test() {
   // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
@@ -26,6 +42,7 @@ export default function Test() {
   const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
     useAuth()
   const [userData, setUserData] = useState()
+  const router = useRouter()
   //檢查token
   useEffect(() => {
     handleLoginStatus()
@@ -33,7 +50,6 @@ export default function Test() {
     getLoginUserData()
   }, [])
   //登出功能
-
   //檢查是否獲取資料
   // console.log(LoginUserData)
   //   讀取使用者資料後 定義大頭貼路徑
@@ -45,6 +61,17 @@ export default function Test() {
   } else {
     avatarImage = `/user/avatar_userDefault.jpg`
   }
+
+  const [Abc, setAbc] = useState('')
+
+  useEffect(() => {
+    if (LoginUserData) {
+      setAbc(LoginUserData)
+    }
+  }, [LoginUserData]) // 在 LoginUserData.name 改變時觸發 useEffect
+
+  console.log(Abc)
+  console.log(Abc.id)
   // 舊版會警告 因為先渲染但沒路徑 bad
   // const avatarImage = `/user/${LoginUserData.img}`
   // const avatargoogle = `${LoginUserData.photo_url}`
@@ -131,10 +158,193 @@ export default function Test() {
     setSales(false)
   }
 
+  //-------------引用jam表單設定
+
+  const [fakeUser, setFakeUser] = useState({
+    id: 110,
+    uid: 'n500ef48Ibat',
+    juid: '6q3SoqnuPEXJ',
+  })
+  const mySwal = withReactContent(Swal)
+  // ---------------------- 標題 ----------------------
+  const [title, setTitle] = useState('')
+  const [titleCheck, setTitleCheck] = useState(true)
+  // ---------------------- 技術程度
+  const [degree, setDegree] = useState('')
+
+  // ---------------------- 曲風 ----------------------
+  // 儲存選擇的曲風
+  const [genre, setgenre] = useState([])
+  const [genreCheck, setGenreCheck] = useState(true)
+  // 變更曲風下拉選單的數量時，陣列會多一個元素
+  const [genreSelect, setgenreSelect] = useState([1])
+  // 實際使用的曲風陣列，避免使用者未照順序新增樂手
+  const [finalgenre, setFinalgenre] = useState('')
+
+  // ---------------------- 擔任職位 ----------------------
+  // 控制表單狀態
+  const [myPlayer, setMyPlayer] = useState('')
+  // 表單實際送出的內容
+  const [finalMyPlayer, setFinalMyPlayer] = useState('')
+  // console.log(finalMyPlayers)
+
+  // ---------------------- 徵求樂手 ----------------------
+  const [players, setplayers] = useState([])
+  const [playersSelect, setPlayersSelect] = useState([1])
+  // 實際使用的樂手陣列，避免使用者未照順序新增樂手
+  const [finalPlayers, setFinalPlayers] = useState([])
+
+  // ---------------------- 篩選城市用的資料 ----------------------
+  const cityData = CityCountyData.map((v, i) => {
+    return v.CityName
+  }).filter((v) => {
+    return v !== '釣魚臺' && v !== '南海島'
+  })
+  const [region, setRegion] = useState('')
+
+  // ---------------------- 其他條件 ----------------------
+  const [condition, setCondition] = useState('')
+  const [conditionCheck, setConditionCheck] = useState(true)
+  // ---------------------- 描述 ----------------------
+  const [description, setDescription] = useState('')
+  const [descriptionCheck, setDescriptionCheck] = useState(true)
+
+  // ---------------------- 表單填寫 ----------------------
+  // 表單完成狀態 0: 有欄位尚未填寫或不符規定, 1: 填寫完成, 2: 填寫中
+  const [complete, setComplete] = useState(2)
+  // 檢查不雅字詞
+  const checkBadWords = debounce(() => {
+    const badWords = /幹|屎|尿|屁|糞|靠北|靠腰|雞掰|王八|你媽|妳媽|淫/g
+    setTitleCheck(title.search(badWords) < 0 ? true : false)
+    setConditionCheck(condition.search(badWords) < 0 ? true : false)
+    setDescriptionCheck(description.search(badWords) < 0 ? true : false)
+  }, 250)
+  // 檢查是否重複填寫曲風
+  const checkGenre = debounce(() => {
+    const genreSet = new Set(genre) // 建立 set 物件，該物件中的每個屬性都是唯一值
+    // 若長度不同，則代表陣列中有重複的值
+    if (genre.length !== genreSet.size) {
+      setGenreCheck(false)
+    } else {
+      setGenreCheck(true)
+    }
+  }, 250)
+  // 檢查表單是否填妥
+  const checkComplete = () => {
+    if (titleCheck === false || title === '') {
+      setComplete(0)
+      return false
+    }
+    if (degree === '') {
+      setComplete(0)
+      return false
+    }
+    if (genreCheck === false || finalgenre === '') {
+      setComplete(0)
+      return false
+    }
+    if (finalMyPlayer === '') {
+      setComplete(0)
+      return false
+    }
+    if (finalPlayers === '') {
+      setComplete(0)
+      return false
+    }
+    if (region === '') {
+      setComplete(0)
+      return false
+    }
+    if (conditionCheck === false) {
+      setComplete(0)
+      return false
+    }
+    if (descriptionCheck === false || description === '') {
+      setComplete(0)
+      return false
+    }
+    setComplete(1)
+    return true
+  }
+  const sendForm = async (
+    uid,
+    title,
+    degree,
+    finalgenre,
+    finalMyPlayer,
+    finalPlayers,
+    region,
+    condition,
+    description
+  ) => {
+    if (!checkComplete()) {
+      return false
+    }
+    let formData = new FormData()
+    formData.append('uid', uid)
+    formData.append('title', title)
+    formData.append('degree', degree)
+    formData.append('genre', finalgenre)
+    formData.append('former', finalMyPlayer)
+    formData.append('players', finalPlayers)
+    formData.append('region', region)
+    formData.append('condition', condition)
+    formData.append('description', description)
+    // 確認formData內容
+    // for (let [key, value] of formData.entries()) {
+    //   console.log(`${key}: ${value}`)
+    // }
+    const res = await fetch('http://localhost:3005/api/jam/form', {
+      method: 'POST',
+      body: formData,
+      credentials: 'include',
+    })
+    const result = await res.json()
+    if (result.status === 'success') {
+      notifySuccess(result.juid)
+    } else {
+      console.log(result.error)
+    }
+  }
+  // 發起成功後，彈出訊息框，並跳轉到資訊頁面
+  const notifySuccess = (juid) => {
+    mySwal
+      .fire({
+        position: 'center',
+        icon: 'success',
+        iconColor: '#1581cc',
+        title: '發起成功，將為您跳轉到資訊頁',
+        showConfirmButton: false,
+        timer: 3000,
+      })
+      .then(
+        setTimeout(() => {
+          router.push(`/jam/recruit-list/${juid}`)
+        }, 3000)
+      )
+  }
+  // ---------------------- 偵測表單輸入變化，並執行檢查
+  useEffect(() => {
+    // 跳出未填寫完畢警告後再次輸入，消除警告
+    setComplete(2)
+    // 檢查不雅字詞
+    checkBadWords.cancel() // 取消上一次的延遲
+    checkBadWords()
+    // 檢查無重複的曲風
+    checkGenre.cancel()
+    checkGenre()
+    // 把曲風&徵求樂手轉換成表單實際接收的字串格式
+    const fgArr = genre.filter((v) => v != (null || undefined))
+    setFinalgenre(`[${fgArr.toString()}]`)
+    const fpArr = players.filter((v) => v != (null || undefined))
+    setFinalPlayers(`[${fpArr.toString()}]`)
+    // 檢查表單是否完成
+  }, [title, degree, genre, myPlayer, players, region, condition, description])
+
   return (
     <>
       <Head>
-        <title>會員資訊</title>
+        <title>修改會員資訊</title>
       </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       {/* 先把HEROSECTION隱藏 */}
@@ -257,6 +467,8 @@ export default function Test() {
           </div>
 
           {/*   ----------------------頁面內容  ---------------------- */}
+
+          {/*   ----------------------頁面內容  ---------------------- */}
           <div className="col-12 col-sm-10 page-control">
             {/* 手機版sidebar */}
             <div
@@ -325,6 +537,11 @@ export default function Test() {
               </div>
             </div>
             {/* 主內容 */}
+
+            {/* //----------------------參考jam------------------------- */}
+
+            {/* //----------------------參考jam------------------------- */}
+
             <main className="content">
               <div className="container custom-container">
                 <div className="row">
@@ -337,8 +554,16 @@ export default function Test() {
                     <div className="user-content col-12">
                       <div className="user-content-top">
                         <div className="user-title-userInfo">會員資訊</div>
+
                         <div className="user-btnGroup">
-                          <div className="user-btnGroup-btn1">
+                          ※ 點擊&nbsp;
+                          <FaCirclePlus
+                            size={18}
+                            style={{ color: '#18a1ff' }}
+                            className="mb-1"
+                          />
+                          &nbsp;可增加項目
+                          {/* <div className="user-btnGroup-btn1">
                             <div>
                               <Link href="/user/user-homepage">
                                 預覽個人首頁
@@ -347,6 +572,64 @@ export default function Test() {
                           </div>
                           <div className="user-btnGroup-btn2">
                             <div>編輯資訊</div>
+                          </div> */}
+                        </div>
+                      </div>
+                      <div className="user-info-item">
+                        <div className="user-info-item-titleText">頭像</div>
+                        <div className="user-info-item-Content-avatar">
+                          <div className="user-info-item-contentText-imgBox">
+                            <Image
+                              src={avatarImage}
+                              alt="user photo mb"
+                              fill
+                              priority="default" //不加的話Next 會問是否要加優先級
+                              sizes="(max-width: 150px)"
+                            ></Image>
+                          </div>
+                          <div>
+                            <input
+                              type="file"
+                              name="myFile2"
+                              className="form-control"
+                              // accept=".png, .jpg, .jpeg"
+                              accept="image/png, image/jpeg"
+                            ></input>
+                            <div className="user-info-item-contentText">
+                              可選擇的圖片格式: .jpg .png
+                            </div>
+
+                            {/* //-----------------測試上傳 */}
+                            {/* <form
+                              action="http://localhost:3005/api/user/upload1"
+                              method="post"
+                              enctype="multipart/form-data"
+                            >
+                              <div className="input-group mb-2">
+                                <span className="input-group-text">名稱</span>
+                                <input
+                                  type="text"
+                                  name="name"
+                                  // value={LoginUserData}
+                                  className="form-control"
+                                />
+                              </div>
+                              <div className="input-group mb-2">
+                                <input
+                                  type="file"
+                                  name="myFile"
+                                  id={LoginUserData}
+                                  accept="image/png, image/jpeg"
+                                  className="form-control"
+                                />
+                              </div>
+                              <div className="d-flex">
+                                <button className="btn btn-primary ms-auto">
+                                  送出
+                                </button>
+                              </div>
+                            </form> */}
+                            {/* //-----------------測試上傳 */}
                           </div>
                         </div>
                       </div>
@@ -354,7 +637,17 @@ export default function Test() {
                         <div className="user-info-item-titleText">真實姓名</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            {LoginUserData.name}
+                            <input
+                              type="text"
+                              className={`${styles.itemInput} form-control`}
+                              placeholder="真實姓名"
+                              maxLength={20}
+                              value={Abc.name}
+                              onChange={(e) => {
+                                setTitle(e.target.value)
+                              }}
+                            />
+                            {/* {LoginUserData.name} */}
                           </div>
                         </div>
                       </div>
@@ -362,7 +655,16 @@ export default function Test() {
                         <div className="user-info-item-titleText">暱稱</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            {LoginUserData.nickname}
+                            <input
+                              type="text"
+                              className={`${styles.itemInput} form-control`}
+                              placeholder="暱稱 上限14字"
+                              maxLength={20}
+                              onChange={(e) => {
+                                setTitle(e.target.value)
+                              }}
+                            />
+                            {/* {LoginUserData.nickname} */}
                           </div>
                         </div>
                       </div>
@@ -370,7 +672,20 @@ export default function Test() {
                         <div className="user-info-item-titleText">性別</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            {LoginUserData.gender}
+                            <select
+                              className="form-select"
+                              style={{ width: 'auto' }}
+                              value={degree}
+                              name="degree"
+                              onChange={(e) => {
+                                setDegree(e.target.value)
+                              }}
+                            >
+                              <option value="">請選擇</option>
+                              <option value="1">新手練功</option>
+                              <option value="2">老手同樂</option>
+                            </select>
+                            {/* {LoginUserData.gender} */}
                           </div>
                         </div>
                       </div>
@@ -378,7 +693,78 @@ export default function Test() {
                         <div className="user-info-item-titleText">喜歡曲風</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            {LoginUserData.genre_like}
+                            <div
+                              className={`${styles.itemInputWrapper} col-12 col-sm-10`}
+                            >
+                              <div className={`${styles.selectGroup}`}>
+                                {genreSelect.map((v, i) => {
+                                  return (
+                                    <select
+                                      key={i}
+                                      className="form-select"
+                                      style={{ width: 'auto' }}
+                                      value={genre[i]}
+                                      name="genre"
+                                      onChange={(e) => {
+                                        let newgenre = [...genre]
+                                        newgenre[i] = e.target.value
+                                        setgenre(newgenre)
+                                      }}
+                                    >
+                                      <option value="">請選擇</option>
+                                      {genreData.map((v) => {
+                                        return (
+                                          <option key={v.id} value={v.id}>
+                                            {v.name}
+                                          </option>
+                                        )
+                                      })}
+                                    </select>
+                                  )
+                                })}
+                                {genreSelect.length < 3 ? (
+                                  <div className={`${styles.plusBtnWrapper}`}>
+                                    <FaCirclePlus
+                                      size={24}
+                                      className={`${styles.plusBtn}`}
+                                      onClick={() => {
+                                        const newArr = [...genreSelect, 1]
+                                        setgenreSelect(newArr)
+                                      }}
+                                    />
+                                    <span
+                                      className="mb-1"
+                                      style={{ color: '#1d1d1d' }}
+                                    >
+                                      (剩餘 {3 - genreSelect.length})
+                                    </span>
+                                  </div>
+                                ) : (
+                                  ''
+                                )}
+                                {genreCheck ? (
+                                  ''
+                                ) : (
+                                  <div
+                                    className={`${styles.warningText} d-none d-sm-block`}
+                                    style={{ marginTop: '5px' }}
+                                  >
+                                    無法選擇重複曲風
+                                  </div>
+                                )}
+                              </div>
+                              {genreCheck ? (
+                                ''
+                              ) : (
+                                <div
+                                  className={`${styles.warningText} d-block d-sm-none mt-2 p-0`}
+                                >
+                                  無法選擇重複曲風
+                                </div>
+                              )}
+                            </div>
+
+                            {/* {LoginUserData.genre_like} */}
                           </div>
                         </div>
                       </div>
@@ -386,7 +772,32 @@ export default function Test() {
                         <div className="user-info-item-titleText">演奏樂器</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            {LoginUserData.play_instrument}
+                            <div
+                              className={`${styles.itemInputWrapper} col-12 col-sm-10`}
+                            >
+                              <select
+                                className="form-select"
+                                style={{ width: 'auto' }}
+                                value={myPlayer}
+                                name="myPlayer"
+                                onChange={(e) => {
+                                  setMyPlayer(e.target.value)
+                                  setFinalMyPlayer(
+                                    `{"id": ${fakeUser.id}, "play": ${e.target.value}}`
+                                  )
+                                }}
+                              >
+                                <option value="">請選擇</option>
+                                {playerData.map((v) => {
+                                  return (
+                                    <option key={v.id} value={v.id}>
+                                      {v.name}
+                                    </option>
+                                  )
+                                })}
+                              </select>
+                            </div>
+                            {/* {LoginUserData.play_instrument} */}
                           </div>
                         </div>
                       </div>
@@ -444,6 +855,16 @@ export default function Test() {
                         <div className="user-info-item-titleText">生日</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
+                            <input
+                              type="date"
+                              className={`${styles.itemInput} form-control`}
+                              placeholder=""
+                              maxLength={20}
+                              onChange={(e) => {
+                                setTitle(e.target.value)
+                              }}
+                            />
+
                             {birthday}
                           </div>
                         </div>
@@ -452,7 +873,16 @@ export default function Test() {
                         <div className="user-info-item-titleText">手機</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            {LoginUserData.phone}
+                            <input
+                              type="date"
+                              className={`${styles.itemInput} form-control`}
+                              placeholder="電話號碼"
+                              maxLength={20}
+                              onChange={(e) => {
+                                setTitle(e.target.value)
+                              }}
+                            />
+                            {/* {LoginUserData.phone} */}
                           </div>
                         </div>
                       </div>
@@ -460,18 +890,89 @@ export default function Test() {
                         <div className="user-info-item-titleText">電子信箱</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            {LoginUserData.email}
+                            <input
+                              type="mail"
+                              className={`${styles.itemInput} form-control`}
+                              placeholder="請輸入電子信箱"
+                              maxLength={20}
+                              onChange={(e) => {
+                                setTitle(e.target.value)
+                              }}
+                            />
+
+                            {/* {LoginUserData.email} */}
                           </div>
                         </div>
                       </div>
                       <div className="user-info-item">
                         <div className="user-info-item-titleText">地址</div>
                         <div className="user-info-item-Content">
-                          <div className="user-info-item-contentText">
-                            {LoginUserData.postcode}&nbsp;
+                          <div className="user-info-item-contentText d-flex">
+                            <input
+                              type="text"
+                              className={`${styles.itemInputPostcode} form-control `}
+                              placeholder="郵遞區號"
+                              maxLength={3}
+                              onChange={(e) => {
+                                setTitle(e.target.value)
+                              }}
+                            />
+                            <div className={`${styles.itemInputWrapper} `}>
+                              <select
+                                className="form-select"
+                                style={{ width: 'auto' }}
+                                value={region}
+                                name="region"
+                                onChange={(e) => {
+                                  setRegion(e.target.value)
+                                }}
+                              >
+                                <option value="">請選擇</option>
+                                {cityData.map((v, i) => {
+                                  return (
+                                    <option key={i} value={v}>
+                                      {v}
+                                    </option>
+                                  )
+                                })}
+                              </select>
+                            </div>
+
+                            <div className={`${styles.itemInputWrapper}`}>
+                              <select
+                                className="form-select"
+                                style={{ width: 'auto' }}
+                                value={region}
+                                name="region"
+                                onChange={(e) => {
+                                  setRegion(e.target.value)
+                                }}
+                              >
+                                <option value="">請選擇</option>
+                                {cityData.map((v, i) => {
+                                  return (
+                                    <option key={i} value={v}>
+                                      {v}
+                                    </option>
+                                  )
+                                })}
+                              </select>
+                            </div>
+
+                            <input
+                              type="text"
+                              className={`${styles.itemInput} form-control `}
+                              placeholder="地址"
+                              maxLength={100}
+                              onChange={(e) => {
+                                setTitle(e.target.value)
+                              }}
+                            />
+
+                            {/* {LoginUserData.postcode}&nbsp;
                             {LoginUserData.country}
                             {LoginUserData.township}
-                            {LoginUserData.address}
+                            {LoginUserData.address} */}
                           </div>
                         </div>
                       </div>
@@ -480,9 +981,47 @@ export default function Test() {
                           自我介紹
                         </div>
                         <div className="user-info-item-info2">
-                          <div className="user-info-item-info-contentText">
-                            {LoginUserData.info}
+                          <div className="user-info-item-info-contentText form-floating">
+                            <textarea
+                              className="form-control"
+                              id="exampleFormControlTextarea1"
+                              rows="3"
+                              cols="50"
+                            ></textarea>
+                            {/* <input
+                              type="text"
+                              className={`${styles.itemInput} form-control `}
+                              placeholder="郵遞區號"
+                              maxLength={3}
+                              onChange={(e) => {
+                                setTitle(e.target.value)
+                              }}
+                            /> */}
+
+                            {/* {LoginUserData.info} */}
                           </div>
+                        </div>
+                      </div>
+                      <div className="d-flex justify-content-center">
+                        <div
+                          className="b-btn b-btn-primary"
+                          style={{ paddingInline: '38px' }}
+                          role="presentation"
+                          onClick={() => {
+                            sendForm(
+                              fakeUser.uid,
+                              title,
+                              degree,
+                              finalgenre,
+                              finalMyPlayer,
+                              finalPlayers,
+                              region,
+                              condition,
+                              description
+                            )
+                          }}
+                        >
+                          提交
                         </div>
                       </div>
                     </div>
@@ -511,7 +1050,9 @@ export default function Test() {
             width: 100px;
             height: 100px;
             border-radius: 100px;
+
             /* react Image 要加上這兩條參數 家在外層容器的css , Image本身要fill */
+
             position: relative;
             overflow: hidden;
           }
@@ -622,7 +1163,7 @@ export default function Test() {
             align-items: flex-start;
             gap: 10px;
             display: flex;
-            color: white;
+            background-color: var(--back);
             font-size: 18px;
             font-weight: 700;
           }
@@ -693,6 +1234,24 @@ export default function Test() {
                 word-wrap: break-word;
               }
             }
+            .user-info-item-Content-avatar {
+              display: flex;
+              height: 138px;
+              max-width: 900px;
+              padding: 3px 0px;
+              align-items: center;
+              gap: 30px;
+              flex: 1 0 0;
+
+              .user-info-item-contentText-imgBox {
+                width: 100px;
+                height: 100px;
+                border-radius: 100px;
+                /* react Image 要加上這兩條參數 家在外層容器的css , Image本身要fill */
+                position: relative;
+                overflow: hidden;
+              }
+            }
           }
 
           .user-info-item-info {
@@ -723,7 +1282,6 @@ export default function Test() {
             flex: 1 0 0;
             color: #000;
             text-align: justify;
-
             font-family: 'Noto Sans TC';
             font-size: 16px;
             font-style: normal;

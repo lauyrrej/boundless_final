@@ -14,7 +14,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 
 // const testdirname = `/`;
-console.log(__dirname)
+// console.log(__dirname)
 // console.log(testdirname)
 
 //token相關
@@ -215,6 +215,8 @@ router.get("/:id", checkToken, async function (req, res) {
   const resUser = singerUser[0];
 
   return res.json(resUser);
+  //改檔老師寫法
+  // return res.json({ status: 'success', data: { resUser } })
 });
 
 // 註冊 = 檢查資料庫是否有此email及密碼 ,如果沒有 就增加sql
@@ -257,7 +259,7 @@ router.post('/', async (req, res) => {
     return res.json({ status: "error 2", message: "該帳號已存在" });
   } else {
     // 用戶不存在，插入新用戶
-    const [result] = await db.execute('INSERT INTO user (email, password, created_time) VALUES (?, ?, ?);', [newUser.email, newUser.password, YYYYMMDDTime]);
+    const [result] = await db.execute('INSERT INTO user (email, uid, password, created_time , valid) VALUES (?, ?, ?, ?, 1);', [newUser.email, uuid,newUser.password, YYYYMMDDTime]);
     // console.log('User inserted:', result);
   }
 
