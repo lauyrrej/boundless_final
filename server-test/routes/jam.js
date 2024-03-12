@@ -19,7 +19,7 @@ router.get("/allJam", async (req, res) => {
   // 取得目前時間，應對資料庫中儲存的資料，使用ISO格式
   const now = new Date().toISOString();
 
-  // 取得資料總筆數，用於製作分頁
+  // 取得資料總筆數，用於製作分頁，招募中state = 0
   let [dataCount] = await db
     .execute(
       "SELECT * FROM `jam` WHERE `valid` = 1 AND DATE_ADD(`created_time`, INTERVAL 30 DAY) > ? AND `state` = 0",
@@ -174,6 +174,23 @@ router.get("/allJam", async (req, res) => {
 
 // 組團資訊頁，獲得單筆資料
 router.get("/singleJam/:juid", async (req, res) => {
+  const juid = req.params.juid;
+  // console.log(juid);
+  // 檢查該樂團是否已經成團，條件: 未解散(valid=1)，已成團(state=1)
+  const [checkFormed] = await db
+    .execute(
+      "SELECT * FROM `jam` WHERE `juid` = ? AND `valid` = 1 AND `state` = 1",
+      [juid]
+    )
+    .catch(() => {
+      return undefined;
+    });
+  if (checkFormed.length > 0) {
+    console.log(checkFormed);
+    res.status(200).json({ status: "formed" });
+    return;
+  }
+
   // -------------------------------------- 取得組團資訊中所需的曲風、樂手資料 --------------------------------------
   const [genreData] = await db.execute("SELECT * FROM `genre`").catch(() => {
     return undefined;
@@ -182,10 +199,14 @@ router.get("/singleJam/:juid", async (req, res) => {
     return undefined;
   });
 
-  const juid = req.params.juid;
-  // console.log(juid);
+  // 取得目前時間，應對資料庫中儲存的資料，使用ISO格式
+  const now = new Date().toISOString();
+
   const [data] = await db
-    .execute("SELECT * FROM `jam` WHERE `juid` = ? ", [juid])
+    .execute(
+      "SELECT * FROM `jam` WHERE `juid` = ? AND `valid` = 1 AND DATE_ADD(`created_time`, INTERVAL 30 DAY) > ?",
+      [juid, now]
+    )
     .catch(() => {
       return undefined;
     });
@@ -206,7 +227,7 @@ router.get("/singleJam/:juid", async (req, res) => {
 
     // -------------------------------------- 撈取該樂團的申請資料 --------------------------------------
     let [applyData] = await db
-      .execute("SELECT * FROM `jam_apply` WHERE `juid` = ? AND `state` = 0", [
+      .execute("SELECT * FROM `jam_apply` WHERE `valid` = 1 AND `juid` = ?", [
         juid,
       ])
       .catch(() => {
@@ -222,13 +243,12 @@ router.get("/singleJam/:juid", async (req, res) => {
           .replace(/\//g, "-");
         return {
           ...v,
-          applier: JSON.parse(v.applier),
           created_time: createdDate,
         };
       });
       applyData = applyData.map((v) => {
         const matchPlay = playerData.find((pv) => {
-          return pv.id === v.applier.play;
+          return pv.id === v.applier_play;
         }).name;
         return {
           ...v,
@@ -238,12 +258,12 @@ router.get("/singleJam/:juid", async (req, res) => {
       // -------------------------------------- 合併對應的會員資料
       let appliersID = "";
       let appliersSql =
-        "SELECT `id`, `uid`, `name`, `img`, `nickname` FROM `user` WHERE `id` IN ";
+        "SELECT `id`, `uid`, `name`, `img`, `nickname` FROM `user` WHERE `uid` IN ";
       applyData.map((v, i) => {
         if (i < applyData.length - 1) {
-          appliersID += v.applier.id + ",";
+          appliersID += "'" + v.applier_uid + "'" + ",";
         } else {
-          appliersID += v.applier.id;
+          appliersID += "'" + v.applier_uid + "'";
         }
       });
       appliersSql += `(${appliersID})`;
@@ -253,7 +273,7 @@ router.get("/singleJam/:juid", async (req, res) => {
       });
       applyData = applyData.map((v) => {
         let matchUser = appliers.find((av) => {
-          return av.id === v.applier.id;
+          return av.uid === v.applier_uid;
         });
         return {
           ...v,
@@ -347,13 +367,39 @@ router.get("/singleJam/:juid", async (req, res) => {
     }
 
     res.status(200).json({
+      status: "success",
       genreData,
       playerData,
       jamData,
       applyData,
     });
   } else {
-    res.status(400).json({ status: "error", message: "無指定資料" });
+    res.status(400).json({ status: "error" });
+  }
+});
+
+router.get("/getMyApply/:uid", async (req, res) => {
+  let [playerData] = await db.execute("SELECT * FROM `player`").catch(() => {
+    return undefined;
+  });
+
+  const uid = req.params.uid;
+  // console.log(uid);
+  const [datas] = await db
+    .execute("SELECT * FROM `jam_apply` WHERE `applier_uid` = ? ", [uid])
+    .catch(() => {
+      return undefined;
+    });
+  if (datas) {
+    const data = datas.map((v) => {
+      const match = playerData.find((pv) => {
+        return pv.id === v.applier_play;
+      }).name;
+      return { ...v, applier_play: match };
+    });
+    res.status(200).json({ status: "success", data });
+  } else {
+    res.status(400).json({ status: "error" });
   }
 });
 
@@ -412,11 +458,11 @@ router.post("/form", upload.none(), async (req, res) => {
 // 申請入團
 router.post("/apply", upload.none(), async (req, res) => {
   // console.log(req.body);
-  const { juid, former_uid, applier, message } = req.body;
+  const { juid, former_uid, applier_uid, applier_play, message } = req.body;
   await db
     .execute(
-      "INSERT INTO `jam_apply` (`id`, `juid`, `former_uid`, `applier`, `message`) VALUES (NULL, ?, ?, ?, ?)",
-      [juid, former_uid, applier, message]
+      "INSERT INTO `jam_apply` (`id`, `juid`, `former_uid`, `applier_uid`,  `applier_play`, `message`) VALUES (NULL, ?, ?, ?, ?, ?)",
+      [juid, former_uid, applier_uid, applier_play, message]
     )
     .then(() => {
       res.status(200).json({ status: "success" });

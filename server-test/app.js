@@ -22,7 +22,7 @@ const __dirname = dirname(__filename);
 const app = express();
 
 // 設定允許互動的網域，讓port 3000  和 5500間可以互動
-const whitelist = ["http://localhost:3005", "http://localhost:3000", undefined];
+const whitelist = ["http://localhost:3005", "http://localhost:3000", "http://localhost:3001", undefined];
 const corsOptions = {
   credentials: true,
   origin(origin, callback) {

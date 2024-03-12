@@ -11,13 +11,13 @@ import Image from 'next/image'
 import Head from 'next/head'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import toast, { Toaster } from 'react-hot-toast'
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
 import { ImExit } from 'react-icons/im'
 // scss
 import styles from '@/pages/jam/jam.module.scss'
-import { redirect } from 'next/dist/server/api-utils'
 
 export default function Info() {
   const router = useRouter()
@@ -51,13 +51,33 @@ export default function Info() {
     former: {},
     member: [],
   })
+  // 申請資料
   const [applies, setApplies] = useState([])
+  // 進入頁面者是否有申請此樂團
   const applied = applies.find((v) => {
     return v.applier.id === LoginUserData.id
   })
     ? true
     : false
-
+  // 該申請的狀態
+  let applyState = applies.find((v) => {
+    return v.applier.id === LoginUserData.id
+  })
+  if (applyState) {
+    applyState = applyState.state
+  }
+  const switchSentence = (applyState) => {
+    switch (applyState) {
+      case 0:
+        return '已送出申請'
+      case 2:
+        return '已被拒絕'
+      case 3:
+        return '已取消申請'
+      default:
+        return null
+    }
+  }
   // ---------------------- 手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -177,14 +197,15 @@ export default function Info() {
     return true
   }
   // 送出表單
-  const sendForm = async (finalMyPlayer, message) => {
+  const sendForm = async (myPlayer, message) => {
     if (!checkComplete()) {
       return false
     }
     let formData = new FormData()
     formData.append('juid', jam.juid)
     formData.append('former_uid', jam.former.uid)
-    formData.append('applier', finalMyPlayer)
+    formData.append('applier_uid', LoginUserData.uid)
+    formData.append('applier_play', myPlayer)
     formData.append('message', message)
     // 確認formData內容
     // for (let [key, value] of formData.entries()) {
@@ -202,7 +223,7 @@ export default function Info() {
       console.log(result.error)
     }
   }
-  // 發起成功後，彈出訊息框
+  // 申請成功後，彈出訊息框
   const notifySuccess = () => {
     mySwal
       .fire({
@@ -226,15 +247,30 @@ export default function Info() {
       const res = await fetch(`http://localhost:3005/api/jam/singleJam/${juid}`)
       // res.json()是解析res的body的json格式資料，得到JS的資料格式
       const data = await res.json()
-      if (data) {
+      if (data.status === 'success') {
         setPlayer(data.playerData)
         setGenre(data.genreData)
         setJam(data.jamData)
         setApplies(data.applyData)
+      } else if (data.status === 'formed') {
+        router.push(`/jam/jam-list/${juid}`)
       }
     } catch (e) {
       console.error(e)
     }
+  }
+  const notifyToast = () => {
+    toast.success('申請成功，請靜候審核結果', {
+      style: {
+        border: '1px solid #666666',
+        padding: '16px',
+        color: '#1d1d1d',
+      },
+      iconTheme: {
+        primary: '#1581cc',
+      },
+      duration: 3000,
+    })
   }
 
   // ----------------------------- useEffect -----------------------------
@@ -243,20 +279,21 @@ export default function Info() {
     if (router.isReady) {
       const { juid } = router.query
       getSingleData(juid)
-    }
-  }, [router.isReady])
 
-  // 期限倒數
-  useEffect(() => {
-    setCountDown(calcTimeLeft())
-    // 每秒更新一次倒數計時
-    const timer = setInterval(() => {
+      // 若是已成立的樂團，導向成立樂團資訊頁
+      if (jam.state === 1) {
+        router.push(`../jam-list/${jam.juid}`)
+      }
       setCountDown(calcTimeLeft())
-    }, 1000)
+      // 每秒更新一次倒數計時
+      const timer = setInterval(() => {
+        setCountDown(calcTimeLeft())
+      }, 1000)
 
-    // 清除計時器
-    return () => clearInterval(timer)
-  }, [jam.created_time])
+      // 清除計時器
+      return () => clearInterval(timer)
+    }
+  }, [router.isReady, jam.created_time])
 
   // 申請表單填寫
   useEffect(() => {
@@ -269,6 +306,12 @@ export default function Info() {
 
   return (
     <>
+      <Toaster
+        containerStyle={{
+          top: 70,
+          zIndex: 30,
+        }}
+      />
       <Navbar menuMbToggle={menuMbToggle} />
       <Head>
         <title>JAM資訊</title>
@@ -488,7 +531,7 @@ export default function Info() {
                               style={{ paddingInline: '38px' }}
                               role="presentation"
                               onClick={() => {
-                                sendForm(finalMyPlayer, message)
+                                sendForm(myPlayer, message)
                               }}
                             >
                               退出
@@ -598,7 +641,7 @@ export default function Info() {
                           }}
                           role="presentation"
                         >
-                          已送出申請
+                          {switchSentence(applyState)}
                         </div>
                       ) : (
                         <div
@@ -606,7 +649,7 @@ export default function Info() {
                           style={{ paddingInline: '38px' }}
                           role="presentation"
                           onClick={() => {
-                            sendForm(finalMyPlayer, message)
+                            sendForm(myPlayer, message)
                           }}
                         >
                           提交
