@@ -8,67 +8,162 @@ import Head from 'next/head'
 import { useAuth } from '@/hooks/user/use-auth'
 import { jwtDecode } from 'jwt-decode'
 
-//google登入
-import useFirebase from '@/hooks/user/use-firebase'
-import GoogleLogo from '@/components/icons/google-logo'
-
 // sweetalert
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 
-export default function Test() {
-  const router = useRouter()
+//google登入
+import useFirebase from '@/hooks/user/use-firebase'
 
-  const [user, setUser] = useState({
-    email: '',
-    password: '',
-    passwordCheck: '',
-  })
+export default function Test() {
+  // ----------------------測試用 獲得所有使用者清單 ----------------------
+  const getUser = async () => {
+    try {
+      const res = await fetch('http://localhost:3005/api/user')
+
+      // 使用 res.json() 來解析 response 的 JSON 格式資料
+      const usersData = await res.json()
+      console.log(usersData)
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error)
+    }
+  }
+
+  //   if (res.data.status === 'success') {
+  //     // 從JWT存取令牌中解析出會員資料
+  //     // 注意JWT存取令牌中只有id, username, google_uid, line_uid在登入時可以得到
+  //     const jwtUser = parseJwt(res.data.data.accessToken)
+  //     console.log(jwtUser)
+
+  //     const res1 = await getUserById(jwtUser.id)
+  //     console.log(res1.data)
+
+  //     // if (res1.data.status === 'success') {
+  //     //   // 只需要initUserData中的定義屬性值，詳見use-auth勾子
+  //     //   const dbUser = res1.data.data.user
+  //     //   const userData = { ...initUserData }
+
+  //     //   for (const key in userData) {
+  //     //     if (Object.hasOwn(dbUser, key)) {
+  //     //       userData[key] = dbUser[key]
+  //     //     }
+  //     //   }
+
+  //       // 設定到全域狀態中
+  //       // setAuth({
+  //       //   isAuth: true,
+  //       //   userData,
+  //       // })
+
+  //       // toast.success('已成功登入')
+  //     } else {
+  //       // toast.error('登入後無法得到會員資料')
+  //       // 這裡可以讓會員登出，因為這也算登入失敗，有可能會造成資料不統一
+  //     }
+  //   } else {
+  //     // toast.error(`登入失敗`)
+  //     console.log(`登入失敗`);
+
+  //   }
+  // }
+
+  const [user, setUser] = useState({ email: '', password: '' })
+  const [token, setToken] = useState('')
+
+  // 隨便字串 先照老師的設定
+  const appKey = 'userToken'
+  let userData
 
   // 輸入帳號 密碼用
   const handleFieldChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value })
   }
-
-  const handleregister = async (e) => {
-    // 阻擋表單預設送出行為
+  // 登入 POST表單來進行
+  const handleLogin = async (e) => {
+    //取消表單預設submit跳頁
     e.preventDefault()
 
-    if (user.password === user.passwordCheck) {
-      const res = await fetch('http://localhost:3005/api/user', {
+    try {
+      const response = await fetch('http://localhost:3005/api/user/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(user),
       })
-      const registerMessage = await res.json()
-      console.log(registerMessage)
 
-      if (registerMessage.status === 'success') {
-        alert('會員註冊成功！將跳轉至登入頁面。')
-        setTimeout(() => {
-          router.push(`/login`)
-        }, 2000)
-      } else if (registerMessage.status === 'error 2') {
-        alert(`錯誤 - 該E-mail已經註冊過。`)
-      } else {
-        alert(`錯誤 - 請填寫全部資料。`)
-      }
-    } else {
-      alert(`錯誤 - 密碼不一致。`)
+      const loginData = await response.json()
+      console.log('Response from server:', loginData)
+
+      const token = loginData.token
+      userData = jwtDecode(token)
+      // 先將 token 字串存入 localStorage
+      localStorage.setItem(appKey, token)
+      // 更新 React state 中的 token
+      setToken(token)
+      console.log(userData)
+      return token, userData
+      // 在這裡處理後端返回的資料
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error)
+    }
+  }
+  //登出功能
+  const { handleLogout } = useAuth()
+
+  // 檢查登入狀態
+  const handleLoginStatus = async (e) => {
+    //取消表單預設submit跳頁
+    e.preventDefault()
+    console.log(token)
+    const usertoken = localStorage.getItem(appKey)
+    try {
+      const response = await fetch('http://localhost:3005/api/user/status', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${usertoken}`,
+        },
+        body: JSON.stringify(),
+      })
+
+      const statusData = await response.json()
+      console.log('Response from server:', statusData)
+
+      // console.log(userData)
+
+      // 在這裡處理後端返回的資料
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error)
     }
   }
 
+  //----------------------------sweetalert--------------------------------------
+  //登入 跳轉 還沒加入判定 應該要先判斷再跳轉
+  const router = useRouter()
+  const mySwal = withReactContent(Swal)
+  const loginAlert = (e) => {
+    e.preventDefault()
+    mySwal
+      .fire({
+        position: 'center',
+        icon: 'success',
+        iconColor: '#1581cc',
+        title: '登入成功，將為您跳轉到首頁',
+        showConfirmButton: false,
+        timer: 2000,
+      })
+      .then(
+        setTimeout(() => {
+          router.push(`/user/user-info`)
+        }, 2000)
+      )
+  }
+
   // ----------------------google登入  ----------------------
-
-  // const [user, setUser] = useState({ email: '', password: '' })
-  const [token, setToken] = useState('')
-
-  // 隨便字串 決定儲存在localStorage的名稱
-  const appKey = 'userToken'
-  let userData
-  /*   Google Login(Firebase)登入用，providerData為登入後得到的資料  */
+  /**
+   * Google Login(Firebase)登入用，providerData為登入後得到的資料
+   */
   const googleLogin = async (providerData = {}) => {
     try {
       const response = await fetch('http://localhost:3005/api/google-login', {
@@ -90,6 +185,7 @@ export default function Test() {
       throw error
     }
   }
+
   //------------------------------------------------
   // loginGoogleRedirect無callback，要改用initApp在頁面初次渲染後監聽google登入狀態
   const { logoutFirebase, loginGoogleRedirect, initApp } = useFirebase()
@@ -128,53 +224,88 @@ export default function Test() {
         router.push(`/user/user-info`)
       }, 2000)
       return googletoken, userData
+
+      //老師的
+      //   const res1 = await getUserById(jwtUser.id)
+      //console.log(res1.data)
+
+      //   if (res1.data.status === 'success') {
+      // 只需要initUserData中的定義屬性值，詳見use-auth勾子
+      // const dbUser = res1.data.user
+      // const userData = { ...initUserData }
+
+      // for (const key in userData) {
+      //   if (Object.hasOwn(dbUser, key)) {
+      //     userData[key] = dbUser[key] || ''
+      //   }
+      // }
+
+      // 設定到全域狀態中
+      // setAuth({
+      //   isAuth: true,
+      //   userData,
+      // })
+
+      //   } else {
+      //     alert('登入後無法得到會員資料')
+      //     // 這裡可以讓會員登出，因為這也算登入失敗，有可能會造成資料不統一
+      //   }
     } else {
       alert(`登入失敗`)
     }
   }
 
   // 處理google登出
-  // const handlegooogleLogout = async (res, req) => {
-  //   // firebase logout(注意，這並不會登出google帳號，是登出firebase的帳號)
-  //   logoutFirebase()
+  const handlegooogleLogout = async (res, req) => {
+    // firebase logout(注意，這並不會登出google帳號，是登出firebase的帳號)
+    logoutFirebase()
 
-  //   handleLogout()
-  // }
+    handleLogout()
 
-  //----------------------------sweetalert--------------------------------------
-  //登入 跳轉 還沒加入判定 應該要先判斷再跳轉
-  // const mySwal = withReactContent(Swal)
-  // const loginAlert = (e) => {
-  //   e.preventDefault()
-  //   mySwal
-  //     .fire({
-  //       position: 'center',
-  //       icon: 'success',
-  //       iconColor: '#1581cc',
-  //       title: '登入成功，將為您跳轉到首頁',
-  //       showConfirmButton: false,
-  //       timer: 2000,
-  //     })
-  //     .then(
-  //       setTimeout(() => {
-  //         router.push(`/user/user-info`)
-  //       }, 2000)
-  //     )
-  // }
+    // 成功登出後，回復初始會員狀態
+    // if (res.status === 'success') {
+    //   alert('已成功登出')
 
+    //   //   setAuth({
+    //   //     isAuth: false,
+    //   //     userData: initUserData,
+    //   //   })
+    // } else {
+    //   alert(`登出失敗`)
+    // }
+  }
+
+  // ----------------------會員登入(舊)  ----------------------
+
+  // const [redirectToIndex, setRedirectToIndex] = useState(false)
+
+  // // 登入後導頁到使用者資訊頁面
+  // useEffect(() => {
+  //   if (auth.isAuth) {
+  //     setRedirectToIndex(true)
+  //   }
+  // }, [auth])
+  // // 如果 redirectToIndex 為真，則執行頁面跳轉
+  // useEffect(() => {
+  //   if (redirectToIndex) {
+  //     window.location.href = 'http://localhost:3000/user/user-info'
+  //   }
+  // }, [redirectToIndex])
+  // ----------------------會員登入(舊) ----------------------
   return (
     <>
       {/* 頁面內容 */}
       <Head>
-        <title>註冊</title>
+        <title>登入</title>
       </Head>
+
       <>
-        <div className="bg-register ">
+        <div className="bg-login">
           {/* contnet */}
-          <div className="container register-wrap">
-            <div className="register-logo">
+          <div className="container col-12 login-wrap">
+            <div className="login-logo">
               <svg
-                className="register-logoSvg"
+                className="login-logoSvg"
                 xmlns="http://www.w3.org/2000/svg"
                 width={280}
                 height={45}
@@ -223,48 +354,68 @@ export default function Test() {
                 />
               </svg>
             </div>
-            <div className="register-logoText">音樂無國界，學習無邊界</div>
-            <div className="register-form">
-              <div className="register-titleText">註冊帳號</div>
-              {/* <div className="register-google-API">
-                <div className="google-icon">圖</div>
-                <div className="google-text">使用Google註冊</div>
-              </div> */}
+            <div className="login-logoText">音樂無國界，學習無邊界</div>
+            <div className="login-form">
+              <div className="login-titleText">登入</div>
+              <button className="btn btn-primary" onClick={getUser}>
+                取得使用者清單JSON
+              </button>
+              <button className="btn btn-primary" onClick={handleLogout}>
+                登出
+              </button>
+              <button className="btn btn-primary" onClick={handleLoginStatus}>
+                檢測登入狀態
+              </button>
               <button
-                className="register-google-API"
+                className="btn btn-primary"
                 onClick={() => loginGoogleRedirect()}
               >
-                {/* <div className="google-icon">圖</div> */}
-                <GoogleLogo />
-                <div className="google-text">使用Google註冊</div>
+                Google登入
               </button>
+              <button
+                className="btn btn-primary"
+                onClick={() => handlegooogleLogout()}
+              >
+                Google登出
+              </button>
+              <div className="login-google-API">
+                <div className="google-icon">圖</div>
+
+                <div className="google-text">使用Google登入</div>
+              </div>
               <div className="hr-content">
                 <div className="hr-line" />
-                <div className="hr-text">以E-mail註冊</div>
+                <div className="hr-text">以E-mail登入</div>
                 <div className="hr-line" />
               </div>
-              <form className="registerByEmail-form" onSubmit={handleregister}>
-                <div className="registerByEmail-form-box">
-                  <label htmlFor="InputAccount">電子信箱/E-mail</label>
+              <form
+                className="loginByEmail-form"
+                onSubmit={(e) => {
+                  handleLogin(e)
+                  loginAlert(e)
+                }}
+              >
+                <div className="loginByEmail-form-box">
+                  <label htmlFor="InputAccount">帳號 / E-mail</label>
                   <input
-                    className="registerByEmail-input "
-                    type="email"
+                    type="text"
                     name="email"
-                    id="InputAccount"
                     value={user.email}
                     onChange={handleFieldChange}
+                    className="loginByEmail-input "
+                    id="InputAccount"
                     aria-describedby="emailHelp"
-                    placeholder="您常用的信箱"
+                    placeholder="您常用的電子信箱"
                   />
                 </div>
-                <div className="registerByEmail-form-box password-box">
+                <div className="loginByEmail-form-box password-box">
                   <label htmlFor="InputPassword">密碼</label>
                   <input
-                    className="registerByEmail-input-password"
-                    type="password"
+                    type="text"
                     name="password"
                     value={user.password}
                     onChange={handleFieldChange}
+                    className="loginByEmail-input-password"
                     id="InputPassword"
                     placeholder="8~20位英數字組合 "
                   />
@@ -287,44 +438,15 @@ export default function Test() {
                     </svg>
                   </span>
                 </div>
-                <div className="registerByEmail-form-box password-box">
-                  <label htmlFor="InputPasswordCheck">確認密碼</label>
-                  <input
-                    className="registerByEmail-input-password"
-                    type="password"
-                    name="passwordCheck"
-                    value={user.passwordCheck}
-                    onChange={handleFieldChange}
-                    id="InputPasswordCheck"
-                    placeholder="8~20位英數字組合 "
-                  />
-                  <span className="svg-icon">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width={22}
-                      height={24}
-                      viewBox="0 0 22 24"
-                      fill="none"
-                    >
-                      <path
-                        d="M14.8363 19.061L12.617 16.7394C11.7588 17.0602 10.8311 17.1196 9.94183 16.9107C9.05258 16.7019 8.23835 16.2333 7.59388 15.5595C6.94941 14.8857 6.50119 14.0345 6.30139 13.1048C6.10159 12.1752 6.15841 11.2053 6.46525 10.3081L3.63275 7.34681C1.28975 9.52462 0 12 0 12C0 12 4.125 19.9062 11 19.9062C12.3206 19.9015 13.6262 19.6138 14.8363 19.061ZM7.16375 4.939C8.37382 4.38617 9.67944 4.0985 11 4.09375C17.875 4.09375 22 12 22 12C22 12 20.7089 14.4739 18.3686 16.6546L15.5334 13.6905C15.8402 12.7933 15.897 11.8234 15.6972 10.8937C15.4974 9.96406 15.0492 9.11282 14.4047 8.43905C13.7603 7.76529 12.946 7.2967 12.0568 7.08782C11.1675 6.87893 10.2398 6.93834 9.38163 7.25913L7.16375 4.939Z"
-                        fill="#5A5A5A"
-                      />
-                      <path
-                        d="M7.59687 11.4912C7.52123 12.0437 7.56971 12.6069 7.73844 13.1364C7.90718 13.6658 8.19155 14.147 8.56901 14.5416C8.94647 14.9362 9.40666 15.2335 9.9131 15.4099C10.4195 15.5863 10.9583 15.637 11.4867 15.5579L7.59687 11.4912ZM14.4031 12.509L10.5132 8.44084C11.0417 8.36176 11.5805 8.41244 12.0869 8.58885C12.5933 8.76525 13.0535 9.06255 13.431 9.45716C13.8084 9.85178 14.0928 10.3329 14.2615 10.8623C14.4303 11.3918 14.4788 11.9551 14.4031 12.5075V12.509ZM18.7632 21.134L2.26324 3.88396L3.23674 2.86621L19.7367 20.1162L18.7632 21.134Z"
-                        fill="#5A5A5A"
-                      />
-                    </svg>
-                  </span>
-                </div>
-                <div className="registerByEmail-forget">
-                  <Link href="/login" className="forget">
-                    已有帳號?
+                <div className="loginByEmail-forget">
+                  <Link href="/register" className="forget">
+                    還未註冊?
                   </Link>
+                  <a className="forget">忘記密碼?</a>
                 </div>
-                <div className="registerByEmail-submit">
-                  <button type="submit" className="btn btn-submit">
-                    註冊
+                <div className="loginByEmail-submit">
+                  <button type="submit" className="btn">
+                    登入
                   </button>
                 </div>
               </form>
@@ -332,7 +454,7 @@ export default function Test() {
           </div>
           {/* End content */}
           <svg
-            className="bg-register-cloud1 moveeffect1"
+            className="bg-login-cloud1 moveeffect1"
             xmlns="http://www.w3.org/2000/svg"
             width={3410}
             height={483}
@@ -373,7 +495,7 @@ export default function Test() {
             />
           </svg>
           <svg
-            className="bg-register-cloud2 moveeffect3"
+            className="bg-login-cloud2 moveeffect3"
             xmlns="http://www.w3.org/2000/svg"
             width={3410}
             height={483}
@@ -414,7 +536,7 @@ export default function Test() {
             />
           </svg>
           <svg
-            className="bg-register-cloud3 moveeffect4"
+            className="bg-login-cloud3 moveeffect4"
             xmlns="http://www.w3.org/2000/svg"
             width={3410}
             height={483}
@@ -455,7 +577,7 @@ export default function Test() {
             />
           </svg>
           <svg
-            className="bg-register-cloud1 moveeffect2"
+            className="bg-login-cloud1 moveeffect2"
             xmlns="http://www.w3.org/2000/svg"
             width={3410}
             height={483}
@@ -501,6 +623,23 @@ export default function Test() {
       <Footer />
 
       <style jsx>{`
+        .main {
+          min-height: 100svh;
+        }
+        * {
+          box-sizing: border-box;
+        }
+        :root {
+          --primary: #1581cc;
+          --light-primary: #18a1ff;
+          --deep-primary: #124365;
+          --dark: #1d1d1d;
+          --secondary: #5a5a5a;
+          --body: #b9b9b9;
+          --yellow: #faad14;
+          --red: #ec3f3f;
+        }
+
         body {
           font-family: 'Noto Sans TC', sans-serif;
 
@@ -556,6 +695,9 @@ export default function Test() {
         /* --------------- container --------------- */
         .container {
           min-height: calc(100vh);
+          & p {
+            color: #000;
+          }
         }
 
         /* --------------- footer --------------- */
@@ -568,7 +710,7 @@ export default function Test() {
         }
 
         /* ------------------------bg-------------------- */
-        .bg-register {
+        .bg-login {
           display: flex;
           /* width: 1920px; */
           max-width: 1920px;
@@ -585,34 +727,34 @@ export default function Test() {
           overflow: hidden;
         }
 
-        .bg-register-cloud1 {
+        .bg-login-cloud1 {
+          width: 2166px;
+          height: 483px;
+          position: absolute;
+          right: -200px;
+          bottom: -200px;
+          fill: var(--white, #fff);
+        }
+
+        .bg-login-cloud2 {
           width: 2166px;
           height: 483px;
           position: absolute;
           right: -182px;
-          bottom: -202px;
+          bottom: -112px;
           fill: var(--white, #fff);
         }
 
-        .bg-register-cloud2 {
+        .bg-login-cloud3 {
           width: 2166px;
           height: 483px;
           position: absolute;
           right: -182px;
-          bottom: -132px;
+          bottom: -222px;
           fill: var(--white, #fff);
         }
 
-        .bg-register-cloud3 {
-          width: 2166px;
-          height: 483px;
-          position: absolute;
-          right: -182px;
-          bottom: -232px;
-          fill: var(--white, #fff);
-        }
-
-        .bg-register-cloud4 {
+        .bg-login-cloud4 {
           width: 2166px;
           height: 483px;
           position: absolute;
@@ -621,7 +763,7 @@ export default function Test() {
           fill: var(--white, #fff);
         }
 
-        .bg-register-cloud5 {
+        .bg-login-cloud5 {
           width: 2166px;
           height: 483px;
           position: absolute;
@@ -632,7 +774,7 @@ export default function Test() {
 
         /* ------------------------bg-End---------------- */
 
-        .register-wrap {
+        .login-wrap {
           display: flex;
           max-width: 1440px;
           padding-top: 80px;
@@ -642,13 +784,13 @@ export default function Test() {
           /* flex: 1 0 0; */
           z-index: 5;
 
-          .register-logo {
+          .login-logo {
             display: flex;
             width: 279px;
             height: 45px;
             justify-content: center;
             align-items: center;
-            .register-logoSvg {
+            .login-logoSvg {
               width: 279px;
               height: 45px;
               flex-shrink: 0;
@@ -656,7 +798,7 @@ export default function Test() {
             }
           }
 
-          .register-logoText {
+          .login-logoText {
             color: var(--white, #fff);
             /* h3 */
             font-family: 'Noto Sans TC';
@@ -666,7 +808,7 @@ export default function Test() {
             line-height: normal;
           }
 
-          .register-form {
+          .login-form {
             display: flex;
             width: 380px;
             max-width: 380px;
@@ -680,7 +822,7 @@ export default function Test() {
 
             /* shadow */
             box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.25);
-            .register-titleText {
+            .login-titleText {
               color: var(--primary-deep, #0d3652);
               font-family: 'Noto Sans TC';
               font-size: 24px;
@@ -689,7 +831,7 @@ export default function Test() {
               line-height: normal;
             }
 
-            .register-google-API {
+            .login-google-API {
               display: flex;
               height: 38px;
               max-width: 700px;
@@ -742,7 +884,7 @@ export default function Test() {
               }
             }
 
-            .registerByEmail-form {
+            .loginByEmail-form {
               display: flex;
               max-width: 840px;
               flex-direction: column;
@@ -752,7 +894,7 @@ export default function Test() {
               align-self: stretch;
               border-radius: 10px;
 
-              .registerByEmail-form-box {
+              .loginByEmail-form-box {
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
@@ -767,7 +909,7 @@ export default function Test() {
                 font-weight: 400;
                 line-height: normal;
 
-                .registerByEmail-input {
+                .loginByEmail-input {
                   display: flex;
                   height: 38px;
                   max-width: 700px;
@@ -780,7 +922,7 @@ export default function Test() {
                   background: var(--white, #fff);
                 }
 
-                .registerByEmail-input-password {
+                .loginByEmail-input-password {
                   display: flex;
                   height: 38px;
                   max-width: 700px;
@@ -810,7 +952,7 @@ export default function Test() {
                 cursor: pointer;
               }
 
-              .registerByEmail-forget {
+              .loginByEmail-forget {
                 display: flex;
                 flex-direction: column;
                 align-items: flex-end;
@@ -825,13 +967,13 @@ export default function Test() {
                 text-decoration-line: underline;
               }
 
-              .registerByEmail-submit {
+              .loginByEmail-submit {
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 gap: 10px;
                 align-self: stretch;
-                .btn-submit {
+                .btn {
                   display: flex;
                   justify-content: center;
                   align-items: center;

@@ -75,7 +75,6 @@ export default function Test() {
     setFilterVisible(!filterVisible)
   }
 
-
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
@@ -155,7 +154,7 @@ export default function Test() {
             </div>
           </div>
           <div className="d-flex">
-            <div className="w-100 p-0 cart-main" style={{ height: '' }}>
+            <div className="w-100 p-0 cart-main">
               <div className="cart-lesson">
                 <div className="cart-title">課程</div>
                 <div className="cart-thead">
@@ -255,7 +254,7 @@ export default function Test() {
                   </div>
                   <div className="d-flex justify-content-between h3">
                     <div>合計</div>
-                    <div>NT ${calcTotalPrice()}</div>
+                    <div>NT ${calcTotalPrice() - calcTotalDiscount()}</div>
                   </div>
                 </div>
                 <div className="cart-btn">
@@ -293,17 +292,17 @@ export default function Test() {
             </div>
             <div className="d-flex justify-content-between h3">
               <div>合計</div>
-              <div>NT ${calcTotalPrice()}</div>
+              <div>NT ${calcTotalPrice() - calcTotalDiscount()}</div>
             </div>
           </div>
-          <div className="cart-btn">
+          <Link href='/cart/info' className="cart-btn">
             <div
               className="b-btn b-btn-primary d-flex w-100 h-100 justify-content-center"
               style={{ padding: '14px 0' }}
             >
               結帳
             </div>
-          </div>
+          </Link>
         </div>
       </div>
       <Footer />
@@ -499,6 +498,8 @@ export default function Test() {
               overflow: hidden;
               position: relative;
               & img {
+                width: auto;
+                height: auto;
                 object-fit: cover;
               }
               @media screen and (max-width: 576px) {

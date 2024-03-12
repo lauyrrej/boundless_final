@@ -1,33 +1,21 @@
-import React, { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
-// icon
-import { FaStar } from 'react-icons/fa'
-import { GoClock } from 'react-icons/go'
-import { MdOutlinePeopleAlt } from 'react-icons/md'
+// import Lesson from '@/data/Lesson.json'
 
-export default function CourseCard({
-  luid,
-  name,
-  price,
-  teacher_id,
-  img,
-  length,
-  sales,
-  discount,
-}) {
-  const [isDiscount, setIsDiscount] = useState(!!discount)
+export default function CourseCard({ id, name, price, teacher_id, img,length, sales }) {
   return (
     <>
-      <Link href={`/lesson/${luid}`}>
+      <Link
+        href={`/lesson/${id}`}
+       
+      >
         <article className="course-card">
-          <div className="course-image-wrapper">
-            <Image
-              className="course-image"
+          <section className="course-image-wrapper">
+            <img
               loading="lazy"
               src={`/課程與師資/lesson_img/${img}`}
               alt="Course Preview"
-              fill
+              className="course-image"
             />
             <img
               loading="lazy"
@@ -35,54 +23,56 @@ export default function CourseCard({
               alt=""
               className="icon-image"
             />
-          </div>
+          </section>
 
           <section className="course-details">
-            <h3 className="course-title mb-1">{name}</h3>
+            <h3 className="course-title">{name}</h3>
             <p className="course-instructor">by {teacher_id}老師</p>
             <div className="course-info">
               <div className="rating">
-                <FaStar size={18} color="#faad14" />
+                <img
+                  loading="lazy"
+                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/b8287886cc0f8e59d93376690dc57f4af99a9e899badb88e0d2ed47fdb08d035?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&"
+                  alt="Rating stars"
+                  className="rating-stars"
+                />
                 <span className="rating-value">4.9</span>
                 <span className="review-count">(3)</span>
               </div>
               <div>
                 <span className="duration-time">
-                  <GoClock size={16} color="#5a5a5a" />
+                  <img
+                    loading="lazy"
+                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/8df3a2bdde335108c6d04c0849bce7699504c28286258ab16838e6cce714455f?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&"
+                    alt="Clock icon"
+                    className="duration-icon"
+                  />
                   {length}小時
                 </span>
               </div>
             </div>
-            {/* {isDiscount ? (
-              <div className="course-price">
-                <del>NT$ 4,000</del>
-                <div style={{ color: '#ec3f3f' }}>{discount}NT$ 3,800</div>
-              </div>
-            ) : (
-              <div className="course-price">
-                <div>NT$ {price}4,000</div>
-              </div>
-            )} */}
-            <div className="course-price">
-              <div>NT$ {price}</div>
-            </div>
-            <div className="students">
-              <MdOutlinePeopleAlt size={16} color="#5a5a5a" />
-              <span>{sales}50</span>
+            <div className="course-price">${price}</div>
+            <div className="enrolled-students">
+              <img
+                loading="lazy"
+                src="https://cdn.builder.io/api/v1/image/assets/TEMP/6d3076872f8f7cffe3e64f324e5f3c6851c51802240e5b7749e95a5dcbb6ab69?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&"
+                alt="User icon"
+                className="user-icon"
+              />
+              <span className="enrollment-count">{sales}</span>
             </div>
           </section>
         </article>
+
         <style jsx>{`
           .course-card {
-            width: 240px;
-            height: 403px;
-
+            max-width: 240px;
             border-radius: 5px;
             border: 1px solid #b9b9b9;
             background-color: #fff;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            padding: 8px;
           }
           .course-image-wrapper {
             display: flex;
@@ -92,12 +82,11 @@ export default function CourseCard({
             position: relative;
             aspect-ratio: 1.33;
             width: 100%;
-            height: 166px; /*設定希望高度 */
           }
-          .course-image {
+          .course-image,
+          .icon-image {
             width: 100%;
-            height: 100%;
-            object-fit: contain;
+            object-fit: cover;
             object-position: center;
           }
           .icon-image {
@@ -114,13 +103,11 @@ export default function CourseCard({
           .rating {
             display: flex;
             align-items: center;
-            gap: 5px;
           }
 
           .course-details {
             display: flex;
             flex-direction: column;
-            gap: 6px;
             color: #1d1d1d;
             font-weight: 400;
             padding: 14px 12px;
@@ -130,39 +117,19 @@ export default function CourseCard({
             font-family: Noto Sans TC, sans-serif;
             margin: 0;
           }
-          .course-instructor {
-            font-size: 14px;
-            color: #5a5a5a;
-            margin-bottom: 0;
-          }
-          .duration-time {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 14px;
-          }
-          .students {
-            display: flex;
-            align-items: center;
-            justify-content: end;
-            gap: 5px;
-            font-size: 14px;
-          }
 
           .course-price {
             font-size: 18px;
             font-family: Noto Sans TC, sans-serif;
             font-weight: 700;
-            height: 60px;
+            margin-top: 11px;
           }
           .enrolled-students {
             text-align: right;
             color: #5a5a5a;
             font-size: 14px;
             font-family: Noto Sans TC, sans-serif;
-             {
-              /* margin-top: 46px; */
-            }
+            margin-top: 46px;
           }
           /* Add your existing styles here */
         `}</style>

@@ -23,19 +23,40 @@ import { IoClose } from 'react-icons/io5'
 export default function Test() {
   // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
-  const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
-    useAuth()
+  const {
+    LoginUserData,
+    handleLoginStatus,
+    getLoginUserData,
+    handleLogout,
+    setLoginUserData,
+  } = useAuth()
   const [userData, setUserData] = useState()
+
+  // const [LoginUserData, setLoginUserData] = useState([])
+
   //檢查token
   useEffect(() => {
     handleLoginStatus()
     //獲得資料
     getLoginUserData()
+    console.log(LoginUserData)
   }, [])
   //登出功能
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     await handleLoginStatus()
+  //     await getLoginUserData()
+  //     // setLoginUserData(LoginUserData)
+  //     // console.log(LoginUserData)
+  //   }
+
+  //   fetchData()
+  // }, [])
+
   //檢查是否獲取資料
-  // console.log(LoginUserData)
+  console.log(LoginUserData)
+  // console.log(userData)
   //   讀取使用者資料後 定義大頭貼路徑
   let avatarImage
   if (LoginUserData.img) {
@@ -51,6 +72,26 @@ export default function Test() {
   // const avatarDefault = `/user/avatar_userDefault.jpg`
 
   // ----------------------會員登入狀態  ----------------------
+
+  // ----------------------會員資訊處裡  ----------------------
+  // 生日
+  // const dateObject = LoginUserData.birthday
+  // const dateObject = LoginUserData.birthday
+
+  // if (dateObject !== undefined) {
+  //   const birthdayDate = dateObject.toString().split('T')[0]
+  //   console.log(birthdayDate)
+  // } else {
+  //   console.error('Birthday is undefined')
+  // }
+
+  // const birthdayDate = dateObject.split('T')[0]
+
+  // console.log(LoginUserData)
+  // console.log(`${LoginUserData.birthday}`)
+  // console.log(dateObject)
+  // console.log(birthdayDate)
+  // ----------------------會員資訊處裡  ----------------------
 
   // ----------------------手機版本  ----------------------
   // 主選單
@@ -145,7 +186,12 @@ export default function Test() {
           {/* 用戶資訊 */}
           <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
             <div className="mb-photo-wrapper mb-2">
-              <Image src={avatarImage} alt="user photo mb" fill></Image>
+              {/* <Image
+                src={avatarImage}
+                alt="user photo mb"
+                fill
+                sizes="(max-width: 150px)"
+              ></Image> */}
             </div>
             <div>{LoginUserData.nickname}</div>
           </div>
@@ -186,13 +232,13 @@ export default function Test() {
             <div className="sidebar">
               <div className="sidebar-user-info">
                 <div className="sidebar-user-info-imgBox">
-                  <Image
+                  {/* <Image
                     src={avatarImage}
                     alt="user photo mb"
                     fill
                     priority="default" //不加的話Next 會問是否要加優先級
                     sizes="(max-width: 150px)"
-                  ></Image>
+                  ></Image> */}
                 </div>
                 <div className="sidebar-user-info-text">
                   <div className="sidebar-user-info-name">

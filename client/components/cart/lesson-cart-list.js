@@ -20,6 +20,8 @@ export default function LessonList({ items, lessonData, remove }) {
                   className={`${Lesson.lesson_item_pic_div}`}
                   src={`/課程與師資/lesson_img/${v.img}`}
                   alt={v.name}
+                  sizes="100vw"
+                  priority={false}
                   fill
                 />
               </div>
