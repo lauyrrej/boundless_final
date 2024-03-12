@@ -4,7 +4,7 @@ import styles from '@/components/coupon/coupon.module.scss'
 export default function Coupon({ id, name, type, kind, discount, limit_time }) {
   return (
     <>
-      <div className={`${styles.couponCard} card mb-3`}>
+      <div className={`${styles.couponCard} card mb-3 mx-1`}>
         <div className="row  d-flex g-0">
           {/* 左 */}
           <div className="col-3">
