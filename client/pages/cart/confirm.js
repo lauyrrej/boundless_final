@@ -16,7 +16,24 @@ import { FaPlus } from 'react-icons/fa'
 import { FaMinus } from 'react-icons/fa'
 import { FaTrash } from 'react-icons/fa6'
 
+//hook
+import { useCart } from '@/hooks/use-cart'
+
 export default function Test() {
+  //hook
+  const {
+    calcInstrumentItems,
+    calcInstrumentPrice,
+    calcInstrumentDiscount,
+    handleInstrumentSelector,
+    calcLessonItems,
+    calcLessonPrice,
+    calcLessonDiscount,
+    handleLessonSelector,
+    calcTotalDiscount,
+    calcTotalPrice,
+  } = useCart()
+
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -88,23 +105,32 @@ export default function Test() {
           </div>
         </div>
         <>
-          <div className='cart'>
+          <div className="cart">
             <h2>購物車</h2>
           </div>
           <div className="d-flex justify-content-between cart-process">
-            <div className="d-flex align-items-center ballbox" style={{ gap: 10 }}>
+            <div
+              className="d-flex align-items-center ballbox"
+              style={{ gap: 10 }}
+            >
               <div className="ball d-flex align-items-center justify-content-center inactive">
                 1
               </div>
-              <div className="h5 cart-process-text">確認/修改訂單</div>
+              <div className="h5 cart-process-text">修改訂單</div>
             </div>
-            <div className="d-flex align-items-center ballbox" style={{ gap: 10 }}>
+            <div
+              className="d-flex align-items-center ballbox"
+              style={{ gap: 10 }}
+            >
               <div className="ball d-flex align-items-center justify-content-center inactive">
                 2
               </div>
               <div className="h5 cart-process-text">填寫訂單資料</div>
             </div>
-            <div className="d-flex align-items-center ballbox" style={{ gap: 10 }}>
+            <div
+              className="d-flex align-items-center ballbox"
+              style={{ gap: 10 }}
+            >
               <div className="ball d-flex align-items-center justify-content-center active">
                 3
               </div>
@@ -112,7 +138,7 @@ export default function Test() {
             </div>
           </div>
           <div className="d-flex">
-            <div className="w-100 p-0 cart-main" style={{ height: '' }}>
+            <div className="w-100 p-0 cart-main">
               <div className="cart-lesson">
                 <div className="cart-title">訂單內容</div>
                 <div className="cart-thead">
@@ -158,9 +184,7 @@ export default function Test() {
                     >
                       購買者姓名
                     </label>
-                    <div className="col-sm-3 col-3">
-                      李宗盛
-                    </div>
+                    <div className="col-sm-3 col-3">李宗盛</div>
                   </div>
                   <div className="row g-3 align-items-center">
                     <label
@@ -169,9 +193,7 @@ export default function Test() {
                     >
                       電話號碼
                     </label>
-                    <div className="col-sm-3 col-4">
-                      0922333444
-                    </div>
+                    <div className="col-sm-3 col-4">0922333444</div>
                   </div>
                   <div className="row g-3">
                     <label
@@ -197,9 +219,7 @@ export default function Test() {
                     >
                       付款方式
                     </label>
-                    <div className="col-sm-6">
-                      信用卡
-                    </div>
+                    <div className="col-sm-6">信用卡</div>
                   </div>
                 </div>
               </div>
@@ -215,28 +235,31 @@ export default function Test() {
                 <div className="total d-flex flex-column" style={{ gap: 20 }}>
                   <div className="d-flex justify-content-between carttext">
                     <div>商品數量</div>
-                    <div>樂器*3 課程*2</div>
+                    <div>
+                      樂器*{calcInstrumentItems()} 課程*{calcLessonItems()}
+                    </div>
                   </div>
                   <div className="d-flex justify-content-between carttext">
                     <div>原價合計</div>
-                    <div>NT $864000</div>
+                    <div>NT ${calcTotalPrice()}</div>
                   </div>
                   <div className="d-flex justify-content-between carttext discount">
                     <div>折扣合計</div>
-                    <div>-NT $3400</div>
+                    <div>-NT ${calcTotalDiscount()}</div>
                   </div>
                   <div className="d-flex justify-content-between h3">
                     <div>合計</div>
-                    <div>NT $790000</div>
+                    <div>NT ${calcTotalPrice() - calcTotalDiscount()}</div>
                   </div>
                 </div>
                 <div className="cart-btn">
-                  <div
+                  <Link
+                    href="/cart/info"
                     className="b-btn b-btn-body d-flex w-100 h-100 justify-content-center"
                     style={{ padding: '14px 0' }}
                   >
                     回上一步
-                  </div>
+                  </Link>
                   <div
                     className="b-btn b-btn-primary d-flex w-100 h-100 justify-content-center"
                     style={{ padding: '14px 0' }}
@@ -249,7 +272,7 @@ export default function Test() {
           </div>
         </>
       </div>
-      <div className="flow-cart-mb" style={{}}>
+      <div className="flow-cart-mb">
         <div
           className="d-flex flex-column position-sticky"
           style={{ gap: 20, top: 110 }}
@@ -257,28 +280,31 @@ export default function Test() {
           <div className="total d-flex flex-column" style={{ gap: 20 }}>
             <div className="d-flex justify-content-between carttext">
               <div>商品數量</div>
-              <div>樂器*3 課程*2</div>
+              <div>
+                樂器*{calcInstrumentItems()} 課程*{calcLessonItems()}
+              </div>
             </div>
             <div className="d-flex justify-content-between carttext">
               <div>原價合計</div>
-              <div>NT $864000</div>
+              <div>NT ${calcTotalPrice()}</div>
             </div>
             <div className="d-flex justify-content-between carttext discount">
               <div>折扣合計</div>
-              <div>-NT $3400</div>
+              <div>-NT ${calcTotalDiscount()}</div>
             </div>
             <div className="d-flex justify-content-between h3">
               <div>合計</div>
-              <div>NT $790000</div>
+              <div>NT ${calcTotalPrice() - calcTotalDiscount()}</div>
             </div>
           </div>
           <div className="cart-btn">
-            <div
+            <Link
+              href="/cart/info"
               className="b-btn b-btn-body d-flex w-100 h-100 justify-content-center"
               style={{ padding: '14px 0' }}
             >
               回上一步
-            </div>
+            </Link>
             <div
               className="b-btn b-btn-primary d-flex w-100 h-100 justify-content-center"
               style={{ padding: '14px 0' }}

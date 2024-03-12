@@ -4,6 +4,7 @@ import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
 import jamHero from '@/assets/jam-hero.png'
+// user頭貼照
 import avatar from '@/public/user/Meiyuyu.jpg'
 
 // icons
@@ -14,7 +15,6 @@ import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
-
 // coupon
 import styles from '@/pages/coupon/userCoupon.module.scss'
 import Coupon from '@/components/coupon/coupon.js'
@@ -65,32 +65,32 @@ export default function Test() {
     setFilterVisible(!filterVisible)
   }
   // filter假資料
-  const brandData = [
-    { id: 1, name: 'YAMAHA' },
-    { id: 2, name: 'Roland' },
-    { id: 3, name: 'Fender' },
-    { id: 4, name: 'Gibson' },
-  ]
-  const [brandSelect, setBrandSelect] = useState('all')
+  // const brandData = [
+  //   { id: 1, name: 'YAMAHA' },
+  //   { id: 2, name: 'Roland' },
+  //   { id: 3, name: 'Fender' },
+  //   { id: 4, name: 'Gibson' },
+  // ]
+  // const [brandSelect, setBrandSelect] = useState('all')
 
-  const [priceLow, setPriceLow] = useState('')
-  const [priceHigh, setPriceHigh] = useState('')
+  // const [priceLow, setPriceLow] = useState('')
+  // const [priceHigh, setPriceHigh] = useState('')
 
   // 課程評價
-  const scoreState = ['all', '5', '4', '3']
-  const [score, setScore] = useState('all')
+  // const scoreState = ['all', '5', '4', '3']
+  // const [score, setScore] = useState('all')
 
   // 活動促銷
   const [sales, setSales] = useState(false)
 
   // 清除表單內容
-  const cleanFilter = () => {
-    setBrandSelect('all')
-    setPriceLow('')
-    setPriceHigh('')
-    setScore('all')
-    setSales(false)
-  }
+  // const cleanFilter = () => {
+  //   setBrandSelect('all')
+  //   setPriceLow('')
+  //   setPriceHigh('')
+  //   setScore('all')
+  //   setSales(false)
+  // }
   // sql分類
   // 0: 全部 ， 1: 樂器，2: 課程
   const [kind, setKind] = useState(0)
@@ -107,7 +107,7 @@ export default function Test() {
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
-      {/* 先把HEROSECTION隱藏 */}
+      {/* 先把HeroSection隱藏 */}
       {/* <div
         className="page-shero d-none d-sm-block"
         style={{ paddingTop: '60px' }}
@@ -306,13 +306,13 @@ export default function Test() {
                       </option>
                       <option value="oldest">樂器</option>
                       <option value="oldest">課程</option>
-                      {/* <option value="oldest">已使用</option> */}
+                      <option value="oldest">已使用</option>
                     </select>
                   </div>
                   {/*篩選*/}
                   <form className="d-flex align-items-center position-relative">
                     <div
-                      className="filter-text d-flex align-items-center me-sm-4"
+                      className="filter-text d-flex align-items-center me-sm-4 d-block d-sm-none"
                       role="presentation"
                       onClick={onshow}
                     >
