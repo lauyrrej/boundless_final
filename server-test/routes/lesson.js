@@ -114,15 +114,18 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-// 獲得單筆課程資料
+// 獲得單筆課程資料＋review
 router.get("/:id", async (req, res, next) => {
   let luid = req.params.id;
   console.log(luid);
-  let [data] = await db
-    .execute("SELECT * FROM `product` WHERE `puid` = ? ", [luid])
-    .catch(() => {
-      return undefined;
-    });
+ let [data] = await db
+   .execute(
+     "SELECT p.*, pr.* FROM `product` AS p LEFT JOIN `product_review` AS pr ON p.id = pr.product_id WHERE p.`puid` = ?",
+     [luid]
+   )
+   .catch(() => {
+     return undefined;
+   });
 
   if (data) {
     console.log(data);

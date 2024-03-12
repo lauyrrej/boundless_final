@@ -15,21 +15,20 @@ import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 import { FaHeart } from 'react-icons/fa'
 
-import Card from '@/components/lesson/lesson-card-data'
-import HoriCard from '@/components/lesson/lesson-card-hori'
-import ProductCard from '@/components/lesson/lesson-productbrief-card'
+import CardIns from '@/components/instrument/card'
+import ProductCardIns from '@/components/instrument/instrument-productbrief-card'
 
 //試抓資料區
-import Lesson from '@/data/Lesson.json'
+import Instrument from '@/data/instrument/instrument.json'
 //toast
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { ToastProvider } from 'react-hot-toast'
 import App from '@/pages/_app'
 
-export default function LessonDetailPage() {
+export default function InstrumentDetailPage() {
   // -------試抓資料區----------
-  //   console.log(Lesson)
+  // console.log(Instrument)
 
   // ----------------------手機版本  ----------------------
   // 主選單
@@ -63,30 +62,15 @@ export default function LessonDetailPage() {
     //按按鍵切換狀態
     setcolorChange(!colorChange)
   }
-  // ----------------------加入右上角購物車的功能  ----------------------
 
-  //FIXME
-  // ReactDOM.render(
-  //   <React.StrictMode>
-  //     <ToastProvider>
-  //       <App />
-  //     </ToastProvider>
-  //   </React.StrictMode>,
-  //   document.getElementById('root')
-  // )
-
-  //-----------------------動態路由
-  //  由router中獲得動態路由(屬性名稱pid，即檔案[pid].js)的值，router.query中會包含pid屬性
-  // 1. 執行(呼叫)useRouter，會回傳一個路由器
-  // 2. router.isReady(布林值)，true代表本元件已完成水合作用(hydration)，可以取得router.query的值
   const router = useRouter()
 
-  const [LessonDetail, setLessonDetail] = useState()
+  const [InstrumentDetail, setInstrumentDetail] = useState()
   const prevLidRef = useRef(null)
   // 向伺服器要求資料，設定到狀態中用的函式
-  const getLessonDetail = async (luid) => {
+  const getInstrumentDetail = async (puid) => {
     try {
-      const res = await fetch(`http://localhost:3005/api/lesson/${luid}`)
+      const res = await fetch(`http://localhost:3005/api/instrument/${puid}`)
 
       // res.json()是解析res的body的json格式資料，得到JS的資料格式
       const data = await res.json()
@@ -96,8 +80,8 @@ export default function LessonDetailPage() {
       // 設定到state中，觸發重新渲染(re-render)，會進入到update階段
       // 進入狀態前檢查資料類型有值，以避免錯誤
       if (data) {
-        setLessonDetail(data)
-        console.log(LessonDetail[0].name)
+        setInstrumentDetail(data)
+        console.log(InstrumentDetail[0].name)
       }
     } catch (e) {
       console.error(e)
@@ -108,18 +92,19 @@ export default function LessonDetailPage() {
   useEffect(() => {
     // 如果isReady是true，確保能得到query的值
     if (router.isReady) {
-      const { luid } = router.query
-      console.log(luid)
+      const { puid } = router.query
+      console.log(puid)
       // 如果lid與上一次的不同，觸發getLessonDetail
-      if (luid !== prevLidRef.current) {
-        getLessonDetail(luid)
-        prevLidRef.current = luid
+      if (puid !== prevLidRef.current) {
+        getInstrumentDetail(puid)
+        prevLidRef.current = puid
       }
     }
   }, [router.isReady])
 
   console.log('render')
   console.log(router.query, ' isReady=', router.isReady)
+
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
@@ -168,19 +153,24 @@ export default function LessonDetailPage() {
         <div className="row">
           {/* 麵包屑 */}
           <div
-            className="breadcrumb-wrapper-ns"
+            className="breadcrumb-wrapper-ms"
             style={{ paddingBlock: '20px' }}
           >
             <ul className="d-flex align-items-center p-0 m-0">
               <IoHome size={20} />
-              <Link href="/lesson">
-                <li style={{ marginLeft: '8px' }}>探索課程</li>
-              </Link>
-              <FaChevronRight />
+              <Link href="/instrument">
+                <li style={{ marginLeft: '8px' }}>樂器商城</li>
+                <FaChevronRight />
 
-              {LessonDetail && LessonDetail.length > 0 && (
+                <li style={{ marginLeft: '10px' }}>音響設備</li>
+              </Link>
+
+              <FaChevronRight />
+              <li style={{ marginLeft: '10px' }}>音箱頭</li>
+
+              {InstrumentDetail && InstrumentDetail.length > 0 && (
                 <li style={{ marginLeft: '10px' }}>
-                  {LessonDetail[0].lesson_category_id}
+                  {InstrumentDetail[0].instrument_category_id}
                 </li>
               )}
             </ul>
@@ -191,20 +181,55 @@ export default function LessonDetailPage() {
               <div>
                 <div className="Left">
                   {/* prodBriefingArea */}
-                  <div className="prodBriefingArea d-flex">
-                    {LessonDetail && LessonDetail.length > 0 && (
+                  <div className="prodBriefingArea d-flex ">
+                    {InstrumentDetail && InstrumentDetail.length > 0 && (
                       <img
-                        src={`/課程與師資/lesson_img/${LessonDetail[0].img}`}
+                        src={`/樂器介紹/instrument_img/${InstrumentDetail[0].img}`}
                         className="prodImg"
                       />
                     )}
                   </div>
+                  {/* <div className="pic-Con ">
+                    <div className="main-Pic border border-secondary">
+                      <img
+                        src="/instrument/Orange_PPC108/PPC108_1.png"
+                        className="main-Pic"
+                      ></img>
+                    </div>
+                    <div className="sub-Pic-Con ">
+                      <div className="sub-Pic border border-secondary">
+                        <img
+                          src="/instrument/Orange_PPC108/PPC108_1.png"
+                          className="sub-Pic"
+                        ></img>
+                      </div>
+                      <div className="sub-Pic border border-secondary">
+                        <img
+                          src="/instrument/Orange_PPC108/PPC108_2.png"
+                          className="sub-Pic"
+                        ></img>
+                      </div>
+                      <div className="sub-Pic border border-secondary">
+                        <img
+                          src="/instrument/Orange_PPC108/PPC108_3.png"
+                          className="sub-Pic"
+                        ></img>
+                      </div>
+                      <div className="sub-Pic border border-secondary">
+                        <img
+                          src="/instrument/Orange_PPC108/PPC108_1.png"
+                          className="sub-Pic"
+                        ></img>
+                      </div>
+                    </div>
+                  </div> */}
+
                   {/* 手機版productbrief-card放這 */}
                   <div className="Right-mobile">
                     <div className="prodBriefing sticky-top">
-                      {LessonDetail && LessonDetail.length > 0 && (
+                      {InstrumentDetail && InstrumentDetail.length > 0 && (
                         <div className="prodMainName">
-                          {LessonDetail[0].name}Logic Pro X 從零開始
+                          {InstrumentDetail[0].name}Orange Micro Terror
                         </div>
                       )}
 
@@ -218,10 +243,10 @@ export default function LessonDetailPage() {
                           <div className="ratingNumber">4.9</div>
                           <div className="commentNumber">(10)</div>
                         </div>
-                        <div className="sales">購買人數 50</div>
+                        <div className="sales">已售出 10</div>
                       </div>
                       <div className="productPrice">
-                        <div className="price">NT$ 1,800</div>
+                        <div className="price">NT$ 22,680</div>
                         <div className="likesIcon icon-container ">
                           <FaHeart
                             className="likesIcon"
@@ -238,90 +263,64 @@ export default function LessonDetailPage() {
                         onClick={colorToggle}
                       /> */}
                       </div>
-                      <div className="lengthHomeworkArea">
-                        <div className="lengthhomework">
-                          <img
-                            loading="lazy"
-                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/81a1d10e78e821775737fe4938ae726e8de4a80804b01bdda9876d9f86f9b1bb?"
-                            className="lengthIcon"
-                          />
-                          <div className="lengthHomeworkWord">5小時</div>
-                        </div>
-                        <div className="lengthhomework">
-                          <img
-                            loading="lazy"
-                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/4552b4fc37047176a87577807414005cf8e8466b4ef23329066c1c39e5dad447?"
-                            className="img-10"
-                          />
-                          <div className="lengthHomeworkWord">1份作業</div>
-                        </div>
+
+                      <div className="Intro">
+                        小巧的放大器，巨大的音色。
+                        <br />
+                        <br /> Micro Terror是一種全球現象。從最初的 Tiny Terror
+                        中汲取靈感，這個微型怪物將一個閥門前置放大器連接到一個固態輸出部分，以獲得巨大的音調，使其小型框架成為一種嘲弄。
+                        <br />
+                        <br />
+                        Micro Terror 重量不到 1
+                        公斤，可以說是市場上最便攜的放大器頭。與配套的 PPC108
+                        機櫃搭配使用時，Micro Terror 的 Aux
+                        輸入和耳機輸出使其成為完美的練習夥伴，即使是最雜亂的餐具櫃也足夠小。
+                        然而，不要被它的微型足跡所迷惑，因為尺寸是這款放大器唯一的小問題。Micro
+                        Terror 採用高強度鋼外殼，按照與 Terror
+                        系列其他產品相同的高標準製造，配備單個 ECC83 (12AX7)
+                        前置放大器閥，並與固態功率放大器耦合。這個小東西發出的聲音深度（和音量）確實令人震驚，橙色的咆哮和咬合聲很豐富。更重要的是，Micro
+                        Terror 可以與任何 8-16 歐姆音箱一起使用。
                       </div>
-                      <div className="lessonIntro">
-                        Logic Pro
-                        為數位音樂編曲入門的必學軟體，從錄音、編曲到混音一次包辦，帶你認識錄音介面、多重效果器，以及豐富的內建素材庫，是對音樂創作有興趣的你不可錯過的專業音樂編曲課程。
+
+                      <div className="shoppingBtn" id="shoppingBtn">
+                        <div className="cartBtn">
+                          <img
+                            loading="lazy"
+                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
+                            className="cartIcon"
+                          />
+
+                          <div className="cart">加入購物車</div>
+                        </div>
+                        <div className="buyBtn">
+                          <div className="buy">立即購買</div>
+                        </div>
                       </div>
                     </div>
                   </div>
 
                   {/*商品細節 */}
                   <div className="detail">
-                    {/* 單元一覽 */}
-                    <div className="outline detail-wrapp  mt40">
-                      <div className="detail-title">單元一覽</div>
+                    {/* 規格 */}
+                    <div className="outline detail-wrapp mt40">
+                      <div className="detail-title">規格</div>
                       <div className="list">
-                        {LessonDetail && LessonDetail.length > 0 && (
+                        {InstrumentDetail && InstrumentDetail.length > 0 && (
                           <ul>
-                            {LessonDetail[0].outline}
-                            //FIXME做斷行
-                            <li>Logic Pro X 從零開始</li>
-                            <li>正式課程開始</li>
-                            <li>編曲Arrange</li>
-                            <li>數位錄音Recording</li>
-                            <li>混音Mixing</li>
-                            <li>專題課程</li>
-                            <li>【 iPad 版】Logic Pro</li>
+                            {InstrumentDetail[0].outline}
+                            <li>輸出功率：20W</li>
+                            <li>單體輸出孔：8 ~ 16ohm</li>
+                            <li>真空管：PREAMP: 1 X 12AX7/ECC83</li>
+                            <li>尺寸：400mm x 210mm x 180mm</li>
+                            <li>重量：0.85kg</li>
                           </ul>
                         )}
                       </div>
                     </div>
-                    {/* 適合對象 */}
-                    <div className="suitable   mt40">
-                      <div className="detail-title">適合對象</div>
-                      <div className="list">
-                        {LessonDetail && LessonDetail.length > 0 && (
-                          <ul>
-                            {LessonDetail[0].suitable}
-                            <li>本身熱愛音樂，但從沒機會學習過。</li>
-                            <li>
-                              會至少一樣樂器，但不會音樂製作，想學錄音編曲和混音。
-                            </li>
-                            <li>
-                              本身有接觸過數位音樂，但沒使用過 Logic Pro X。
-                            </li>
-                          </ul>
-                        )}
-                      </div>
-                    </div>
-                    {/* 你將學到 */}
-                    <div className="achievement  -secondary mt40">
-                      <div className="detail-title">你將學到</div>
-                      <div className="list">
-                        {LessonDetail && LessonDetail.length > 0 && (
-                          <ol>
-                            {LessonDetail[0].achievement}
-                            <li>
-                              用Logic Pro X 獨立完成一首或更多首屬於自己的音樂。
-                            </li>
-                            <li>
-                              了解音樂製作完整的步驟流程，若有興趣可再專精音樂方面的造詣。
-                            </li>
-                          </ol>
-                        )}
-                      </div>
-                    </div>
-                    {/* 學員回饋 */}
-                    <div className="reviews  -secondary mt40">
-                      <div className="detail-title">學員回饋</div>
+
+                    {/* 買家評論 */}
+                    <div className="reviews mt40">
+                      <div className="detail-title">買家評論</div>
                       <div className="list">
                         {/* 評論 */}
                         <div className="review">
@@ -334,16 +333,19 @@ export default function LessonDetailPage() {
                               />
                               <div className="review-user">
                                 <div className="review-Name">
-                                  {LessonDetail && LessonDetail.length > 0 && (
-                                    <div className="user-Name">
-                                      {LessonDetail[0].user_id}
-                                    </div>
-                                  )}
-                                  {LessonDetail && LessonDetail.length > 0 && (
-                                    <div className="review-Date">
-                                      {LessonDetail[0].created_time}
-                                    </div>
-                                  )}
+                                  {InstrumentDetail &&
+                                    InstrumentDetail.length > 0 && (
+                                      <div className="user-Name">
+                                        {InstrumentDetail[0].user_id}
+                                      </div>
+                                    )}
+                                  {InstrumentDetail &&
+                                    InstrumentDetail.length > 0 && (
+                                      <div className="review-Date">
+                                        {' '}
+                                        {InstrumentDetail[0].created_time}
+                                      </div>
+                                    )}
                                 </div>
                                 <div className="review-Star">
                                   <img
@@ -374,19 +376,21 @@ export default function LessonDetailPage() {
                                 </div>
                               </div>
                             </div>
-                            {LessonDetail && LessonDetail.length > 0 && (
-                              <div className="review-content">
-                                {LessonDetail[0].content}
-                              </div>
-                            )}
+                            {InstrumentDetail &&
+                              InstrumentDetail.length > 0 && (
+                                <div className="review-content">
+                                  {InstrumentDetail[0].content}
+                                </div>
+                              )}
                           </div>
 
                           <div className="comment-Like">
-                            {LessonDetail && LessonDetail.length > 0 && (
-                              <div className="comment-Like-Number">
-                                {LessonDetail[0].likes}人覺得有幫助
-                              </div>
-                            )}
+                            {InstrumentDetail &&
+                              InstrumentDetail.length > 0 && (
+                                <div className="comment-Like-Number">
+                                  {InstrumentDetail[0].likes}人覺得有幫助
+                                </div>
+                              )}
                             <div className="comment-Like-Icon">
                               <img
                                 loading="lazy"
@@ -398,7 +402,140 @@ export default function LessonDetailPage() {
                           </div>
                         </div>
                       </div>
-                      {/* 更多按鈕 */}
+                      <div className="review">
+                        <div className="review-area">
+                          <div className="review-title">
+                            <img
+                              loading="lazy"
+                              srcSet="..."
+                              className="review-avatar"
+                            />
+                            <div className="review-user">
+                              <div className="review-Name">
+                                <div className="user-Name">John Mayer</div>
+                                <div className="review-Date">2024-01-25</div>
+                              </div>
+                              <div className="review-Star">
+                                <img
+                                  loading="lazy"
+                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                  className="img-13"
+                                />
+                                <img
+                                  loading="lazy"
+                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                  className="img-13"
+                                />
+                                <img
+                                  loading="lazy"
+                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                  className="img-13"
+                                />
+                                <img
+                                  loading="lazy"
+                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                  className="img-13"
+                                />
+                                <img
+                                  loading="lazy"
+                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                  className="img-13"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="review-content">
+                            初次見到這套軟體 全是英文 完全不知從何下手
+                            去Youtube上查了很多教學影片 也去網路上搜了各種資料
+                            還是不知道該從何著手。不過還好有在Youtu上看到這門課的宣傳影片
+                            就進到Ｈahow這網站裡買下了第一堂課
+                            原本只是想了解Logic的基本操作
+                            沒想到竟然連簡單的編曲技術也學會了（目前剛上完第三章）受益良多！！
+                            非常期待上完這堂課以後能做出什麼樣作品
+                            我會繼續力學習的！！非常感謝老師開這堂課！！
+                          </div>
+                          <div className="comment-Like">
+                            <div className="comment-Like-Number">
+                              1人覺得有幫助
+                            </div>
+                            <div className="comment-Like-Icon">
+                              <img
+                                loading="lazy"
+                                src="https://cdn.builder.io/api/v1/image/assets/TEMP/b33573d1006caa2dd045129e591ff98dd975245bb9b1f9ad55c74a65c6a47d58?"
+                                className="comment-like-icon-img"
+                              />
+                              <div className="comment-Like-Word">有幫助</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="review">
+                        <div className="review-area">
+                          <div className="review-title">
+                            <img
+                              loading="lazy"
+                              srcSet="..."
+                              className="review-avatar"
+                            />
+                            <div className="review-user">
+                              <div className="review-Name">
+                                <div className="user-Name">John Mayer</div>
+                                <div className="review-Date">2024-01-25</div>
+                              </div>
+                              <div className="review-Star">
+                                <img
+                                  loading="lazy"
+                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                  className="img-13"
+                                />
+                                <img
+                                  loading="lazy"
+                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                  className="img-13"
+                                />
+                                <img
+                                  loading="lazy"
+                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                  className="img-13"
+                                />
+                                <img
+                                  loading="lazy"
+                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                  className="img-13"
+                                />
+                                <img
+                                  loading="lazy"
+                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                  className="img-13"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="review-content">
+                            初次見到這套軟體 全是英文 完全不知從何下手
+                            去Youtube上查了很多教學影片 也去網路上搜了各種資料
+                            還是不知道該從何著手。不過還好有在Youtu上看到這門課的宣傳影片
+                            就進到Ｈahow這網站裡買下了第一堂課
+                            原本只是想了解Logic的基本操作
+                            沒想到竟然連簡單的編曲技術也學會了（目前剛上完第三章）受益良多！！
+                            非常期待上完這堂課以後能做出什麼樣作品
+                            我會繼續力學習的！！非常感謝老師開這堂課！！
+                          </div>
+                          <div className="comment-Like">
+                            <div className="comment-Like-Number">
+                              1人覺得有幫助
+                            </div>
+                            <div className="comment-Like-Icon">
+                              <img
+                                loading="lazy"
+                                src="https://cdn.builder.io/api/v1/image/assets/TEMP/b33573d1006caa2dd045129e591ff98dd975245bb9b1f9ad55c74a65c6a47d58?"
+                                className="comment-like-icon-img"
+                              />
+                              <div className="comment-Like-Word">有幫助</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                       <div className="more-review">
                         <div className="more-review-word">更多回饋</div>
                         <img
@@ -409,30 +546,6 @@ export default function LessonDetailPage() {
                       </div>
                     </div>
                   </div>
-                  {/* 講師資訊 */}
-                  <div className="teacher-info  -secondary mt40">
-                    <div className="detail-title">講師資訊</div>
-                    <div className="teacher-info-area">
-                      <div className="teacher-img-con ">
-                        {LessonDetail && LessonDetail.length > 0 && (
-                          <img
-                            loading="lazy"
-                            src="/課程與師資/teacher_img/teacher_001.jpeg"
-                            className="teacherImg"
-                          />
-                        )}
-                      </div>
-                      <div className="teacher-info-word">
-                        <div className="teacher-name">徐歡CheerHsu</div>
-                        <div className="teacher-info-detail">
-                          本身為全職的音樂工作者，也是
-                          Youtuber「倆倆」的音樂影片製作人，擁有近百支以上音樂的
-                          MV 製作經驗，在2017曾創下台灣 Youtube
-                          熱門創作者影片的第四名，本身頻道總點閱率也達到一千五百萬成績。對於這方面的學習從不間斷，且已將音樂融入為生活習慣。
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </main>
@@ -440,15 +553,13 @@ export default function LessonDetailPage() {
 
           {/*   ----------------------頁面內容 右半部---------------------- */}
           <div className="d-none d-sm-block col-sm-6 page-control">
-            {LessonDetail && LessonDetail.length > 0 && (
-              <ProductCard
+            {InstrumentDetail && InstrumentDetail.length > 0 && (
+              <ProductCardIns
                 className="Right-card"
-                name={LessonDetail[0].name}
-                homework={LessonDetail[0].homework}
-                sales={LessonDetail[0].sales}
-                price={LessonDetail[0].price}
-                length={LessonDetail[0].length}
-                info={LessonDetail[0].info}
+                name={InstrumentDetail[0].name}
+                sales={InstrumentDetail[0].sales}
+                price={InstrumentDetail[0].price}
+                info={InstrumentDetail[0].info}
               />
             )}
           </div>
@@ -457,20 +568,29 @@ export default function LessonDetailPage() {
         <div className="you-will-like">
           <div className="detail-title ">猜你喜歡...</div>
           <div className="card-con">
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
+            <CardIns />
+            <CardIns />
+            <CardIns />
+            <CardIns />
+            <CardIns />
           </div>
         </div>
         <div className="you-will-like-mobile">
           <div className="detail-title ">猜你喜歡...</div>
           {/* 手機版card-con */}
-          <div className="card-con-mobile">
-            <HoriCard />
-            <HoriCard />
-            <HoriCard />
+          <div className="card-con-mobile row d-flex gy-4">
+            <div className="col-6">
+              <CardIns />
+            </div>
+            <div className="col-6">
+              <CardIns />
+            </div>
+            <div className="col-6">
+              <CardIns />
+            </div>
+            <div className="col-6">
+              <CardIns />
+            </div>
           </div>
         </div>
       </div>
@@ -569,22 +689,48 @@ export default function LessonDetailPage() {
         }
 
         /* prodBriefingArea */
-        .prodBriefingArea{
-             width: 660px;
-          height: 394px;
+        .prodBriefingArea-ins{
+             width: 100%;
             padding:0px;
-            border-radius: 10px;
-            overflow: hidden; 
-        }
-        .prodImg {
-            padding:0px;
-         
-          background-color: #ff9595;
-          border-radius: 10px;
-         
           
+            overflow: hidden; 
+            flex-direction:column;
+          justify-content:center;
         }
+     
+     .pic-Con{
+        display:flex;
+    height: 100%;
+     flex-direction:column;
+          justify-content:center;
+          align-items:center;
+     }
+     .main-Pic{
+height:550px;
+width:550px;
+border-radius: 10px;
+border: 1px solid var(--body, #B9B9B9);
 
+     }
+     .sub-Pic-Con{
+        display:flex;
+        justify-content:space-between;
+height:130px;
+width:550px;
+{/* margin-top:5px; */}
+padding-top:20px;
+
+     }
+     .sub-Pic{
+height:130px;
+width:130px;
+border-radius: 10px;
+border: 1px solid var(--body, #B9B9B9);
+&:hover{
+border-radius: 10px;
+border: 5px solid var(--primary-light, #18A1FF);
+}
+     }
         .mt-60 {
           margin-top: 60px;
         }
@@ -647,7 +793,7 @@ list-style-type: disc;
           justify-content: end;
           gap: 5px;
         }
-         .comment-Like-Icon {
+        .comment-Like-Icon {
           display: flex;
           border-radius: 3px;
           border: 1px solid #1581cc;
@@ -716,21 +862,28 @@ list-style-type: disc;
         .you-will-like-mobile{
             display:none;
         }
-        .shoppingBtn{
-             display:none;
-        }
         /* --------------- footer --------------- */
-
-
-
 
 
         {/* -----------RWD-------------*/}
         @media screen and (max-width:576px) {
 
-  .breadcrumb-wrapper {
-margin-bottom:0px;
-  }
+ .main-Pic{
+    height: 390px;
+max-width: 390px;
+ }
+   .sub-Pic-Con{
+        display:flex;
+        justify-content:space-between;
+width:100%;
+{/* margin-top:5px; */}
+padding-top:20px;
+
+     }
+ .sub-Pic {
+    width: 90px;
+height: 90px;
+ }
   .Right{
     display:none;
   }
@@ -747,7 +900,6 @@ margin-bottom:0px;
           height:204px;
           
         }
-       
                         .Right-mobile{
 display:block;
   }
@@ -831,24 +983,9 @@ display:block;
                       .likesIcon :hover {
                         background-color: #ffc0cb;
                       }
-                      .lengthHomeworkArea {
-                        display: flex;
-                      }
-                      .lengthhomework {
-                        justify-content: space-between;
-                        display: flex;
-                        gap: 5px;
-                      }
-
-                      .lengthHomeworkWord {
-                        font-family: Noto Sans TC, sans-serif;
-                        flex-grow: 1;
-                      }
-                      .lessonIntro {
-                      }
 
                       .container{
-                        padding-bottom: 20px;
+                        padding-bottom: 95px;
                       }
                       .shoppingBtn {
                         display: flex;
@@ -858,36 +995,35 @@ display:block;
                         font-size: 16px;
                         color: var(--white, #fff);
                         font-weight: 700;
-                       
+                         position: fixed;
                          bottom: 0;
                         left: 0;
                         width: 100%;
                         background-color:white;
-                        padding-bottom:5px;
-                        padding: 26px 0px 30px 0px;
+                        margin-top:870px;
+                        margin-bottom:45px;
                         z-index:1200;
                       }
 
                       .cartBtn {
                         display: flex;
-                        justify-content: center;
+                        {/* justify-content: space-between; */}
                         border-radius: 5px;
                         background-color: var(--body, #b9b9b9);
                         gap: 12px;
-                        padding: 8px ;
-                        margin-left:5px;
-                        width: 100%;
+                        padding: 8px 78px;
+                        flex: 1 0 0;
                       }
-                   
+                   .cart{
+                    line-height: normal;
+                   }
                       .buyBtn {
-                        display: flex;
-                        justify-content: center;
+                        justify-content: space-between;
                         border-radius: 5px;
                         background-color: #18a1ff;
                         gap: 12px;
-                        padding: 8px ;
-                        margin-right:5px;
-                        width: 100%;
+                        padding: 8px 78px;
+                        flex: 1 0 0;
                       }
                    
                       {/* ---------- */}
@@ -913,8 +1049,12 @@ max-width:100%;
 }
 .card-con-mobile{
     display:block;
+     {/* flex: 0 0 90%;  */}
 }
-                      //FIXME
+.you-will-like-mobile-card{
+ flex: 0 0 30%; 
+}
+                   
                    
 }
     
