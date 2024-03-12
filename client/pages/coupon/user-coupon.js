@@ -44,7 +44,7 @@ export default function Test() {
   //登出功能
 
   //檢查是否獲取資料
-  // console.log(LoginUserData)
+  console.log(LoginUserData)
   //   讀取使用者資料後 定義大頭貼路徑
   let avatarImage
   if (LoginUserData.img) {
@@ -264,13 +264,13 @@ export default function Test() {
                   <Link href="/user/user-order">我的訂單</Link>
                 </li>
                 <li key={4}>
-                  <Link href="/user/user-acticle">我的文章</Link>
+                  <Link href="/user/user-article">我的文章</Link>
                 </li>
                 <li key={5}>
                   <Link href="/user/user-favorite">我的收藏</Link>
                 </li>
                 <li key={6}>
-                  <Link href="/coupon/user-Coupon">我的優惠券</Link>
+                  <Link href="/user/user-coupon">我的優惠券</Link>
                 </li>
                 <li key={7}>
                   <Link href="/user/user-lesson">我的課程</Link>
@@ -298,28 +298,28 @@ export default function Test() {
                   }}
                 />
               </div>
-              <Link href="#" className="sm-item active">
+              <Link href="/user/user-info" className="sm-item active">
                 會員資訊
               </Link>
-              <Link href="#" className="sm-item">
+              <Link href="/user/user-jam" className="sm-item">
                 我的樂團
               </Link>
-              <Link href="#" className="sm-item">
+              <Link href="/user/user-order" className="sm-item">
                 我的訂單
               </Link>
-              <Link href="#" className="sm-item">
+              <Link href="/user/user-article" className="sm-item">
                 我的文章
               </Link>
-              <Link href="#" className="sm-item">
+              <Link href="/user/user-favorite" className="sm-item">
                 我的收藏
               </Link>
-              <Link href="#" className="sm-item">
+              <Link href="/coupon/user-coupon" className="sm-item">
                 我的優惠券
               </Link>
-              <Link href="#" className="sm-item">
+              <Link href="/user/user-lesson" className="sm-item">
                 我的課程
               </Link>
-              <Link href="#" className="sm-item">
+              <Link href="/user/user-notify" className="sm-item">
                 我的訊息
               </Link>
             </div>
@@ -603,7 +603,9 @@ export default function Test() {
                   >
                     <div className="coupon-content col-12">
                       <div className="coupon-content-top">
-                        <div className="user-title-userInfo">我的優惠券</div>
+                        <div className="user-title-userInfo">
+                          我的優惠券{LoginUserData.name}
+                        </div>
                       </div>
                       {/* components */}
                       <div className="couponImage">
@@ -771,11 +773,15 @@ export default function Test() {
         .couponImage {
           display: flex;
           flex-wrap: wrap;
-          justify-content: space-between;
-
-          @media screen and (max-width: 576px) {
+           {
+             {
+              /* justify-content: space-between; */
+            }
+          }
+           {
+            /* @media screen and (max-width: 576px) {
             padding: 0;
-            margin-left: 12px;
+            margin: 12px; */
           }
         }
         @media screen and (max-width: 576px) {
