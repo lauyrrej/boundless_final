@@ -20,10 +20,15 @@ import ProductCardIns from '@/components/instrument/instrument-productbrief-card
 
 //試抓資料區
 import Instrument from '@/data/instrument/instrument.json'
+//toast
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { ToastProvider } from 'react-hot-toast'
+import App from '@/pages/_app'
 
 export default function InstrumentDetailPage() {
   // -------試抓資料區----------
-  console.log(Instrument)
+  // console.log(Instrument)
 
   // ----------------------手機版本  ----------------------
   // 主選單
@@ -61,7 +66,7 @@ export default function InstrumentDetailPage() {
   const router = useRouter()
 
   const [InstrumentDetail, setInstrumentDetail] = useState()
-  // const prevLidRef = useRef(null)
+  const prevLidRef = useRef(null)
   // 向伺服器要求資料，設定到狀態中用的函式
   const getInstrumentDetail = async (puid) => {
     try {
@@ -90,10 +95,10 @@ export default function InstrumentDetailPage() {
       const { puid } = router.query
       console.log(puid)
       // 如果lid與上一次的不同，觸發getLessonDetail
-      // if (puid !== prevLidRef.current) {
-      //   getInstrumentDetail(puid)
-      //   prevLidRef.current = puid
-      // }
+      if (puid !== prevLidRef.current) {
+        getInstrumentDetail(puid)
+        prevLidRef.current = puid
+      }
     }
   }, [router.isReady])
 
@@ -145,38 +150,46 @@ export default function InstrumentDetailPage() {
             <ImExit size={20} className="ms-2" />
           </div>
         </div>
-        {/* 麵包屑 */}
-        <div
-          className="breadcrumb-wrapper-ms"
-          style={{ paddingBlock: '20px 30px' }}
-        >
-          <ul className="d-flex align-items-center p-0 m-0">
-            <IoHome size={20} />
-
-            <li style={{ marginLeft: '8px' }}>樂器商城</li>
-            <FaChevronRight />
-            <Link href="/instrument">
-              <li style={{ marginLeft: '10px' }}>音響設備</li>
-            </Link>
-
-            <FaChevronRight />
-            <li style={{ marginLeft: '10px' }}>音箱頭</li>
-
-            {InstrumentDetail && InstrumentDetail.length > 0 && (
-              <li style={{ marginLeft: '10px' }}>
-                {InstrumentDetail[0].instrument_category_id}
-              </li>
-            )}
-          </ul>
-        </div>
         <div className="row">
+          {/* 麵包屑 */}
+          <div
+            className="breadcrumb-wrapper-ms"
+            style={{ paddingBlock: '20px' }}
+          >
+            <ul className="d-flex align-items-center p-0 m-0">
+              <IoHome size={20} />
+              <Link href="/instrument">
+                <li style={{ marginLeft: '8px' }}>樂器商城</li>
+                <FaChevronRight />
+
+                <li style={{ marginLeft: '10px' }}>音響設備</li>
+              </Link>
+
+              <FaChevronRight />
+              <li style={{ marginLeft: '10px' }}>音箱頭</li>
+
+              {InstrumentDetail && InstrumentDetail.length > 0 && (
+                <li style={{ marginLeft: '10px' }}>
+                  {InstrumentDetail[0].instrument_category_id}
+                </li>
+              )}
+            </ul>
+          </div>
           <div className="col-12 col-sm-6">
             {/* 主內容 */}
             <main className="content">
-              <div className="Left">
-                {/* prodBriefingArea */}
-                <div className="prodBriefingArea-ins d-flex ">
-                  <div className="pic-Con ">
+              <div>
+                <div className="Left">
+                  {/* prodBriefingArea */}
+                  <div className="prodBriefingArea d-flex ">
+                    {InstrumentDetail && InstrumentDetail.length > 0 && (
+                      <img
+                        src={`/樂器介紹/instrument_img/${InstrumentDetail[0].img}`}
+                        className="prodImg"
+                      />
+                    )}
+                  </div>
+                  {/* <div className="pic-Con ">
                     <div className="main-Pic border border-secondary">
                       <img
                         src="/instrument/Orange_PPC108/PPC108_1.png"
@@ -209,12 +222,17 @@ export default function InstrumentDetailPage() {
                         ></img>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
 
                   {/* 手機版productbrief-card放這 */}
                   <div className="Right-mobile">
-                    <div className="prodBriefing  ">
-                      <div className="prodMainName">Orange Micro Terror</div>
+                    <div className="prodBriefing sticky-top">
+                      {InstrumentDetail && InstrumentDetail.length > 0 && (
+                        <div className="prodMainName">
+                          {InstrumentDetail[0].name}Orange Micro Terror
+                        </div>
+                      )}
+
                       <div className="Rating">
                         <div className="star">
                           <img
@@ -263,6 +281,7 @@ export default function InstrumentDetailPage() {
                         前置放大器閥，並與固態功率放大器耦合。這個小東西發出的聲音深度（和音量）確實令人震驚，橙色的咆哮和咬合聲很豐富。更重要的是，Micro
                         Terror 可以與任何 8-16 歐姆音箱一起使用。
                       </div>
+
                       <div className="shoppingBtn" id="shoppingBtn">
                         <div className="cartBtn">
                           <img
@@ -270,7 +289,7 @@ export default function InstrumentDetailPage() {
                             src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
                             className="cartIcon"
                           />
-                          //FIXME
+
                           <div className="cart">加入購物車</div>
                         </div>
                         <div className="buyBtn">
@@ -283,16 +302,19 @@ export default function InstrumentDetailPage() {
                   {/*商品細節 */}
                   <div className="detail">
                     {/* 規格 */}
-                    <div className="outline detail-wrapp  mt40">
+                    <div className="outline detail-wrapp mt40">
                       <div className="detail-title">規格</div>
                       <div className="list">
-                        <ul>
-                          <li>輸出功率：20W</li>
-                          <li>單體輸出孔：8 ~ 16ohm</li>
-                          <li>真空管：PREAMP: 1 X 12AX7/ECC83</li>
-                          <li>尺寸：400mm x 210mm x 180mm</li>
-                          <li>重量：0.85kg</li>
-                        </ul>
+                        {InstrumentDetail && InstrumentDetail.length > 0 && (
+                          <ul>
+                            {InstrumentDetail[0].outline}
+                            <li>輸出功率：20W</li>
+                            <li>單體輸出孔：8 ~ 16ohm</li>
+                            <li>真空管：PREAMP: 1 X 12AX7/ECC83</li>
+                            <li>尺寸：400mm x 210mm x 180mm</li>
+                            <li>重量：0.85kg</li>
+                          </ul>
+                        )}
                       </div>
                     </div>
 
@@ -300,6 +322,7 @@ export default function InstrumentDetailPage() {
                     <div className="reviews mt40">
                       <div className="detail-title">買家評論</div>
                       <div className="list">
+                        {/* 評論 */}
                         <div className="review">
                           <div className="review-area">
                             <div className="review-title">
@@ -310,8 +333,19 @@ export default function InstrumentDetailPage() {
                               />
                               <div className="review-user">
                                 <div className="review-Name">
-                                  <div className="user-Name">John Mayer</div>
-                                  <div className="review-Date">2024-01-25</div>
+                                  {InstrumentDetail &&
+                                    InstrumentDetail.length > 0 && (
+                                      <div className="user-Name">
+                                        {InstrumentDetail[0].user_id}
+                                      </div>
+                                    )}
+                                  {InstrumentDetail &&
+                                    InstrumentDetail.length > 0 && (
+                                      <div className="review-Date">
+                                        {' '}
+                                        {InstrumentDetail[0].created_time}
+                                      </div>
+                                    )}
                                 </div>
                                 <div className="review-Star">
                                   <img
@@ -342,173 +376,173 @@ export default function InstrumentDetailPage() {
                                 </div>
                               </div>
                             </div>
-                            <div className="review-content">
-                              初次見到這套軟體 全是英文 完全不知從何下手
-                              去Youtube上查了很多教學影片 也去網路上搜了各種資料
-                              還是不知道該從何著手。不過還好有在Youtu上看到這門課的宣傳影片
-                              就進到Ｈahow這網站裡買下了第一堂課
-                              原本只是想了解Logic的基本操作
-                              沒想到竟然連簡單的編曲技術也學會了（目前剛上完第三章）受益良多！！
-                              非常期待上完這堂課以後能做出什麼樣作品
-                              我會繼續力學習的！！非常感謝老師開這堂課！！
-                            </div>
-                            <div className="comment-Like">
-                              <div className="comment-Like-Number">
-                                1人覺得有幫助
-                              </div>
-                              <div className="comment-Like-Icon">
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/b33573d1006caa2dd045129e591ff98dd975245bb9b1f9ad55c74a65c6a47d58?"
-                                  className="comment-like-icon-img"
-                                />
-                                <div className="comment-Like-Word">有幫助</div>
-                              </div>
-                            </div>
+                            {InstrumentDetail &&
+                              InstrumentDetail.length > 0 && (
+                                <div className="review-content">
+                                  {InstrumentDetail[0].content}
+                                </div>
+                              )}
                           </div>
-                        </div>
-                        <div className="review">
-                          <div className="review-area">
-                            <div className="review-title">
+
+                          <div className="comment-Like">
+                            {InstrumentDetail &&
+                              InstrumentDetail.length > 0 && (
+                                <div className="comment-Like-Number">
+                                  {InstrumentDetail[0].likes}人覺得有幫助
+                                </div>
+                              )}
+                            <div className="comment-Like-Icon">
                               <img
                                 loading="lazy"
-                                srcSet="..."
-                                className="review-avatar"
+                                src="https://cdn.builder.io/api/v1/image/assets/TEMP/b33573d1006caa2dd045129e591ff98dd975245bb9b1f9ad55c74a65c6a47d58?"
+                                className="comment-like-icon-img"
                               />
-                              <div className="review-user">
-                                <div className="review-Name">
-                                  <div className="user-Name">John Mayer</div>
-                                  <div className="review-Date">2024-01-25</div>
-                                </div>
-                                <div className="review-Star">
-                                  <img
-                                    loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                    className="img-13"
-                                  />
-                                  <img
-                                    loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                    className="img-13"
-                                  />
-                                  <img
-                                    loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                    className="img-13"
-                                  />
-                                  <img
-                                    loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                    className="img-13"
-                                  />
-                                  <img
-                                    loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                    className="img-13"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                            <div className="review-content">
-                              初次見到這套軟體 全是英文 完全不知從何下手
-                              去Youtube上查了很多教學影片 也去網路上搜了各種資料
-                              還是不知道該從何著手。不過還好有在Youtu上看到這門課的宣傳影片
-                              就進到Ｈahow這網站裡買下了第一堂課
-                              原本只是想了解Logic的基本操作
-                              沒想到竟然連簡單的編曲技術也學會了（目前剛上完第三章）受益良多！！
-                              非常期待上完這堂課以後能做出什麼樣作品
-                              我會繼續力學習的！！非常感謝老師開這堂課！！
-                            </div>
-                            <div className="comment-Like">
-                              <div className="comment-Like-Number">
-                                1人覺得有幫助
-                              </div>
-                              <div className="comment-Like-Icon">
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/b33573d1006caa2dd045129e591ff98dd975245bb9b1f9ad55c74a65c6a47d58?"
-                                  className="comment-like-icon-img"
-                                />
-                                <div className="comment-Like-Word">有幫助</div>
-                              </div>
+                              <div className="comment-Like-Word">有幫助</div>
                             </div>
                           </div>
                         </div>
-                        <div className="review">
-                          <div className="review-area">
-                            <div className="review-title">
+                      </div>
+                      <div className="review">
+                        <div className="review-area">
+                          <div className="review-title">
+                            <img
+                              loading="lazy"
+                              srcSet="..."
+                              className="review-avatar"
+                            />
+                            <div className="review-user">
+                              <div className="review-Name">
+                                <div className="user-Name">John Mayer</div>
+                                <div className="review-Date">2024-01-25</div>
+                              </div>
+                              <div className="review-Star">
+                                <img
+                                  loading="lazy"
+                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                  className="img-13"
+                                />
+                                <img
+                                  loading="lazy"
+                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                  className="img-13"
+                                />
+                                <img
+                                  loading="lazy"
+                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                  className="img-13"
+                                />
+                                <img
+                                  loading="lazy"
+                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                  className="img-13"
+                                />
+                                <img
+                                  loading="lazy"
+                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                  className="img-13"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="review-content">
+                            初次見到這套軟體 全是英文 完全不知從何下手
+                            去Youtube上查了很多教學影片 也去網路上搜了各種資料
+                            還是不知道該從何著手。不過還好有在Youtu上看到這門課的宣傳影片
+                            就進到Ｈahow這網站裡買下了第一堂課
+                            原本只是想了解Logic的基本操作
+                            沒想到竟然連簡單的編曲技術也學會了（目前剛上完第三章）受益良多！！
+                            非常期待上完這堂課以後能做出什麼樣作品
+                            我會繼續力學習的！！非常感謝老師開這堂課！！
+                          </div>
+                          <div className="comment-Like">
+                            <div className="comment-Like-Number">
+                              1人覺得有幫助
+                            </div>
+                            <div className="comment-Like-Icon">
                               <img
                                 loading="lazy"
-                                srcSet="..."
-                                className="review-avatar"
+                                src="https://cdn.builder.io/api/v1/image/assets/TEMP/b33573d1006caa2dd045129e591ff98dd975245bb9b1f9ad55c74a65c6a47d58?"
+                                className="comment-like-icon-img"
                               />
-                              <div className="review-user">
-                                <div className="review-Name">
-                                  <div className="user-Name">John Mayer</div>
-                                  <div className="review-Date">2024-01-25</div>
-                                </div>
-                                <div className="review-Star">
-                                  <img
-                                    loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                    className="img-13"
-                                  />
-                                  <img
-                                    loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                    className="img-13"
-                                  />
-                                  <img
-                                    loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                    className="img-13"
-                                  />
-                                  <img
-                                    loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                    className="img-13"
-                                  />
-                                  <img
-                                    loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                    className="img-13"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                            <div className="review-content">
-                              初次見到這套軟體 全是英文 完全不知從何下手
-                              去Youtube上查了很多教學影片 也去網路上搜了各種資料
-                              還是不知道該從何著手。不過還好有在Youtu上看到這門課的宣傳影片
-                              就進到Ｈahow這網站裡買下了第一堂課
-                              原本只是想了解Logic的基本操作
-                              沒想到竟然連簡單的編曲技術也學會了（目前剛上完第三章）受益良多！！
-                              非常期待上完這堂課以後能做出什麼樣作品
-                              我會繼續力學習的！！非常感謝老師開這堂課！！
-                            </div>
-                            <div className="comment-Like">
-                              <div className="comment-Like-Number">
-                                1人覺得有幫助
-                              </div>
-                              <div className="comment-Like-Icon">
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/b33573d1006caa2dd045129e591ff98dd975245bb9b1f9ad55c74a65c6a47d58?"
-                                  className="comment-like-icon-img"
-                                />
-                                <div className="comment-Like-Word">有幫助</div>
-                              </div>
+                              <div className="comment-Like-Word">有幫助</div>
                             </div>
                           </div>
                         </div>
-                        <div className="more-review">
-                          <div className="more-review-word">更多回饋</div>
-                          <img
-                            loading="lazy"
-                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/0121670ff626339b824728641b333ff15c591ace8f84c9c919e13179e8adc237?"
-                            className="img-33"
-                          />
+                      </div>
+                      <div className="review">
+                        <div className="review-area">
+                          <div className="review-title">
+                            <img
+                              loading="lazy"
+                              srcSet="..."
+                              className="review-avatar"
+                            />
+                            <div className="review-user">
+                              <div className="review-Name">
+                                <div className="user-Name">John Mayer</div>
+                                <div className="review-Date">2024-01-25</div>
+                              </div>
+                              <div className="review-Star">
+                                <img
+                                  loading="lazy"
+                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                  className="img-13"
+                                />
+                                <img
+                                  loading="lazy"
+                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                  className="img-13"
+                                />
+                                <img
+                                  loading="lazy"
+                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                  className="img-13"
+                                />
+                                <img
+                                  loading="lazy"
+                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                  className="img-13"
+                                />
+                                <img
+                                  loading="lazy"
+                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                  className="img-13"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="review-content">
+                            初次見到這套軟體 全是英文 完全不知從何下手
+                            去Youtube上查了很多教學影片 也去網路上搜了各種資料
+                            還是不知道該從何著手。不過還好有在Youtu上看到這門課的宣傳影片
+                            就進到Ｈahow這網站裡買下了第一堂課
+                            原本只是想了解Logic的基本操作
+                            沒想到竟然連簡單的編曲技術也學會了（目前剛上完第三章）受益良多！！
+                            非常期待上完這堂課以後能做出什麼樣作品
+                            我會繼續力學習的！！非常感謝老師開這堂課！！
+                          </div>
+                          <div className="comment-Like">
+                            <div className="comment-Like-Number">
+                              1人覺得有幫助
+                            </div>
+                            <div className="comment-Like-Icon">
+                              <img
+                                loading="lazy"
+                                src="https://cdn.builder.io/api/v1/image/assets/TEMP/b33573d1006caa2dd045129e591ff98dd975245bb9b1f9ad55c74a65c6a47d58?"
+                                className="comment-like-icon-img"
+                              />
+                              <div className="comment-Like-Word">有幫助</div>
+                            </div>
+                          </div>
                         </div>
+                      </div>
+                      <div className="more-review">
+                        <div className="more-review-word">更多回饋</div>
+                        <img
+                          loading="lazy"
+                          src="https://cdn.builder.io/api/v1/image/assets/TEMP/0121670ff626339b824728641b333ff15c591ace8f84c9c919e13179e8adc237?"
+                          className="img-33"
+                        />
                       </div>
                     </div>
                   </div>
@@ -519,7 +553,15 @@ export default function InstrumentDetailPage() {
 
           {/*   ----------------------頁面內容 右半部---------------------- */}
           <div className="d-none d-sm-block col-sm-6 page-control">
-            <ProductCardIns className="Right-card" />
+            {InstrumentDetail && InstrumentDetail.length > 0 && (
+              <ProductCardIns
+                className="Right-card"
+                name={InstrumentDetail[0].name}
+                sales={InstrumentDetail[0].sales}
+                price={InstrumentDetail[0].price}
+                info={InstrumentDetail[0].info}
+              />
+            )}
           </div>
         </div>
         {/* 猜你喜歡 */}
@@ -550,6 +592,19 @@ export default function InstrumentDetailPage() {
               <CardIns />
             </div>
           </div>
+        </div>
+      </div>
+      <div className="shoppingBtn sticky-top" id="shoppingBtn">
+        <div className="cartBtn">
+          <img
+            loading="lazy"
+            src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
+            className="cartIcon"
+          />
+          <div className="cart">加入購物車</div>
+        </div>
+        <div className="buyBtn">
+          <div className="buy">立即購買</div>
         </div>
       </div>
       <Footer />

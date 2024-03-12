@@ -87,7 +87,7 @@ router.get("/categories", async (req, res) => {
   let [data] = await db
    .execute(
      "SELECT p.*, pr.* FROM `product` AS p LEFT JOIN `product_review` AS pr ON p.id = pr.product_id WHERE p.`puid` = ?",
-     [luid]
+     [puid]
    )
    .catch(() => {
     return undefined;
