@@ -238,13 +238,13 @@ export default function Test() {
                   <Link href="/user/user-order">我的訂單</Link>
                 </li>
                 <li key={4}>
-                  <Link href="/user/user-acticle">我的文章</Link>
+                  <Link href="/user/user-article">我的文章</Link>
                 </li>
                 <li key={5}>
                   <Link href="/user/user-favorite">我的收藏</Link>
                 </li>
                 <li key={6}>
-                  <Link href="/coupon/userCoupon">我的優惠券</Link>
+                  <Link href="/user/user-coupon">我的優惠券</Link>
                 </li>
                 <li key={7}>
                   <Link href="/user/user-lesson">我的課程</Link>
@@ -457,7 +457,7 @@ export default function Test() {
                         </div>
                       </div>
                       <div className="user-info-item">
-                        <div className="user-info-item-titleText">信箱</div>
+                        <div className="user-info-item-titleText">電子信箱</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
                             {LoginUserData.email}

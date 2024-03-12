@@ -195,6 +195,10 @@ export default function Test() {
 
     handleLogout()
   }
+  // useEffect(() => {
+  //   logoutFirebase()
+  //   handleLogout()
+  // }, [])
 
   return (
     <>
