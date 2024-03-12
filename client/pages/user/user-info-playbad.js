@@ -3,15 +3,13 @@ import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
-import jamHero from '@/assets/jam-hero.png'
 import Head from 'next/head'
+
+//圖片
+import jamHero from '@/assets/jam-hero.png'
 
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
-
-// lessoncard
-import Card from '@/components/lesson/lesson-card'
-import Cardrwd from '@/components/lesson/lesson-card-rwd'
 
 // icons
 import { IoHome } from 'react-icons/io5'
@@ -25,19 +23,40 @@ import { IoClose } from 'react-icons/io5'
 export default function Test() {
   // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
-  const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
-    useAuth()
+  const {
+    LoginUserData,
+    handleLoginStatus,
+    getLoginUserData,
+    handleLogout,
+    setLoginUserData,
+  } = useAuth()
   const [userData, setUserData] = useState()
+
+  // const [LoginUserData, setLoginUserData] = useState([])
+
   //檢查token
   useEffect(() => {
     handleLoginStatus()
     //獲得資料
     getLoginUserData()
+    console.log(LoginUserData)
   }, [])
   //登出功能
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     await handleLoginStatus()
+  //     await getLoginUserData()
+  //     // setLoginUserData(LoginUserData)
+  //     // console.log(LoginUserData)
+  //   }
+
+  //   fetchData()
+  // }, [])
+
   //檢查是否獲取資料
-  // console.log(LoginUserData)
+  console.log(LoginUserData)
+  // console.log(userData)
   //   讀取使用者資料後 定義大頭貼路徑
   let avatarImage
   if (LoginUserData.img) {
@@ -47,24 +66,33 @@ export default function Test() {
   } else {
     avatarImage = `/user/avatar_userDefault.jpg`
   }
+  // 舊版會警告 因為先渲染但沒路徑 bad
+  // const avatarImage = `/user/${LoginUserData.img}`
+  // const avatargoogle = `${LoginUserData.photo_url}`
+  // const avatarDefault = `/user/avatar_userDefault.jpg`
 
   // ----------------------會員登入狀態  ----------------------
-  // 在電腦版或手機版時
-  const [isSmallScreen, setIsSmallScreen] = useState(false)
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsSmallScreen(window.innerWidth <= 576)
-    }
+  // ----------------------會員資訊處裡  ----------------------
+  // 生日
+  // const dateObject = LoginUserData.birthday
+  // const dateObject = LoginUserData.birthday
 
-    handleResize()
+  // if (dateObject !== undefined) {
+  //   const birthdayDate = dateObject.toString().split('T')[0]
+  //   console.log(birthdayDate)
+  // } else {
+  //   console.error('Birthday is undefined')
+  // }
 
-    window.addEventListener('resize', handleResize)
+  // const birthdayDate = dateObject.split('T')[0]
 
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [])
+  // console.log(LoginUserData)
+  // console.log(`${LoginUserData.birthday}`)
+  // console.log(dateObject)
+  // console.log(birthdayDate)
+  // ----------------------會員資訊處裡  ----------------------
+
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -138,7 +166,7 @@ export default function Test() {
   return (
     <>
       <Head>
-        <title>我的課程</title>
+        <title>會員資訊</title>
       </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       {/* 先把HEROSECTION隱藏 */}
@@ -158,12 +186,12 @@ export default function Test() {
           {/* 用戶資訊 */}
           <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
             <div className="mb-photo-wrapper mb-2">
-              <Image
+              {/* <Image
                 src={avatarImage}
                 alt="user photo mb"
                 fill
                 sizes="(max-width: 150px)"
-              ></Image>
+              ></Image> */}
             </div>
             <div>{LoginUserData.nickname}</div>
           </div>
@@ -204,19 +232,19 @@ export default function Test() {
             <div className="sidebar">
               <div className="sidebar-user-info">
                 <div className="sidebar-user-info-imgBox">
-                  <Image
+                  {/* <Image
                     src={avatarImage}
                     alt="user photo mb"
                     fill
                     priority="default" //不加的話Next 會問是否要加優先級
                     sizes="(max-width: 150px)"
-                  ></Image>
+                  ></Image> */}
                 </div>
                 <div className="sidebar-user-info-text">
                   <div className="sidebar-user-info-name">
                     {LoginUserData.nickname}
                   </div>
-                  <div className="sidebar-user-info-band">樂團名稱</div>
+                  <div className="sidebar-user-info-band">樂團名稱七個字</div>
                 </div>
                 {/* 更換大頭貼的功能暫定併回會員資訊 故不再sidebar顯示 */}
                 {/* <div className="sidebar-user-info-Camera-img">
@@ -276,14 +304,30 @@ export default function Test() {
                   }}
                 />
               </div>
+
               <Link href={`/jam/recruit-list`} className="sm-item active">
-                團員募集
+                會員資訊
               </Link>
-              <Link href={`/jam/jam-list`} className="sm-item">
-                活動中的JAM
+              <Link href={`/jam/recruit-list`} className="sm-item">
+                我的樂團
               </Link>
-              <Link href={`/jam/Q&A`} className="sm-item">
-                什麼是JAM？
+              <Link href={`/jam/recruit-list`} className="sm-item">
+                我的訂單
+              </Link>
+              <Link href={`/jam/recruit-list`} className="sm-item">
+                我的文章
+              </Link>
+              <Link href={`/jam/recruit-list`} className="sm-item">
+                我的收藏
+              </Link>
+              <Link href={`/jam/recruit-list`} className="sm-item">
+                我的優惠券
+              </Link>
+              <Link href={`/jam/recruit-list`} className="sm-item">
+                我的課程
+              </Link>
+              <Link href={`/jam/recruit-list`} className="sm-item">
+                我的訊息
               </Link>
             </div>
             {/*  ---------------------- 頂部功能列  ---------------------- */}
@@ -294,7 +338,7 @@ export default function Test() {
                   <IoHome size={20} />
                   <li style={{ marginLeft: '8px' }}>會員中心</li>
                   <FaChevronRight />
-                  <li style={{ marginLeft: '10px' }}>我的收藏</li>
+                  <li style={{ marginLeft: '10px' }}>會員資訊</li>
                 </ul>
               </div>
 
@@ -308,16 +352,6 @@ export default function Test() {
                     onClick={sidebarToggle}
                   >
                     選單
-                  </div>
-                  <div className="search input-group">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="請輸入關鍵字..."
-                    />
-                    <div className="search-btn btn d-flex justify-content-center align-items-center p-0">
-                      <IoIosSearch size={25} />
-                    </div>
                   </div>
                 </div>
               </div>
@@ -334,29 +368,154 @@ export default function Test() {
                   >
                     <div className="user-content col-12">
                       <div className="user-content-top">
-                        <div className="user-title-userInfo">我的課程</div>
+                        <div className="user-title-userInfo">會員資訊</div>
+                        <div className="user-btnGroup">
+                          <div className="user-btnGroup-btn1">
+                            <div>
+                              <Link href="/user/user-homepage">
+                                預覽個人首頁
+                              </Link>
+                            </div>
+                          </div>
+                          <div className="user-btnGroup-btn2">
+                            <div>編輯資訊</div>
+                          </div>
+                        </div>
                       </div>
-
-                      {/* <div className="user-lesson-cardList">
-                        <div className="user-lesson-cardList-row">
-                          {isSmallScreen ? <Cardrwd /> : <Card />}
-                          {isSmallScreen ? <Cardrwd /> : <Card />}
-                          {isSmallScreen ? <Cardrwd /> : <Card />}
+                      <div className="user-info-item">
+                        <div className="user-info-item-titleText">真實姓名</div>
+                        <div className="user-info-item-Content">
+                          <div className="user-info-item-contentText">
+                            {LoginUserData.name}
+                          </div>
                         </div>
-                        <div className="user-lesson-cardList-row">
-                          {isSmallScreen ? <Cardrwd /> : <Card />}
-                          {isSmallScreen ? <Cardrwd /> : <Card />}
-                          {isSmallScreen ? <Cardrwd /> : <Card />}
+                      </div>
+                      <div className="user-info-item">
+                        <div className="user-info-item-titleText">暱稱</div>
+                        <div className="user-info-item-Content">
+                          <div className="user-info-item-contentText">
+                            {LoginUserData.nickname}
+                          </div>
                         </div>
-                        <div className="user-lesson-cardList-row">
-                          {isSmallScreen ? <Cardrwd /> : <Card />}
-                          {isSmallScreen ? <Cardrwd /> : <Card />}
-                          {isSmallScreen ? <Cardrwd /> : <Card />}
+                      </div>
+                      <div className="user-info-item">
+                        <div className="user-info-item-titleText">性別</div>
+                        <div className="user-info-item-Content">
+                          <div className="user-info-item-contentText">
+                            {LoginUserData.gender}
+                          </div>
                         </div>
-                      </div> */}
-
-                      <div className="user-orderList-pagination">
-                        <p>待放分頁元件 注意class</p>
+                      </div>
+                      <div className="user-info-item">
+                        <div className="user-info-item-titleText">喜歡曲風</div>
+                        <div className="user-info-item-Content">
+                          <div className="user-info-item-contentText">
+                            {LoginUserData.genre_like}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="user-info-item">
+                        <div className="user-info-item-titleText">演奏樂器</div>
+                        <div className="user-info-item-Content">
+                          <div className="user-info-item-contentText">
+                            {LoginUserData.play_instrument}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="user-info-item">
+                        <div className="user-info-item-titleText">公開資訊</div>
+                        <div className="user-info-item-checkBoxGroup ">
+                          <div className="form-check">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              defaultValue=""
+                              id="privacyBD"
+                              defaultChecked=""
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor="privacyBD"
+                            >
+                              生日
+                            </label>
+                          </div>
+                          <div className="form-check">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              defaultValue=""
+                              id="privacyPhone"
+                              defaultChecked=""
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor="privacyPhone"
+                            >
+                              手機
+                            </label>
+                          </div>
+                          <div className="form-check">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              defaultValue=""
+                              id="privacyEmail"
+                              defaultChecked=""
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor="privacyEmail"
+                            >
+                              電子信箱
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="user-info-item">
+                        <div className="user-info-item-titleText">生日</div>
+                        <div className="user-info-item-Content">
+                          <div className="user-info-item-contentText">
+                            {LoginUserData.birthday}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="user-info-item">
+                        <div className="user-info-item-titleText">手機</div>
+                        <div className="user-info-item-Content">
+                          <div className="user-info-item-contentText">
+                            {LoginUserData.phone}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="user-info-item">
+                        <div className="user-info-item-titleText">信箱</div>
+                        <div className="user-info-item-Content">
+                          <div className="user-info-item-contentText">
+                            {LoginUserData.email}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="user-info-item">
+                        <div className="user-info-item-titleText">地址</div>
+                        <div className="user-info-item-Content">
+                          <div className="user-info-item-contentText">
+                            {LoginUserData.postcode}
+                            {LoginUserData.country}
+                            {LoginUserData.township}
+                            {LoginUserData.address}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="user-info-item-info">
+                        <div className="user-info-item-info-titleText">
+                          自我介紹
+                        </div>
+                        <div className="user-info-item-info2">
+                          <div className="user-info-item-info-contentText">
+                            {LoginUserData.info}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -460,34 +619,150 @@ export default function Test() {
             background: var(--gray-30, rgba(185, 185, 185, 0.3));
           }
 
+          .user-content {
+            max-width: 1076px;
+            /* width: 1100px; */
+            /* height: 705px; */
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            background: rgba(185, 185, 185, 0.3);
+            border-radius: 5px;
+            flex-direction: column;
+            justify-content: start;
+            align-items: flex-start;
+            gap: 5px;
+            display: inline-flex;
+            font-family: Noto Sans TC;
+          }
+
           .user-content-top {
+            align-self: stretch;
+            justify-content: space-between;
+            align-items: flex-start;
+            display: inline-flex;
+            word-wrap: break-word;
+          }
+
+          .user-title-userInfo {
+            color: #0d3652;
+            font-size: 28px;
+            font-weight: 700;
+          }
+
+          .user-btnGroup {
+            justify-content: flex-start;
+            align-items: flex-start;
+            gap: 10px;
             display: flex;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+          }
+
+          .user-btnGroup-btn1 {
+            padding: 10px;
+            background: #b9b9b9;
+            border-radius: 5px;
+            overflow: hidden;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            display: flex;
+          }
+          .user-btnGroup-btn2 {
+            padding: 10px;
+            background: #18a1ff;
+            border-radius: 5px;
+            overflow: hidden;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            display: flex;
+          }
+
+          /* ------------------ */
+          .user-info-item {
+            align-self: stretch;
+            justify-content: space-between;
+            align-items: center;
+            display: flex;
+
+            .user-info-item-titleText {
+              display: flex;
+              color: #124365;
+              font-size: 16px;
+              font-family: Noto Sans TC;
+              font-weight: 700;
+              word-wrap: break-word;
+            }
+
+            .user-info-item-checkBoxGroup {
+              display: flex;
+              height: 38px;
+              max-width: 900px;
+              padding: 3px 0px;
+              align-items: center;
+              gap: 10px;
+              flex: 1 0 0;
+              color: #000;
+            }
+
+            .user-info-item-Content {
+              display: flex;
+              height: 38px;
+              max-width: 900px;
+              padding: 3px 0px;
+              align-items: center;
+              gap: 10px;
+              flex: 1 0 0;
+
+              .user-info-item-contentText {
+                flex: 1 1 0;
+                color: black;
+                font-size: 16px;
+                font-family: Noto Sans TC;
+                font-weight: 400;
+                word-wrap: break-word;
+              }
+            }
+          }
+
+          .user-info-item-info {
+            display: flex;
+            justify-content: space-between;
             align-items: flex-start;
             align-self: stretch;
+          }
+
+          .user-info-item-info-titleText {
             color: var(--primary-deep, #124365);
-            text-align: center;
-            /* h3 */
             font-family: 'Noto Sans TC';
-            font-size: 28px;
+            font-size: 16px;
             font-style: normal;
             font-weight: 700;
             line-height: normal;
           }
 
-          .user-lesson-cardList {
+          .user-info-item-info2 {
             display: flex;
-            flex-direction: column;
+            max-width: 900px;
             align-items: center;
-            gap: 40px;
-            align-self: stretch;
-            .user-lesson-cardList-row {
-              display: flex;
+            gap: 10px;
+            flex: 1 0 0;
+          }
 
-              justify-content: center;
-              align-items: flex-start;
-              gap: 90px;
-              align-self: stretch;
-            }
+          .user-info-item-info-contentText {
+            flex: 1 0 0;
+            color: #000;
+            text-align: justify;
+
+            font-family: 'Noto Sans TC';
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
           }
 
           .user-orderList-pagination {
@@ -512,26 +787,19 @@ export default function Test() {
               width: 390px;
               padding: 10px;
               overflow: hidden;
+              margin-bottom: 20px;
 
-              .user-lesson-cardList {
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-                align-self: stretch;
-                gap: 15px;
-                .user-lesson-cardList-row {
-                  display: flex;
-                  flex-direction: column;
-                  align-items: center;
-                  gap: 15px;
-                  align-self: stretch;
-                  padding: 0px;
-                }
+              .user-info-item {
+                display: block;
+              }
+
+              .user-info-item-info {
+                display: block;
               }
             }
           }
+          /*------------- RWD  ----------- */
         }
-        /*------------- RWD  ----------- */
       `}</style>
     </>
   )

@@ -18,9 +18,23 @@ import { IoClose } from 'react-icons/io5'
 // 自製元件
 import RecruitCard from '@/components/jam/recruit-card'
 import BS5Pagination from '@/components/common/pagination'
+import { useAuth } from '@/hooks/user/use-auth'
 
 export default function RecruitList() {
   const router = useRouter()
+  // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
+  //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
+  const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
+    useAuth()
+  // console.log(LoginUserData)
+  //檢查token
+  useEffect(() => {
+    handleLoginStatus()
+    //獲得資料
+    getLoginUserData()
+  }, [])
+  //登出功能
+
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -296,12 +310,22 @@ export default function RecruitList() {
               </Link>
             </div>
             {/* 手機版 發起/我的JAM 按鍵 */}
-            <Link
-              href="/jam/recruit-list/form"
-              className="fixed-btn b-btn b-btn-primary d-block d-sm-none"
-            >
-              發起JAM
-            </Link>
+            {LoginUserData.my_jam ? (
+              <Link
+                href={`/jam/recruit-list/${LoginUserData.my_jam}`}
+                className="fixed-btn b-btn b-btn-primary d-block d-sm-none"
+              >
+                我的JAM
+              </Link>
+            ) : (
+              <Link
+                href="/jam/recruit-list/form"
+                className="fixed-btn b-btn b-btn-primary d-block d-sm-none"
+              >
+                發起JAM
+              </Link>
+            )}
+
             {/*  ---------------------- 頂部功能列  ---------------------- */}
             <div className="top-function-container">
               {/*  ---------------------- 麵包屑  ---------------------- */}
@@ -325,12 +349,21 @@ export default function RecruitList() {
                   >
                     選單
                   </div>
-                  <Link
-                    href="/jam/recruit-list/form"
-                    className="b-btn b-btn-primary px-3 d-none d-sm-block"
-                  >
-                    發起JAM
-                  </Link>
+                  {LoginUserData.my_jam ? (
+                    <Link
+                      href={`/jam/recruit-list/${LoginUserData.my_jam}`}
+                      className="b-btn b-btn-primary px-3 d-none d-sm-block"
+                    >
+                      我的JAM
+                    </Link>
+                  ) : (
+                    <Link
+                      href="/jam/recruit-list/form"
+                      className="b-btn b-btn-primary px-3 d-none d-sm-block"
+                    >
+                      發起JAM
+                    </Link>
+                  )}
                 </div>
 
                 <div className="filter-sort d-flex justify-content-between">
