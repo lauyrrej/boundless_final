@@ -15,6 +15,9 @@ import { useAuth } from '@/hooks/user/use-auth'
 //google登入
 import useFirebase from '@/hooks/user/use-firebase'
 
+// 購物車小badge 測試
+import { useCart } from '@/hooks/use-cart'
+
 export default function Navbar({ menuMbToggle }) {
   const [showMenu, setShowMenu] = useState(false)
   const { logoutFirebase } = useFirebase()
@@ -99,9 +102,10 @@ export default function Navbar({ menuMbToggle }) {
             <li>
               <Link href="/article/article-list">樂友論壇</Link>
             </li>
-            <li className="ms-3">
-              <Link href="/cart">
+            <li className="ms-3 cart-icon">
+              <Link href="/cart/check">
                 <IoCart size={30} className="cart-icon" />
+                              <span className="button__badge">10{ }</span>
               </Link>
             </li>
             <li className="login-state d-flex justify-content-center">
@@ -227,6 +231,19 @@ export default function Navbar({ menuMbToggle }) {
         }
         .menu-active {
           top: -580px;
+        }
+        .cart-icon {
+          position: relative;
+        }
+        .button__badge {
+          background-color: #fa3e3e;
+          border-radius: 2px;
+          color: white;
+          padding: 1px 3px;
+          font-size: 10px;
+          position: absolute;
+          top: 1px;
+          right: 5px;
         }
       `}</style>
     </>

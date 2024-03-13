@@ -25,8 +25,42 @@ import { useParams } from 'react-router-dom'
 
 import Pagination from '@/components/lesson/pagination.js'
 
+// 會員認證hook
+import { useAuth } from '@/hooks/user/use-auth'
+
 
 export default function LessonList({ onSearch }) {
+  // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
+  //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
+  const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
+    useAuth()
+  const [userData, setUserData] = useState()
+  //檢查token
+  useEffect(() => {
+    handleLoginStatus()
+    //獲得資料
+    getLoginUserData()
+  }, [])
+  //登出功能
+
+  //檢查是否獲取資料
+  console.log(LoginUserData)
+  //   讀取使用者資料後 定義大頭貼路徑
+  let avatarImage
+  if (LoginUserData.img) {
+    avatarImage = `/user/${LoginUserData.img}`
+  } else if (LoginUserData.photo_url) {
+    avatarImage = `${LoginUserData.photo_url}`
+  } else {
+    avatarImage = `/user/avatar_userDefault.jpg`
+  }
+  // 舊版會警告 因為先渲染但沒路徑 bad
+  // const avatarImage = `/user/${LoginUserData.img}`
+  // const avatargoogle = `${LoginUserData.photo_url}`
+  // const avatarDefault = `/user/avatar_userDefault.jpg`
+
+  // ----------------------會員登入狀態  ----------------------
+
   // 在電腦版或手機版時
   const [isSmallScreen, setIsSmallScreen] = useState(false)
 
@@ -75,15 +109,7 @@ export default function LessonList({ onSearch }) {
   // ----------------------假資料  ----------------------
   // 資料排序
   const [dataSort, setDataSort] = useState('upToDate')
-  // sidebar假資料
-  //   const sidebarData = [
-  //     '歌唱技巧',
-  //     '樂器演奏',
-  //     '音樂理論',
-  //     '詞曲創作',
-  //     '軟體操作',
-  //     '活動專區',
-  //   ]
+
   const [priceLow, setPriceLow] = useState('')
   const [priceHigh, setPriceHigh] = useState('')
   // 課程評價
@@ -101,54 +127,51 @@ export default function LessonList({ onSearch }) {
     setSales(false)
   }
 
-    //--------------------重新整理後url回歸原始
-    // const history = useHistory();
+  //--------------------重新整理後url回歸原始
+  // const history = useHistory();
 
-    // useEffect(() => {
-    //     return () => {
-    //         history.push();
-    //     }
-    // },[history])
-    
-    // ------------------------------------- 製作分頁
+  // useEffect(() => {
+  //     return () => {
+  //         history.push();
+  //     }
+  // },[history])
 
-     
-//   const [products, setProducts] = useState([]);
-//   const [CurrentPage, setCurrentPage] = useState(1)
-//   const [totalPages, setTotalPages] = useState(1);
+  // ------------------------------------- 製作分頁 not done
 
-// //   useEffect(() => {
-// //     handlePageClick()
-// //   }, [CurrentPage])
-    
-//         useEffect(() => {
-//           handlePageClick()
-//         }, [])
+  //   const [products, setProducts] = useState([]);
+  //   const [CurrentPage, setCurrentPage] = useState(1)
+  //   const [totalPages, setTotalPages] = useState(1);
 
-//   const handlePageClick = async () => {
-//     try {
-//       const response = await fetch(
-//         `http://localhost:3005/api/lesson/page/${page}`
-//       )
-//       setProducts(response.data.products);
-//       setTotalPages(response.data.totalPages);
-//     } catch (error) {
-//       console.error(error);
-//     }  
-//   };
+  //   useEffect(() => {
+  //     handlePageClick()
+  //   }, [CurrentPage])
 
-//   const handlePrevPage = () => {
-//     setCurrentPage(prevPage => prevPage - 1);
-//   };
+  //         useEffect(() => {
+  //           handlePageClick()
+  //         }, [])
 
-//   const handleNextPage = () => {
-//     setCurrentPage(prevPage => prevPage + 1);
-//   };
-    
- 
+  //   const handlePageClick = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         `http://localhost:3005/api/lesson/page/${page}`
+  //       )
+  //       setProducts(response.data.products);
+  //       setTotalPages(response.data.totalPages);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+
+  //   const handlePrevPage = () => {
+  //     setCurrentPage(prevPage => prevPage - 1);
+  //   };
+
+  //   const handleNextPage = () => {
+  //     setCurrentPage(prevPage => prevPage + 1);
+  //   };
 
   //-------------------連資料庫
-    const initialUrl = 'http://localhost:3005/api/lesson';
+  const initialUrl = 'http://localhost:3005/api/lesson'
   const [Lesson, setLesson] = useState([])
 
   function getLesson(initialUrl) {
@@ -175,6 +198,17 @@ export default function LessonList({ onSearch }) {
   useEffect(() => {
     getLesson(initialUrl)
   }, [initialUrl])
+
+  //-----------------篩選功能 //FIXME
+  useEffect(() => {
+    if (priceLow !== '' && priceHigh !== '') {
+      fetch(
+        `http://localhost:3005/api/lesson?priceLow=${priceLow}&priceHigh=${priceHigh}`
+      )
+        .then((response) => response.json())
+        .then((data) => setData(data))
+    }
+  }, [priceLow, priceHigh])
   //-------------------搜尋功能
   const [data, setData] = useState(Lesson)
   //-----------所有過濾資料功能傳回來的地方
@@ -249,7 +283,7 @@ export default function LessonList({ onSearch }) {
 
   //-------------------選定特定分類
 
-  const [selectedCategory, setSelectedCategory] = useState('') // 用于存储用户选择的分类
+  const [selectedCategory, setSelectedCategory] = useState('') // 儲存所選分類
   function handleCategoryChange(id) {
     console.log('Clicked on category with ID:', id)
     // 在這裡執行你的其他邏輯，比如更新狀態
@@ -257,7 +291,6 @@ export default function LessonList({ onSearch }) {
   }
 
   useEffect(() => {
-    // 定义一个函数用于获取商品数据
     const fetchProducts = async () => {
       try {
         const response = await fetch(
