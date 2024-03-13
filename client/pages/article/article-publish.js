@@ -65,7 +65,7 @@ export default function Publish() {
     setComplete(1)
     return true
   }
-  const sendForm = async (uid, title, category, condition, description) => {
+  const sendForm = async (uid, title, category, description) => {
     if (!checkComplete()) {
       return false
     }
@@ -235,7 +235,11 @@ export default function Publish() {
                     defaultValue={''}
                   />
                 </div>
-                {titleCheck ? '' : <div>偵測到不雅字詞</div>}
+                {titleCheck ? (
+                  ''
+                ) : (
+                  <div className="bad-words">偵測到不雅字詞</div>
+                )}
               </div>
             </div>
             <hr />
@@ -284,7 +288,11 @@ export default function Publish() {
                     defaultValue={''}
                   />
                 </div>
-                {descriptionCheck ? '' : <div>偵測到不雅字詞</div>}
+                {descriptionCheck ? (
+                  ''
+                ) : (
+                  <div className="bad-words">偵測到不雅字詞</div>
+                )}
               </div>
             </div>
             <hr />
@@ -410,7 +418,23 @@ export default function Publish() {
               <button type="button" className="btn">
                 上一步
               </button>
-              <button type="button" className="btn btn-primary">
+              {complete === 0 ? (
+                <div
+                  className="d-flex bad-words justify-content-center"
+                  style={{ marginTop: '-8px' }}
+                >
+                  <div>請遵照規則，並填寫所有必填內容</div>
+                </div>
+              ) : (
+                ''
+              )}
+              <button
+                onClick={() => {
+                  sendForm(title, category, description)
+                }}
+                type="button"
+                className="btn btn-primary"
+              >
                 確認更新
               </button>
             </div>
@@ -441,6 +465,9 @@ export default function Publish() {
         }
         .rwd-content {
           width: calc(60%);
+        }
+        .bad-words {
+          color: red;
         }
         .tag-btns {
           display: flex;
