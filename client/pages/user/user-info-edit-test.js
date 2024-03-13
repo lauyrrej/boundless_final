@@ -13,8 +13,9 @@ import jamHero from '@/assets/jam-hero.png'
 
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
+import { jwtDecode } from 'jwt-decode'
 
-//選項資料資料 data
+//選項資料 data
 import CityCountyData from '@/data/CityCountyData.json'
 import playerData from '@/data/player.json'
 import genreData from '@/data/genre.json'
@@ -41,7 +42,6 @@ export default function Test() {
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
   const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
     useAuth()
-  const [userData, setUserData] = useState()
   const router = useRouter()
   //檢查token
   useEffect(() => {
@@ -61,17 +61,105 @@ export default function Test() {
   } else {
     avatarImage = `/user/avatar_userDefault.jpg`
   }
+  //-------------------------------------------------------------
+  const appKey = 'userToken'
+  // const [userData, setuserData] = useState({
+  //   id: '',
+  //
+  //   name: '',
+  //   email: '',
+  //   phone: '',
+  //   postcode: '',
+  //   country: '',
+  //   township: '',
+  //   address: '',
+  //   birthday: '',
+  //   genre_like: '',
+  //   play_instrument: '',
+  //   info: '',
+  //   img: '',
+  //   gender: '',
+  //   nickname: '',
+  //   google_uid: '',
+  //   photo_url: '',
+  //   privacy: '',
+  //   my_lesson: '',
+  //   my_jam: '',
+  // })
 
-  const [Abc, setAbc] = useState('')
+  //讓userData有預設值
+  const [userData, setuserData] = useState({
+    id: '',
+    uid: '',
+    name: '',
+    email: '',
+    password: '',
+    phone: '',
+    postcode: '',
+    country: '',
+    township: '',
+    address: '',
+    birthday: '',
+    genre_like: '',
+    play_instrument: '',
+    info: '',
+    img: '',
+    gender: '',
+    nickname: '',
+    google_uid: '',
+    photo_url: '',
+    privacy: '',
+    my_lesson: '',
+    my_jam: '',
+    updated_time: '',
+    valid: '',
+  })
+  //------獲取單一使用者全部資料 包含密碼
+  const getLoginUserProfile = async (e) => {
+    // 拿取Token回傳後端驗證狀態
+    const Loginusertoken = localStorage.getItem(appKey)
 
+    if (!Loginusertoken) {
+      console.error('沒有登入的token 故無法取得使用者資料。')
+      return null
+    }
+    const userID = jwtDecode(Loginusertoken)
+    const id = userID.id
+
+    try {
+      const response = await fetch(
+        `http://localhost:3005/api/user/profile/${id}`,
+        {
+          method: 'get',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${Loginusertoken}`,
+          },
+          body: JSON.stringify(),
+        }
+      )
+      const LoginUserProfile = await response.json()
+      // console.log('Response from server:', LoginUserData)
+      // setUserData(LoginUserData)
+      // console.log(LoginUserProfile)
+      setuserData(LoginUserProfile)
+      // console.log(LoginUserData)
+      // 在這裡處理後端返回的資料
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error)
+    }
+  }
+  //-------------------------------------------------------------
+  //執行一次，如果有登入，獲得該使用者全部資料寫入userData 狀態
   useEffect(() => {
     if (LoginUserData) {
-      setAbc(LoginUserData)
+      getLoginUserProfile()
+      //   console.log(userData)
     }
-  }, [LoginUserData]) // 在 LoginUserData.name 改變時觸發 useEffect
+  }, []) // 在 LoginUserData.name 改變時觸發 useEffect
 
-  console.log(Abc)
-  console.log(Abc.id)
+  //   console.log(userData.id)
+  console.log(userData)
   // 舊版會警告 因為先渲染但沒路徑 bad
   // const avatarImage = `/user/${LoginUserData.img}`
   // const avatargoogle = `${LoginUserData.photo_url}`
@@ -81,13 +169,132 @@ export default function Test() {
 
   // ----------------------會員資料處理  ----------------------
   // 處理生日
-  let birthday
-  if (LoginUserData.birthday) {
-    birthday = LoginUserData.birthday.split('T')[0]
+  let finalbirthday = '1970-01-01'
+
+  if (userData.birthday) {
+    // 原本處理方式 但和SQL資料庫有時區差異------------
+    // birthday = userData.birthday.split('T')[0]
+
+    // testTime = new Date(testTime)
+    // const taipeiTime = new Date(testTime.getTime() + 8 * 60 * 60 * 1000)
+    // YYYYMMDDTime = taipeiTime.toISOString().slice(0, 19).replace('T', ' ')
+    // 原本處理方式 但和SQL資料庫有時區差異------------
+    let defaultTime = userData.birthday
+    let inputDate = new Date(defaultTime)
+    let year = inputDate.getFullYear()
+    let month = String(inputDate.getMonth() + 1).padStart(2, '0') // 月份從0開始，需要加1，並保持兩位數
+    let day = String(inputDate.getDate()).padStart(2, '0') // 日期需保持兩位數
+
+    finalbirthday = `${year}-${month}-${day}`
+
+    // console.log(finalbirthday)
   }
-  // console.log(birthday)
+  useEffect(() => {
+    setuserData({ ...userData, birthday: finalbirthday })
+  }, [finalbirthday])
+
+  // ---------------曲風-------------
+  let totalGenreData = genreData.map((v) => ({
+    key: v.id,
+    value: v.id,
+    label: v.name,
+  }))
+  // console.log(totalGenreData)
+  // console.log(totalGenreData[0].value)
+  // console.log(totalGenreData[0].label)
+  let genreLike,
+    genreLike1,
+    genreLike2,
+    genreLike3,
+    finalGenreLike = `尚未填寫`
+  if (LoginUserData.genre_like) {
+    genreLike = LoginUserData.genre_like
+    // 使用 split 方法將字串拆分成陣列
+    let ArrGenreLike = genreLike.split(',')
+    genreLike1 = ArrGenreLike[0]
+    genreLike2 = ArrGenreLike[1]
+    genreLike3 = ArrGenreLike[3]
+    // 傻人方法
+    // for (let i = 0; i < totalGenreData.length; i++) {
+    //   if ([genreLike1] == totalGenreData[i].value) {
+    //     genreLike1 = totalGenreData[i].label
+    //     break // 找到匹配後就跳出迴圈
+    //   }
+    // }
+    // for (let i = 0; i < totalGenreData.length; i++) {
+    //   if ([genreLike2] == totalGenreData[i].value) {
+    //     genreLike2 = totalGenreData[i].label
+    //     break // 找到匹配後就跳出迴圈
+    //   }
+    // }
+    // for (let i = 0; i < totalGenreData.length; i++) {
+    //   if ([genreLike3] == totalGenreData[i].value) {
+    //     genreLike3 = totalGenreData[i].label
+    //     break // 找到匹配後就跳出迴圈
+    //   }
+    // }
+    //判斷最後結果
+    // if (genreLike1 && genreLike2 && genreLike3 !== undefined) {
+    //   finalGenreLike = `${genreLike1}, ${genreLike2}, ${genreLike3}`
+    // } else if (genreLike1 && genreLike2 !== undefined) {
+    //   finalGenreLike = `${genreLike1}, ${genreLike2}`
+    // } else if (genreLike1 !== undefined) {
+    //   finalGenreLike = `${genreLike1}`
+    // }
+  }
+
+  const [genreSelect1, setgenreSelect1] = useState('')
+  useEffect(() => {
+    if (genreSelect1 && genreLike2 && genreLike3 !== undefined) {
+      finalGenreLike = `${genreSelect1},${genreLike2},${genreLike3}`
+    } else if (genreSelect1 && genreLike2 !== undefined) {
+      finalGenreLike = `${genreSelect1},${genreLike2}`
+    } else if (genreSelect1 !== undefined) {
+      finalGenreLike = `${genreSelect1}`
+    }
+
+    // finalGenreLike = `${genreSelect1},${genreLike2},${genreLike3}`
+    setuserData({ ...userData, genre_like: finalGenreLike })
+  }, [genreSelect1])
+  // console.log(finalGenreLike)
+
+  // console.log(genreLike1)
+  // console.log(genreLike3)
   // ----------------------會員資料處理  ----------------------
 
+  // ----------------------表單資料傳送處理  ----------------------
+  const postForm = async (e) => {
+    //取消表單預設submit跳頁
+    e.preventDefault()
+
+    const Loginusertoken = localStorage.getItem(appKey)
+    if (!Loginusertoken) {
+      console.error('沒有登入的token 故無法取得使用者資料。')
+      return null
+    }
+    const userID = jwtDecode(Loginusertoken)
+    const id = userID.id
+    const res = await fetch(
+      `http://localhost:3005/api/user/editProfile/${id}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Loginusertoken}`,
+        },
+        body: JSON.stringify(userData),
+      }
+    )
+    const result = await res.json()
+    console.log(result)
+    // if (result.status === 'success') {
+    //   alert('修改資料成功')
+    //   // notifySuccess(result.juid)
+    // } else {
+    //   console.log(result.error)
+    // }
+  }
+  // ----------------------表單資料傳送處理  ----------------------
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -175,6 +382,7 @@ export default function Test() {
   // ---------------------- 曲風 ----------------------
   // 儲存選擇的曲風
   const [genre, setgenre] = useState([])
+
   const [genreCheck, setGenreCheck] = useState(true)
   // 變更曲風下拉選單的數量時，陣列會多一個元素
   const [genreSelect, setgenreSelect] = useState([1])
@@ -201,6 +409,20 @@ export default function Test() {
     return v !== '釣魚臺' && v !== '南海島'
   })
   const [region, setRegion] = useState('')
+
+  // const townData = CityCountyData.map((v, i) => {
+  //   return v.CityName.AreaList.AreaName
+  // }).filter((v) => {
+  //   return v !== '釣魚臺' && v !== '南海島'
+  // })
+
+  const townData = CityCountyData.flatMap((city) => {
+    return city.AreaList.map((area) => {
+      return area.AreaName
+    })
+  }).filter((areaName) => {
+    return areaName !== '釣魚臺' && areaName !== '南海島'
+  })
 
   // ---------------------- 其他條件 ----------------------
   const [condition, setCondition] = useState('')
@@ -323,6 +545,10 @@ export default function Test() {
         }, 3000)
       )
   }
+
+  useEffect(() => {
+    setuserData({ ...userData, genre_like: genre })
+  }, [finalgenre])
   // ---------------------- 偵測表單輸入變化，並執行檢查
   useEffect(() => {
     // 跳出未填寫完畢警告後再次輸入，消除警告
@@ -642,9 +868,12 @@ export default function Test() {
                               className={`${styles.itemInput} form-control`}
                               placeholder="真實姓名"
                               maxLength={20}
-                              value={Abc.name}
+                              value={userData.name}
                               onChange={(e) => {
-                                setTitle(e.target.value)
+                                setuserData({
+                                  ...userData,
+                                  name: e.target.value,
+                                })
                               }}
                             />
                             {/* {LoginUserData.name} */}
@@ -660,8 +889,12 @@ export default function Test() {
                               className={`${styles.itemInput} form-control`}
                               placeholder="暱稱 上限14字"
                               maxLength={20}
+                              value={userData.nickname}
                               onChange={(e) => {
-                                setTitle(e.target.value)
+                                setuserData({
+                                  ...userData,
+                                  nickname: e.target.value,
+                                })
                               }}
                             />
                             {/* {LoginUserData.nickname} */}
@@ -675,15 +908,19 @@ export default function Test() {
                             <select
                               className="form-select"
                               style={{ width: 'auto' }}
-                              value={degree}
-                              name="degree"
+                              value={userData.gender}
+                              name="gender"
                               onChange={(e) => {
-                                setDegree(e.target.value)
+                                setuserData({
+                                  ...userData,
+                                  gender: e.target.value,
+                                })
                               }}
                             >
                               <option value="">請選擇</option>
-                              <option value="1">新手練功</option>
-                              <option value="2">老手同樂</option>
+                              <option value="1">男</option>
+                              <option value="2">女</option>
+                              <option value="3">其他</option>
                             </select>
                             {/* {LoginUserData.gender} */}
                           </div>
@@ -697,71 +934,68 @@ export default function Test() {
                               className={`${styles.itemInputWrapper} col-12 col-sm-10`}
                             >
                               <div className={`${styles.selectGroup}`}>
-                                {genreSelect.map((v, i) => {
-                                  return (
-                                    <select
-                                      key={i}
-                                      className="form-select"
-                                      style={{ width: 'auto' }}
-                                      value={genre[i]}
-                                      name="genre"
-                                      onChange={(e) => {
-                                        let newgenre = [...genre]
-                                        newgenre[i] = e.target.value
-                                        setgenre(newgenre)
-                                      }}
-                                    >
-                                      <option value="">請選擇</option>
-                                      {genreData.map((v) => {
-                                        return (
-                                          <option key={v.id} value={v.id}>
-                                            {v.name}
-                                          </option>
-                                        )
-                                      })}
-                                    </select>
-                                  )
-                                })}
-                                {genreSelect.length < 3 ? (
-                                  <div className={`${styles.plusBtnWrapper}`}>
-                                    <FaCirclePlus
-                                      size={24}
-                                      className={`${styles.plusBtn}`}
-                                      onClick={() => {
-                                        const newArr = [...genreSelect, 1]
-                                        setgenreSelect(newArr)
-                                      }}
-                                    />
-                                    <span
-                                      className="mb-1"
-                                      style={{ color: '#1d1d1d' }}
-                                    >
-                                      (剩餘 {3 - genreSelect.length})
-                                    </span>
-                                  </div>
-                                ) : (
-                                  ''
-                                )}
-                                {genreCheck ? (
-                                  ''
-                                ) : (
-                                  <div
-                                    className={`${styles.warningText} d-none d-sm-block`}
-                                    style={{ marginTop: '5px' }}
-                                  >
-                                    無法選擇重複曲風
-                                  </div>
-                                )}
-                              </div>
-                              {genreCheck ? (
-                                ''
-                              ) : (
-                                <div
-                                  className={`${styles.warningText} d-block d-sm-none mt-2 p-0`}
+                                <select
+                                  className="form-select"
+                                  style={{ width: 'auto' }}
+                                  value={genreLike1}
+                                  name="genre1"
+                                  onChange={(e) => {
+                                    genreLike1 = e.target.value
+                                    setgenreSelect1(`${genreLike1}`)
+                                    console.log(genreLike1)
+                                    console.log(genreSelect1)
+                                  }}
                                 >
-                                  無法選擇重複曲風
-                                </div>
-                              )}
+                                  <option value="0">請選擇</option>
+                                  {genreData.map((v) => {
+                                    return (
+                                      <option key={v.id} value={v.id}>
+                                        {v.name}
+                                      </option>
+                                    )
+                                  })}
+                                </select>
+                                <select
+                                  className="form-select"
+                                  style={{ width: 'auto' }}
+                                  value={genreLike2}
+                                  name="genre2"
+                                  onChange={(e) => {
+                                    genreLike2 = e.target.value
+                                    let newgenre = [...genre]
+
+                                    setgenre(newgenre)
+                                  }}
+                                >
+                                  <option value="">請選擇</option>
+                                  {genreData.map((v) => {
+                                    return (
+                                      <option key={v.id} value={v.id}>
+                                        {v.name}
+                                      </option>
+                                    )
+                                  })}
+                                </select>
+                                <select
+                                  className="form-select"
+                                  style={{ width: 'auto' }}
+                                  value={genreLike3}
+                                  name="genre3"
+                                  onChange={(e) => {
+                                    genreLike3 = e.target.value
+                                    console.log(genreLike3)
+                                  }}
+                                >
+                                  <option value="">請選擇</option>
+                                  {genreData.map((v) => {
+                                    return (
+                                      <option key={v.id} value={v.id}>
+                                        {v.name}
+                                      </option>
+                                    )
+                                  })}
+                                </select>
+                              </div>
                             </div>
 
                             {/* {LoginUserData.genre_like} */}
@@ -772,7 +1006,7 @@ export default function Test() {
                         <div className="user-info-item-titleText">演奏樂器</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            <div
+                            {/* <div
                               className={`${styles.itemInputWrapper} col-12 col-sm-10`}
                             >
                               <select
@@ -796,7 +1030,7 @@ export default function Test() {
                                   )
                                 })}
                               </select>
-                            </div>
+                            </div> */}
                             {/* {LoginUserData.play_instrument} */}
                           </div>
                         </div>
@@ -859,13 +1093,17 @@ export default function Test() {
                               type="date"
                               className={`${styles.itemInput} form-control`}
                               placeholder=""
+                              value={finalbirthday}
                               maxLength={20}
                               onChange={(e) => {
-                                setTitle(e.target.value)
+                                setuserData({
+                                  ...userData,
+                                  birthday: e.target.value,
+                                })
                               }}
                             />
 
-                            {birthday}
+                            {/* {birthday} */}
                           </div>
                         </div>
                       </div>
@@ -874,36 +1112,23 @@ export default function Test() {
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
                             <input
-                              type="date"
+                              type="tel"
                               className={`${styles.itemInput} form-control`}
                               placeholder="電話號碼"
+                              value={userData.phone}
                               maxLength={20}
                               onChange={(e) => {
-                                setTitle(e.target.value)
+                                setuserData({
+                                  ...userData,
+                                  phone: e.target.value,
+                                })
                               }}
                             />
                             {/* {LoginUserData.phone} */}
                           </div>
                         </div>
                       </div>
-                      <div className="user-info-item">
-                        <div className="user-info-item-titleText">電子信箱</div>
-                        <div className="user-info-item-Content">
-                          <div className="user-info-item-contentText">
-                            <input
-                              type="mail"
-                              className={`${styles.itemInput} form-control`}
-                              placeholder="請輸入電子信箱"
-                              maxLength={20}
-                              onChange={(e) => {
-                                setTitle(e.target.value)
-                              }}
-                            />
 
-                            {/* {LoginUserData.email} */}
-                          </div>
-                        </div>
-                      </div>
                       <div className="user-info-item">
                         <div className="user-info-item-titleText">地址</div>
                         <div className="user-info-item-Content">
@@ -912,19 +1137,26 @@ export default function Test() {
                               type="text"
                               className={`${styles.itemInputPostcode} form-control `}
                               placeholder="郵遞區號"
+                              value={userData.postcode}
                               maxLength={3}
                               onChange={(e) => {
-                                setTitle(e.target.value)
+                                setuserData({
+                                  ...userData,
+                                  postcode: e.target.value,
+                                })
                               }}
                             />
                             <div className={`${styles.itemInputWrapper} `}>
                               <select
                                 className="form-select"
                                 style={{ width: 'auto' }}
-                                value={region}
+                                value={userData.country}
                                 name="region"
                                 onChange={(e) => {
-                                  setRegion(e.target.value)
+                                  setuserData({
+                                    ...userData,
+                                    country: e.target.value,
+                                  })
                                 }}
                               >
                                 <option value="">請選擇</option>
@@ -942,14 +1174,17 @@ export default function Test() {
                               <select
                                 className="form-select"
                                 style={{ width: 'auto' }}
-                                value={region}
+                                value={userData.township}
                                 name="region"
                                 onChange={(e) => {
-                                  setRegion(e.target.value)
+                                  setuserData({
+                                    ...userData,
+                                    township: e.target.value,
+                                  })
                                 }}
                               >
                                 <option value="">請選擇</option>
-                                {cityData.map((v, i) => {
+                                {townData.map((v, i) => {
                                   return (
                                     <option key={i} value={v}>
                                       {v}
@@ -964,8 +1199,13 @@ export default function Test() {
                               className={`${styles.itemInput} form-control `}
                               placeholder="地址"
                               maxLength={100}
+                              value={userData.address}
+                              name="address"
                               onChange={(e) => {
-                                setTitle(e.target.value)
+                                setuserData({
+                                  ...userData,
+                                  address: e.target.value,
+                                })
                               }}
                             />
 
@@ -984,9 +1224,17 @@ export default function Test() {
                           <div className="user-info-item-info-contentText form-floating">
                             <textarea
                               className="form-control"
+                              style={{ height: '300px', width: '84%' }}
                               id="exampleFormControlTextarea1"
                               rows="3"
                               cols="50"
+                              defaultValue={userData.info}
+                              onChange={(e) => {
+                                setuserData({
+                                  ...userData,
+                                  info: e.target.value,
+                                })
+                              }}
                             ></textarea>
                             {/* <input
                               type="text"
@@ -1007,18 +1255,19 @@ export default function Test() {
                           className="b-btn b-btn-primary"
                           style={{ paddingInline: '38px' }}
                           role="presentation"
-                          onClick={() => {
-                            sendForm(
-                              fakeUser.uid,
-                              title,
-                              degree,
-                              finalgenre,
-                              finalMyPlayer,
-                              finalPlayers,
-                              region,
-                              condition,
-                              description
-                            )
+                          onClick={(e) => {
+                            // sendForm(
+                            //   fakeUser.uid,
+                            //   title,
+                            //   degree,
+                            //   finalgenre,
+                            //   finalMyPlayer,
+                            //   finalPlayers,
+                            //   region,
+                            //   condition,
+                            //   description
+                            // )
+                            postForm(e)
                           }}
                         >
                           提交

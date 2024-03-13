@@ -130,7 +130,7 @@ router.post('/', upload.none(), async function (req, res, next) {
       },
       accessTokenSecret,
       //token 認證的時長原為30m
-      { expiresIn: "120m" }
+      { expiresIn: "3d" }
       
     );
     res.status(200).json({

@@ -11,6 +11,11 @@ import jamHero from '@/assets/jam-hero.png'
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
 
+//選項資料 data
+// import CityCountyData from '@/data/CityCountyData.json'
+import playerData from '@/data/player.json'
+import genreData from '@/data/genre.json'
+
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
@@ -53,12 +58,145 @@ export default function Test() {
   // ----------------------會員登入狀態  ----------------------
 
   // ----------------------會員資料處理  ----------------------
-  // 處理生日
-  let birthday
-  if (LoginUserData.birthday) {
-    birthday = LoginUserData.birthday.split('T')[0]
+  // ---------------性別-------------
+  let gender = '讀取中'
+  if (LoginUserData.gender == 1) {
+    gender = '男'
+  } else if (LoginUserData.gender == 2) {
+    gender = '女'
+  } else if (LoginUserData.gender == 3) {
+    gender = '其他'
+  } else {
+    gender = '尚未填寫'
   }
-  // console.log(birthday)
+
+  // ---------------生日-------------
+  let birthday = '1970-01-01'
+  if (LoginUserData.birthday) {
+    // 原本處理方式 但和SQL資料庫有時區差異------------
+    // birthday = userData.birthday.split('T')[0]
+
+    // testTime = new Date(testTime)
+    // const taipeiTime = new Date(testTime.getTime() + 8 * 60 * 60 * 1000)
+    // YYYYMMDDTime = taipeiTime.toISOString().slice(0, 19).replace('T', ' ')
+    // 原本處理方式 但和SQL資料庫有時區差異------------
+    let defaultTime = LoginUserData.birthday
+    let inputDate = new Date(defaultTime)
+    let year = inputDate.getFullYear()
+    let month = String(inputDate.getMonth() + 1).padStart(2, '0') // 月份從0開始，需要加1，並保持兩位數
+    let day = String(inputDate.getDate()).padStart(2, '0') // 日期需保持兩位數
+    birthday = `${year}-${month}-${day}`
+    // console.log(birthday)
+  }
+
+  // ---------------曲風-------------
+  let totalGenreData = genreData.map((v) => ({
+    key: v.id,
+    value: v.id,
+    label: v.name,
+  }))
+  // console.log(totalGenreData)
+  // console.log(totalGenreData[0].value)
+  // console.log(totalGenreData[0].label)
+  let genreLike,
+    finalGenreLike = `尚未填寫`
+  if (LoginUserData.genre_like) {
+    genreLike = LoginUserData.genre_like
+    // 使用 split 方法將字串拆分成陣列
+    let [genreLike1, genreLike2, genreLike3] = genreLike.split(',')
+    // 傻人方法
+    for (let i = 0; i < totalGenreData.length; i++) {
+      if ([genreLike1] == totalGenreData[i].value) {
+        genreLike1 = totalGenreData[i].label
+        break // 找到匹配後就跳出迴圈
+      }
+    }
+    for (let i = 0; i < totalGenreData.length; i++) {
+      if ([genreLike2] == totalGenreData[i].value) {
+        genreLike2 = totalGenreData[i].label
+        break // 找到匹配後就跳出迴圈
+      }
+    }
+    for (let i = 0; i < totalGenreData.length; i++) {
+      if ([genreLike3] == totalGenreData[i].value) {
+        genreLike3 = totalGenreData[i].label
+        break // 找到匹配後就跳出迴圈
+      }
+    }
+    //判斷最後結果
+    if (genreLike1 && genreLike2 && genreLike3 !== undefined) {
+      finalGenreLike = `${genreLike1}, ${genreLike2}, ${genreLike3}`
+    } else if (genreLike1 && genreLike2 !== undefined) {
+      finalGenreLike = `${genreLike1}, ${genreLike2}`
+    } else if (genreLike1 !== undefined) {
+      finalGenreLike = `${genreLike1}`
+    }
+  }
+  // console.log(finalGenreLike)
+
+  // ---------------演奏樂器-------------
+  let totalPlayerData = playerData.map((v) => ({
+    key: v.id,
+    value: v.id,
+    label: v.name,
+  }))
+
+  // console.log(totalPlayerData[0].value)
+  // console.log(totalPlayerData[0].label)
+  let playInstrument,
+    finalPlayInstrument = `尚未填寫`
+  if (LoginUserData.play_instrument) {
+    playInstrument = LoginUserData.play_instrument
+    // 使用 split 方法將字串拆分成陣列
+    let [playInstrument1, playInstrument2, playInstrument3] =
+      playInstrument.split(',')
+    // 傻人方法
+    for (let i = 0; i < totalPlayerData.length; i++) {
+      if ([playInstrument1] == totalPlayerData[i].value) {
+        playInstrument1 = totalPlayerData[i].label
+        break // 找到匹配後就跳出迴圈
+      }
+    }
+    for (let i = 0; i < totalPlayerData.length; i++) {
+      if ([playInstrument2] == totalPlayerData[i].value) {
+        playInstrument2 = totalPlayerData[i].label
+        break // 找到匹配後就跳出迴圈
+      }
+    }
+    for (let i = 0; i < totalPlayerData.length; i++) {
+      if ([playInstrument3] == totalPlayerData[i].value) {
+        playInstrument3 = totalPlayerData[i].label
+        break // 找到匹配後就跳出迴圈
+      }
+    }
+    //判斷最後結果
+    if (playInstrument1 && playInstrument2 && playInstrument3 !== undefined) {
+      finalPlayInstrument = `${playInstrument1}, ${playInstrument2}, ${playInstrument3}`
+    } else if (playInstrument1 && playInstrument2 !== undefined) {
+      finalPlayInstrument = `${playInstrument1}, ${playInstrument2}`
+    } else if (playInstrument1 !== undefined) {
+      finalPlayInstrument = `${playInstrument1}`
+    }
+  }
+  // console.log(finalPlayInstrument)
+  // ---------------公開資訊-------------
+  //帶入隱私設定進來, 但是不可更改
+  let privacy,
+    privacyBD = '',
+    privacyPhone = '',
+    privacyEmail = '',
+    ArrPrivacy
+  if (LoginUserData.privacy) {
+    privacy = LoginUserData.privacy
+    ArrPrivacy = privacy.split(',')
+    privacyBD = ArrPrivacy[0]
+    privacyPhone = ArrPrivacy[1]
+    privacyEmail = ArrPrivacy[2]
+  }
+  // console.log(privacyBD)
+  // console.log(privacyPhone)
+  // console.log(privacyEmail)
+
   // ----------------------會員資料處理  ----------------------
 
   // ----------------------手機版本  ----------------------
@@ -370,7 +508,7 @@ export default function Test() {
                         <div className="user-info-item-titleText">性別</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            {LoginUserData.gender}
+                            {gender}
                           </div>
                         </div>
                       </div>
@@ -378,7 +516,8 @@ export default function Test() {
                         <div className="user-info-item-titleText">喜歡曲風</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            {LoginUserData.genre_like}
+                            {finalGenreLike}
+                            {/* {LoginUserData.genre_like} */}
                           </div>
                         </div>
                       </div>
@@ -386,7 +525,8 @@ export default function Test() {
                         <div className="user-info-item-titleText">演奏樂器</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            {LoginUserData.play_instrument}
+                            {finalPlayInstrument}
+                            {/* {LoginUserData.play_instrument} */}
                           </div>
                         </div>
                       </div>
@@ -399,7 +539,8 @@ export default function Test() {
                               type="checkbox"
                               defaultValue=""
                               id="privacyBD"
-                              defaultChecked=""
+                              defaultChecked={privacyBD == '1'}
+                              disabled={true}
                             />
                             <label
                               className="form-check-label"
@@ -414,7 +555,8 @@ export default function Test() {
                               type="checkbox"
                               defaultValue=""
                               id="privacyPhone"
-                              defaultChecked=""
+                              defaultChecked={privacyPhone == '1'}
+                              disabled={true}
                             />
                             <label
                               className="form-check-label"
@@ -427,9 +569,10 @@ export default function Test() {
                             <input
                               className="form-check-input"
                               type="checkbox"
-                              defaultValue=""
+                              defaultValue={privacyEmail == '1'}
                               id="privacyEmail"
                               defaultChecked=""
+                              disabled={true}
                             />
                             <label
                               className="form-check-label"

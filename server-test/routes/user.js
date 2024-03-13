@@ -121,7 +121,7 @@ router.post("/login", upload.none(), async(req, res) => {
       },
       accessTokenSecret,
       //token 認證的時長原為30m
-      { expiresIn: "120m" }
+      { expiresIn: "3d" }
     );
     res.status(200).json({
       status: "success",
@@ -176,7 +176,7 @@ router.post("/status", checkToken, async(req, res) => {
         my_jam: user.my_jam,
       },
       accessTokenSecret,
-      { expiresIn: "30m" }
+      { expiresIn: "3d" }
     );
     res.json({
       status: "token ok",
@@ -217,6 +217,46 @@ router.get("/:id", checkToken, async function (req, res) {
   return res.json(resUser);
   //改檔老師寫法
   // return res.json({ status: 'success', data: { resUser } })
+});
+
+// GET - 得到單筆會員資料資料 全部資料版本含密碼
+router.get("/profile/:id", checkToken, async function (req, res) {
+  const id = req.params.id;
+
+  
+  //所有資料
+  const [singerUser] =  await db.execute(`SELECT * FROM \`user\` WHERE \`id\` = ? AND \`valid\` = 1`, [id]);
+ 
+  const resUser = singerUser[0];
+  return res.json(resUser);
+  //改檔老師寫法
+  // return res.json({ status: 'success', data: { resUser } })
+});
+
+//會員更新資訊
+router.post("/editProfile/:id", checkToken, async function (req, res) {
+  const id = req.params.id;
+  let { email, name , password, phone, postcode, country, township, address, birthday, genre_like , play_instrument , info, gender , nickname , privacy } = req.body;
+  // console.log(req.body)
+  console.log(email)
+  console.log(name)
+  console.log(birthday)
+  // birthday = new Date(birthday)
+  // if(birthday.length > 10){
+  //   birthday = birthday.split('T')[0]
+  //   console.log(birthday)
+  // }
+  // console.log(birthday)
+
+
+  // 更新資料庫
+  const [result] = await db.execute(`UPDATE user SET email = ?, name =? , phone = ?, postcode = ? , country = ? , township = ?, address = ? , birthday = STR_TO_DATE(?, '%Y-%m-%d') , genre_like = ? , play_instrument = ?, info = ?, gender = ?, nickname = ?, privacy = ? WHERE id = ?;`, [email, name , phone, postcode, country, township, address, birthday, genre_like , play_instrument , info, gender , nickname , privacy, id]);
+
+  
+  // const resUser = singerUser[0];
+  // return res.json(resUser);
+  //改檔老師寫法
+  return res.json({ status: 'success', data: { result } })
 });
 
 // 註冊 = 檢查資料庫是否有此email及密碼 ,如果沒有 就增加sql
