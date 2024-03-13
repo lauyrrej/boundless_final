@@ -14,56 +14,207 @@ import { IoClose } from 'react-icons/io5'
 import { IoCloseOutline } from 'react-icons/io5'
 import { IoIosArrowForward } from 'react-icons/io'
 import { IoMdHome } from 'react-icons/io'
-import axios from 'axios'
+import { debounce } from 'lodash'
+// sweetalert
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+//data
+import CityCountyData from '@/data/CityCountyData.json'
+import playerData from '@/data/player.json'
+import genreData from '@/data/genre.json'
 
 export default function Publish() {
-  // ----------------------上傳圖片  ----------------------
-  // const uploadFileToServer = (file) => {
-  //   // 構造 FormData 對象，用於將文件上傳到服務器
-  //   const formData = new FormData()
-  //   formData.append('file', file)
-
-  //   // 發送 POST 請求到服務器，將文件上傳
-  //   return fetch('http://localhost:3005/api/upload', {
-  //     method: 'POST',
-  //     body: formData,
-  //   }).then((response) => {
-  //     // 檢查響應是否成功，如果不成功則拋出錯誤
-  //     if (!response.ok) {
-  //       throw new Error('File upload failed')
-  //     }
-  //     // 返回響應
-  //     return response.json()
-  //   })
-  // }
-  const [file, setFile] = useState()
-  const upload = () => {
-    const formData = new FormData()
-    formData.append('file', file)
-    axios
-      .post('http://localhost:3005/api/upload', formData)
-      .then((response) => {
-        // 檢查響應是否成功，如果不成功則拋出錯誤
-        if (!response.ok) {
-          throw new Error('File upload failed')
-        }
-        // 返回響應
-        return response.json()
-      })
-      .catch((error) => console.log(error))
-    // bug 顯示error但不知道問題在哪
-  }
-
-  // ----------------------設定字數150---------------
+  // ----------------------設定字數15, 150---------------
+  const [topic, setTopic] = useState('')
   const [text, setText] = useState('')
   const maxLength = 150
 
+  const handleTitleChange = (e) => {
+    const inputValue = e.target.value
+    if (inputValue.length <= maxLength) {
+      setTopic(inputValue)
+    }
+  }
   const handleTextChange = (e) => {
     const inputValue = e.target.value
     if (inputValue.length <= maxLength) {
       setText(inputValue)
     }
   }
+
+  // ----------------------表單  ----------------------
+  // ---------------------- 標題 ----------------------
+  const [title, setTitle] = useState('')
+  const [titleCheck, setTitleCheck] = useState(true)
+  // ---------------------- 技術程度
+  const [degree, setDegree] = useState('')
+
+  // ---------------------- 曲風 ----------------------
+  // 儲存選擇的曲風
+  const [genre, setgenre] = useState([])
+  const [genreCheck, setGenreCheck] = useState(true)
+  // 變更曲風下拉選單的數量時，陣列會多一個元素
+  const [genreSelect, setgenreSelect] = useState([1])
+  // 實際使用的曲風陣列，避免使用者未照順序新增樂手
+  const [finalgenre, setFinalgenre] = useState('')
+
+  // ---------------------- 擔任職位 ----------------------
+  // 控制表單狀態
+  const [myPlayer, setMyPlayer] = useState('')
+  // 表單實際送出的內容
+  const [finalMyPlayer, setFinalMyPlayer] = useState('')
+  // console.log(finalMyPlayers)
+
+  // ---------------------- 徵求樂手 ----------------------
+  const [players, setplayers] = useState([])
+  const [playersSelect, setPlayersSelect] = useState([1])
+  // 實際使用的樂手陣列，避免使用者未照順序新增樂手
+  const [finalPlayers, setFinalPlayers] = useState([])
+
+  // ---------------------- 篩選城市用的資料 ----------------------
+  const cityData = CityCountyData.map((v, i) => {
+    return v.CityName
+  }).filter((v) => {
+    return v !== '釣魚臺' && v !== '南海島'
+  })
+  const [region, setRegion] = useState('')
+
+  // ---------------------- 其他條件 ----------------------
+  const [condition, setCondition] = useState('')
+  const [conditionCheck, setConditionCheck] = useState(true)
+  // ---------------------- 描述 ----------------------
+  const [description, setDescription] = useState('')
+  const [descriptionCheck, setDescriptionCheck] = useState(true)
+  // 表單完成狀態 0: 有欄位尚未填寫或不符規定, 1: 填寫完成, 2: 填寫中
+  const [complete, setComplete] = useState(2)
+  // 檢查不雅字詞
+  const checkBadWords = debounce(() => {
+    const badWords = /幹|屎|尿|屁|糞|靠北|靠腰|雞掰|王八|你媽|妳媽|淫/g
+    setTitleCheck(title.search(badWords) < 0 ? true : false)
+    setConditionCheck(condition.search(badWords) < 0 ? true : false)
+    setDescriptionCheck(description.search(badWords) < 0 ? true : false)
+  }, 250)
+  // 檢查是否重複填寫曲風
+  const checkGenre = debounce(() => {
+    const genreSet = new Set(genre) // 建立 set 物件，該物件中的每個屬性都是唯一值
+    // 若長度不同，則代表陣列中有重複的值
+    if (genre.length !== genreSet.size) {
+      setGenreCheck(false)
+    } else {
+      setGenreCheck(true)
+    }
+  }, 250)
+  // 檢查表單是否填妥
+  const checkComplete = () => {
+    if (titleCheck === false || title === '') {
+      setComplete(0)
+      return false
+    }
+    if (degree === '') {
+      setComplete(0)
+      return false
+    }
+    if (genreCheck === false || finalgenre === '') {
+      setComplete(0)
+      return false
+    }
+    if (finalMyPlayer === '') {
+      setComplete(0)
+      return false
+    }
+    if (finalPlayers === '') {
+      setComplete(0)
+      return false
+    }
+    if (region === '') {
+      setComplete(0)
+      return false
+    }
+    if (conditionCheck === false) {
+      setComplete(0)
+      return false
+    }
+    if (descriptionCheck === false || description === '') {
+      setComplete(0)
+      return false
+    }
+    setComplete(1)
+    return true
+  }
+  const sendForm = async (
+    uid,
+    title,
+    degree,
+    finalgenre,
+    finalMyPlayer,
+    finalPlayers,
+    region,
+    condition,
+    description
+  ) => {
+    if (!checkComplete()) {
+      return false
+    }
+    let formData = new FormData()
+    formData.append('uid', uid)
+    formData.append('title', title)
+    formData.append('degree', degree)
+    formData.append('genre', finalgenre)
+    formData.append('former', finalMyPlayer)
+    formData.append('players', finalPlayers)
+    formData.append('region', region)
+    formData.append('condition', condition)
+    formData.append('description', description)
+    // 確認formData內容
+    // for (let [key, value] of formData.entries()) {
+    //   console.log(`${key}: ${value}`)
+    // }
+    const res = await fetch('http://localhost:3005/api/jam/form', {
+      method: 'POST',
+      body: formData,
+      credentials: 'include',
+    })
+    const result = await res.json()
+    if (result.status === 'success') {
+      notifySuccess(result.juid)
+    } else {
+      console.log(result.error)
+    }
+  }
+  // 發起成功後，彈出訊息框，並跳轉到資訊頁面
+  const notifySuccess = (juid) => {
+    mySwal
+      .fire({
+        position: 'center',
+        icon: 'success',
+        iconColor: '#1581cc',
+        title: '發起成功，將為您跳轉到資訊頁',
+        showConfirmButton: false,
+        timer: 3000,
+      })
+      .then(
+        setTimeout(() => {
+          router.push(`/jam/recruit-list/${juid}`)
+        }, 3000)
+      )
+  }
+  // ---------------------- 偵測表單輸入變化，並執行檢查
+  useEffect(() => {
+    // 跳出未填寫完畢警告後再次輸入，消除警告
+    setComplete(2)
+    // 檢查不雅字詞
+    checkBadWords.cancel() // 取消上一次的延遲
+    checkBadWords()
+    // 檢查無重複的曲風
+    checkGenre.cancel()
+    checkGenre()
+    // 把曲風&徵求樂手轉換成表單實際接收的字串格式
+    const fgArr = genre.filter((v) => v != (null || undefined))
+    setFinalgenre(`[${fgArr.toString()}]`)
+    const fpArr = players.filter((v) => v != (null || undefined))
+    setFinalPlayers(`[${fpArr.toString()}]`)
+    // 檢查表單是否完成
+  }, [title, degree, genre, myPlayer, players, region, condition, description])
 
   // ----------------------手機版本  ----------------------
   // 主選單
@@ -157,12 +308,40 @@ export default function Publish() {
                 <IoCloseOutline size={50} />
               </Link>
             </div>
+            {/* setting title */}
+            <div className="set-rwd">
+              <div className="rwd-title">
+                <h3>自訂文章標題</h3>
+              </div>
+              <div className="rwd-content">
+                <h5 className="text-secondary">
+                  上限15個字，系統已經先擷取，你也可以自行修改標題。(
+                  {topic.length}/15)
+                </h5>
+                <div>
+                  <label
+                    htmlFor="exampleFormControlTextarea1"
+                    className="form-label"
+                  ></label>
+                  <textarea
+                    className="form-control"
+                    id="exampleFormControlTextarea1"
+                    rows={3}
+                    onChange={handleTitleChange}
+                    placeholder="輸入內容..."
+                    maxLength={15}
+                    defaultValue={''}
+                  />
+                </div>
+              </div>
+            </div>
+            <hr />
             {/* setting category */}
-            <div className="set-category d-flex justify-content-between row">
-              <div className="col-4">
+            <div className="set-rwd">
+              <div className="rwd-title">
                 <h3>設定文章分類</h3>
               </div>
-              <div className="col-8">
+              <div className="rwd-content">
                 <select
                   className="form-select"
                   aria-label="Default select example"
@@ -218,21 +397,6 @@ export default function Publish() {
                     width={150}
                     height={150}
                   />
-                  <form
-                    action="/upload"
-                    method="post"
-                    encType="multipart/form-data"
-                  >
-                    <input
-                      type="file"
-                      name="myFile"
-                      id="myFile"
-                      onChange={(e) => setFile(e.target.files[0])}
-                    />
-                    <button type="button" onClick={upload}>
-                      送出
-                    </button>
-                  </form>
                   {/* <h5 className="text-secondary ms-5">上傳圖片</h5> */}
                 </div>
                 <h5 className="text-secondary mt-4">
@@ -245,7 +409,7 @@ export default function Publish() {
             </div>
             <hr />
             {/* setting tag */}
-            <div className="set-rwd">
+            {/* <div className="set-rwd">
               <div className="rwd-title">
                 <h3>自訂文章摘要</h3>
               </div>
@@ -282,7 +446,7 @@ export default function Publish() {
                 </div>
               </div>
             </div>
-            <hr />
+            <hr /> */}
             {/* setting publish */}
             <div className="set-rwd">
               <div className="rwd-title">
