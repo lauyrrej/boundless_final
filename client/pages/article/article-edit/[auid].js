@@ -199,55 +199,16 @@ export default function Auid() {
                   {articleDetail.category_name}
                 </div>
               </div>
-              {/* Reader Comment */}
-              <h3 className="pt-5 text-primary">讀者留言</h3>
-              <div className="reader-comment pt-3 d-flex align-items-center">
-                <Image
-                  className="article-author"
-                  src={`/user/${articleDetail.user_img}`}
-                  alt="空的圖"
-                  width={50}
-                  height={50}
-                />
-                <span className="ps-3 info-p text-primary">
-                  {articleDetail.user_name}
-                </span>
-                <span className="ps-2 info-p text-secondary">
-                  <Datetime
-                    published_time={articleDetail.comment_created_time}
-                  />
-                </span>
-              </div>
-              <p className="pt-1">{articleDetail.comment_content}</p>
-              <div className="reader-like d-flex justify-content-between">
-                <div />
-                <div className="d-flex align-items-center">
-                  <div>{articleDetail.comment_likes}人認同</div>
-                  <button
-                    type="button"
-                    className="btn btn-outline-primary ms-1"
-                  >
-                    <i className="fa-solid fa-thumbs-up" />
-                    認同
-                  </button>
-                </div>
-              </div>
-              {/* 最後textarea */}
-              <div className="ps-3 pe-3">
-                <textarea
-                  className="form-control"
-                  rows={5}
-                  placeholder="發表文章評語...(限50字)"
-                  defaultValue={''}
-                />
-                <div className="text-end mt-2 mb-3">
-                  <button className="btn btn-primary" type="submit">
-                    發表
-                  </button>
-                </div>
-              </div>
             </main>
           </div>
+        </div>
+        <div className="page-button d-flex justify-content-between pt-5 pb-4">
+          <button type="button" className="btn">
+            上一步
+          </button>
+          <button type="button" className="btn btn-primary">
+            確認更新
+          </button>
         </div>
       </div>
       <Footer />
