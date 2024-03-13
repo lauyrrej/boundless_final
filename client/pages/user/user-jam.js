@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import { Toaster } from 'react-hot-toast'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
@@ -8,18 +9,18 @@ import Head from 'next/head'
 
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
+import { useJam } from '@/hooks/use-jam'
 
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
-import { IoIosSearch } from 'react-icons/io'
-import { FaFilter } from 'react-icons/fa6'
-import { FaSortAmountDown } from 'react-icons/fa'
+import { FaExternalLinkAlt } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 
 export default function UserJam() {
   const router = useRouter()
+  const { cancelSuccess, deleteSuccess } = useJam()
   // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
   const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
@@ -34,7 +35,7 @@ export default function UserJam() {
   //登出功能
 
   //檢查是否獲取資料
-  console.log(LoginUserData)
+  // console.log(LoginUserData)
   //   讀取使用者資料後 定義大頭貼路徑
   let avatarImage
   if (LoginUserData.img) {
@@ -69,6 +70,47 @@ export default function UserJam() {
   //   '我的課程',
   //   '我的訊息',
   // ]
+  // 取消申請
+  const cancelApply = async (id) => {
+    let formData = new FormData()
+    formData.append('id', id)
+    try {
+      const res = await fetch(`http://localhost:3005/api/jam/cancelApply`, {
+        method: 'PUT',
+        body: formData,
+        credentials: 'include',
+      })
+      const result = await res.json()
+      if (result.status === 'success') {
+        cancelSuccess()
+      } else {
+        console.log(result.error)
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  // 刪除申請
+  const deleteApply = async (id) => {
+    let formData = new FormData()
+    formData.append('id', id)
+    try {
+      const res = await fetch(`http://localhost:3005/api/jam/deleteApply`, {
+        method: 'PUT',
+        body: formData,
+        credentials: 'include',
+      })
+      const result = await res.json()
+      if (result.status === 'success') {
+        deleteSuccess()
+      } else {
+        console.log(result.error)
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   const getMyApply = async (uid) => {
     // console.log(uid)
     try {
@@ -82,6 +124,65 @@ export default function UserJam() {
     }
   }
 
+  const switchSentence = (state) => {
+    switch (state) {
+      case 0:
+        return '審核中'
+      case 1:
+        return '通過'
+      case 2:
+        return '拒絕'
+      default:
+        return null
+    }
+  }
+
+  const switchOption = (state, id) => {
+    switch (state) {
+      case 0:
+        return (
+          <div
+            role="presentation"
+            className="b-btn b-btn-body"
+            style={{ width: '50px', height: '32px' }}
+            onClick={() => {
+              cancelApply(id)
+            }}
+          >
+            取消
+          </div>
+        )
+      case 1:
+        return (
+          <div
+            role="presentation"
+            className="b-btn b-btn-primary"
+            style={{ width: '50px', height: '32px' }}
+            onClick={() => {
+              cancelApply(id)
+            }}
+          >
+            加入
+          </div>
+        )
+      case 2:
+        return (
+          <div
+            role="presentation"
+            className="b-btn b-btn-body"
+            style={{ width: '50px', height: '32px' }}
+            onClick={() => {
+              deleteApply(id)
+            }}
+          >
+            刪除
+          </div>
+        )
+      default:
+        return null
+    }
+  }
+
   // 若有樂團，則會直接導向所屬樂團
   useEffect(() => {
     if (LoginUserData.my_jam) {
@@ -90,11 +191,18 @@ export default function UserJam() {
     getMyApply(LoginUserData.uid)
     // 必須確定LoginUserData.uid已經讀入
   }, [LoginUserData.uid])
+  // console.log(myApply)
   return (
     <>
       <Head>
         <title>我的樂團</title>
       </Head>
+      <Toaster
+        containerStyle={{
+          top: 80,
+          zIndex: 101,
+        }}
+      />
       <Navbar menuMbToggle={menuMbToggle} />
       {/* 先把HEROSECTION隱藏 */}
       {/* <div
@@ -304,64 +412,73 @@ export default function UserJam() {
                     <div className="user-content-top">
                       <div className="user-title-userInfo">樂團申請</div>
                     </div>
+                    <div className="noticeText" style={{ color: '#666666' }}>
+                      ※ 非招募中、已取消的申請資料不會列出。
+                    </div>
 
                     <div className="user-notifyList ">
-                      <div className="user-notifyList-item row flex-nowrap gap-2">
+                      <div className="user-notifyList-item row flex-nowrap">
                         <div
-                          className="fw-medium col-3 col-sm-2"
+                          className="fw-medium text-center col-3"
                           style={{ color: '#124365', paddingInline: '0' }}
                         >
-                          申請樂團
+                          樂團連結
                         </div>
                         <div
-                          className="fw-medium col-3"
+                          className="fw-medium text-center col-3"
                           style={{ color: '#124365', paddingInline: '0' }}
                         >
-                          申請職位
+                          職位
                         </div>
                         <div
-                          className="fw-medium col-3"
+                          className="fw-medium text-center col-3"
                           style={{ color: '#124365', paddingInline: '0' }}
                         >
                           審核狀態
                         </div>
                         <div
-                          className="fw-medium col-3"
+                          className="fw-medium text-center col-3"
                           style={{ color: '#124365', paddingInline: '0' }}
                         >
-                          功能
+                          操作
                         </div>
                       </div>
                       <hr style={{ color: '#124365', marginInline: '0' }} />
                       {myApply.map((v) => {
                         return (
                           <div
-                            className="user-notifyList-item row flex-nowrap gap-2"
+                            className="user-notifyList-item row flex-nowrap mb-2"
                             key={v.id}
                           >
                             <div
-                              className="fw-medium col-3 col-sm-2"
+                              className="d-flex justify-content-center col-3"
                               style={{ color: '#124365', paddingInline: '0' }}
                             >
-                              申請樂團
+                              <Link
+                                href={`/jam/recruit-list/${v.juid}`}
+                                className="b-btn b-btn-primary"
+                                style={{ width: '50px', height: '32px' }}
+                              >
+                                <FaExternalLinkAlt />
+                              </Link>
                             </div>
                             <div
-                              className="fw-medium col-3"
-                              style={{ color: '#124365', paddingInline: '0' }}
+                              className="text-center col-3"
+                              style={{ paddingInline: '0' }}
                             >
-                              職位
+                              {v.applier_play}
                             </div>
                             <div
-                              className="fw-medium col-3"
-                              style={{ color: '#124365', paddingInline: '0' }}
+                              className="text-center col-3"
+                              style={{ paddingInline: '0' }}
                             >
-                              審核狀態
+                              {switchSentence(v.state)}
                             </div>
                             <div
-                              className="fw-medium col-3"
+                              className="d-flex justify-content-center col-3"
                               style={{ color: '#124365', paddingInline: '0' }}
                             >
-                              功能
+                              {switchOption(v.state, v.id)}
                             </div>
                           </div>
                         )
@@ -386,6 +503,13 @@ export default function UserJam() {
             min-height: calc(100svh - 146px);
           }
         }
+        .noticeText {
+          margin-block: 10px;
+          padding: 0;
+          color: '#666666';
+          font-size: 16px;
+          font-weight: 400;
+        }
         .user-top-container {
           width: 100%;
           background-color: #fff;
@@ -396,7 +520,7 @@ export default function UserJam() {
           z-index: 100;
           @media screen and (max-width: 576px) {
             top: 60px;
-            padding-block: 20px 16px;
+            padding-block: 20px 18px;
             padding-inline: 12px;
             box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.25);
           }
@@ -493,11 +617,9 @@ export default function UserJam() {
 
         .user-content {
           display: flex;
-
           padding: 20px 10px;
           flex-direction: column;
           align-items: flex-start;
-          gap: 20px;
           border-radius: 5px;
           background: var(--gray-30, rgba(185, 185, 185, 0.3));
 
@@ -508,7 +630,6 @@ export default function UserJam() {
             color: var(--primary-deep, #124365);
             text-align: center;
             justify-content: space-between;
-            /* h3 */
             font-family: 'Noto Sans TC';
             font-size: 28px;
             font-style: normal;

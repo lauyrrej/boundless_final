@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2024-03-12 20:52:40
--- 伺服器版本： 10.4.28-MariaDB
--- PHP 版本： 8.0.28
+-- 產生時間： 2024-03-14 05:58:16
+-- 伺服器版本： 10.4.32-MariaDB
+-- PHP 版本： 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -44,7 +44,7 @@ CREATE TABLE `jam_apply` (
 --
 
 INSERT INTO `jam_apply` (`id`, `juid`, `former_uid`, `applier_uid`, `applier_play`, `message`, `state`, `created_time`, `valid`) VALUES
-(2, '6q3SoqnuPEXJ', 'n500ef48Ibat', 'n500ef48Ibat11', 3, '好想加入!', 0, '2024-03-12 12:09:22', 1);
+(3, '6q3SoqnuPEXJ', 'n500ef48Ibat', 'n500ef48Ib22', 1, '我想加入!', 4, '2024-03-14 00:24:41', 0);
 
 --
 -- 已傾印資料表的索引
@@ -64,7 +64,7 @@ ALTER TABLE `jam_apply`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `jam_apply`
 --
 ALTER TABLE `jam_apply`
-  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

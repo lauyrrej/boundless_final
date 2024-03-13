@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2024-03-11 20:57:26
--- 伺服器版本： 10.4.28-MariaDB
--- PHP 版本： 8.0.28
+-- 產生時間： 2024-03-14 05:58:30
+-- 伺服器版本： 10.4.32-MariaDB
+-- PHP 版本： 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -171,7 +171,7 @@ INSERT INTO `user` (`id`, `uid`, `name`, `email`, `password`, `phone`, `postcode
 (108, '4UL6TCLHRtE1', '林流蓁', 'miller8162@gmail.com', 'be65XsX2', '0912646686', 111, '台北市', '士林區', '德行東路7號', '1989-03-21', '3,18,19', '8,18', '嘿，我是江島啓一。音樂對我來說是生活中不可或缺的一部分，是我情感和想法的最佳表達方式。\n\n作為一個鼓手，我對爵士鼓情有獨鍾，這個樂器讓我能夠深刻地感受到節奏和韻律的魅力。\n\n我喜歡探索多種風格的音樂，從搖滾到電子音樂，每一種都讓我充滿熱情。\n\n音樂是我生活中的一部分，也是我與世界連結的橋樑，希望我的音樂能夠觸動您的心靈，為您帶來美好的聆聽體驗。', 'avatar_user0025.jpg', '1', '江島啓一', '', '', '1,0,1', '', 'vE8OCDx8FmVA', '2023-11-30 20:12:44', '0000-00-00 00:00:00', 1),
 (109, 'nSCV34Mnblwm', '薛升雁', 'nicole9181@gmail.com', '23584F96', '0988281862', 520, '彰化縣', '田中鎮', '高鐵東五路２段89號', '2002-04-22', '1,3,18', '6,18', '嗨，我是岡崎英美。音樂對我而言是生活中不可或缺的一部分，是我情感和想法的最佳表達方式。\n\n我擅長彈奏鋼琴和合成器，這兩種樂器讓我能夠深入地感受到音樂的美妙與多樣性。\n\n我喜歡探索各種風格的音樂，尤其是搖滾和電子音樂，這些風格充滿了活力和創意。\n\n音樂是我生活的一部分，也是我與世界連結的橋樑，希望我的音樂能夠觸動您的心靈，為您帶來美好的聆聽體驗。', 'avatar_user0026.jpg', '2', '岡崎英美', '', '', '0,1,0', '', 'vE8OCDx8FmVA', '2023-12-02 21:32:38', '0000-00-00 00:00:00', 1),
 (110, 'n500ef48Ibat', '安迪', 'andy@test.com', 'a21153524', NULL, NULL, NULL, NULL, NULL, '0000-00-00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '6q3SoqnuPEXJ', '2024-03-11 09:54:33', '0000-00-00 00:00:00', 1),
-(111, 'n500ef48Ibat11', '安迪2號', 'andy22@test.com', '112233445', NULL, NULL, NULL, NULL, NULL, '0000-00-00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-03-11 15:51:41', '0000-00-00 00:00:00', 1);
+(112, 'n500ef48Ib22', '安迪22', 'andy22@test.com', '12345', NULL, NULL, NULL, NULL, NULL, '0000-00-00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-03-14 00:14:40', '0000-00-00 00:00:00', 1);
 
 --
 -- 已傾印資料表的索引
@@ -191,7 +191,7 @@ ALTER TABLE `user`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
+  MODIFY `id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

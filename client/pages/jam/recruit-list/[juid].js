@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { debounce } from 'lodash'
 import { useAuth } from '@/hooks/user/use-auth'
+import { useJam } from '@/hooks/use-jam'
+import { Toaster } from 'react-hot-toast'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import MemberInfo from '@/components/jam/member-info'
@@ -11,7 +13,6 @@ import Image from 'next/image'
 import Head from 'next/head'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
-import toast, { Toaster } from 'react-hot-toast'
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
@@ -21,6 +22,7 @@ import styles from '@/pages/jam/jam.module.scss'
 
 export default function Info() {
   const router = useRouter()
+  const { setInvalidJam, checkCancel, notifyAccept, notifyReject } = useJam()
   // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
   const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
@@ -54,26 +56,74 @@ export default function Info() {
   // 申請資料
   const [applies, setApplies] = useState([])
   // 進入頁面者是否有申請此樂團
-  const applied = applies.find((v) => {
-    return v.applier.id === LoginUserData.id
-  })
-    ? true
-    : false
-  // 該申請的狀態
-  let applyState = applies.find((v) => {
-    return v.applier.id === LoginUserData.id
-  })
-  if (applyState) {
-    applyState = applyState.state
-  }
+  const [myApplyState, setMyApplyState] = useState(0)
+  // 根據申請狀態顯示不同內容
   const switchSentence = (applyState) => {
     switch (applyState) {
       case 0:
-        return '已送出申請'
+        return (
+          <div
+            className="b-btn-disable"
+            style={{
+              paddingInline: '38px',
+              backgroundColor: '#666666',
+            }}
+            role="presentation"
+          >
+            已送出申請
+          </div>
+        )
+      case 1:
+        return (
+          <div
+            className="b-btn b-btn-primary"
+            style={{
+              paddingInline: '38px',
+            }}
+            role="presentation"
+          >
+            正式加入
+          </div>
+        )
       case 2:
-        return '已被拒絕'
+        return (
+          <div
+            className="b-btn-disable"
+            style={{
+              paddingInline: '38px',
+              backgroundColor: '#666666',
+            }}
+            role="presentation"
+          >
+            已被拒絕
+          </div>
+        )
       case 3:
-        return '已取消申請'
+        return (
+          <div
+            className="b-btn-disable"
+            style={{
+              paddingInline: '38px',
+              backgroundColor: '#666666',
+            }}
+            role="presentation"
+          >
+            已取消申請
+          </div>
+        )
+      case 4:
+        return (
+          <div
+            className="b-btn-disable"
+            style={{
+              paddingInline: '38px',
+              backgroundColor: '#666666',
+            }}
+            role="presentation"
+          >
+            不得再次申請
+          </div>
+        )
       default:
         return null
     }
@@ -137,12 +187,13 @@ export default function Info() {
     second: 0,
   })
 
+  let interval
   function calcTimeLeft() {
     let countDownObj = {}
     const now = Date.now()
     // 創立日期 + 30天 - 目前時間 = 剩餘時間
     const createdTime = new Date(jam.created_time).getTime()
-    const interval = createdTime + 30 * 24 * 60 * 60 * 1000 - now
+    interval = createdTime + 30 * 24 * 60 * 60 * 1000 - now
     const cdDay = Math.floor(interval / (1000 * 60 * 60 * 24))
     const cdHour = Math.floor(
       (interval % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
@@ -171,8 +222,6 @@ export default function Info() {
   // ---------------------- 擔任職位 ----------------------
   // 控制表單狀態
   const [myPlayer, setMyPlayer] = useState('')
-  // 表單實際送出的內容
-  const [finalMyPlayer, setFinalMyPlayer] = useState('')
   // ---------------------- 描述 ----------------------
   const [message, setMessage] = useState('')
   const [messageCheck, setMessageCheck] = useState(true)
@@ -241,10 +290,33 @@ export default function Info() {
       )
   }
 
+  const sendResult = async (id, state) => {
+    let formData = new FormData()
+    formData.append('id', id)
+    formData.append('state', state)
+    const res = await fetch('http://localhost:3005/api/jam/decideApply', {
+      method: 'PUT',
+      body: formData,
+      credentials: 'include',
+    })
+    const result = await res.json()
+    if (result.status === 'success') {
+      if (result.state === 1) {
+        notifyAccept()
+      } else if (result.state === 2) {
+        notifyReject()
+      }
+    } else if (result.status === 'cancel') {
+      checkCancel()
+    }
+  }
+
   // 向伺服器要求資料，設定到狀態中用的函式
   const getSingleData = async (juid) => {
     try {
-      const res = await fetch(`http://localhost:3005/api/jam/singleJam/${juid}`)
+      const res = await fetch(
+        `http://localhost:3005/api/jam/singleJam/${juid}/${LoginUserData.uid}`
+      )
       // res.json()是解析res的body的json格式資料，得到JS的資料格式
       const data = await res.json()
       if (data.status === 'success') {
@@ -252,25 +324,19 @@ export default function Info() {
         setGenre(data.genreData)
         setJam(data.jamData)
         setApplies(data.applyData)
+        if (data.myApplyState.length > 0) {
+          setMyApplyState(data.myApplyState[0])
+        }
+        // 若該樂團已成立，導向成團後的資訊頁面
       } else if (data.status === 'formed') {
         router.push(`/jam/jam-list/${juid}`)
+      } else if (data.status === 'error') {
+        setInvalidJam(false)
+        router.push(`/jam/recruit-list`)
       }
     } catch (e) {
       console.error(e)
     }
-  }
-  const notifyToast = () => {
-    toast.success('申請成功，請靜候審核結果', {
-      style: {
-        border: '1px solid #666666',
-        padding: '16px',
-        color: '#1d1d1d',
-      },
-      iconTheme: {
-        primary: '#1581cc',
-      },
-      duration: 3000,
-    })
   }
 
   // ----------------------------- useEffect -----------------------------
@@ -279,21 +345,19 @@ export default function Info() {
     if (router.isReady) {
       const { juid } = router.query
       getSingleData(juid)
-
-      // 若是已成立的樂團，導向成立樂團資訊頁
-      if (jam.state === 1) {
-        router.push(`../jam-list/${jam.juid}`)
-      }
-      setCountDown(calcTimeLeft())
-      // 每秒更新一次倒數計時
-      const timer = setInterval(() => {
-        setCountDown(calcTimeLeft())
-      }, 1000)
-
-      // 清除計時器
-      return () => clearInterval(timer)
     }
-  }, [router.isReady, jam.created_time])
+  }, [router.isReady, LoginUserData.uid])
+
+  useEffect(() => {
+    setCountDown(calcTimeLeft())
+    // 每秒更新一次倒數計時
+    const timer = setInterval(() => {
+      setCountDown(calcTimeLeft())
+    }, 1000)
+
+    // 清除計時器
+    return () => clearInterval(timer)
+  }, [jam.created_time])
 
   // 申請表單填寫
   useEffect(() => {
@@ -306,16 +370,16 @@ export default function Info() {
 
   return (
     <>
-      <Toaster
-        containerStyle={{
-          top: 70,
-          zIndex: 30,
-        }}
-      />
-      <Navbar menuMbToggle={menuMbToggle} />
       <Head>
         <title>JAM資訊</title>
       </Head>
+      <Toaster
+        containerStyle={{
+          top: 80,
+          zIndex: 101,
+        }}
+      />
+      <Navbar menuMbToggle={menuMbToggle} />
       <div
         className="container position-relative"
         style={{ minHeight: '95svh' }}
@@ -513,10 +577,13 @@ export default function Info() {
                               return (
                                 <Apply
                                   key={v.id}
+                                  id={v.id}
                                   applier={v.applier}
                                   message={v.message}
                                   play={v.play}
                                   created_time={v.created_time}
+                                  state={v.state}
+                                  sendResult={sendResult}
                                 />
                               )
                             })}
@@ -571,12 +638,9 @@ export default function Info() {
                           style={{ width: 'auto' }}
                           value={myPlayer}
                           name="myPlayer"
-                          disabled={applied}
+                          disabled={myApplyState ? true : false}
                           onChange={(e) => {
                             setMyPlayer(e.target.value)
-                            setFinalMyPlayer(
-                              `{"id": ${LoginUserData.id}, "play": ${e.target.value}}`
-                            )
                           }}
                         >
                           <option value="" disabled>
@@ -605,7 +669,7 @@ export default function Info() {
                           placeholder="建議可以提到自己喜歡的音樂、入團動機等，上限150字"
                           name="message"
                           maxLength={150}
-                          disabled={applied}
+                          disabled={myApplyState ? true : false}
                           onChange={(e) => {
                             setMessage(e.target.value)
                           }}
@@ -632,17 +696,8 @@ export default function Info() {
                     </div>
 
                     <div className="d-flex justify-content-center">
-                      {applied ? (
-                        <div
-                          className="b-btn-disable"
-                          style={{
-                            paddingInline: '38px',
-                            backgroundColor: '#666666',
-                          }}
-                          role="presentation"
-                        >
-                          {switchSentence(applyState)}
-                        </div>
+                      {myApplyState ? (
+                        <>{switchSentence(myApplyState.state)}</>
                       ) : (
                         <div
                           className="b-btn b-btn-primary"
@@ -684,7 +739,9 @@ export default function Info() {
                   fontSize: '20px',
                 }}
               >
-                {`${countDown.day} 天 ${countDown.hour} 小時 ${countDown.minute} 分 ${countDown.second} 秒`}
+                {interval <= 0
+                  ? '發起失敗'
+                  : `${countDown.day} 天 ${countDown.hour} 小時 ${countDown.minute} 分 ${countDown.second} 秒`}
               </div>
               <div
                 className={`${styles.jamTitle}`}

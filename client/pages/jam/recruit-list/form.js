@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import { useAuth } from '@/hooks/user/use-auth'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
@@ -25,11 +26,16 @@ const mySwal = withReactContent(Swal)
 
 export default function Form() {
   const router = useRouter()
-  const [fakeUser, setFakeUser] = useState({
-    id: 110,
-    uid: 'n500ef48Ibat',
-    juid: '6q3SoqnuPEXJ',
-  })
+  //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
+  const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
+    useAuth()
+  // console.log(LoginUserData)
+  //檢查token
+  useEffect(() => {
+    handleLoginStatus()
+    //獲得資料
+    getLoginUserData()
+  }, [])
   // ---------------------- 手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -341,6 +347,7 @@ export default function Form() {
                 </div>
                 <div className={`${styles.itemInputWrapper} col-12 col-sm-10`}>
                   <select
+                    defaultValue={''}
                     className="form-select"
                     style={{ width: 'auto' }}
                     value={degree}
@@ -367,6 +374,7 @@ export default function Form() {
                     {genreSelect.map((v, i) => {
                       return (
                         <select
+                          defaultValue={''}
                           key={i}
                           className="form-select"
                           style={{ width: 'auto' }}
@@ -437,6 +445,7 @@ export default function Form() {
                 </div>
                 <div className={`${styles.itemInputWrapper} col-12 col-sm-10`}>
                   <select
+                    defaultValue={''}
                     className="form-select"
                     style={{ width: 'auto' }}
                     value={myPlayer}
@@ -444,7 +453,7 @@ export default function Form() {
                     onChange={(e) => {
                       setMyPlayer(e.target.value)
                       setFinalMyPlayer(
-                        `{"id": ${fakeUser.id}, "play": ${e.target.value}}`
+                        `{"id": ${LoginUserData.id}, "play": ${e.target.value}}`
                       )
                     }}
                   >
@@ -471,6 +480,7 @@ export default function Form() {
                     {playersSelect.map((v, i) => {
                       return (
                         <select
+                          defaultValue={''}
                           key={i}
                           className="form-select"
                           style={{ width: 'auto' }}
@@ -522,6 +532,7 @@ export default function Form() {
                 </div>
                 <div className={`${styles.itemInputWrapper} col-12 col-sm-10`}>
                   <select
+                    defaultValue={''}
                     className="form-select"
                     style={{ width: 'auto' }}
                     value={region}
@@ -621,7 +632,7 @@ export default function Form() {
                   role="presentation"
                   onClick={() => {
                     sendForm(
-                      fakeUser.uid,
+                      LoginUserData.uid,
                       title,
                       degree,
                       finalgenre,
