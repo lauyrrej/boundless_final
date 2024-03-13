@@ -34,7 +34,7 @@ export default function Publish() {
   const [titleCheck, setTitleCheck] = useState(true)
 
   // 文章分類
-  const [category, setCategory] = useState('')
+  const [category, setCategory] = useState(true)
 
   // ---------------------- 文章摘要 ----------------------
   const [description, setDescription] = useState('')
@@ -65,24 +65,26 @@ export default function Publish() {
     setComplete(1)
     return true
   }
-  const sendForm = async (uid, title, category, description) => {
+  const sendForm = async (title, category, description) => {
     if (!checkComplete()) {
       return false
     }
     let formData = new FormData()
-    formData.append('uid', uid)
     formData.append('title', title)
     formData.append('category', category)
     formData.append('description', description)
     // 確認formData內容
-    // for (let [key, value] of formData.entries()) {
-    //   console.log(`${key}: ${value}`)
-    // }
-    const res = await fetch('http://localhost:3005/api/jam/form', {
-      method: 'POST',
-      body: formData,
-      credentials: 'include',
-    })
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`)
+    }
+    const res = await fetch(
+      'http://localhost:3005/api/article/article-publish',
+      {
+        method: 'POST',
+        body: formData,
+        credentials: 'include',
+      }
+    )
     const result = await res.json()
     if (result.status === 'success') {
       notifySuccess(result.juid)
@@ -369,7 +371,7 @@ export default function Publish() {
               </div>
             </div>
             {/* form-check */}
-            <div className="form-check">
+            <div className="form-check123">
               <input
                 className="form-check-input"
                 type="radio"
@@ -418,16 +420,6 @@ export default function Publish() {
               <button type="button" className="btn">
                 上一步
               </button>
-              {complete === 0 ? (
-                <div
-                  className="d-flex bad-words justify-content-center"
-                  style={{ marginTop: '-8px' }}
-                >
-                  <div>請遵照規則，並填寫所有必填內容</div>
-                </div>
-              ) : (
-                ''
-              )}
               <button
                 onClick={() => {
                   sendForm(title, category, description)
@@ -439,6 +431,16 @@ export default function Publish() {
               </button>
             </div>
           </div>
+          {complete === 0 ? (
+            <div
+              className="d-flex bad-words justify-content-center"
+              style={{ marginTop: '-8px' }}
+            >
+              <div>請遵照規則，並填寫所有必填內容</div>
+            </div>
+          ) : (
+            ''
+          )}
         </div>
       </div>
       <Footer />

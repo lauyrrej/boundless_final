@@ -58,13 +58,60 @@ router.get("/categories", async (req, res) => {
   }
 });
 
-router.post("/api/upload", upload.single("myFile"), (req, res) => {
-  // 處理上傳邏輯與命名myFile=前端input:name
-  let timestamp = Date.now();
-  let newFileName = timestamp + extname(req.file.originalname);
-  // 根據時間點給予新的名稱
-  renameSync(req.file.path, resolve(__dirname, "public/upload", newFileName));
-  res.json({ body: req.body, file: req.file });
+// router.post("/api/upload", upload.single("myFile"), (req, res) => {
+//   // 處理上傳邏輯與命名myFile=前端input:name
+//   let timestamp = Date.now();
+//   let newFileName = timestamp + extname(req.file.originalname);
+//   // 根據時間點給予新的名稱
+//   renameSync(req.file.path, resolve(__dirname, "public/upload", newFileName));
+//   res.json({ body: req.body, file: req.file });
+// });
+
+// publish
+router.post("/article-publish", upload.none(), async (req, res) => {
+  console.log(req.body);
+  const {
+    uid,
+    title,
+    content,
+    img,
+    category_id,
+  } = req.body;
+  const trueCategory = parseInt(category_id);
+  const auid = generateUid();
+  // 更新會員所屬的JAM
+  // let returnNum = await db
+  //   .execute(
+  //     "UPDATE `user` SET `my_jam` = ? WHERE `uid` = ?;",
+  //     [auid, uid]
+  //   )
+  //   .then(() => {
+  //     return 1;
+  //   })
+  //   .catch(() => {
+  //     return 0;
+  //   });
+  // if (returnNum === 0) {
+  //   console.log("新增失敗");
+  //   return
+  // }
+  await db
+    .execute(
+      "INSERT INTO `article` (`id`, `auid`, `title`, `content`, `img`, `category_id`) VALUES (NULL, ?, ?, ?, ?, ?)",
+      [
+        auid,
+        title,
+        content,
+        img,
+        category_id,
+      ]
+    )
+    .then(() => {
+      res.status(200).json({ status: "success", auid });
+    })
+    .catch((error) => {
+      res.status(409).json({ status: "error", error });
+    });
 });
 
 //特定分類的資料

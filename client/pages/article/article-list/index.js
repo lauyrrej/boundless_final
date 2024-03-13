@@ -361,7 +361,10 @@ export default function ArticleList() {
                 <h4 className="text-primary pt-2">
                   熱門文章{LoginUserData.name}
                 </h4>
-                <Link href={`/article/article-publish`} className="icon-btn">
+                <Link
+                  href={`/article/article-list/article-publish`}
+                  className="icon-btn"
+                >
                   <MdNoteAdd
                     size={35}
                     style={{ color: 'gray', cursor: 'pointer' }}
