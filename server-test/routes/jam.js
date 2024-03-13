@@ -54,17 +54,17 @@ router.get("/allJam", async (req, res) => {
     const genre =
       req.query.genre !== "all"
         ? " AND (`genre` LIKE '%," +
-          req.query.genre +
-          "]'" +
-          " OR `genre` LIKE '[" +
-          req.query.genre +
-          ",%'" +
-          " OR `genre` LIKE '%," +
-          req.query.genre +
-          ",%'" +
-          " OR `genre` = '[" +
-          req.query.genre +
-          "]')"
+        req.query.genre +
+        "]'" +
+        " OR `genre` LIKE '[" +
+        req.query.genre +
+        ",%'" +
+        " OR `genre` LIKE '%," +
+        req.query.genre +
+        ",%'" +
+        " OR `genre` = '[" +
+        req.query.genre +
+        "]')"
         : "";
     const player =
       req.query.player !== "all"
@@ -307,7 +307,7 @@ router.post("/form", upload.none(), async (req, res) => {
     .catch(() => {
       return 0;
     });
-  if(returnNum === 0) {
+  if (returnNum === 0) {
     console.log("新增失敗");
     return
   }
