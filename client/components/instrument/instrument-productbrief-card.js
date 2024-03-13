@@ -32,17 +32,17 @@ export default function ProductBriefCard({ name, sales, price, info }) {
   }
 
   //數量增減功能
-  // const [quantity, setQuantity] = useState(1)
+  const [quantity, setQuantity] = useState(1)
 
-  // const increaseQuantity = () => {
-  //   setQuantity(quantity + 1)
-  // }
+  const increaseQuantity = () => {
+    setQuantity(quantity + 1)
+  }
 
-  // const decreaseQuantity = () => {
-  //   if (quantity > 1) {
-  //     setQuantity(quantity - 1)
-  //   }
-  // }
+  const decreaseQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1)
+    }
+  }
   return (
     <>
       <div className="Right sticky-top ">
