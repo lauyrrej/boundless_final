@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 //試抓資料區
-import Card from '@/components/lesson/lesson-card-data'
+import Card from '@/components/lesson/lesson-card'
 import Cardrwd from '@/components/lesson/lesson-card-rwd-data'
 // import Lesson from '@/data/Lesson.json'
 
@@ -23,9 +23,14 @@ import BS5Pagination from '@/components/common/pagination.js'
 
 import { useParams } from 'react-router-dom'
 
+import Pagination from '@/components/lesson/pagination.js'
+
+export default function LessonList({ onSearch }) {
+
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
 export default function Test({ onSearch }) {
+
   // 在電腦版或手機版時
   const [isSmallScreen, setIsSmallScreen] = useState(false)
 
@@ -100,6 +105,51 @@ export default function Test({ onSearch }) {
     setSales(false)
   }
 
+
+    //--------------------重新整理後url回歸原始
+    // const history = useHistory();
+
+    // useEffect(() => {
+    //     return () => {
+    //         history.push();
+    //     }
+    // },[history])
+    
+    // ------------------------------------- 製作分頁
+
+     
+//   const [products, setProducts] = useState([]);
+//   const [CurrentPage, setCurrentPage] = useState(1)
+//   const [totalPages, setTotalPages] = useState(1);
+
+// //   useEffect(() => {
+// //     handlePageClick()
+// //   }, [CurrentPage])
+    
+//         useEffect(() => {
+//           handlePageClick()
+//         }, [])
+
+//   const handlePageClick = async () => {
+//     try {
+//       const response = await fetch(
+//         `http://localhost:3005/api/lesson/page/${page}`
+//       )
+//       setProducts(response.data.products);
+//       setTotalPages(response.data.totalPages);
+//     } catch (error) {
+//       console.error(error);
+//     }  
+//   };
+
+//   const handlePrevPage = () => {
+//     setCurrentPage(prevPage => prevPage - 1);
+//   };
+
+//   const handleNextPage = () => {
+//     setCurrentPage(prevPage => prevPage + 1);
+//   };
+    
   // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
   const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
@@ -148,10 +198,10 @@ export default function Test({ onSearch }) {
   }
 
   //-------------------連資料庫
-
+    const initialUrl = 'http://localhost:3005/api/lesson';
   const [Lesson, setLesson] = useState([])
 
-  function getLesson() {
+  function getLesson(initialUrl) {
     return new Promise((resolve, reject) => {
       let url = 'http://localhost:3005/api/lesson'
       fetch(url, {
@@ -173,8 +223,8 @@ export default function Test({ onSearch }) {
     })
   }
   useEffect(() => {
-    getLesson()
-  }, [])
+    getLesson(initialUrl)
+  }, [initialUrl])
   //-------------------搜尋功能
   const [data, setData] = useState(Lesson)
   //-----------所有過濾資料功能傳回來的地方
@@ -261,7 +311,7 @@ export default function Test({ onSearch }) {
     const fetchProducts = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3005/api/Lesson/category/${selectedCategory}`
+          `http://localhost:3005/api/lesson/category/${selectedCategory}`
         )
         const data = await response.json()
         console.log(data)
@@ -640,6 +690,7 @@ export default function Test({ onSearch }) {
                             img={img}
                             sales={sales}
                             length={length}
+                            user_id={user_id}
                           />
                         ) : (
                           <Card
@@ -706,10 +757,15 @@ export default function Test({ onSearch }) {
       </div>
       <div className="d-flex justify-content-center">
         <BS5Pagination
-          forcePage={page - 1}
-          onPageChange={handlePageClick}
-          pageCount={pageTotal}
+        //   forcePage={CurrentPage - 1}
+        //   onPageChange={handlePageClick}
+        //   pageCount={totalPages}
         />
+        {/* <Pagination
+          totalPages={Math.ceil(filteredProducts.length / perPage)}
+                  setFilterSettings={setFilterSettings}
+                  page={setFilterSettings.page}
+        /> */}
       </div>
       <Footer />
       <style jsx>{`

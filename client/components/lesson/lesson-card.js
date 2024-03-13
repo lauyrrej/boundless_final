@@ -6,7 +6,7 @@ import { FaStar } from 'react-icons/fa'
 import { GoClock } from 'react-icons/go'
 import { MdOutlinePeopleAlt } from 'react-icons/md'
 
-export default function CourseCard(
+export default function CourseCard({
   luid,
   name,
   price,
@@ -14,8 +14,8 @@ export default function CourseCard(
   img,
   length,
   sales,
-  discount
-) {
+  discount,
+}) {
   const [isDiscount, setIsDiscount] = useState(!!discount)
   return (
     <>
@@ -53,26 +53,30 @@ export default function CourseCard(
                 </span>
               </div>
             </div>
-            {isDiscount ? (
+            {/* {isDiscount ? (
               <div className="course-price">
                 <del>NT$ 4,000</del>
-                              <div style={{ color: '#ec3f3f' }}>{discount}NT$ 3,800</div>
+                <div style={{ color: '#ec3f3f' }}>{discount}NT$ 3,800</div>
               </div>
             ) : (
               <div className="course-price">
-                                  <div>NT$ {price}4,000</div>
+                <div>NT$ {price}4,000</div>
               </div>
-            )}
+            )} */}
+            <div className="course-price">
+              <div>NT$ {price}</div>
+            </div>
             <div className="students">
               <MdOutlinePeopleAlt size={16} color="#5a5a5a" />
-                          <span>{ sales}50</span>
+              <span>{sales}50</span>
             </div>
           </section>
         </article>
         <style jsx>{`
           .course-card {
-            max-width: 240px;
-            width: 100%;
+            width: 240px;
+            height: 403px;
+
             border-radius: 5px;
             border: 1px solid #b9b9b9;
             background-color: #fff;
@@ -88,11 +92,12 @@ export default function CourseCard(
             position: relative;
             aspect-ratio: 1.33;
             width: 100%;
+            height: 166px; /*設定希望高度 */
           }
-          .course-image,
-          .icon-image {
+          .course-image {
             width: 100%;
-            object-fit: cover;
+            height: 100%;
+            object-fit: contain;
             object-position: center;
           }
           .icon-image {

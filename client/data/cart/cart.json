@@ -24,8 +24,7 @@
         "created_time": "2023-12-04 10:50:10",
         "onshelf_time": "2023-12-10 11:11:43",
         "updated_time": "NULL",
-        "valid": 1,
-        "qty": 1
+        "valid": 1
     },
     {
         "id": 25,
@@ -52,8 +51,7 @@
         "created_time": "2023-12-04 23:38:21",
         "onshelf_time": "2023-12-13 0:28:37",
         "updated_time": "NULL",
-        "valid": 1,
-        "qty":1
+        "valid": 1
     },
     {
         "id": 216,
