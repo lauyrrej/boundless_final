@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
@@ -21,68 +22,21 @@ import withReactContent from 'sweetalert2-react-content'
 //data
 import CityCountyData from '@/data/CityCountyData.json'
 import playerData from '@/data/player.json'
-import genreData from '@/data/genre.json'
+
+const mySwal = withReactContent(Swal)
 
 export default function Publish() {
-  // ----------------------設定字數15, 150---------------
-  const [topic, setTopic] = useState('')
-  const [text, setText] = useState('')
-  const maxLength = 150
-
-  const handleTitleChange = (e) => {
-    const inputValue = e.target.value
-    if (inputValue.length <= maxLength) {
-      setTopic(inputValue)
-    }
-  }
-  const handleTextChange = (e) => {
-    const inputValue = e.target.value
-    if (inputValue.length <= maxLength) {
-      setText(inputValue)
-    }
-  }
-
   // ----------------------表單  ----------------------
+
   // ---------------------- 標題 ----------------------
+  const router = useRouter()
   const [title, setTitle] = useState('')
   const [titleCheck, setTitleCheck] = useState(true)
-  // ---------------------- 技術程度
-  const [degree, setDegree] = useState('')
 
-  // ---------------------- 曲風 ----------------------
-  // 儲存選擇的曲風
-  const [genre, setgenre] = useState([])
-  const [genreCheck, setGenreCheck] = useState(true)
-  // 變更曲風下拉選單的數量時，陣列會多一個元素
-  const [genreSelect, setgenreSelect] = useState([1])
-  // 實際使用的曲風陣列，避免使用者未照順序新增樂手
-  const [finalgenre, setFinalgenre] = useState('')
+  // 文章分類
+  const [category, setCategory] = useState('')
 
-  // ---------------------- 擔任職位 ----------------------
-  // 控制表單狀態
-  const [myPlayer, setMyPlayer] = useState('')
-  // 表單實際送出的內容
-  const [finalMyPlayer, setFinalMyPlayer] = useState('')
-  // console.log(finalMyPlayers)
-
-  // ---------------------- 徵求樂手 ----------------------
-  const [players, setplayers] = useState([])
-  const [playersSelect, setPlayersSelect] = useState([1])
-  // 實際使用的樂手陣列，避免使用者未照順序新增樂手
-  const [finalPlayers, setFinalPlayers] = useState([])
-
-  // ---------------------- 篩選城市用的資料 ----------------------
-  const cityData = CityCountyData.map((v, i) => {
-    return v.CityName
-  }).filter((v) => {
-    return v !== '釣魚臺' && v !== '南海島'
-  })
-  const [region, setRegion] = useState('')
-
-  // ---------------------- 其他條件 ----------------------
-  const [condition, setCondition] = useState('')
-  const [conditionCheck, setConditionCheck] = useState(true)
-  // ---------------------- 描述 ----------------------
+  // ---------------------- 文章摘要 ----------------------
   const [description, setDescription] = useState('')
   const [descriptionCheck, setDescriptionCheck] = useState(true)
   // 表單完成狀態 0: 有欄位尚未填寫或不符規定, 1: 填寫完成, 2: 填寫中
@@ -91,18 +45,8 @@ export default function Publish() {
   const checkBadWords = debounce(() => {
     const badWords = /幹|屎|尿|屁|糞|靠北|靠腰|雞掰|王八|你媽|妳媽|淫/g
     setTitleCheck(title.search(badWords) < 0 ? true : false)
-    setConditionCheck(condition.search(badWords) < 0 ? true : false)
     setDescriptionCheck(description.search(badWords) < 0 ? true : false)
-  }, 250)
-  // 檢查是否重複填寫曲風
-  const checkGenre = debounce(() => {
-    const genreSet = new Set(genre) // 建立 set 物件，該物件中的每個屬性都是唯一值
-    // 若長度不同，則代表陣列中有重複的值
-    if (genre.length !== genreSet.size) {
-      setGenreCheck(false)
-    } else {
-      setGenreCheck(true)
-    }
+    // 檢查 主旨/條件/描述
   }, 250)
   // 檢查表單是否填妥
   const checkComplete = () => {
@@ -110,27 +54,7 @@ export default function Publish() {
       setComplete(0)
       return false
     }
-    if (degree === '') {
-      setComplete(0)
-      return false
-    }
-    if (genreCheck === false || finalgenre === '') {
-      setComplete(0)
-      return false
-    }
-    if (finalMyPlayer === '') {
-      setComplete(0)
-      return false
-    }
-    if (finalPlayers === '') {
-      setComplete(0)
-      return false
-    }
-    if (region === '') {
-      setComplete(0)
-      return false
-    }
-    if (conditionCheck === false) {
+    if (category === '') {
       setComplete(0)
       return false
     }
@@ -141,29 +65,14 @@ export default function Publish() {
     setComplete(1)
     return true
   }
-  const sendForm = async (
-    uid,
-    title,
-    degree,
-    finalgenre,
-    finalMyPlayer,
-    finalPlayers,
-    region,
-    condition,
-    description
-  ) => {
+  const sendForm = async (uid, title, category, condition, description) => {
     if (!checkComplete()) {
       return false
     }
     let formData = new FormData()
     formData.append('uid', uid)
     formData.append('title', title)
-    formData.append('degree', degree)
-    formData.append('genre', finalgenre)
-    formData.append('former', finalMyPlayer)
-    formData.append('players', finalPlayers)
-    formData.append('region', region)
-    formData.append('condition', condition)
+    formData.append('category', category)
     formData.append('description', description)
     // 確認formData內容
     // for (let [key, value] of formData.entries()) {
@@ -205,16 +114,7 @@ export default function Publish() {
     // 檢查不雅字詞
     checkBadWords.cancel() // 取消上一次的延遲
     checkBadWords()
-    // 檢查無重複的曲風
-    checkGenre.cancel()
-    checkGenre()
-    // 把曲風&徵求樂手轉換成表單實際接收的字串格式
-    const fgArr = genre.filter((v) => v != (null || undefined))
-    setFinalgenre(`[${fgArr.toString()}]`)
-    const fpArr = players.filter((v) => v != (null || undefined))
-    setFinalPlayers(`[${fpArr.toString()}]`)
-    // 檢查表單是否完成
-  }, [title, degree, genre, myPlayer, players, region, condition, description])
+  }, [title, category, description])
 
   // ----------------------手機版本  ----------------------
   // 主選單
@@ -316,7 +216,7 @@ export default function Publish() {
               <div className="rwd-content">
                 <h5 className="text-secondary">
                   上限15個字，系統已經先擷取，你也可以自行修改標題。(
-                  {topic.length}/15)
+                  {title.length}/15)
                 </h5>
                 <div>
                   <label
@@ -327,12 +227,15 @@ export default function Publish() {
                     className="form-control"
                     id="exampleFormControlTextarea1"
                     rows={3}
-                    onChange={handleTitleChange}
+                    onChange={(e) => {
+                      setTitle(e.target.value)
+                    }}
                     placeholder="輸入內容..."
                     maxLength={15}
                     defaultValue={''}
                   />
                 </div>
+                {titleCheck ? '' : <div>偵測到不雅字詞</div>}
               </div>
             </div>
             <hr />
@@ -361,7 +264,7 @@ export default function Publish() {
               <div className="rwd-content">
                 <h5 className="text-secondary">
                   上限150個字，系統已經先擷取，你也可以自行修改摘要說明。(
-                  {text.length}/150)
+                  {description.length}/150)
                 </h5>
                 <div>
                   <label
@@ -370,14 +273,18 @@ export default function Publish() {
                   ></label>
                   <textarea
                     className="form-control"
-                    id="exampleFormControlTextarea1"
+                    id="description"
+                    name="description"
                     rows={3}
-                    onChange={handleTextChange}
+                    onChange={(e) => {
+                      setDescription(e.target.value)
+                    }}
                     placeholder="輸入內容..."
                     maxLength={150}
                     defaultValue={''}
                   />
                 </div>
+                {descriptionCheck ? '' : <div>偵測到不雅字詞</div>}
               </div>
             </div>
             <hr />
