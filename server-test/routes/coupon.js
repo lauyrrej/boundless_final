@@ -14,17 +14,40 @@ const upload = multer();
 // #endregion
 
 // 處理 GET 請求，路徑為 /public/coupon/FindAll
-router.get("/FindAll", async (req, res) => {
+router.get("/FindAll/:user_id", async (req, res) => {
   try {
+    const param = req.params.user_id;
     // 創建 Coupon 控制器的實例
     const obj = new Coupon();
     // 呼叫 Coupon 控制器中的 FindAll 方法來查詢所有優惠券
-    const result = await obj.FindAll();
+    const result = await obj.FindAll(parseInt(param));
     // 將查詢結果以 JSON 格式返回給客戶端
     res.status(200).json(result);
   } catch (err) {
     console.error(err);
     // 如果發生錯誤，返回 500 狀態碼和錯誤訊息
+    res.status(500).json(err.message);
+  }
+});
+
+// create
+router.post("/Create", async (req, res) => {
+  try {
+    const param = req.body;
+    // 前端給後端1. user_id，  2. coupon_template_id
+    // {
+    //   user_id: "";
+    //   coupon_template_id: "";
+    // }
+
+    const obj = new Coupon();
+    obj.user_id = param.user_id;
+    obj.coupon_template_id = param.coupon_template_id;
+
+    const result = await obj.Create();
+
+    res.status(200).json(result);
+  } catch (err) {
     res.status(500).json(err.message);
   }
 });
@@ -43,4 +66,5 @@ router.post("/Update", async (req, res) => {
     res.status(500).json(err);
   }
 });
+
 export default router;

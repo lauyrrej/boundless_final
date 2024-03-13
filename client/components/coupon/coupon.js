@@ -1,7 +1,15 @@
 import React from 'react'
 import styles from '@/components/coupon/coupon.module.scss'
 
-export default function Coupon({ id, name, type, kind, discount, limit_time }) {
+export default function Coupon({
+  id,
+  name,
+  type,
+  kind,
+  discount,
+
+  limit_time,
+}) {
   return (
     <>
       <div className={`${styles.couponCard} card mb-3 mx-1`}>

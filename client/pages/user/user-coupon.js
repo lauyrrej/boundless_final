@@ -54,6 +54,7 @@ export default function Test() {
   } else {
     avatarImage = `/user/avatar_userDefault.jpg`
   }
+
   // #endregion
   // #region ---會員登入狀態 ---
   // 在電腦版或手機版時
@@ -153,7 +154,8 @@ export default function Test() {
   // 從後端加載商品數據
   useEffect(() => {
     // component did mounted 呼叫api，這樣只會做一遍
-    CouponClass.FindAll().then(async (res) => {
+    // ????
+    CouponClass.FindAll(1).then(async (res) => {
       setDataSort(res)
     })
   }, [])
@@ -622,6 +624,7 @@ export default function Test() {
                               type,
                               discount,
                               kind,
+                              created_time,
                               limit_time,
                             } = v
                             return (
