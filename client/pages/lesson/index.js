@@ -36,15 +36,15 @@ export default function LessonList({ onSearch }) {
     useAuth()
   const [userData, setUserData] = useState()
   //檢查token
-  useEffect(() => {
-    handleLoginStatus()
-    //獲得資料
-    getLoginUserData()
-  }, [])
+//   useEffect(() => {
+//     handleLoginStatus()
+//     //獲得資料
+//     getLoginUserData()
+//   }, [])
   //登出功能
 
   //檢查是否獲取資料
-  console.log(LoginUserData)
+//   console.log(LoginUserData)
   //   讀取使用者資料後 定義大頭貼路徑
   let avatarImage
   if (LoginUserData.img) {
@@ -196,8 +196,9 @@ export default function LessonList({ onSearch }) {
     getLesson(initialUrl)
   }, [initialUrl])
 
-  //-----------------篩選功能 //FIXME
-  useEffect(() => {
+    //-----------------篩選功能 //FIXME
+    
+  const priceRange = (priceLow, priceHigh) => {
     if (priceLow !== '' && priceHigh !== '') {
       fetch(
         `http://localhost:3005/api/lesson?priceLow=${priceLow}&priceHigh=${priceHigh}`
@@ -205,7 +206,22 @@ export default function LessonList({ onSearch }) {
         .then((response) => response.json())
         .then((data) => setData(data))
     }
-  }, [priceLow, priceHigh])
+  }
+
+  // 確保 priceLow 和 priceHigh 有被定義後再呼叫 priceRange 函式
+//   priceRange(priceLow, priceHigh)
+
+
+//   useEffect(() => {
+//     if (priceLow !== '' && priceHigh !== '') {
+//       fetch(
+//         `http://localhost:3005/api/lesson?priceLow=${priceLow}&priceHigh=${priceHigh}`
+//       )
+//         .then((response) => response.json())
+//         .then((data) => setData(data))
+//     }
+    //   }, [priceLow, priceHigh])
+    
   //-------------------搜尋功能
   const [data, setData] = useState(Lesson)
   //-----------所有過濾資料功能傳回來的地方
@@ -586,7 +602,11 @@ export default function LessonList({ onSearch }) {
                           >
                             清除
                           </div>
-                          <div className="filter-btn confirm-btn w-100 d-flex justify-content-center">
+                          <div
+                            className="filter-btn confirm-btn w-100 d-flex justify-content-center"
+                            role="presentation"
+                            onClick={priceRange}
+                          >
                             確認
                           </div>
                         </div>
