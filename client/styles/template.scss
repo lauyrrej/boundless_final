@@ -369,6 +369,16 @@ header {
   cursor: pointer;
   transition: 0.25s;
 }
+.b-btn-disable {
+  border-radius: 5px;
+  color: #fff;
+  font-weight: bold;
+  padding-block: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
 .b-btn-primary {
   background-color: $light-primary;
   &:hover {
@@ -422,4 +432,8 @@ header {
 .active > .page-link {
   background-color: $light-primary;
   color: #fff;
+}
+
+.no-result {
+  font-size: 32px;
 }

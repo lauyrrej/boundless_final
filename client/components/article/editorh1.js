@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 
-function Editor({ onChange, editorLoaded, name, value }) {
+function EditorH1({ onChange, editorLoaded, name, value }) {
   const editorRef = useRef()
   const { CKEditor, ClassicEditor } = editorRef.current || {}
 
@@ -25,7 +25,7 @@ function Editor({ onChange, editorLoaded, name, value }) {
               uploadUrl: '', //Enter your upload url
             },
           }}
-          data={value}
+          data={`<h1>${value}</h1>`}
           onChange={(event, editor) => {
             const data = editor.getData()
             // console.log({ event, editor, data })
@@ -33,10 +33,10 @@ function Editor({ onChange, editorLoaded, name, value }) {
           }}
         />
       ) : (
-        <div>123</div>
+        <div>Heading 1</div>
       )}
     </div>
   )
 }
 
-export default Editor
+export default EditorH1
