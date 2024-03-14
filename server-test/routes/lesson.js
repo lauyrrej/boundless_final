@@ -14,17 +14,17 @@ router.get("/", async (req, res) => {
     if (priceLow && priceHigh) {
       baseQuery += " AND price >= ? AND price <= ?";
       queryParams.push(priceLow, priceHigh);
-    //   console.log(baseQuery);
+      console.log(baseQuery);
     }
 
-    //Pagination
-    if (page) {
-      const perPage = 12; // Number of items per page
-      const startIndex = ((parseInt(page) || 1) - 1) * perPage;
-      baseQuery += " LIMIT ?, ?";
-        queryParams.push(startIndex, perPage);
-         console.log(baseQuery);
-    }
+    // //Pagination
+    // if (page) {
+    //   const perPage = 12; // Number of items per page
+    //   const startIndex = ((parseInt(page) || 1) - 1) * perPage;
+    //   baseQuery += " LIMIT ?, ?";
+    //     queryParams.push(startIndex, perPage);
+    //      console.log(baseQuery);
+    // }
 
     // Execute the query
     const [results] = await db.execute(baseQuery, queryParams);
@@ -50,7 +50,9 @@ router.get("/categories", async (req, res) => {
     );
 
     if (lesson_category) {
-      res.json(lesson_category);
+        res.json(lesson_category);
+        console.log(lesson_category);
+        
     } else {
       res.json("沒有找到相應的資訊");
     }
@@ -59,6 +61,7 @@ router.get("/categories", async (req, res) => {
     res.json("發生錯誤");
   }
 });
+
 //特定分類的資料
 router.get("/category/:category", async (req, res) => {
   try {
@@ -81,30 +84,38 @@ router.get("/category/:category", async (req, res) => {
 });
 
 // 獲得單筆課程資料＋review
-router.get("/:id", async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
   let luid = req.params.id;
   console.log(luid);
-  let [data] = await db
-    .execute(
-      //       ”SELECT p.*, pr.*, lc.*
-      // FROM `product` AS p
-      // LEFT JOIN `product_review` AS pr ON p.id = pr.product_id
-      // LEFT JOIN `lesson_category` AS lc ON p.lesson_category_id = lc.id
-      // WHERE p.`puid` = ?“,
-      //       [luid] //FIXME評論多連一張資料表
+  try {
+ let [data] = await db.execute(
+   'SELECT p.*, pr.*, lc.* ' +
+     'FROM `product` AS p ' +
+     'LEFT JOIN `product_review` AS pr ON p.id = pr.product_id ' +
+     'LEFT JOIN `lesson_category` AS lc ON p.lesson_category_id = lc.id ' +
+     'WHERE p.`puid` = ? AND p.`lesson_category_id` IN (' +
+     'SELECT `lesson_category_id` FROM `product` WHERE `puid` = ?' +
+     ')',
+     [luid, luid]) //FIXME sql可以改一下
+   
+  let [youwilllike] = await db.execute(
+    'SELECT p.* FROM `product` AS p ' +
+      'JOIN (SELECT `lesson_category_id` FROM `product` WHERE `puid` = ?) AS sub ' +
+      'ON p.`lesson_category_id` = sub.`lesson_category_id`',
+    [luid]
+  );
 
-      "SELECT p.*, pr.* FROM `product` AS p LEFT JOIN `product_review` AS pr ON p.id = pr.product_id WHERE p.`puid` = ?",
-      [luid]
-    )
-    .catch(() => {
-      return undefined;
-    });
 
-  if (data) {
-    console.log(data);
-    res.status(200).json(data);
-  } else {
-    res.status(400).send("發生錯誤");
+
+    if ({ data, youwilllike }) {
+      console.log({ data, youwilllike });
+        res.status(200).json({ data, youwilllike });
+    } else {
+      res.status(404).send('Data not found');
+    }
+  } catch (error) {
+    console.error('Database error:', error);
+    res.status(500).send('Internal server error');
   }
 });
 

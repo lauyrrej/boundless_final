@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { FaHeart } from 'react-icons/fa'
-import Lesson from '@/data/Lesson.json'
+//toast
 import toast, { Toaster } from 'react-hot-toast'
 //收藏的功能
 
@@ -34,7 +34,9 @@ export default function ProductBriefCard({
 
   // ----------------------加入右上角購物車的功能  ----------------------
 
-  //跳轉頁面
+  //toast
+    const notify = () =>
+      toast('{LessonDetail.data[0].name}已加入購物車.')
 
   return (
     <>
@@ -97,23 +99,24 @@ export default function ProductBriefCard({
             <div
               className="cartBtn"
               onClick={() => {
-                addLessonItem({
-                  id,
-                  img,
-                  img_small,
-                  type,
-                  lesson_category_id,
-                  name,
-                  homework,
-                  sales,
-                  price,
-                  discount,
-                  discount_state,
-                  length,
-                  info,
-                  onshelf_time,
-                })
-                calcTotalItems() // Moved inside the onClick function
+                  addLessonItem({
+                      id,
+                      img,
+                      img_small,
+                      type,
+                      lesson_category_id,
+                      name,
+                      homework,
+                      sales,
+                      price,
+                      discount,
+                      discount_state,
+                      length,
+                      info,
+                      onshelf_time,
+                  });
+                  calcTotalItems();// Moved inside the onClick function
+                  notify();
               }}
             >
               <img
@@ -122,6 +125,7 @@ export default function ProductBriefCard({
                 className=""
               />
               <div className="cart">加入購物車</div>
+              <Toaster /> //FIXME吐司跑不出來
             </div>
             <div
               className="buyBtn"

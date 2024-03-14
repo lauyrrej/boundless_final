@@ -4,7 +4,6 @@ import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
-import jamHero from '@/assets/jam-hero.png'
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
@@ -21,10 +20,7 @@ import HoriCard from '@/components/lesson/lesson-card-hori'
 import ProductCard from '@/components/lesson/lesson-productbrief-card'
 
 //toast
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { ToastProvider } from 'react-hot-toast'
-import App from '@/pages/_app'
+import toast, { Toaster } from 'react-hot-toast'
 
 // 購物車hook
 import { useCart } from '@/hooks/use-cart'
@@ -87,13 +83,14 @@ export default function LessonDetailPage() {
       // 設定到state中，觸發重新渲染(re-render)，會進入到update階段
       // 進入狀態前檢查資料類型有值，以避免錯誤
       if (data) {
-        setLessonDetail(data)
-        console.log(LessonDetail[0].name)
+          setLessonDetail(data)
+          console.log(LessonDetail.data[0].img)
       }
     } catch (e) {
       console.error(e)
     }
   }
+
 
   // 初次渲染"之後(After)"+router.isReady改變時，執行其中程式碼
   useEffect(() => {
@@ -109,7 +106,7 @@ export default function LessonDetailPage() {
 
   console.log(router.query, ' isReady=', router.isReady)
   
-   
+   const notify = () => toast('{LessonDetail.data[0].name}已加入購物車.')
     
     return (
       <>
@@ -169,9 +166,9 @@ export default function LessonDetailPage() {
                 </Link>
                 <FaChevronRight />
 
-                {LessonDetail && LessonDetail.length > 0 && (
+                {LessonDetail && LessonDetail.data.length > 0 && (
                   <li style={{ marginLeft: '10px' }}>
-                    {LessonDetail[0].lesson_category_id}
+                    {LessonDetail.data[0].Lesson_category_name}
                   </li>
                 )}
               </ul>
@@ -183,9 +180,9 @@ export default function LessonDetailPage() {
                   <div className="Left">
                     {/* prodBriefingArea */}
                     <div className="prodBriefingArea d-flex">
-                      {LessonDetail && LessonDetail.length > 0 && (
+                      {LessonDetail && LessonDetail.data.length > 0 && (
                         <img
-                          src={`/課程與師資/lesson_img/${LessonDetail[0].img}`}
+                          src={`/課程與師資/lesson_img/${LessonDetail.data[0].img}`}
                           className="prodImg"
                         />
                       )}
@@ -193,9 +190,9 @@ export default function LessonDetailPage() {
                     {/* 手機版productbrief-card放這 */}
                     <div className="Right-mobile">
                       <div className="prodBriefing sticky-top">
-                        {LessonDetail && LessonDetail.length > 0 && (
+                        {LessonDetail && LessonDetail.data.length > 0 && (
                           <div className="prodMainName">
-                            {LessonDetail[0].name}Logic Pro X 從零開始
+                            {LessonDetail.data[0].name}Logic Pro X 從零開始
                           </div>
                         )}
 
@@ -262,9 +259,9 @@ export default function LessonDetailPage() {
                         <div className="list">
                           {/* 斷行處理 */}
                           <ul>
-                            {LessonDetail && LessonDetail.length > 0 && (
+                            {LessonDetail && LessonDetail.data.length > 0 && (
                               <ul>
-                                {LessonDetail[0].outline
+                                {LessonDetail.data[0].outline
                                   .split('\n')
                                   .map((line, index) => (
                                     <li key={index}>{line}</li>
@@ -279,9 +276,9 @@ export default function LessonDetailPage() {
                         <div className="detail-title">適合對象</div>
                         <div className="list">
                           <ul>
-                            {LessonDetail && LessonDetail.length > 0 && (
+                            {LessonDetail && LessonDetail.data.length > 0 && (
                               <ul>
-                                {LessonDetail[0].suitable
+                                {LessonDetail.data[0].suitable
                                   .split('\n')
                                   .map((line, index) => (
                                     <li key={index}>{line}</li>
@@ -295,9 +292,9 @@ export default function LessonDetailPage() {
                       <div className="achievement mt40">
                         <div className="detail-title">你將學到</div>
                         <div className="list">
-                          {LessonDetail && LessonDetail.length > 0 && (
+                          {LessonDetail && LessonDetail.data.length > 0 && (
                             <ul>
-                              {LessonDetail[0].achievement
+                              {LessonDetail.data[0].achievement
                                 .split('\n')
                                 .map((line, index) => (
                                   <li key={index}>{line}</li>
@@ -322,15 +319,15 @@ export default function LessonDetailPage() {
                                 <div className="review-user">
                                   <div className="review-Name">
                                     {LessonDetail &&
-                                      LessonDetail.length > 0 && (
+                                      LessonDetail.data.length > 0 && (
                                         <div className="user-Name">
-                                          {LessonDetail[0].user_id}
+                                          {LessonDetail.data[0].user_id}
                                         </div>
                                       )}
                                     {LessonDetail &&
-                                      LessonDetail.length > 0 && (
+                                      LessonDetail.data.length > 0 && (
                                         <div className="review-Date">
-                                          {LessonDetail[0].created_time}
+                                          {LessonDetail.data[0].created_time}
                                         </div>
                                       )}
                                   </div>
@@ -363,17 +360,17 @@ export default function LessonDetailPage() {
                                   </div>
                                 </div>
                               </div>
-                              {LessonDetail && LessonDetail.length > 0 && (
+                              {LessonDetail && LessonDetail.data.length > 0 && (
                                 <div className="review-content">
-                                  {LessonDetail[0].content}
+                                  {LessonDetail.data[0].content}
                                 </div>
                               )}
                             </div>
 
                             <div className="comment-Like">
-                              {LessonDetail && LessonDetail.length > 0 && (
+                              {LessonDetail && LessonDetail.data.length > 0 && (
                                 <div className="comment-Like-Number">
-                                  {LessonDetail[0].likes}人覺得有幫助
+                                  {LessonDetail.data[0].likes}人覺得有幫助
                                 </div>
                               )}
                               <div className="comment-Like-Icon">
@@ -403,7 +400,7 @@ export default function LessonDetailPage() {
                       <div className="detail-title">講師資訊</div>
                       <div className="teacher-info-area">
                         <div className="teacher-img-con ">
-                          {LessonDetail && LessonDetail.length > 0 && (
+                          {LessonDetail && LessonDetail.data.length > 0 && (
                             <img
                               loading="lazy"
                               src="/課程與師資/teacher_img/teacher_001.jpeg"
@@ -429,23 +426,23 @@ export default function LessonDetailPage() {
 
             {/*   ----------------------頁面內容 右半部---------------------- */}
             <div className="d-none d-sm-block col-sm-6 page-control">
-              {LessonDetail && LessonDetail.length > 0 && (
+              {LessonDetail && LessonDetail.data.length > 0 && (
                 <ProductCard
                   className="Right-card"
-                  id={LessonDetail[0].id}
-                  img={LessonDetail[0].img}
-                  img_small={LessonDetail[0].img}
-                  type={LessonDetail[0].type}
-                  lesson_category_id={LessonDetail[0].lesson_category_id}
-                  name={LessonDetail[0].name}
-                  homework={LessonDetail[0].homework}
-                  sales={LessonDetail[0].sales}
-                  price={LessonDetail[0].price}
-                  discount={LessonDetail[0].discount}
-                  discount_state={LessonDetail[0].discount_state}
-                  length={LessonDetail[0].length}
-                  info={LessonDetail[0].info}
-                  onshelf_time={LessonDetail[0].onshelf_time}
+                  id={LessonDetail.data[0].id}
+                  img={LessonDetail.data[0].img}
+                  img_small={LessonDetail.data[0].img}
+                  type={LessonDetail.data[0].type}
+                  lesson_category_id={LessonDetail.data[0].lesson_category_id}
+                  name={LessonDetail.data[0].name}
+                  homework={LessonDetail.data[0].homework}
+                  sales={LessonDetail.data[0].sales}
+                  price={LessonDetail.data[0].price}
+                  discount={LessonDetail.data[0].discount}
+                  discount_state={LessonDetail.data[0].discount_state}
+                  length={LessonDetail.data[0].length}
+                  info={LessonDetail.data[0].info}
+                  onshelf_time={LessonDetail.data[0].onshelf_time}
                   addLessonItem={addLessonItem}
                 />
               )}
@@ -454,12 +451,25 @@ export default function LessonDetailPage() {
           {/* 猜你喜歡 */}
           <div className="you-will-like">
             <div className="detail-title ">猜你喜歡...</div>
-            <div className="card-con" style={{ overflowX: 'scroll' }}>
-              <Card />
-              <Card />
-              <Card />
-              <Card />
-              <Card />
+            <div className="card-con">
+              {LessonDetail &&
+                LessonDetail.youwilllike &&
+                LessonDetail.youwilllike
+                  .sort((a, b) => b.sales - a.sales) // Sort courses based on sales volume
+                  .slice(0, 5) // Get top 5 courses
+                  .map((v, i) => (
+                    <Card
+                      key={i}
+                      id={v.id}
+                      luid={v.puid}
+                      name={v.name}
+                      price={v.price}
+                      teacher_id={v.teacher_id}
+                      img={v.img}
+                      length={v.length}
+                      sales={v.sales}
+                    />
+                  ))}
             </div>
           </div>
           <div className="you-will-like-mobile">
@@ -473,20 +483,20 @@ export default function LessonDetailPage() {
           </div>
         </div>
         <div className="shoppingBtn sticky-top" id="shoppingBtn">
-          <div className="cartBtn">
+          <div
+            className="cartBtn"
+            onClick={() => {
+                addLessonItem(v);
+                notify();
+            }}
+          >
+            <Toaster />
             <img
               loading="lazy"
               src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
               className="cartIcon"
             />
-            <div
-              className="cart"
-              onClick={() => {
-                addLessonItem(v)
-              }}
-            >
-              加入購物車
-            </div>
+            <div className="cart">加入購物車</div>
           </div>
           <div className="buyBtn">
             <div className="buy">立即購買</div>
