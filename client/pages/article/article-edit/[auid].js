@@ -14,7 +14,8 @@ import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 import Datetime from '@/components/article/datetime'
-import Tiptap from '@/components/article/tiptap'
+import { Tiptap } from '@/components/article/TipTap'
+import Details from '@/components/article/Details'
 
 export default function Auid() {
   // ----------------------手機版本  ----------------------
