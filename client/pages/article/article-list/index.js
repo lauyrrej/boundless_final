@@ -17,6 +17,7 @@ import bookmarkIcon from '@/assets/emptybookmark.svg'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 import ArticleCard from '@/components/article/article-card'
+import BS5Pagination from '@/components/common/pagination'
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
 
@@ -360,7 +361,10 @@ export default function ArticleList() {
                 <h4 className="text-primary pt-2">
                   熱門文章{LoginUserData.name}
                 </h4>
-                <Link href={`/article/article-publish`} className="icon-btn">
+                <Link
+                  href={`/article/article-list/article-publish`}
+                  className="icon-btn"
+                >
                   <MdNoteAdd
                     size={35}
                     style={{ color: 'gray', cursor: 'pointer' }}
@@ -452,38 +456,14 @@ export default function ArticleList() {
                   )
                 })}
               </div>
-              {/* <div className='d-flex justify-content-center pb-3'>
-                <nav aria-label="Page navigation example">
-                  <ul className="pagination">
-                    <li className="page-item">
-                      <a className="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">«</span>
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        1
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        2
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        3
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">»</span>
-                      </a>
-                    </li>
-                  </ul>
-                </nav>
-              </div> */}
             </main>
+            {/* <div className="d-flex justify-content-center">
+              <BS5Pagination
+                forcePage={page - 1}
+                onPageChange={handlePageClick}
+                pageCount={pageTotal}
+              />
+            </div> */}
           </div>
         </div>
       </div>
