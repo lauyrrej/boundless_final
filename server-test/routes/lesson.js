@@ -6,7 +6,7 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   try {
     // Mandatory type filter
-    let baseQuery = "SELECT * FROM `product` WHERE `type` = 2 ";
+    let baseQuery = "SELECT * FROM `product` WHERE `type` = ? ";
     let queryParams = [2];
     // Additional filters
     const { priceLow, priceHigh, page } = req.query;
@@ -14,16 +14,17 @@ router.get("/", async (req, res) => {
     if (priceLow && priceHigh) {
       baseQuery += " AND price >= ? AND price <= ?";
       queryParams.push(priceLow, priceHigh);
-      console.log(baseQuery);
+    //   console.log(baseQuery);
     }
 
-    // Pagination
-    // if (page) {
-    //   const perPage = 12; // Number of items per page
-    //   const startIndex = ((parseInt(page) || 1) - 1) * perPage;
-    //   baseQuery += " LIMIT ?, ?";
-    //   queryParams.push(startIndex, perPage);
-    // }
+    //Pagination
+    if (page) {
+      const perPage = 12; // Number of items per page
+      const startIndex = ((parseInt(page) || 1) - 1) * perPage;
+      baseQuery += " LIMIT ?, ?";
+        queryParams.push(startIndex, perPage);
+         console.log(baseQuery);
+    }
 
     // Execute the query
     const [results] = await db.execute(baseQuery, queryParams);
@@ -118,7 +119,7 @@ router.get("/:id", async (req, res, next) => {
       // LEFT JOIN `product_review` AS pr ON p.id = pr.product_id
       // LEFT JOIN `lesson_category` AS lc ON p.lesson_category_id = lc.id
       // WHERE p.`puid` = ?“,
-      //       [luid]
+      //       [luid] //FIXME評論多連一張資料表
 
       "SELECT p.*, pr.* FROM `product` AS p LEFT JOIN `product_review` AS pr ON p.id = pr.product_id WHERE p.`puid` = ?",
       [luid]

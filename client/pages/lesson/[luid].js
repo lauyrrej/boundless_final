@@ -109,13 +109,7 @@ export default function LessonDetailPage() {
 
   console.log(router.query, ' isReady=', router.isReady)
   
-     const [products, setProducts] = useState([])
-
-     useEffect(() => {
-       // 模擬從API獲取數據
-       setProducts(mockApiResponse)
-       // 在實際應用中，這裡會是一個從後端API獲取數據的請求
-     }, [])
+   
     
     return (
       <>

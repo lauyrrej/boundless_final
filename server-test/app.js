@@ -34,6 +34,7 @@ const corsOptions = {
   },
 };
 
+
 app.use(cors(corsOptions));
 app.use(logger("dev"));
 app.use(express.json());
@@ -66,5 +67,7 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render("error");
 });
+
+
 
 export default app;

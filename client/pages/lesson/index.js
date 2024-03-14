@@ -136,31 +136,28 @@ export default function LessonList({ onSearch }) {
   //     }
   // },[history])
 
+//FIXME分頁功能
   // ------------------------------------- 製作分頁 not done
 
-  //   const [products, setProducts] = useState([]);
-  //   const [CurrentPage, setCurrentPage] = useState(1)
-  //   const [totalPages, setTotalPages] = useState(1);
+    const [products, setProducts] = useState([]);
+    const [CurrentPage, setCurrentPage] = useState(1)
+    const [totalPages, setTotalPages] = useState(1);
 
-  //   useEffect(() => {
-  //     handlePageClick()
-  //   }, [CurrentPage])
+    useEffect(() => {
+      handlePageClick()
+    }, [CurrentPage])
 
-  //         useEffect(() => {
-  //           handlePageClick()
-  //         }, [])
-
-  //   const handlePageClick = async () => {
-  //     try {
-  //       const response = await fetch(
-  //         `http://localhost:3005/api/lesson/page/${page}`
-  //       )
-  //       setProducts(response.data.products);
-  //       setTotalPages(response.data.totalPages);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
+    const handlePageClick = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3005/api/lesson/page/${page}`
+        )
+        setProducts(response.data.products);
+        setTotalPages(response.data.totalPages);
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
   //   const handlePrevPage = () => {
   //     setCurrentPage(prevPage => prevPage - 1);
@@ -740,9 +737,9 @@ export default function LessonList({ onSearch }) {
       </div>
       <div className="d-flex justify-content-center">
         <BS5Pagination
-        //   forcePage={CurrentPage - 1}
-        //   onPageChange={handlePageClick}
-        //   pageCount={totalPages}
+          forcePage={CurrentPage - 1}
+          onPageChange={handlePageClick}
+          pageCount={totalPages}
         />
         {/* <Pagination
           totalPages={Math.ceil(filteredProducts.length / perPage)}
