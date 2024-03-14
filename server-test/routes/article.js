@@ -70,36 +70,21 @@ router.get("/categories", async (req, res) => {
 // publish
 router.post("/article-publish", upload.none(), async (req, res) => {
   console.log(req.body);
-  // POST /api/user/status 401 7.812 ms - 70
+  // POST /api/user/status 500Internal error
   const {
-    uid,
+    id,
+    auid,
     title,
     content,
     img,
     category_id,
   } = req.body;
-  const trueCategory = parseInt(category_id);
-  const auid = generateUid();
-  // 更新會員所屬的JAM
-  // let returnNum = await db
-  //   .execute(
-  //     "UPDATE `user` SET `my_jam` = ? WHERE `uid` = ?;",
-  //     [auid, uid]
-  //   )
-  //   .then(() => {
-  //     return 1;
-  //   })
-  //   .catch(() => {
-  //     return 0;
-  //   });
-  // if (returnNum === 0) {
-  //   console.log("新增失敗");
-  //   return
-  // }
+
   await db
     .execute(
-      "INSERT INTO `article` (`id`, `auid`, `title`, `content`, `img`, `category_id`) VALUES (NULL, ?, ?, ?, ?, ?)",
+      "INSERT INTO `article` (`id`,`auid`, `title`, `content`, `img`, `category_id`) VALUES (NULL, NULL, ?, ?, ?, ?)",
       [
+        id,
         auid,
         title,
         content,

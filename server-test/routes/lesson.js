@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
     if (priceLow && priceHigh) {
       baseQuery += " AND price >= ? AND price <= ?";
       queryParams.push(priceLow, priceHigh);
-    //   console.log(baseQuery);
+      //   console.log(baseQuery);
     }
 
     //Pagination
@@ -22,8 +22,8 @@ router.get("/", async (req, res) => {
       const perPage = 12; // Number of items per page
       const startIndex = ((parseInt(page) || 1) - 1) * perPage;
       baseQuery += " LIMIT ?, ?";
-        queryParams.push(startIndex, perPage);
-         console.log(baseQuery);
+      queryParams.push(startIndex, perPage);
+      console.log(baseQuery);
     }
 
     // Execute the query
@@ -141,14 +141,14 @@ router.get("/:id", async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
   let luid = req.params.id;
   console.log(luid);
- let [data] = await db
-   .execute(
-     "SELECT p.*, pr.* FROM `product` AS p LEFT JOIN `product_review` AS pr ON p.id = pr.product_id WHERE p.`puid` = ?",
-     [luid]
-   )
-   .catch(() => {
-     return undefined;
-   });
+  let [data] = await db
+    .execute(
+      "SELECT p.*, pr.* FROM `product` AS p LEFT JOIN `product_review` AS pr ON p.id = pr.product_id WHERE p.`puid` = ?",
+      [luid]
+    )
+    .catch(() => {
+      return undefined;
+    });
 
   if (data) {
     console.log(data);
@@ -156,6 +156,7 @@ router.get("/:id", async (req, res, next) => {
   } else {
     res.status(400).send("發生錯誤");
   }
+});
 
 router.get("/:priceLow&;priceHigh", async (req, res, next) => {
   const { priceLow, priceHigh } = req.query;
