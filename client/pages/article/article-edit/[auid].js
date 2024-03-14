@@ -15,6 +15,7 @@ import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 import Datetime from '@/components/article/datetime'
 import Editor from '@/components/article/editor'
+import EditorH1 from '@/components/article/editorh1'
 
 export default function Auid() {
   // ----------------------手機版本  ----------------------
@@ -69,11 +70,18 @@ export default function Auid() {
     setShowEditor(false)
   }
   const [data, setData] = useState('')
-  const initContent = { articleDetail.title }
 
   useEffect(() => {
     setEditorLoaded(true)
   }, [])
+
+  // 預設CKEditor格式
+  const editorConfig = {
+    // 其他配置...
+    format_tags: 'p;h1;h2;h3;h4;h5;h6',
+    format_h1: { element: 'h1', name: 'Heading 1' },
+    // 如果您想要設置其他標題樣式，可以繼續添加 format_h2, format_h3 等等
+  }
   // ----------------------假資料  ----------------------
 
   const [filterVisible, setFilterVisible] = useState(false)
@@ -156,16 +164,24 @@ export default function Auid() {
           <div className="">
             {/* 主內容 */}
             <main className="content">
-              <Editor
+              <EditorH1
                 name="description"
+                config={editorConfig}
                 onChange={(data) => {
                   setData(data)
                 }}
                 editorLoaded={editorLoaded}
-                value={initContent}
+                value={articleDetail.title}
               />
-              <h1 className="text-center">{articleDetail.title}</h1>
-              <p className="pt-2">{articleDetail.content}</p>
+              <Editor
+                name="description"
+                config={editorConfig}
+                onChange={(data) => {
+                  setData(data)
+                }}
+                editorLoaded={editorLoaded}
+                value={articleDetail.content}
+              />
               <div className="main-img">
                 <Image
                   src={`/article/${articleDetail.img}`}
@@ -183,55 +199,16 @@ export default function Auid() {
                   {articleDetail.category_name}
                 </div>
               </div>
-              {/* Reader Comment */}
-              <h3 className="pt-5 text-primary">讀者留言</h3>
-              <div className="reader-comment pt-3 d-flex align-items-center">
-                <Image
-                  className="article-author"
-                  src={`/user/${articleDetail.user_img}`}
-                  alt="空的圖"
-                  width={50}
-                  height={50}
-                />
-                <span className="ps-3 info-p text-primary">
-                  {articleDetail.user_name}
-                </span>
-                <span className="ps-2 info-p text-secondary">
-                  <Datetime
-                    published_time={articleDetail.comment_created_time}
-                  />
-                </span>
-              </div>
-              <p className="pt-1">{articleDetail.comment_content}</p>
-              <div className="reader-like d-flex justify-content-between">
-                <div />
-                <div className="d-flex align-items-center">
-                  <div>{articleDetail.comment_likes}人認同</div>
-                  <button
-                    type="button"
-                    className="btn btn-outline-primary ms-1"
-                  >
-                    <i className="fa-solid fa-thumbs-up" />
-                    認同
-                  </button>
-                </div>
-              </div>
-              {/* 最後textarea */}
-              <div className="ps-3 pe-3">
-                <textarea
-                  className="form-control"
-                  rows={5}
-                  placeholder="發表文章評語...(限50字)"
-                  defaultValue={''}
-                />
-                <div className="text-end mt-2 mb-3">
-                  <button className="btn btn-primary" type="submit">
-                    發表
-                  </button>
-                </div>
-              </div>
             </main>
           </div>
+        </div>
+        <div className="page-button d-flex justify-content-between pt-5 pb-4">
+          <button type="button" className="btn">
+            上一步
+          </button>
+          <button type="button" className="btn btn-primary">
+            確認更新
+          </button>
         </div>
       </div>
       <Footer />
