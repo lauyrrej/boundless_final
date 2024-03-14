@@ -24,7 +24,7 @@ import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 // #endregion common ---
 // ---coupon ---
-import styles from '@/pages/coupon/coupon.module.scss'
+import styles from '@/pages/user/coupon.module.scss'
 import Coupon from '@/components/coupon/coupon.js'
 // API
 import CouponClass from '@/API/Coupon'
@@ -144,7 +144,7 @@ export default function Test() {
     setSales(false)
   }
   // #endregion
-  // sql???? --- 分類 0:全部 / 1:樂器 / 2:課程 / 3:已使用 ---
+  // sql???? --- 分類 0:全部 / 2:樂器 / 1:課程 / 3:已使用 ---
   const [kind, setKind] = useState(0)
   const [valid, setValid] = useState(1)
   // sql???? --- 折扣幅度↓ / 即將到期↑ ---

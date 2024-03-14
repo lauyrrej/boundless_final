@@ -23,7 +23,7 @@ class Basic {
 }
 
 // sql模板繼承基本物件
-class Coupontemplate extends Basic {
+class Coupon_template extends Basic {
   constructor() {
     super();
     this.limit_time = "";
@@ -34,7 +34,7 @@ class Coupontemplate extends Basic {
   // FindAll，代表查找所有模板
   async FindAll() {
     try {
-      const queryString = `Select * From coupontemplate`;
+      const queryString = `Select * From coupon_template`;
       // target是我們要的，useless是套件給我們的(用不到)
       const [target, useless] = await db.execute(queryString);
       return target.map((i) => {
@@ -72,7 +72,7 @@ class Coupon extends Basic {
     super();
     this.user_id = 0;
 
-    this.coupontemplate_id = 0;
+    this.coupon_template_id = 0;
     // coupon是否已使用
     this.valid = 0;
   }
@@ -87,13 +87,15 @@ class Coupon extends Basic {
         [user_id]
       );
 
-      const obj = new Coupontemplate();
+      const obj = new Coupon_template();
 
-      const coupontemplate = await obj.FindAll();
+      const coupon_template = await obj.FindAll();
 
       const result = target.map((v) => {
         // 在每個迴圈去找到他的模板
-        const target = coupontemplate.find((i) => i.id === v.coupontemplate_id);
+        const target = coupon_template.find(
+          (i) => i.id === v.coupon_template_id
+        );
         const limit_time = moment(v.created_time)
           .add(7, "d")
           .format("YYYY-MM-DD HH:mm:ss");
@@ -125,8 +127,8 @@ class Coupon extends Basic {
       const now = moment().format("YYYY-MM-DD HH:mm:ss");
 
       const queryString = await db.query(
-        "Insert Into coupon(user_id,coupontemplate_id,created_time,valid) values(?,?,?,1)",
-        [this.user_id, this.coupontemplate_id, now]
+        "Insert Into coupon(user_id,coupon_template_id,created_time,valid) values(?,?,?,1)",
+        [this.user_id, this.coupon_template_id, now]
       );
 
       return true;
