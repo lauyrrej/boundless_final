@@ -74,8 +74,7 @@ export default function RecruitList() {
     stopPropagation(e)
     setFilterVisible(!filterVisible)
   }
-  // ---------------------- filter 假資料  ----------------------
-  // filter假資料
+  // ---------------------- filter 資料  ----------------------
   const [player, setPlayer] = useState('')
 
   const [genre, setgenre] = useState('')
@@ -118,6 +117,7 @@ export default function RecruitList() {
     })
   }
 
+  // 點擊篩選表確認
   const handleLoadData = () => {
     // 要送至伺服器的query string參數
 
@@ -566,7 +566,7 @@ export default function RecruitList() {
                     <div
                       className={`sort-item ${order === 'ASC' ? 'active' : ''}`}
                       role="presentation"
-                      onClick={(e) => {
+                      onClick={() => {
                         handleOrder('ASC')
                       }}
                     >
@@ -577,7 +577,7 @@ export default function RecruitList() {
                         order === 'DESC' ? 'active' : ''
                       }`}
                       role="presentation"
-                      onClick={(e) => {
+                      onClick={() => {
                         handleOrder('DESC')
                       }}
                     >
@@ -590,12 +590,10 @@ export default function RecruitList() {
             {/* 主內容 */}
             <main className="content">
               {jams.length > 0 ? (
-                jams.map((v, i) => {
+                jams.map((v) => {
                   const {
-                    id,
                     juid,
                     former,
-                    member,
                     title,
                     degree,
                     genre,
@@ -605,11 +603,9 @@ export default function RecruitList() {
                   } = v
                   return (
                     <RecruitCard
-                      key={id}
-                      id={id}
+                      key={juid}
                       juid={juid}
                       former={former}
-                      member={member}
                       title={title}
                       degree={degree}
                       genre={genre}

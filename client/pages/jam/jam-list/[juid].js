@@ -840,17 +840,6 @@ export default function Info() {
           {/*   ---------------------- 成員名單  ---------------------- */}
           <div className={`${styles.jamRightWrapper} col-12 col-sm-4`}>
             <div className={`${styles.jamRight}`}>
-              <div className={`${styles.jamTitle}`}>期限倒數</div>
-              <div
-                style={{
-                  color: timeWarningState ? '#ec3f3f' : '#1d1d1d',
-                  fontSize: '20px',
-                }}
-              >
-                {interval <= 0
-                  ? '發起失敗'
-                  : `${countDown.day} 天 ${countDown.hour} 小時 ${countDown.minute} 分 ${countDown.second} 秒`}
-              </div>
               <div
                 className={`${styles.jamTitle}`}
                 style={{ marginBlock: '10px' }}
@@ -870,22 +859,18 @@ export default function Info() {
               <div className="d-flex">
                 <div className={`${styles.itemTitle} me-3`}>參加者</div>
                 <div className="d-flex flex-column gap-2">
-                  {jam.member[0] ? (
-                    jam.member.map((v) => {
-                      return (
-                        <MemberInfo
-                          key={v.uid}
-                          uid={v.uid}
-                          name={v.name}
-                          nickname={v.nickname}
-                          img={v.img}
-                          play={v.play}
-                        />
-                      )
-                    })
-                  ) : (
-                    <span className="fw-medium">尚無人參加</span>
-                  )}
+                  {jam.member.map((v) => {
+                    return (
+                      <MemberInfo
+                        key={v.uid}
+                        uid={v.uid}
+                        name={v.name}
+                        nickname={v.nickname}
+                        img={v.img}
+                        play={v.play}
+                      />
+                    )
+                  })}
                 </div>
               </div>
               {LoginUserData.id === jam.former.id ? (

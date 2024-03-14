@@ -105,7 +105,7 @@ export default function Navbar({ menuMbToggle }) {
             <li className="ms-3 cart-icon">
               <Link href="/cart/check">
                 <IoCart size={30} className="cart-icon" />
-                              <span className="button__badge">10{ }</span>
+                <span className="button__badge">10{}</span>
               </Link>
             </li>
             <li className="login-state d-flex justify-content-center">

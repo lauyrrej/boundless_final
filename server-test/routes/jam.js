@@ -163,7 +163,6 @@ router.get('/allJam', async (req, res) => {
       playerData,
       jamData,
       formerData,
-      dataTotal: dataCount.length,
       pageTotal,
       page,
     });
@@ -432,6 +431,110 @@ router.get('/getMyApply/:uid', async (req, res) => {
     res.status(200).json({ status: 'success', data });
   } else {
     res.status(400).json({ status: 'error' });
+  }
+});
+
+// 取得所有已成立的樂團資料
+router.get('/allFormedJam', async (req, res) => {
+  // 取得組團資訊中所需的曲風資料
+  let [genreData] = await db.execute('SELECT * FROM `genre`').catch((error) => {
+    console.log(error);
+    return undefined;
+  });
+
+  // 取得資料總筆數，用於製作分頁，招募完成state = 1
+  let [dataCount] = await db
+    .execute('SELECT * FROM `jam` WHERE `valid` = 1 AND `state` = 1')
+    .catch((error) => {
+      console.log(error);
+      return undefined;
+    });
+
+  let page = Number(req.query.page) || 1; // 目前頁碼
+  let dataPerpage = 10; // 每頁 10 筆
+  let offset = (page - 1) * dataPerpage; // 取得下一批資料
+  let pageTotal = Math.ceil(dataCount.length / dataPerpage); // 計算總頁數
+  let pageString = ' LIMIT ' + offset + ',' + dataPerpage;
+
+  // 排序用
+  let orderDirection = req.query.order || 'DESC';
+
+  let data;
+  if (Object.keys(req.query).length !== 0) {
+    // 所有篩選條件，預設條件: valid=1(未解散)、state=0(發起中)、時間未過期
+    let sqlString = 'SELECT * FROM `jam` WHERE `valid` = 1 AND `state` = 1';
+    // 解譯編碼
+    const decoded = decodeURIComponent(req.query.search);
+    const search = decoded !== '' ? " AND `name` LIKE '%" + decoded + "%'" : '';
+    // genere儲存的是字串，需使用 LIKE 語法，而非 FIND_IN_SET('1', `genere`)
+    const genre =
+      req.query.genre !== 'all'
+        ? " AND (`genre` LIKE '%," +
+          req.query.genre +
+          "]'" +
+          " OR `genre` LIKE '[" +
+          req.query.genre +
+          ",%'" +
+          " OR `genre` LIKE '%," +
+          req.query.genre +
+          ",%'" +
+          " OR `genre` = '[" +
+          req.query.genre +
+          "]')"
+        : '';
+    const region =
+      req.query.region !== 'all'
+        ? " AND `region` = '" + req.query.region + "'"
+        : '';
+
+    sqlString +=
+      search + genre + region + ' ORDER BY `formed_time` ' + orderDirection;
+    [dataCount] = await db.execute(sqlString).catch(() => {
+      return undefined;
+    });
+    console.log(sqlString);
+
+    page = Number(req.query.page) || 1; // 目前頁碼
+    dataPerpage = 10; // 每頁 10 筆
+    offset = (page - 1) * dataPerpage; // 取得下一批資料
+    pageTotal = Math.ceil(dataCount.length / dataPerpage); // 計算總頁數
+    pageString = ' LIMIT ' + offset + ',' + dataPerpage;
+
+    sqlString += pageString;
+    // console.log(sqlString);
+    [data] = await db.execute(sqlString).catch(() => {
+      return undefined;
+    });
+    // console.log(data);
+  } else {
+    // 沒有篩選條件
+    [data] = await db
+      .execute(
+        'SELECT `juid`, `name`, `cover_img`, `genre`, `formed_time`, `region` FROM `jam` WHERE `valid` = 1 AND `state` = 1 ORDER BY `formed_time` DESC LIMIT 0, 10'
+      )
+      .catch(() => {
+        return undefined;
+      });
+    // console.log(data);
+  }
+
+  if (data && data != undefined) {
+    // 整理資料，把字串轉成陣列或物件
+    const jamData = data.map((v) => {
+      return {
+        ...v,
+        genre: JSON.parse(v.genre),
+      };
+    });
+
+    res.status(200).json({
+      genreData,
+      jamData,
+      pageTotal,
+      page,
+    });
+  } else {
+    res.status(400).send('發生錯誤');
   }
 });
 

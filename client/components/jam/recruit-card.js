@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { FaUser } from 'react-icons/fa'
 
 export default function RecruitCard({
-  id,
   juid,
   former,
   title,

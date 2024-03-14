@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2024-03-14 05:58:16
--- 伺服器版本： 10.4.32-MariaDB
--- PHP 版本： 8.2.12
+-- 產生時間： 2024-03-14 19:58:25
+-- 伺服器版本： 10.4.28-MariaDB
+-- PHP 版本： 8.0.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -44,7 +44,7 @@ CREATE TABLE `jam_apply` (
 --
 
 INSERT INTO `jam_apply` (`id`, `juid`, `former_uid`, `applier_uid`, `applier_play`, `message`, `state`, `created_time`, `valid`) VALUES
-(3, '6q3SoqnuPEXJ', 'n500ef48Ibat', 'n500ef48Ib22', 1, '我想加入!', 4, '2024-03-14 00:24:41', 0);
+(3, '6q3SoqnuPEXJ', 'n500ef48Ibat', 'n500ef48Ib22', 1, '我想加入!', 1, '2024-03-14 00:24:41', 1);
 
 --
 -- 已傾印資料表的索引
