@@ -19,6 +19,7 @@ import useFirebase from '@/hooks/user/use-firebase'
 import { useCart } from '@/hooks/use-cart'
 
 export default function Navbar({ menuMbToggle }) {
+      const {calcTotalItems } = useCart()
   const [showMenu, setShowMenu] = useState(false)
   const { logoutFirebase } = useFirebase()
 
@@ -105,7 +106,7 @@ export default function Navbar({ menuMbToggle }) {
             <li className="ms-3 cart-icon">
               <Link href="/cart/check">
                 <IoCart size={30} className="cart-icon" />
-                              <span className="button__badge">10{ }</span>
+                <span className="button__badge">{calcTotalItems()}</span>
               </Link>
             </li>
             <li className="login-state d-flex justify-content-center">

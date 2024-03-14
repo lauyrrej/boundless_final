@@ -7,24 +7,23 @@ import toast, { Toaster } from 'react-hot-toast'
 //跳轉頁面
 import Link from 'next/link'
 
-
-
 export default function ProductBriefCard({
   id,
   img,
-    img_small,
-    type,
-   lesson_category_id,
+  img_small,
+  type,
+  lesson_category_id,
   name,
   homework,
   sales,
-    price,
-    discount,
+  price,
+  discount,
   discount_state,
   length,
-    info,
+  info,
   onshelf_time,
   addLessonItem = () => {},
+  calcTotalItems = () => {},
 }) {
   //收藏按鍵的功能
   const [colorChange, setcolorChange] = useState(false)
@@ -34,20 +33,6 @@ export default function ProductBriefCard({
   }
 
   // ----------------------加入右上角購物車的功能  ----------------------
-  const [cartItems, setCartItems] = useState([])
-  const [cartCount, setCartCount] = useState(0)
-
-  const addToCart = (product) => {
-    const existingItem = cartItems.find((item) => item.id === product.id)
-    if (existingItem) {
-      existingItem.quantity += 1
-    } else {
-      const newItem = { ...product, quantity: 1 }
-      setCartItems([...cartItems, newItem])
-    }
-    setCartCount(cartCount + 1)
-    toast(`${Lesson[0].name}已加入購物車中`)
-  }
 
   //跳轉頁面
 
@@ -109,7 +94,28 @@ export default function ProductBriefCard({
           </div>
           <div className="lessonIntro">{info}</div>
           <div className="shoppingBtn">
-            <div className="cartBtn">
+            <div
+              className="cartBtn"
+              onClick={() => {
+                addLessonItem({
+                  id,
+                  img,
+                  img_small,
+                  type,
+                  lesson_category_id,
+                  name,
+                  homework,
+                  sales,
+                  price,
+                  discount,
+                  discount_state,
+                  length,
+                  info,
+                  onshelf_time,
+                })
+                calcTotalItems() // Moved inside the onClick function
+              }}
+            >
               <img
                 loading="lazy"
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
