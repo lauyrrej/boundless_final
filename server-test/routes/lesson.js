@@ -136,20 +136,18 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.get("/:priceLow&;priceHigh", async (req, res, next) => {
-  const { priceLow, priceHigh } = req.query;
-  const query = `
-        SELECT * FROM product
-        WHERE price >= ? AND price <= ?
-        ORDER BY price ASC;
-    `;
+// router.get("/:priceLow&;priceHigh", async (req, res, next) => {
+//   const { priceLow, priceHigh } = req.query;
+//   const query = `
+//         SELECT * FROM product
+//         WHERE price >= ? AND price <= ?
+//         ORDER BY price ASC;
+//     `;
 
-  db.query(query, [priceLow, priceHigh], (err, results) => {
-    if (err) throw err;
-    res.json(results);
-  });
-});
-//   // 排序用
-//   let orderDirection = req.query.order || "ASC";
+//   db.query(query, [priceLow, priceHigh], (err, results) => {
+//     if (err) throw err;
+//     res.json(results);
+//   });
+
 
 export default router;

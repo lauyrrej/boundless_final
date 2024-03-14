@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
@@ -14,56 +15,108 @@ import { IoClose } from 'react-icons/io5'
 import { IoCloseOutline } from 'react-icons/io5'
 import { IoIosArrowForward } from 'react-icons/io'
 import { IoMdHome } from 'react-icons/io'
-import axios from 'axios'
+import { debounce } from 'lodash'
+// sweetalert
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+//data
+import CityCountyData from '@/data/CityCountyData.json'
+import playerData from '@/data/player.json'
+
+const mySwal = withReactContent(Swal)
 
 export default function Publish() {
-  // ----------------------上傳圖片  ----------------------
-  // const uploadFileToServer = (file) => {
-  //   // 構造 FormData 對象，用於將文件上傳到服務器
-  //   const formData = new FormData()
-  //   formData.append('file', file)
+  // ----------------------表單  ----------------------
 
-  //   // 發送 POST 請求到服務器，將文件上傳
-  //   return fetch('http://localhost:3005/api/upload', {
-  //     method: 'POST',
-  //     body: formData,
-  //   }).then((response) => {
-  //     // 檢查響應是否成功，如果不成功則拋出錯誤
-  //     if (!response.ok) {
-  //       throw new Error('File upload failed')
-  //     }
-  //     // 返回響應
-  //     return response.json()
-  //   })
-  // }
-  const [file, setFile] = useState()
-  const upload = () => {
-    const formData = new FormData()
-    formData.append('file', file)
-    axios
-      .post('http://localhost:3005/api/upload', formData)
-      .then((response) => {
-        // 檢查響應是否成功，如果不成功則拋出錯誤
-        if (!response.ok) {
-          throw new Error('File upload failed')
-        }
-        // 返回響應
-        return response.json()
-      })
-      .catch((error) => console.log(error))
-    // bug 顯示error但不知道問題在哪
+  // ---------------------- 標題 ----------------------
+  const router = useRouter()
+  const [title, setTitle] = useState('')
+  const [titleCheck, setTitleCheck] = useState(true)
+
+  // 文章分類
+  const [category, setCategory] = useState(true)
+
+  // ---------------------- 文章摘要 ----------------------
+  const [description, setDescription] = useState('')
+  const [descriptionCheck, setDescriptionCheck] = useState(true)
+  // 表單完成狀態 0: 有欄位尚未填寫或不符規定, 1: 填寫完成, 2: 填寫中
+  const [complete, setComplete] = useState(2)
+  // 檢查不雅字詞
+  const checkBadWords = debounce(() => {
+    const badWords = /幹|屎|尿|屁|糞|靠北|靠腰|雞掰|王八|你媽|妳媽|淫/g
+    setTitleCheck(title.search(badWords) < 0 ? true : false)
+    setDescriptionCheck(description.search(badWords) < 0 ? true : false)
+    // 檢查 主旨/條件/描述
+  }, 250)
+  // 檢查表單是否填妥
+  const checkComplete = () => {
+    if (titleCheck === false || title === '') {
+      setComplete(0)
+      return false
+    }
+    if (category === '') {
+      setComplete(0)
+      return false
+    }
+    if (descriptionCheck === false || description === '') {
+      setComplete(0)
+      return false
+    }
+    setComplete(1)
+    return true
   }
-
-  // ----------------------設定字數150---------------
-  const [text, setText] = useState('')
-  const maxLength = 150
-
-  const handleTextChange = (e) => {
-    const inputValue = e.target.value
-    if (inputValue.length <= maxLength) {
-      setText(inputValue)
+  const sendForm = async (title, category, description) => {
+    if (!checkComplete()) {
+      return false
+    }
+    let formData = new FormData()
+    formData.append('title', title)
+    formData.append('category', category)
+    formData.append('description', description)
+    // 確認formData內容
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`)
+    }
+    const res = await fetch(
+      'http://localhost:3005/api/article/article-publish',
+      {
+        method: 'POST',
+        body: formData,
+        credentials: 'include',
+      }
+    )
+    const result = await res.json()
+    if (result.status === 'success') {
+      notifySuccess(result.juid)
+    } else {
+      console.log(result.error)
     }
   }
+  // 發起成功後，彈出訊息框，並跳轉到資訊頁面
+  const notifySuccess = (juid) => {
+    mySwal
+      .fire({
+        position: 'center',
+        icon: 'success',
+        iconColor: '#1581cc',
+        title: '發起成功，將為您跳轉到資訊頁',
+        showConfirmButton: false,
+        timer: 3000,
+      })
+      .then(
+        setTimeout(() => {
+          router.push(`/jam/recruit-list/${juid}`)
+        }, 3000)
+      )
+  }
+  // ---------------------- 偵測表單輸入變化，並執行檢查
+  useEffect(() => {
+    // 跳出未填寫完畢警告後再次輸入，消除警告
+    setComplete(2)
+    // 檢查不雅字詞
+    checkBadWords.cancel() // 取消上一次的延遲
+    checkBadWords()
+  }, [title, category, description])
 
   // ----------------------手機版本  ----------------------
   // 主選單
@@ -157,12 +210,47 @@ export default function Publish() {
                 <IoCloseOutline size={50} />
               </Link>
             </div>
+            {/* setting title */}
+            <div className="set-rwd">
+              <div className="rwd-title">
+                <h3>自訂文章標題</h3>
+              </div>
+              <div className="rwd-content">
+                <h5 className="text-secondary">
+                  上限15個字，系統已經先擷取，你也可以自行修改標題。(
+                  {title.length}/15)
+                </h5>
+                <div>
+                  <label
+                    htmlFor="exampleFormControlTextarea1"
+                    className="form-label"
+                  ></label>
+                  <textarea
+                    className="form-control"
+                    id="exampleFormControlTextarea1"
+                    rows={3}
+                    onChange={(e) => {
+                      setTitle(e.target.value)
+                    }}
+                    placeholder="輸入內容..."
+                    maxLength={15}
+                    defaultValue={''}
+                  />
+                </div>
+                {titleCheck ? (
+                  ''
+                ) : (
+                  <div className="bad-words">偵測到不雅字詞</div>
+                )}
+              </div>
+            </div>
+            <hr />
             {/* setting category */}
-            <div className="set-category d-flex justify-content-between row">
-              <div className="col-4">
+            <div className="set-rwd">
+              <div className="rwd-title">
                 <h3>設定文章分類</h3>
               </div>
-              <div className="col-8">
+              <div className="rwd-content">
                 <select
                   className="form-select"
                   aria-label="Default select example"
@@ -182,7 +270,7 @@ export default function Publish() {
               <div className="rwd-content">
                 <h5 className="text-secondary">
                   上限150個字，系統已經先擷取，你也可以自行修改摘要說明。(
-                  {text.length}/150)
+                  {description.length}/150)
                 </h5>
                 <div>
                   <label
@@ -191,14 +279,22 @@ export default function Publish() {
                   ></label>
                   <textarea
                     className="form-control"
-                    id="exampleFormControlTextarea1"
+                    id="description"
+                    name="description"
                     rows={3}
-                    onChange={handleTextChange}
+                    onChange={(e) => {
+                      setDescription(e.target.value)
+                    }}
                     placeholder="輸入內容..."
                     maxLength={150}
                     defaultValue={''}
                   />
                 </div>
+                {descriptionCheck ? (
+                  ''
+                ) : (
+                  <div className="bad-words">偵測到不雅字詞</div>
+                )}
               </div>
             </div>
             <hr />
@@ -218,21 +314,6 @@ export default function Publish() {
                     width={150}
                     height={150}
                   />
-                  <form
-                    action="/upload"
-                    method="post"
-                    encType="multipart/form-data"
-                  >
-                    <input
-                      type="file"
-                      name="myFile"
-                      id="myFile"
-                      onChange={(e) => setFile(e.target.files[0])}
-                    />
-                    <button type="button" onClick={upload}>
-                      送出
-                    </button>
-                  </form>
                   {/* <h5 className="text-secondary ms-5">上傳圖片</h5> */}
                 </div>
                 <h5 className="text-secondary mt-4">
@@ -245,7 +326,7 @@ export default function Publish() {
             </div>
             <hr />
             {/* setting tag */}
-            <div className="set-rwd">
+            {/* <div className="set-rwd">
               <div className="rwd-title">
                 <h3>自訂文章摘要</h3>
               </div>
@@ -282,7 +363,7 @@ export default function Publish() {
                 </div>
               </div>
             </div>
-            <hr />
+            <hr /> */}
             {/* setting publish */}
             <div className="set-rwd">
               <div className="rwd-title">
@@ -290,7 +371,7 @@ export default function Publish() {
               </div>
             </div>
             {/* form-check */}
-            <div className="form-check">
+            <div className="form-check123">
               <input
                 className="form-check-input"
                 type="radio"
@@ -339,11 +420,27 @@ export default function Publish() {
               <button type="button" className="btn">
                 上一步
               </button>
-              <button type="button" className="btn btn-primary">
+              <button
+                onClick={() => {
+                  sendForm(title, category, description)
+                }}
+                type="button"
+                className="btn btn-primary"
+              >
                 確認更新
               </button>
             </div>
           </div>
+          {complete === 0 ? (
+            <div
+              className="d-flex bad-words justify-content-center"
+              style={{ marginTop: '-8px' }}
+            >
+              <div>請遵照規則，並填寫所有必填內容</div>
+            </div>
+          ) : (
+            ''
+          )}
         </div>
       </div>
       <Footer />
@@ -370,6 +467,9 @@ export default function Publish() {
         }
         .rwd-content {
           width: calc(60%);
+        }
+        .bad-words {
+          color: red;
         }
         .tag-btns {
           display: flex;

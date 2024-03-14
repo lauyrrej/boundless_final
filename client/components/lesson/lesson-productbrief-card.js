@@ -9,10 +9,23 @@ import Link from 'next/link'
 
 
 
-export default function ProductBriefCard(
-  { img,name, homework, sales, price, length, info },
-  { addLessonItem = () => {} }
-) {
+export default function ProductBriefCard({
+  id,
+  img,
+    img_small,
+    type,
+   lesson_category_id,
+  name,
+  homework,
+  sales,
+    price,
+    discount,
+  discount_state,
+  length,
+    info,
+  onshelf_time,
+  addLessonItem = () => {},
+}) {
   //收藏按鍵的功能
   const [colorChange, setcolorChange] = useState(false)
   const colorToggle = () => {
@@ -96,22 +109,35 @@ export default function ProductBriefCard(
           </div>
           <div className="lessonIntro">{info}</div>
           <div className="shoppingBtn">
-            <div
-              className="cartBtn"
-              onClick={() => addLessonItem({ img, name, price })}
-            >
+            <div className="cartBtn">
               <img
                 loading="lazy"
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
                 className=""
               />
-              <div
-                className="cart"
-              >
-                加入購物車
-              </div>
+              <div className="cart">加入購物車</div>
             </div>
-            <div className="buyBtn">
+            <div
+              className="buyBtn"
+              onClick={() =>
+                addLessonItem({
+                  id,
+                  img,
+                  img_small,
+                  type,
+                  lesson_category_id,
+                  name,
+                  homework,
+                  sales,
+                  price,
+                  discount,
+                  discount_state,
+                  length,
+                  info,
+                  onshelf_time,
+                })
+              }
+            >
               <Link className="buy" href="/cart/check">
                 立即購買
               </Link>

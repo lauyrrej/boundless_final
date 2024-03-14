@@ -3,6 +3,19 @@ import db from "../db.js";
 import multer from "multer";
 import moment from "moment";
 
+//上傳檔案
+import {renameSync} from "fs";
+import {dirname, resolve, extname} from "path";
+import {fileURLToPath} from "url";
+//方法2
+import formidable from "formidable";
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+
+// const testdirname = `/`;
+// console.log(__dirname)
+// console.log(testdirname)
+
 //token相關
 import jwt from "jsonwebtoken";
 import "dotenv/config.js";
@@ -12,9 +25,64 @@ const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 
 const router = express.Router();
 const upload = multer();
+
 //得到所有會員資料
 // let [userData] = await db.execute("SELECT * FROM `user` WHERE `valid` = 1");
 // console.log(userData)
+
+
+//上傳檔案-----------------------
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, resolve(__dirname, "public"));
+  },
+  filename: function (req, file, cb) {
+    if(!req.timestamp){
+      req.timestamp = Date.now();
+      req.index = 0;
+    }else{
+      req.index++;
+    }
+    let newName = (req.timestamp + req.index) + extname(file.originalname);
+    cb(null, newName)
+  }
+})
+const uploadTest = multer({ storage: storage })
+// const uploadTest = multer({ dest: resolve(__dirname, "public")})
+
+
+
+router.post("/upload1", uploadTest.single('myFile'), (req, res)=>{
+  // res.json({body: req.body, file: req.file});
+  // render("你好")
+  // res.send("處理檔案上傳");
+
+  // let timestamp = Date.now();
+  // // let newName = timestamp + extname(req.file.originalname);
+  // let newName = timestamp ;
+
+  // // renameSync(req.file.path, resolve(__dirname, "public/"));
+  // req.body.myFile = newName;
+  res.json({body: req.body, file: req.file});
+});
+
+router.post("/upload2", (req, res)=>{
+  const form = formidable({
+    uploadDir: resolve(__dirname, "public/"),
+    keepExtensions: true,
+    multiples: true})
+
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      next(err);
+      return;
+    }
+    res.json({ fields, files });
+  });
+
+  res.json({body: req.body, file: req.file});
+});
+//上傳檔案-----------------------
 
 //GET 測試 - 得到所有會員資料
 router.get("/", async (req, res, next) => {
@@ -52,7 +120,7 @@ router.post("/login", upload.none(), async(req, res) => {
       },
       accessTokenSecret,
       //token 認證的時長原為30m
-      { expiresIn: "120m" }
+      { expiresIn: "3d" }
     );
     res.status(200).json({
       status: "success",
@@ -107,7 +175,7 @@ router.post("/status", checkToken, async(req, res) => {
         my_jam: user.my_jam,
       },
       accessTokenSecret,
-      { expiresIn: "30m" }
+      { expiresIn: "3d" }
     );
     res.json({
       status: "token ok",
@@ -139,13 +207,55 @@ router.get("/:id", checkToken, async function (req, res) {
 
   // 不回傳密碼跟創建時間的版本
   const [singerUser] = await db.execute(
-    `SELECT \`id\` ,\`name\` ,\`email\`,\`phone\`,\`postcode\`,\`country\`,\`township\`,\`address\`,\`birthday\`,\`genre_like\`,\`play_instrument\`,\`info\`,\`img\`,\`gender\`,\`nickname\`,\`google_uid\`,\`photo_url\`,\`privacy\`,\`my_lesson\` ,\`my_jam\` FROM \`user\` WHERE \`id\` = ? AND \`valid\` = 1`,
+    `SELECT \`id\` , \`uid\` ,\`name\` ,\`email\`,\`phone\`,\`postcode\`,\`country\`,\`township\`,\`address\`,\`birthday\`,\`genre_like\`,\`play_instrument\`,\`info\`,\`img\`,\`gender\`,\`nickname\`,\`google_uid\`,\`photo_url\`,\`privacy\`,\`my_lesson\` ,\`my_jam\` FROM \`user\` WHERE \`id\` = ? AND \`valid\` = 1`,
     [id]
   );
 
   const resUser = singerUser[0];
 
   return res.json(resUser);
+  //改檔老師寫法
+  // return res.json({ status: 'success', data: { resUser } })
+});
+
+// GET - 得到單筆會員資料資料 全部資料版本含密碼
+router.get("/profile/:id", checkToken, async function (req, res) {
+  const id = req.params.id;
+
+  
+  //所有資料
+  const [singerUser] =  await db.execute(`SELECT * FROM \`user\` WHERE \`id\` = ? AND \`valid\` = 1`, [id]);
+ 
+  const resUser = singerUser[0];
+  return res.json(resUser);
+  //改檔老師寫法
+  // return res.json({ status: 'success', data: { resUser } })
+});
+
+//會員更新資訊
+router.post("/editProfile/:id", checkToken, async function (req, res) {
+  const id = req.params.id;
+  let { email, name , password, phone, postcode, country, township, address, birthday, genre_like , play_instrument , info, gender , nickname , privacy } = req.body;
+  // console.log(req.body)
+  console.log(email)
+  console.log(name)
+  console.log(birthday)
+  // birthday = new Date(birthday)
+  // if(birthday.length > 10){
+  //   birthday = birthday.split('T')[0]
+  //   console.log(birthday)
+  // }
+  // console.log(birthday)
+
+
+  // 更新資料庫
+  const [result] = await db.execute(`UPDATE user SET email = ?, name =? , phone = ?, postcode = ? , country = ? , township = ?, address = ? , birthday = STR_TO_DATE(?, '%Y-%m-%d') , genre_like = ? , play_instrument = ?, info = ?, gender = ?, nickname = ?, privacy = ? WHERE id = ?;`, [email, name , phone, postcode, country, township, address, birthday, genre_like , play_instrument , info, gender , nickname , privacy, id]);
+
+  
+  // const resUser = singerUser[0];
+  // return res.json(resUser);
+  //改檔老師寫法
+  return res.json({ status: 'success', data: { result } })
 });
 
 // 註冊 = 檢查資料庫是否有此email及密碼 ,如果沒有 就增加sql
@@ -188,7 +298,7 @@ router.post('/', async (req, res) => {
     return res.json({ status: "error 2", message: "該帳號已存在" });
   } else {
     // 用戶不存在，插入新用戶
-    const [result] = await db.execute('INSERT INTO user (email, password, created_time) VALUES (?, ?, ?);', [newUser.email, newUser.password, YYYYMMDDTime]);
+    const [result] = await db.execute('INSERT INTO user (email, uid, password, created_time , valid) VALUES (?, ?, ?, ?, 1);', [newUser.email, uuid,newUser.password, YYYYMMDDTime]);
     // console.log('User inserted:', result);
   }
 
@@ -224,7 +334,7 @@ function checkToken(req, res, next) {
       .json({ status: "error", message: "無登入驗證資料，請重新登入。" });
   }
 }
-
+//uid
 function generateUid() {
   let characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

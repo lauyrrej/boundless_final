@@ -432,13 +432,20 @@ export default function LessonDetailPage() {
               {LessonDetail && LessonDetail.length > 0 && (
                 <ProductCard
                   className="Right-card"
+                  id={LessonDetail[0].id}
                   img={LessonDetail[0].img}
+                  img_small={LessonDetail[0].img}
+                  type={LessonDetail[0].type}
+                  lesson_category_id={LessonDetail[0].lesson_category_id}
                   name={LessonDetail[0].name}
                   homework={LessonDetail[0].homework}
                   sales={LessonDetail[0].sales}
                   price={LessonDetail[0].price}
+                  discount={LessonDetail[0].discount}
+                  discount_state={LessonDetail[0].discount_state}
                   length={LessonDetail[0].length}
                   info={LessonDetail[0].info}
+                  onshelf_time={LessonDetail[0].onshelf_time}
                   addLessonItem={addLessonItem}
                 />
               )}

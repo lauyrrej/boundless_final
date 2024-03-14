@@ -1,12 +1,36 @@
 import { React, useState } from 'react'
 import { FaHeart } from 'react-icons/fa'
-export default function ProductBriefCard() {
+import Instrument from '@/data/instrument/instrument.json'
+import toast, { Toaster } from 'react-hot-toast'
+//收藏的功能
+
+//跳轉頁面
+import Link from 'next/link'
+
+export default function ProductBriefCard({ name, sales, price, info }) {
   //收藏按鍵的功能
   const [colorChange, setcolorChange] = useState(false)
   const colorToggle = () => {
     //按按鍵切換狀態
     setcolorChange(!colorChange)
   }
+
+  // ----------------------加入右上角購物車的功能
+  const [cartItems, setCartItems] = useState([])
+  const [cartCount, setCartCount] = useState(0)
+
+  const addToCart = (product) => {
+    const existingItem = cartItems.find((item) => item.id === product.id)
+    if (existingItem) {
+      existingItem.quantity += 1
+    } else {
+      const newItem = { ...product, quantity: 1 }
+      setCartItems([...cartItems, newItem])
+    }
+    setCartCount(cartCount + 1)
+    toast(`${Instrument[0].name}已加入購物車中`)
+  }
+
   //數量增減功能
   const [quantity, setQuantity] = useState(1)
 
@@ -23,7 +47,7 @@ export default function ProductBriefCard() {
     <>
       <div className="Right sticky-top ">
         <div className="prodBriefing sticky-top ">
-          <div className="prodMainName">Orange Micro Terror</div>
+          <div className="prodMainName">{name}</div>
           <div className="Rating">
             <div className="star">
               <img
@@ -34,10 +58,10 @@ export default function ProductBriefCard() {
               <div className="ratingNumber">4.9</div>
               <div className="commentNumber">(3)</div>
             </div>
-            <div className="sales">已售出 10</div>
+            <div className="sales">已售出 {sales}</div>
           </div>
           <div className="productPrice">
-            <div className="price">NT$ 22,680</div>
+            <div className="price">NT$ {price}</div>
             {/* 收藏功能 */}
             {/* 做好的 onClick*/}
             <div className="likesIcon icon-container ">
@@ -49,26 +73,10 @@ export default function ProductBriefCard() {
               />
             </div>
           </div>
-          <div className="Intro">
-            小巧的放大器，巨大的音色。
-            <br />
-            <br /> Micro Terror是一種全球現象。從最初的 Tiny Terror
-            中汲取靈感，這個微型怪物將一個閥門前置放大器連接到一個固態輸出部分，以獲得巨大的音調，使其小型框架成為一種嘲弄。
-            <br />
-            <br />
-            Micro Terror 重量不到 1
-            公斤，可以說是市場上最便攜的放大器頭。與配套的 PPC108
-            機櫃搭配使用時，Micro Terror 的 Aux
-            輸入和耳機輸出使其成為完美的練習夥伴，即使是最雜亂的餐具櫃也足夠小。
-            然而，不要被它的微型足跡所迷惑，因為尺寸是這款放大器唯一的小問題。Micro
-            Terror 採用高強度鋼外殼，按照與 Terror
-            系列其他產品相同的高標準製造，配備單個 ECC83 (12AX7)
-            前置放大器閥，並與固態功率放大器耦合。這個小東西發出的聲音深度（和音量）確實令人震驚，橙色的咆哮和咬合聲很豐富。更重要的是，Micro
-            Terror 可以與任何 8-16 歐姆音箱一起使用。
-          </div>
+          <div className="Intro">{info}</div>
           {/* 數量選擇器 */}
           {/* 庫存等於0時應該顯示 暫無庫存*/}
-          //TODO
+
           <div>
             {quantity === 0 ? (
               <h6 className="ms-4 mt-2">暫無庫存</h6>
@@ -85,7 +93,10 @@ export default function ProductBriefCard() {
             )}
           </div>
           <div className="shoppingBtn">
-            <div className="cartBtn">
+            <div
+              className="cartBtn"
+              onClick={() => addToCart({ id: 1, name: '商品名稱', price: 100 })}
+            >
               <img
                 loading="lazy"
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
@@ -94,15 +105,18 @@ export default function ProductBriefCard() {
               <div className="cart">加入購物車</div>
             </div>
             <div className="buyBtn">
-              <div className="buy">立即購買</div>
+              <Link className="buy" href="/cart/checkorder">
+                立即購買
+              </Link>
             </div>
           </div>
         </div>
       </div>
+
       <style jsx>
         {`
           .Right {
-            padding-top: 80px;
+            top: 80px;
           }
 
           .prodBriefing {
