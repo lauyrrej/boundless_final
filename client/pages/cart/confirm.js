@@ -16,30 +16,12 @@ import { FaPlus } from 'react-icons/fa'
 import { FaMinus } from 'react-icons/fa'
 import { FaTrash } from 'react-icons/fa6'
 
-//css module
-
-//cart-list
-import LessonList from '@/components/cart/lesson-cart-list.js'
-import InstrumentList from '@/components/cart/instrument-cart-list.js'
-import InstrumentCouponList from '@/components/cart/instrument-coupons.js'
-import LessonCouponList from '@/components/cart/lesson-coupons.js'
-
-//cart-data
-
 //hook
 import { useCart } from '@/hooks/use-cart'
 
 export default function Test() {
   //hook
   const {
-    items,
-    instrumentData,
-    instrumentCoupons,
-    lessonData,
-    lessonCoupons,
-    increment,
-    decrement,
-    remove,
     calcInstrumentItems,
     calcInstrumentPrice,
     calcInstrumentDiscount,
@@ -51,12 +33,14 @@ export default function Test() {
     calcTotalDiscount,
     calcTotalPrice,
   } = useCart()
+
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
   const menuMbToggle = () => {
     setShowMenu(!showMenu)
   }
+
   // ----------------------假資料  ----------------------
 
   const [filterVisible, setFilterVisible] = useState(false)
@@ -126,16 +110,16 @@ export default function Test() {
           </div>
           <div className="d-flex justify-content-between cart-process">
             <div
-              className="d-flex align-items-center ballbox step1"
+              className="d-flex align-items-center ballbox"
               style={{ gap: 10 }}
             >
-              <div className="ball d-flex align-items-center justify-content-center active">
+              <div className="ball d-flex align-items-center justify-content-center inactive">
                 1
               </div>
-              <div className="h5 cart-process-text">確認/修改訂單</div>
+              <div className="h5 cart-process-text">修改訂單</div>
             </div>
             <div
-              className="d-flex align-items-center ballbox step2"
+              className="d-flex align-items-center ballbox"
               style={{ gap: 10 }}
             >
               <div className="ball d-flex align-items-center justify-content-center inactive">
@@ -144,10 +128,10 @@ export default function Test() {
               <div className="h5 cart-process-text">填寫訂單資料</div>
             </div>
             <div
-              className="d-flex align-items-center ballbox step3"
+              className="d-flex align-items-center ballbox"
               style={{ gap: 10 }}
             >
-              <div className="ball d-flex align-items-center justify-content-center inactive">
+              <div className="ball d-flex align-items-center justify-content-center active">
                 3
               </div>
               <div className="h5 cart-process-text">結帳確認</div>
@@ -156,75 +140,86 @@ export default function Test() {
           <div className="d-flex">
             <div className="w-100 p-0 cart-main">
               <div className="cart-lesson">
-                <div className="cart-title">課程</div>
+                <div className="cart-title">訂單內容</div>
                 <div className="cart-thead">
-                  <div className="lesson-product">商品</div>
-                  <div className="lesson-price">售價</div>
+                  <div className="lesson-product">課程</div>
+                  <div className="lesson-price">價格</div>
+                  <div className="lesson-payment">實付金額</div>
                 </div>
-                <LessonList
-                  items={items}
-                  lessonData={lessonData}
-                  remove={remove}
-                />
-                <div className="cart-subtotal h6">
-                  原價 NT$ {calcLessonPrice()}
-                </div>
-                <div className="cart-coupon">
-                  <div className="coupon-selector">
-                    <div className="cart-coupon-text">優惠券</div>
-                    <div>
-                      <LessonCouponList
-                        lessonCoupons={lessonCoupons}
-                        handleLessonSelector={handleLessonSelector}
-                      />
+                <div className="cart-item-group">
+                  <div className="lesson-item">
+                    <div className="lesson-item-name h6">
+                      Logic Pro X 從零開始
                     </div>
-                  </div>
-                  <div className="cart-discount h6">
-                    折扣 -NT$
-                    {calcLessonDiscount()}
+                    <div className="lesson-item-price h6">$26000</div>
+                    <div className="lesson-item-payment h6">$26000</div>
                   </div>
                 </div>
-                <div className="cart-total">
-                  <div className="cart-total-text">
-                    小計 NT$ {calcLessonPrice() - calcLessonDiscount()}
-                  </div>
-                </div>
-              </div>
-              <div className="cart-instrument">
-                <div className="cart-title">樂器</div>
                 <div className="cart-thead">
-                  <div className="instrument-product">商品</div>
+                  <div className="instrument-product">樂器</div>
                   <div className="instrument-price">單價</div>
                   <div className="instrument-quantity">數量</div>
                   <div className="instrument-total">總價</div>
+                  <div className="instrument-payment">實付金額</div>
                 </div>
-                <InstrumentList
-                  items={items}
-                  instrumentData={instrumentData}
-                  increment={increment}
-                  decrement={decrement}
-                  remove={remove}
-                />
-                <div className="cart-subtotal h6">
-                  原價 NT$ {calcInstrumentPrice()}
+                <div className="cart-item-group">
+                  <div className="instrument-item">
+                    <div className="instrument-item-name h6">
+                      Logic Pro X 從零開始
+                    </div>
+                    <div className="instrument-item-price h6">$26000</div>
+                    <div className="instrument-item-quantity h6">10</div>
+                    <div className="instrument-item-total h6">$26000</div>
+                    <div className="instrument-item-payment h6">$26000</div>
+                  </div>
                 </div>
-                <div className="cart-coupon">
-                  <div className="coupon-selector">
-                    <div className="cart-coupon-text">優惠券</div>
-                    <div>
-                      <InstrumentCouponList
-                        instrumentCoupons={instrumentCoupons}
-                        handleInstrumentSelector={handleInstrumentSelector}
-                      />
+              </div>
+              <div className="consumer-info">
+                <div className="cart-title">寄送資訊</div>
+                <div className="consumer-info-group">
+                  <div className="row g-3 align-items-center">
+                    <label
+                      htmlfor="name"
+                      className="col-form-label col-sm-2 col-6 h6"
+                    >
+                      購買者姓名
+                    </label>
+                    <div className="col-sm-3 col-3">李宗盛</div>
+                  </div>
+                  <div className="row g-3 align-items-center">
+                    <label
+                      htmlfor="phone"
+                      className="col-form-label col-sm-2 col-6 h6"
+                    >
+                      電話號碼
+                    </label>
+                    <div className="col-sm-3 col-4">0922333444</div>
+                  </div>
+                  <div className="row g-3">
+                    <label
+                      htmlfor="address"
+                      className="col-form-label col-sm-2 col-6 h6"
+                    >
+                      寄送地址
+                    </label>
+                    <div className="address-location col-sm-10 col-6">
+                      <div>320</div>
+                      <div>桃園市中壢區新生路二段421號</div>
                     </div>
                   </div>
-                  <div className="cart-discount h6">
-                    折扣 -NT$ {calcInstrumentDiscount()}
-                  </div>
                 </div>
-                <div className="cart-total">
-                  <div className="cart-total-text">
-                    小計 NT$ {calcInstrumentPrice() - calcInstrumentDiscount()}
+              </div>
+              <div className="cart-instrument credit-card-info">
+                <div className="cart-title">付款資訊</div>
+                <div className="consumer-info-group">
+                  <div className="row g-3 align-items-center">
+                    <label
+                      htmlFor="name"
+                      className="col-form-label col-sm-2 h6"
+                    >
+                      付款方式
+                    </label>
+                    <div className="col-sm-6">信用卡</div>
                   </div>
                 </div>
               </div>
@@ -258,11 +253,18 @@ export default function Test() {
                   </div>
                 </div>
                 <div className="cart-btn">
+                  <Link
+                    href="/cart/info"
+                    className="b-btn b-btn-body d-flex w-100 h-100 justify-content-center"
+                    style={{ padding: '14px 0' }}
+                  >
+                    回上一步
+                  </Link>
                   <div
                     className="b-btn b-btn-primary d-flex w-100 h-100 justify-content-center"
                     style={{ padding: '14px 0' }}
                   >
-                    結帳
+                    確認付款
                   </div>
                 </div>
               </div>
@@ -270,7 +272,7 @@ export default function Test() {
           </div>
         </>
       </div>
-      <div className="flow-cart-mb" style={{}}>
+      <div className="flow-cart-mb">
         <div
           className="d-flex flex-column position-sticky"
           style={{ gap: 20, top: 110 }}
@@ -295,29 +297,36 @@ export default function Test() {
               <div>NT ${calcTotalPrice() - calcTotalDiscount()}</div>
             </div>
           </div>
-          <Link href='/cart/info' className="cart-btn">
+          <div className="cart-btn">
+            <Link
+              href="/cart/info"
+              className="b-btn b-btn-body d-flex w-100 h-100 justify-content-center"
+              style={{ padding: '14px 0' }}
+            >
+              回上一步
+            </Link>
             <div
               className="b-btn b-btn-primary d-flex w-100 h-100 justify-content-center"
               style={{ padding: '14px 0' }}
             >
-              結帳
+              確認付款
             </div>
-          </Link>
+          </div>
         </div>
       </div>
       <Footer />
 
       <style jsx>{`
-        .cart {
+        .cart{
           color: black;
           padding: 20px 0;
         }
-        .flowcart {
+        .flowcart{
           @media screen and (max-width: 576px) {
             display: none;
           }
         }
-        .ballbox {
+        .ballbox{
           @media screen and (max-width: 576px) {
             flex-wrap: wrap;
             justify-content: center;
@@ -327,15 +336,15 @@ export default function Test() {
           padding: 8px 40px;
           margin-bottom: 20px;
           @media screen and (max-width: 576px) {
-            padding: 0 0 0 0;
-            gap: 25px;
+            padding:0 0 0 0;
+            gap:25px;
           }
-          .cart-process-text {
-            font-size: 20px;
+          .cart-process-text{
+            font-size:20px;
             text-align: center;
             @media screen and (max-width: 576px) {
-              font-size: 14px;
-              width: 100px;
+              font-size:14px;
+              width:100px;
             }
           }
         }
@@ -410,7 +419,37 @@ export default function Test() {
         .cart-btn {
           width: 100%;
           display: flex;
+          gap: 20px;
+
           justify-content: center;
+          align-items: center;
+          align-self: stretch;
+          border-radius: 5px;
+          .btn {
+            width: 100%;
+            padding: 14px 0px !important;
+          }
+          .btn-prev{
+            color: var(--Gray-00, #FFF);
+
+            /* Button Label/Large */
+            font-family: Inter;
+            font-size: 18px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 24px; /* 133.333% */
+          }
+          .btn-next{
+            color: var(--Gray-00, #FFF);
+
+            /* Button Label/Large */
+            font-family: Inter;
+            font-size: 18px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 24px; /* 133.333% */
+          }
+        }
         }
         .cart-lesson {
           display: flex;
@@ -447,116 +486,157 @@ export default function Test() {
           font-weight: 700;
           line-height: normal;
           @media screen and (max-width: 576px) {
-            display: none;
+            grid-template-columns: repeat(4, 1fr);
           }
           .lesson-product {
             grid-row: 1/2;
-            grid-column: 1/4;
+            grid-column: 1/3;
+            @media screen and (max-width: 576px) {
+              grid-column: 1/3;
+            }
           }
           .lesson-price {
-            grid-area: lesson-price;
             grid-row: 1/2;
-            grid-column: 4/9;
+            grid-column: 3/8;
+            margin: auto;
+            @media screen and (max-width: 576px) {
+              grid-column: 3/4;
+            }
+          }
+          .lesson-payment{
+            grid-row: 1/2;
+            grid-column: 8/9;
+            margin: auto;
+            @media screen and (max-width: 576px) {
+              grid-column: 4/5;
+            }
           }
           .instrument-product {
             grid-row: 1/2;
-            grid-column: 1/4;
+            grid-column: 1/3;
+            @media screen and (max-width: 576px) {
+              grid-column: 1/3;
+            }
           }
           .instrument-price {
             grid-row: 1/2;
-            grid-column: 4/5;
+            grid-column: 3/5;
+            margin: auto;
+            @media screen and (max-width: 576px) {
+              display: none;
+            }
           }
           .instrument-quantity {
             grid-row: 1/2;
-            grid-column: 5/7;
+            grid-column: 5/6;
             margin: auto;
+            @media screen and (max-width: 576px) {
+              display: none;
+            }
           }
           .instrument-total {
             grid-row: 1/2;
-            grid-column: 7/8;
+            grid-column: 6/8;
+            margin: auto;
+            @media screen and (max-width: 576px) {
+              grid-column: 3/4;
+            }
+          }
+          .instrument-payment{
+            grid-row: 1/2;
+            grid-column: 8/9;
+            margin: auto;
+            @media screen and (max-width: 576px) {
+              grid-column: 4/5;
+            }
           }
         }
         .cart-item-group {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 20px;
+          gap: 12px;
           padding: 12px;
           color: black;
-
+          .lesson-item {
+            display: grid;
+            place-content: center;
+            grid-template-columns: repeat(8, 110px);
+            @media screen and (max-width: 576px) {
+              grid-template-columns: repeat(4, 1fr);
+            }
+            .lesson-item-name {
+              grid-row: 1/2;
+              grid-column: 1/3;
+              margin-block: auto;
+              padding-left: 10px;
+              @media screen and (max-width: 576px) {
+                grid-column: 1/3;
+                padding-left: 0;
+              }
+            }
+            .lesson-item-price {
+              grid-row: 1/2;
+              grid-column: 3/8;
+              margin: auto;
+              @media screen and (max-width: 576px) {
+                grid-column: 3/4;
+              }
+            }
+            .lesson-item-payment{
+              grid-row: 1/2;
+              grid-column: 8/9;
+              margin: auto;
+              @media screen and (max-width: 576px) {
+                grid-column: 4/5;
+              }
+            }
+          }
           .instrument-item {
             display: grid;
             place-content: center;
             grid-template-columns: repeat(8, 110px);
             @media screen and (max-width: 576px) {
-              grid-template-columns: repeat(3, 132px);
-              grid-template-rows: repeat(4, 33px);
-            }
-            .instrument-item-pic {
-              width: 110px;
-              height: 110px;
-              grid-column: 1/2;
-              overflow: hidden;
-              position: relative;
-              & img {
-                width: auto;
-                height: auto;
-                object-fit: cover;
-              }
-              @media screen and (max-width: 576px) {
-                width: 132px;
-                height: 132px;
-                grid-column: 1/2;
-                grid-row: 1/4;
-              }
+              grid-template-columns: repeat(4, 1fr);
             }
             .instrument-item-name {
               grid-row: 1/2;
-              grid-column: 2/4;
+              grid-column: 1/3;
               margin-block: auto;
               padding-left: 10px;
               @media screen and (max-width: 576px) {
-                grid-row: 1/2;
-                grid-column: 2/4;
+                grid-column: 1/3;
+                padding-left: 0;
               }
             }
             .instrument-item-price {
               grid-row: 1/2;
-              grid-column: 4/5;
-              margin-block: auto;
+              grid-column: 3/5;
+              margin: auto;
               @media screen and (max-width: 576px) {
-                padding-left: 10px;
-                grid-row: 2/3;
-                grid-column: 2/4;
+                display: none;
               }
             }
             .instrument-item-quantity {
               padding: 0 26px;
               grid-row: 1/2;
-              grid-column: 5/7;
-              margin-block: auto;
-              @media screen and (max-width: 576px) {
-                padding-left: 10px;
-                padding-right: 0;
-                grid-row: 3/4;
-                grid-column: 2/3;
-              }
-            }
-            .instrument-item-total {
-              grid-row: 1/2;
-              grid-column: 7/8;
-              margin-block: auto;
+              grid-column: 5/6;
+              margin: auto;
               @media screen and (max-width: 576px) {
                 display: none;
               }
             }
-            .instrument-button {
+            .instrument-item-total {
+              grid-row: 1/2;
+              grid-column: 6/8;
+              margin: auto;
+              @media screen and (max-width: 576px) {
+                grid-column: 3/4;
+              }
+            }
+            .instrument-item-payment{
               grid-row: 1/2;
               grid-column: 8/9;
               margin: auto;
               @media screen and (max-width: 576px) {
-                grid-row: 4/5;
-                grid-column: 3/4;
-                margin-right: 0;
+                grid-column: 4/5;
               }
             }
             .quantity-left-minus {
@@ -564,20 +644,29 @@ export default function Test() {
 
               width: 40px;
               height: 40px;
-
-              @media screen and (max-width: 576px) {
-                width: 32px;
-                height: 32px;
-                padding: 0;
+              .minussign::before {
+                content: '\x91';
+                color: #000;
+                /* sidebar-font */
+                font-family: 'Noto Sans TC';
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 700;
+                line-height: normal;
               }
             }
             .quantity-right-plus {
               width: 40px;
               height: 40px;
-              @media screen and (max-width: 576px) {
-                width: 32px;
-                height: 32px;
-                padding: 0;
+              .plussign::before {
+                content: '\x17';
+                color: var(--white, #fff);
+                /* sidebar-font */
+                font-family: 'Noto Sans TC';
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 700;
+                line-height: normal;
               }
             }
             .input-number {
@@ -590,42 +679,7 @@ export default function Test() {
               font-style: normal;
               font-weight: 700;
               line-height: normal;
-              @media screen and (max-width: 576px) {
-                padding: 0;
-                text-align: center;
-              }
             }
-          }
-        }
-
-        .cart-coupon {
-          display: flex;
-          padding: 0 12px;
-          .coupon-selector {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            @media screen and (max-width: 576px) {
-              gap: 0;
-              width: 200px;
-            }
-          }
-          .cart-coupon-text {
-            color: black;
-            font-family: Inter;
-            font-size: 20px;
-            font-style: normal;
-            font-weight: 400;
-            line-height: 24px; /* 120% */
-            @media screen and (max-width: 576px) {
-              font-size: 18px;
-              width: 100px;
-            }
-          }
-          .cart-discount {
-            color: var(--primary, #1581cc);
-            grid-column: 7/9;
-            margin-left: auto;
           }
         }
         .cart-subtotal {
@@ -651,13 +705,40 @@ export default function Test() {
             line-height: normal;
           }
         }
-        .delete-btn {
+        .delete-btn{
           display: flex;
           gap: 6px;
           padding: 5px 10px;
           vertical-align: center;
         }
-        .flow-cart-mb {
+        .consumer-info-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 12px;
+      }
+      .address-location{
+        display: flex;
+        /* width: 664px; */
+        align-items: flex-start;
+        align-content: flex-start;
+        gap: 12px 45px;
+        flex-wrap: wrap;
+        @media screen and (max-width: 576px) {
+          flex-wrap: nowrap;
+          gap: 12px 20px;
+        }
+      }
+      .credit-card-info{
+        color: black;
+        .minussign{
+          width:12px;
+        }
+      }
+      .consumer-info{
+        color: black;
+      }
+      .flow-cart-mb {
           display: none;
           @media screen and (max-width: 576px) {
             display: block;
@@ -665,9 +746,9 @@ export default function Test() {
             bottom: 0;
             left: 0;
             z-index: 100;
-            background-color: #fff;
+            background-color: #FFF;
             padding: 20px 30px;
-          }
+            }
         }
       `}</style>
     </>

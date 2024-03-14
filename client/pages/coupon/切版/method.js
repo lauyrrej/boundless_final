@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import couponsData from '@/data/coupon.json'
+// import couponsData from '@/data/coupon.json'
 
 function CouponList() {
   const [coupons, setCoupons] = useState(couponsData)

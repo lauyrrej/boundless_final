@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef} from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
@@ -82,7 +82,7 @@ export default function LessonDetailPage() {
   const router = useRouter()
 
   const [LessonDetail, setLessonDetail] = useState()
- const prevLidRef = useRef(null)
+  const prevLidRef = useRef(null)
   // 向伺服器要求資料，設定到狀態中用的函式
   const getLessonDetail = async (luid) => {
     try {
