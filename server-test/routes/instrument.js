@@ -121,22 +121,32 @@ router.get("/categories", async (req, res) => {
 });
     
 
-// 獲得單筆樂器資料
-router.get("/:id", async (req, res, next) => {
-  let puid = req.params.id;
-  console.log(puid);
-  let [data] = await db
-    .execute("SELECT * FROM `product` WHERE `puid` = ? ", [puid])
-    .catch(() => {
-      return undefined;
-    });
 
-  if (data) {
-    console.log(data);
-    res.status(200).json(data);
-  } else {
-    res.status(400).send("發生錯誤");
+// 獲得單筆樂器資料
+// router.get("/:id", async (req, res, next) => {
+//   let puid = req.params.id;
+//   console.log(puid);
+//   let [data] = await db
+//     .execute("SELECT * FROM `product` WHERE `puid` = ? ", [puid])
+//     .catch(() => {
+//       return undefined;
+//     });
+
+//   if (data) {
+//     console.log(data);
+//     res.status(200).json(data);
+//   } else {
+//     res.status(400).send("發生錯誤");
+//   }
+// });
+function App() {
+  const [selectedBrand, setSelectedBrand] = useState(null)
+
+  // Input Filter
+  const [query, setQuery] = useState("")
+  const handleInputChange = event => {
+    setQuery(event.target.value)
   }
-});
+} 
 
 export default router;
