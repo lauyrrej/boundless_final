@@ -65,8 +65,9 @@ export default function InstrumentDetailPage() {
 
   const router = useRouter()
 
-  const [InstrumentDetail, setInstrumentDetail] = useState()
-  const prevLidRef = useRef(null)
+  const [InstrumentDetail, setInstrumentDetail] = useState([])
+
+  const prevPuidRef = useRef(null)
   // 向伺服器要求資料，設定到狀態中用的函式
   const getInstrumentDetail = async (puid) => {
     try {
@@ -94,11 +95,9 @@ export default function InstrumentDetailPage() {
     if (router.isReady) {
       const { puid } = router.query
       console.log(puid)
-      // 如果lid與上一次的不同，觸發getLessonDetail
-      if (puid !== prevLidRef.current) {
-        getInstrumentDetail(puid)
-        prevLidRef.current = puid
-      }
+      // 如果puid與上一次的不同，觸發getInstrumentDetail
+
+      getInstrumentDetail(puid)
     }
   }, [router.isReady])
 
@@ -160,10 +159,10 @@ export default function InstrumentDetailPage() {
               <IoHome size={20} />
               <Link href="/instrument">
                 <li style={{ marginLeft: '8px' }}>樂器商城</li>
-                <FaChevronRight />
-
-                <li style={{ marginLeft: '10px' }}>音響設備</li>
               </Link>
+              <FaChevronRight />
+
+              <li style={{ marginLeft: '10px' }}>音響設備</li>
 
               <FaChevronRight />
               <li style={{ marginLeft: '10px' }}>音箱頭</li>
@@ -175,19 +174,69 @@ export default function InstrumentDetailPage() {
               )}
             </ul>
           </div>
+
           <div className="col-12 col-sm-6">
             {/* 主內容 */}
             <main className="content">
               <div>
                 <div className="Left">
                   {/* prodBriefingArea */}
+                  {/* 因為我的資料庫img存的是字串，所以我要把逗號去掉才能存成陣列，然後傳回來 */}
                   <div className="prodBriefingArea d-flex ">
+                    {InstrumentDetail &&
+                      InstrumentDetail.length > 0 &&
+                      InstrumentDetail.map((item, index) => (
+                        <img
+                          key={index}
+                          src={`/instrument/${
+                            item.category_name
+                          }/${item.name.replaceAll(' ', '_')}/${
+                            item.img.split(',')[0]
+                          }`}
+                          className="prodImg"
+                        />
+                      ))}
+                    <div className="pic-Con ">
+                      <div className="main-Pic border border-secondary">
+                        {InstrumentDetail &&
+                          InstrumentDetail.length > 0 &&
+                          InstrumentDetail.map((item, index) => (
+                            <img
+                              key={index}
+                              src={`/instrument/${
+                                item.category_name
+                              }/${item.name.replaceAll(' ', '_')}/${
+                                item.img.split(',')[0]
+                              }`}
+                              className="prodImg"
+                            />
+                          ))}
+                      </div>
+                    </div>
+                    {/* {InstrumentDetail &&
+                      InstrumentDetail.length > 0 &&
+                      InstrumentDetail.map((item, index) => {
+                        console.log(
+                          `/instrument/${item.category_name}/${item.name}/${
+                            item.img.split(',')[0]
+                          }`
+                        )
+                        ;<img
+                          key={index}
+                          src="\public\instrument\木吉他\YAMAHA_FGX3\FGX3-3.jpeg"
+                          className="prodImg"
+                        />
+                      })} */}
+
+                    {/* 資料庫img存的是字串，直接.img會沒東西 */}
+                    {/* <div className="prodBriefingArea d-flex ">
                     {InstrumentDetail && InstrumentDetail.length > 0 && (
                       <img
-                        src={`/樂器介紹/instrument_img/${InstrumentDetail[0].img}`}
+                        src={`/instrument/木吉他/YAMAHA_FG5/${InstrumentDetail[0].img}`}
                         className="prodImg"
                       />
                     )}
+                  </div> */}
                   </div>
                   {/* <div className="pic-Con ">
                     <div className="main-Pic border border-secondary">
@@ -689,13 +738,20 @@ export default function InstrumentDetailPage() {
         }
 
         /* prodBriefingArea */
-        .prodBriefingArea-ins{
-             width: 100%;
-            padding:0px;
-          
-            overflow: hidden; 
-            flex-direction:column;
-          justify-content:center;
+        .prodBriefingArea{
+          width: 660px;
+          height: 394px;
+          padding:0px;
+          border-radius: 10px;
+          overflow: hidden; 
+         
+        
+        }
+
+        .prodImg {
+          padding:0px;
+          background-color: #ff9595;
+          border-radius: 10px;
         }
      
      .pic-Con{
