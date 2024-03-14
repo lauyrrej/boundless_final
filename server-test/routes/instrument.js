@@ -13,7 +13,7 @@ router.get("/", async (req, res, next) => {
     
         if (instrument) {
           res.json(instrument);
-          console.log(instrument);
+         // console.log(instrument);
         } else {
           res.json("沒有找到相應的資訊");
         }
@@ -22,54 +22,102 @@ router.get("/", async (req, res, next) => {
         res.json("發生錯誤");
       }
 
+        // 取得資料總筆數，用於製作分頁
+       let [dataCount] = await db
+       .execute("SELECT * FROM `product` WHERE `type` = 1")
+       .catch(() => {
+        return undefined;
+      });
     
        // 排序用
   // let orderDirection = req.query.order || "ASC";
 
-  let data;
-let page, dataPerpage, offset, pageTotal, pageString;
+  let page = Number(req.query.page) || 1; // 目前頁碼
+  let dataPerpage = 20; // 每頁20筆
+  let offset = (page - 1) * dataPerpage; // 取得下一批資料
+  let pageTotal = Math.ceil(dataCount.length / dataPerpage); // 計算總頁數
+  let pageString = " LIMIT " + offset + "," + dataPerpage;
+  });
 
-if (Object.keys(req.query).length !== 0) {
-  // 所有篩選條件
-  let sqlString = "SELECT * FROM `brand` WHERE `valid` = 1";
-  
-  const brandSelect =
-    req.query.brandSelect !== "all"
-      ? " AND `brandSelect` = " + parseInt(req.query.brandSelect)
-      : "";
-  
-  sqlString += brandSelect;
-  
-  // 取得總筆數
+//instrument_category
+router.get("/categories", async (req, res) => {
   try {
-    const [countResult] = await db.execute("SELECT COUNT(*) as total FROM `brand` WHERE `valid` = 1" + brandSelect);
-    const dataCount = countResult[0].total;
-    
-    // 計算總頁數
-    page = Number(req.query.page) || 1;
-    dataPerpage = 10; // 每頁 10 筆
-    offset = (page - 1) * dataPerpage; // 取得下一批資料
-    pageTotal = Math.ceil(dataCount / dataPerpage); // 計算總頁數
-    pageString = " LIMIT " + offset + "," + dataPerpage;
-    
-    sqlString += pageString;
-    
-    [data] = await db.execute(sqlString).catch(() => {
-      return undefined;
-    });
+    let [instrument_category] = await db.execute(
+      "SELECT * FROM `instrument_category` "
+    );
+
+    if (instrument_category) {
+      res.json(instrument_category);
+    } else {
+      res.json("沒有找到相應的資訊");
+    }
   } catch (error) {
     console.error("發生錯誤：", error);
-    data = undefined;
+    res.json("發生錯誤");
   }
-} else {
-  // 沒有篩選條件
-  [data] = await db.execute("SELECT * FROM `brand` WHERE `valid` = 1").catch(() => {
+});
+
+  //特定分類的資料
+  router.get("/category/:category", async (req, res) => {
+    try {
+      const category = req.params.category;
+  
+      let [instrument] = await db.execute(
+        "SELECT * FROM `product` WHERE `instrument_category_id` = ?",
+          [category]
+        
+      );
+
+      if (instrument.length > 0) {
+        res.json(instrument);
+      } else {
+        res.json("沒有找到相應的資訊");
+      }
+    } catch (error) {
+      console.error("發生錯誤：", error);
+      res.json("發生錯誤");
+    }
+  });
+
+ // 獲得單筆樂器資料＋review
+ // 檢索屬於特定 puid 的產品，並且通過左連接獲取與之相關聯的產品評論
+ router.get("/:id", async (req, res, next) => {
+  let puid = req.params.id;
+  console.log(puid);
+  let [data] = await db
+   .execute(
+     "SELECT p.*, pr.* FROM `product` AS p LEFT JOIN `product_review` AS pr ON p.id = pr.product_id WHERE p.`puid` = ?",
+     [puid]
+   )
+   .catch(() => {
     return undefined;
   });
-}
 
-console.log(data);
-}
+  if (data) {
+    console.log(data);
+    res.status(200).json(data);
+  } else {
+    res.status(400).send("發生錯誤");
+  }
+});
+    
 
-);
+// 獲得單筆樂器資料
+router.get("/:id", async (req, res, next) => {
+  let puid = req.params.id;
+  console.log(puid);
+  let [data] = await db
+    .execute("SELECT * FROM `product` WHERE `puid` = ? ", [puid])
+    .catch(() => {
+      return undefined;
+    });
+
+  if (data) {
+    console.log(data);
+    res.status(200).json(data);
+  } else {
+    res.status(400).send("發生錯誤");
+  }
+});
+
 export default router;

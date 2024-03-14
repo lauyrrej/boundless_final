@@ -1,3 +1,4 @@
+// #region ---common ---
 import { useEffect, useState } from 'react'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
@@ -9,6 +10,10 @@ import Head from 'next/head'
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
 
+// lessoncard
+import Card from '@/components/lesson/lesson-card'
+import Cardrwd from '@/components/lesson/lesson-card-rwd'
+
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
@@ -17,9 +22,15 @@ import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
+// #endregion common ---
+// ---coupon ---
+import styles from '@/pages/coupon/coupon.module.scss'
+import Coupon from '@/components/coupon/coupon.js'
+// API
+import CouponClass from '@/API/Coupon'
 
 export default function Test() {
-  // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
+  // #region ---會員登入狀態 & 會員資料獲取 ---
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
   const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
     useAuth()
@@ -33,7 +44,7 @@ export default function Test() {
   //登出功能
 
   //檢查是否獲取資料
-  // console.log(LoginUserData)
+  console.log(LoginUserData)
   //   讀取使用者資料後 定義大頭貼路徑
   let avatarImage
   if (LoginUserData.img) {
@@ -43,9 +54,26 @@ export default function Test() {
   } else {
     avatarImage = `/user/avatar_userDefault.jpg`
   }
+  // #endregion
+  // #region ---會員登入狀態 ---
+  // 在電腦版或手機版時
+  const [isSmallScreen, setIsSmallScreen] = useState(false)
 
-  // ----------------------會員登入狀態  ----------------------
-  // ----------------------手機版本  ----------------------
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth <= 576)
+    }
+
+    handleResize()
+
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+  // #endregion
+  // #region ---手機版本 ---
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
   const menuMbToggle = () => {
@@ -68,10 +96,11 @@ export default function Test() {
   //   '我的課程',
   //   '我的訊息',
   // ]
+  // #endregion
 
   // 資料排序
-  const [dataSort, setDataSort] = useState('latest')
-  // ----------------------條件篩選  ----------------------
+  const [dataSort, setDataSort] = useState([])
+  // #region ---條件篩選 ---
   const [filterVisible, setFilterVisible] = useState(false)
   useEffect(() => {
     document.addEventListener('click', (e) => {
@@ -95,13 +124,12 @@ export default function Test() {
     { id: 4, name: 'Gibson' },
   ]
   const [brandSelect, setBrandSelect] = useState('all')
-
-  const [priceLow, setPriceLow] = useState('')
-  const [priceHigh, setPriceHigh] = useState('')
-
+  // 篩選金額範圍
+  // const [priceLow, setPriceLow] = useState('')
+  // const [priceHigh, setPriceHigh] = useState('')
   // 課程評價
-  const scoreState = ['all', '5', '4', '3']
-  const [score, setScore] = useState('all')
+  // const scoreState = ['all', '5', '4', '3']
+  // const [score, setScore] = useState('all')
 
   // 活動促銷
   const [sales, setSales] = useState(false)
@@ -109,19 +137,32 @@ export default function Test() {
   // 清除表單內容
   const cleanFilter = () => {
     setBrandSelect('all')
-    setPriceLow('')
-    setPriceHigh('')
-    setScore('all')
+    // setPriceLow('')
+    // setPriceHigh('')
+    // setScore('all')
     setSales(false)
   }
+  // #endregion
+  // sql???? --- 分類 0:全部 / 1:樂器 / 2:課程 / 3:已使用 ---
+  const [kind, setKind] = useState(0)
+  const [valid, setValid] = useState(1)
+  // sql???? --- 折扣幅度↓ / 即將到期↑ ---
+  // const [discount, setDiscount] = useState('ASC')
+  // const [limit_time, setLimit_time] = useState('DESC')
+
+  // 從後端加載商品數據
+  useEffect(() => {
+    // component did mounted 呼叫api，這樣只會做一遍
+    CouponClass.FindAll().then(async (res) => {
+      setDataSort(res)
+    })
+  }, [])
 
   return (
     <>
-      <Head>
-        <title>我的文章</title>
-      </Head>
+      <Head menuMbToggle={menuMbToggle}>{/* <title>我的優惠券</title> */}</Head>
       <Navbar menuMbToggle={menuMbToggle} />
-      {/* 先把HEROSECTION隱藏 */}
+      {/* 先把HeroSection隱藏 */}
       {/* <div
         className="page-shero d-none d-sm-block"
         style={{ paddingTop: '60px' }}
@@ -178,6 +219,7 @@ export default function Test() {
             <ImExit size={20} className="ms-2" />
           </div>
         </div>
+
         <div className="row">
           {/* sidebar */}
           <div className="sidebar-wrapper d-none d-sm-block col-sm-2">
@@ -228,7 +270,7 @@ export default function Test() {
                   <Link href="/user/user-favorite">我的收藏</Link>
                 </li>
                 <li key={6}>
-                  <Link href="/coupon/userCoupon">我的優惠券</Link>
+                  <Link href="/coupon/user-Coupon">我的優惠券</Link>
                 </li>
                 <li key={7}>
                   <Link href="/user/user-lesson">我的課程</Link>
@@ -240,7 +282,7 @@ export default function Test() {
             </div>
           </div>
 
-          {/*   ----------------------頁面內容  ---------------------- */}
+          {/* ---頁面內容???? --- */}
           <div className="col-12 col-sm-10 page-control">
             {/* 手機版sidebar */}
             <div
@@ -256,30 +298,45 @@ export default function Test() {
                   }}
                 />
               </div>
-              <Link href={`/jam/recruit-list`} className="sm-item active">
-                團員募集
+              <Link href="#" className="sm-item active">
+                會員資訊
               </Link>
-              <Link href={`/jam/jam-list`} className="sm-item">
-                活動中的JAM
+              <Link href="#" className="sm-item">
+                我的樂團
               </Link>
-              <Link href={`/jam/Q&A`} className="sm-item">
-                什麼是JAM？
+              <Link href="#" className="sm-item">
+                我的訂單
+              </Link>
+              <Link href="#" className="sm-item">
+                我的文章
+              </Link>
+              <Link href="#" className="sm-item">
+                我的收藏
+              </Link>
+              <Link href="#" className="sm-item">
+                我的優惠券
+              </Link>
+              <Link href="#" className="sm-item">
+                我的課程
+              </Link>
+              <Link href="#" className="sm-item">
+                我的訊息
               </Link>
             </div>
-            {/*  ---------------------- 頂部功能列  ---------------------- */}
+            {/* --- 頂部功能列 --- */}
             <div className="top-function-container">
-              {/*  ---------------------- 麵包屑  ---------------------- */}
+              {/* --- 麵包屑 --- */}
               <div className="breadcrumb-wrapper-ns">
                 <ul className="d-flex align-items-center p-0 m-0">
                   <IoHome size={20} />
                   <li style={{ marginLeft: '8px' }}>會員中心</li>
                   <FaChevronRight />
-                  <li style={{ marginLeft: '10px' }}>我的文章</li>
+                  <li style={{ marginLeft: '10px' }}>我的優惠券</li>
                 </ul>
               </div>
 
               <div className="top-function-flex">
-                {/*  ---------------------- 搜尋欄  ---------------------- */}
+                {/* --- 搜尋欄 --- */}
                 <div className="search-sidebarBtn">
                   <div
                     className="d-flex d-sm-none align-items-center b-btn b-btn-body"
@@ -289,7 +346,8 @@ export default function Test() {
                   >
                     選單
                   </div>
-                  <div className="search input-group">
+                  {/* search */}
+                  {/* <div className="search input-group">
                     <input
                       type="text"
                       className="form-control"
@@ -298,27 +356,81 @@ export default function Test() {
                     <div className="search-btn btn d-flex justify-content-center align-items-center p-0">
                       <IoIosSearch size={25} />
                     </div>
+                  </div> */}
+
+                  {/* 分類 */}
+                  <div className="d-none d-sm-block pt-4">
+                    <nav aria-label="breadcrumb sort d-flex justify-content-between align-items-center">
+                      <ol className="breadcrumb">
+                        <li className="sort breadcrumb-item btn">
+                          <a href="#" onClick={() => setKind(0)}>
+                            全部
+                          </a>
+                        </li>
+                        <li
+                          className="sort breadcrumb-item btn"
+                          aria-current="page"
+                        >
+                          <a href="#" onClick={() => setKind(2)}>
+                            樂器
+                          </a>
+                        </li>
+                        <li
+                          className="sort breadcrumb-item btn"
+                          aria-current="page"
+                        >
+                          <a href="#" onClick={() => setKind(1)}>
+                            課程
+                          </a>
+                        </li>
+                        <li
+                          className="sort breadcrumb-item btn"
+                          aria-current="page"
+                        >
+                          <a
+                            href="#"
+                            // 已過期valid=0????
+                            onClick={() => setValid(0)}
+                          >
+                            已使用
+                          </a>
+                        </li>
+                        {/* ???? */}
+                        {/* <li className="sort breadcrumb-item submit btn">
+                          領取Test
+                        </li> */}
+                      </ol>
+                    </nav>
                   </div>
                 </div>
-
+                {/* 條件排序+RWD分類&條件排序 */}
+                {/* RWD???? */}
                 <div className="filter-sort d-flex justify-content-between">
                   <div className="sort-mb d-block d-sm-none">
                     <select
                       className="form-select"
-                      value={dataSort}
-                      name="dataSort"
-                      onChange={(e) => {
-                        setDataSort(e.target.value)
-                      }}
+                      //????
+                      // value={order}
+                      name="order"
+                      //????
+                      // onChange={(e) => {
+                      //   handleOrder(e.target.value)
+                      // }}
                     >
-                      <option value="latest">新到舊</option>
-                      <option value="oldest">舊到新</option>
+                      <option selected value="#">
+                        全部
+                      </option>
+                      <option value="ASC">樂器</option>
+                      <option value="ASC">課程</option>
+                      <option value="ASC">已使用</option>
+                      <option value="ASC">折扣幅度</option>
+                      <option value="DESC">即將到期</option>
                     </select>
                   </div>
-                  {/*  ---------------------- 條件篩選  ---------------------- */}
+                  {/*篩選*/}
                   <form className="d-flex align-items-center position-relative">
                     <div
-                      className="filter-text d-flex align-items-center me-sm-4"
+                      className="filter-text d-flex align-items-center me-sm-4 d-block d-sm-none"
                       role="presentation"
                       onClick={onshow}
                     >
@@ -331,6 +443,8 @@ export default function Test() {
                         onClick={stopPropagation}
                         role="presentation"
                       >
+                        {/*條件篩選*/}
+
                         {/* 品牌 */}
                         <div className="filter-item">
                           <div className="filter-title">選擇品牌</div>
@@ -343,7 +457,9 @@ export default function Test() {
                               setBrandSelect(e.target.value)
                             }}
                           >
-                            <option value="all">全部</option>
+                            <option selected value="all">
+                              全部
+                            </option>
                             {brandData.map((v) => {
                               return (
                                 <option key={v.id} value={v.id}>
@@ -354,7 +470,7 @@ export default function Test() {
                           </select>
                         </div>
                         {/* 價格區間 */}
-                        <div className="filter-item">
+                        {/* <div className="filter-item">
                           <div className="filter-title">價格區間</div>
                           <input
                             type="number"
@@ -379,9 +495,9 @@ export default function Test() {
                               setPriceHigh(e.target.value)
                             }}
                           />
-                        </div>
+                        </div> */}
                         {/* 商品評價 */}
-                        <div className="filter-item m-0">
+                        {/* <div className="filter-item m-0">
                           <div className="filter-title">商品評價</div>
                           <div className="filter-radio-group d-flex flex-wrap justify-content-between">
                             {scoreState.map((v, i) => {
@@ -392,6 +508,7 @@ export default function Test() {
                                 >
                                   <label className="form-check-label">
                                     <input
+                                      classname="form-check-input"
                                       type="radio"
                                       name="score"
                                       value={v}
@@ -406,7 +523,7 @@ export default function Test() {
                               )
                             })}
                           </div>
-                        </div>
+                        </div> */}
                         {/* 促銷商品 */}
                         <div className="filter-item">
                           <div className="form-check">
@@ -442,33 +559,33 @@ export default function Test() {
                       </div>
                     </div>
                   </form>
-                  {/* ---------------------- 資料排序  ---------------------- */}
+
+                  {/* ----- 資料排序 ------ */}
                   <div className="sort d-none d-sm-flex justify-content-between align-items-center">
                     <div className="d-flex align-items-center">
                       排序
                       <FaSortAmountDown size={14} />
                     </div>
                     <div
-                      className={`sort-item ${
-                        dataSort === 'latest' ? 'active' : ''
-                      }`}
+                      // className={`sort-item ${order === 'ASC' ? 'active' : ''}`}
                       role="presentation"
-                      onClick={(e) => {
-                        setDataSort('latest')
-                      }}
+                      // onClick={(e) => {
+                      //   handleOrder('ASC')
+                      // }}
                     >
-                      新到舊
+                      即將到期
                     </div>
                     <div
-                      className={`sort-item ${
-                        dataSort === 'oldest' ? 'active' : ''
-                      }`}
+                      //discount
+                      // className={`sort-item ${
+                      //     order === 'DESC' ? 'active' : ''
+                      //   }`}
                       role="presentation"
-                      onClick={(e) => {
-                        setDataSort('oldest')
-                      }}
+                      // onClick={(e) => {
+                      //   handleOrder('DESC')
+                      // }}
                     >
-                      舊到新
+                      折扣幅度
                     </div>
                   </div>
                 </div>
@@ -484,86 +601,84 @@ export default function Test() {
                       backgroundColor: 'rgb(255, 255, 255)',
                     }}
                   >
-                    <div className="user-content col-12">
-                      <div className="user-content-top">
-                        <div className="user-title-userInfo">我的文章</div>
-                        <div className="user-acticle-newBtn btn  btn-primary">
-                          <div>新文章</div>
+                    <div className="coupon-content col-12">
+                      <div className="coupon-content-top">
+                        <div className="user-title-userInfo">
+                          我的優惠券{LoginUserData.name}
                         </div>
                       </div>
-
-                      <div className="user-acticleList ">
-                        <div className="user-acticleList-item-title d-flex row mb-2">
-                          <div className="form-check col-sm-6 col-6 ">
-                            <input
-                              className="form-check-input user-acticleList-item-title-acticleCheck"
-                              type="checkbox"
-                              defaultValue=""
-                              id="user-acticleList-item-title-acticleCheck"
-                            />
-                            <label
-                              className="form-check-label user-acticleList-item-title-acticleLabel"
-                              htmlFor="user-acticleList-item-title-acticleCheck"
-                            >
-                              文章標題
-                            </label>
-                          </div>
-                          <div className="user-acticleList-item-title-time col-sm-2 col-2">
-                            時間
-                          </div>
-                          <div className="user-acticleList-item-title-message col-sm-1 col-1 px-2">
-                            留言數
-                          </div>
-                          <div className="user-acticleList-item-title-btnGroup col-sm-3 col-4 row ">
-                            <div className=" btn btn-primary user-acticleList-item-title-newBtn col-sm-5 col-9">
-                              新文章
-                            </div>
-                            <div className=" btn btn-primary user-acticleList-item-title-btn col-sm-5 col-9">
-                              刪除
-                            </div>
-                          </div>
-                        </div>
-                        <hr />
-
-                        <div className="user-acticleList-item d-flex row mb-2">
-                          <div className="form-check col-sm-6 col-6 ">
-                            <input
-                              className="form-check-input user-acticleList-item-acticleCheck"
-                              type="checkbox"
-                              defaultValue=""
-                              id="user-acticleList-item-acticleCheck"
-                            />
-                            <label
-                              className="form-check-label user-acticleList-item-acticleLabel"
-                              htmlFor="user-acticleList-item-acticleCheck"
-                            >
-                              那些在買七弦吉他前，需要注意的調 Tone
-                              撇步！那些在買七弦吉他前，需要注意的調 Tone
-                              撇步！那些在買七弦吉他前，需要注意的調 Tone
-                              撇步！那些在買七弦吉他前，需要注意的調 Tone
-                              撇步！那些在買七弦吉他前，需要注意的調 Tone 撇步！
-                            </label>
-                          </div>
-                          <div className="user-acticleList-item-time col-sm-2 col-2">
-                            2024/01/14
-                          </div>
-                          <div className="user-acticleList-item-message col-sm-1 col-1 px-2">
-                            10
-                          </div>
-                          <div className="user-acticleList-item-btnGroup col-sm-3 col-4 row ">
-                            <div className="user-acticleList-item-text   col-sm-5 col-9 ">
-                              已發布
-                            </div>
-                            <div className=" btn btn-primary user-acticleList-item-btn col-sm-5 col-9">
-                              編輯
-                            </div>
-                          </div>
-                        </div>
-                        <hr />
+                      {/* components */}
+                      <div className="couponImage">
+                        {/* 如果 kind 不等於 0，則只保留具有與 kind 變數相等的 kind 屬性的元素；如果 kind 等於 0，則保留所有元素。最終返回符合條件的元素組成的新陣列。 */}
+                        {dataSort
+                          .filter((i) => (kind !== 0 ? i.kind === kind : true))
+                          .filter((i) =>
+                            valid !== 1 ? i.valid === valid : true
+                          )
+                          .map((v, i) => {
+                            const {
+                              id,
+                              name,
+                              type,
+                              discount,
+                              kind,
+                              limit_time,
+                            } = v
+                            return (
+                              <Coupon
+                                key={id}
+                                name={name}
+                                type={type}
+                                discount={discount}
+                                kind={kind}
+                                limit_time={limit_time}
+                                className={`${styles.couponItem} `}
+                              />
+                            )
+                          })}
                       </div>
 
-                      <div className="user-orderList-pagination">
-                        <p>待放分頁元件 注意class</p>
+                      {/*pagination*/}
+                      <div className="coupon-pagination">
+                        <div className="d-flex justify-content-center pages d-none d-sm-block">
+                          <nav aria-label="Page navigation example">
+                            <ul className="pagination">
+                              <li className="page-item">
+                                <a
+                                  className="page-link"
+                                  href="#"
+                                  aria-label="Previous"
+                                >
+                                  <span aria-hidden="true">«</span>
+                                </a>
+                              </li>
+                              <li className="page-item">
+                                <a className="page-link" href="#">
+                                  1
+                                </a>
+                              </li>
+                              <li className="page-item">
+                                <a className="page-link" href="#">
+                                  2
+                                </a>
+                              </li>
+                              <li className="page-item">
+                                <a className="page-link" href="#">
+                                  3
+                                </a>
+                              </li>
+                              <li className="page-item">
+                                <a
+                                  className="page-link"
+                                  href="#"
+                                  aria-label="Next"
+                                >
+                                  <span aria-hidden="true">»</span>
+                                </a>
+                              </li>
+                            </ul>
+                          </nav>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -574,9 +689,8 @@ export default function Test() {
         </div>
       </div>
       <Footer />
-
       <style jsx>{`
-        /* -------------------user sidebar-------------------- */
+        /* ---user sidebar--- */
         .sidebar-user-info {
           display: flex;
           padding: 0px 12px;
@@ -584,28 +698,23 @@ export default function Test() {
           align-items: flex-start;
           gap: 10px;
           align-self: stretch;
-
           /* position: relative; */
-
           .sidebar-user-info-imgBox {
             width: 100px;
             height: 100px;
             border-radius: 100px;
-
             /* react Image 要加上這兩條參數 家在外層容器的css , Image本身要fill */
-
             position: relative;
             overflow: hidden;
           }
           .sidebar-user-info-text {
             display: flex;
-            width: 140px;
+            width: 100px;
             flex-direction: column;
             align-items: flex-start;
             gap: 6px;
             color: var(--dark, #1d1d1d);
-            text-align: start;
-
+            text-align: center;
             /* h5 */
             font-family: 'Noto Sans TC';
             font-size: 20px;
@@ -616,7 +725,6 @@ export default function Test() {
               margin-bottom: 20px;
             }
           }
-
           .sidebar-user-info-Camera-img {
             width: 30px;
             height: 30px;
@@ -626,41 +734,11 @@ export default function Test() {
             fill: var(--light-gray, #cfcfcf);
           }
         }
-
-        /* -------------------user sidebar-------------------- */
-        /* --------------- user-contect-acticle--------------- */
-        hr {
-          margin: 10px;
-        }
-
-        .btn-primary {
-          background-color: #18a1ff;
-        }
+        /* --- contect--- */
         .custom-container {
           padding: 0;
           color: #000;
-
-          & p {
-            font-family: 'Noto Sans TC';
-            font-style: normal;
-            font-weight: 400;
-            line-height: normal;
-            overflow: hidden;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 2;
-            color: #000;
-            text-overflow: ellipsis;
-          }
-          & h5 {
-            font-family: 'Noto Sans TC';
-            font-size: 20px;
-            font-style: normal;
-            font-weight: 400;
-            line-height: normal;
-            color: var(--primary-deep, #124365);
-          }
-
-          .user-orderList-pagination {
+          .coupon-pagination {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -668,8 +746,7 @@ export default function Test() {
             align-self: stretch;
           }
         }
-
-        .user-content {
+        .coupon-content {
           display: flex;
           width: 1070px;
           padding: 20px 10px;
@@ -678,8 +755,7 @@ export default function Test() {
           gap: 20px;
           border-radius: 5px;
           background: var(--gray-30, rgba(185, 185, 185, 0.3));
-
-          .user-content-top {
+          .coupon-content-top {
             display: flex;
             align-items: flex-start;
             align-self: stretch;
@@ -692,195 +768,29 @@ export default function Test() {
             font-style: normal;
             font-weight: 700;
             line-height: normal;
-
-            .user-acticle-newBtn {
-              display: none;
-            }
-          }
-          /*----------------------acticle css----------------------- */
-          .user-acticleList {
-            width: 100%;
-          }
-
-          .user-acticleList-item {
-            align-items: center;
-            padding-left: 25px;
-            margin-inline: auto;
-            /*height: 60px; */
-
-            .user-acticleList-item-acticleCheck {
-            }
-            .user-acticleList-item-acticleLabel {
-              display: -webkit-box;
-              -webkit-box-orient: vertical;
-              -webkit-line-clamp: 1;
-              overflow: hidden;
-            }
-
-            .user-acticleList-item-time {
-            }
-
-            .user-acticleList-item-message {
-            }
-
-            .user-acticleList-item-btnGroup {
-              /* width: 200px; */
-              gap: 10px;
-              align-items: center;
-              justify-content: end;
-
-              .user-acticleList-item-text {
-                color: var(--primary-deep, #124365);
-                font-weight: bold;
-                font-size: 20px;
-              }
-              .user-acticleList-item-btn {
-                align-items: self-end;
-              }
-            }
-          }
-
-          .user-acticleList-item-title {
-            align-items: center;
-            margin-inline: auto;
-            padding-left: 25px;
-            .user-acticleList-item-title-acticleCheck {
-            }
-            .user-acticleList-item-title-acticleLabel {
-              display: -webkit-box;
-              -webkit-box-orient: vertical;
-              -webkit-line-clamp: 1;
-              overflow: hidden;
-            }
-
-            .user-acticleList-item-title-time {
-            }
-
-            .user-acticleList-item-title-message {
-            }
-
-            .user-acticleList-item-title-btnGroup {
-              /* width: 200px; */
-              gap: 10px;
-              justify-content: end;
-
-              .user-acticleList-item-title-text {
-                color: var(--primary-deep, #124365);
-                font-weight: bold;
-              }
-              .user-acticleList-item-title-btn {
-                align-items: self-end;
-              }
-            }
-          }
-
-          /*----------------------acticle css----------------------- */
-
-          .user-orderList-pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            align-self: stretch;
           }
         }
+        .couponImage {
+          display: flex;
+          flex-wrap: wrap;
+           {
+             {
+              /* justify-content: space-between; */
+            }
+          }
 
-        /* RWD未生效 */
-
-        /* RWD讓SIDEBAR消失 測試用記得刪 */
+          @media screen and (max-width: 576px) {
+            padding: 0;
+            margin: 12px;
+          }
+        }
         @media screen and (max-width: 576px) {
-          body {
-            padding-inline: 20px;
-          }
-
-          .custom-container {
+          .coupon-content {
+            width: 390px;
+            padding: 10px;
             overflow: hidden;
-
-            .user-content {
-              width: 390px;
-              padding: 10px;
-              overflow: hidden;
-
-              .user-acticle-newBtn {
-                display: flex;
-                margin-right: 25px;
-              }
-            }
-          }
-
-          .user-content {
-            .user-acticleList-item-title {
-              padding-left: 15px;
-              .user-acticleList-item-title-acticleCheck {
-              }
-              .user-acticleList-item-title-acticleLabel {
-                -webkit-line-clamp: 2;
-              }
-              .user-acticleList-item-title-message {
-                display: none;
-              }
-              .user-acticleList-item-title-time {
-                text-align: right;
-                font-size: 12px;
-
-                /* display: none; */
-              }
-
-              .user-acticleList-item-title-btnGroup {
-                justify-content: flex-end;
-                font-size: 12px;
-
-                .user-acticleList-item-title-newBtn {
-                  display: none;
-                }
-                .user-acticleList-item-title-text {
-                  text-align: right;
-                  font-size: 12px;
-                  padding: 3px;
-                }
-
-                .user-acticleList-item-title-btn {
-                  font-size: 12px;
-                  padding: 3px;
-                }
-              }
-            }
-
-            .user-acticleList-item {
-              padding-left: 15px;
-              .user-acticleList-item-acticleCheck {
-                margin-top: 15px;
-              }
-              .user-acticleList-item-acticleLabel {
-                -webkit-line-clamp: 2;
-              }
-              .user-acticleList-item-message {
-                display: none;
-              }
-              .user-acticleList-item-time {
-                font-size: 12px;
-                /* display: none; */
-              }
-
-              .user-acticleList-item-btnGroup {
-                justify-content: flex-end;
-                font-size: 12px;
-
-                .user-acticleList-item-text {
-                  text-align: right;
-                  font-size: 20px;
-                  padding: 3px;
-                }
-
-                .user-acticleList-item-btn {
-                  font-size: 12px;
-                  padding: 3px;
-                }
-              }
-            }
           }
         }
-        /* RWD讓SIDEBAR消失 測試用記得刪 */
       `}</style>
     </>
   )

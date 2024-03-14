@@ -4,7 +4,7 @@ import { FaHeart } from 'react-icons/fa'
 import category from '@/data/instrument/instrument_category.json'
 
 export default function InstrumentCard({
-  id,
+  puid,
   name,
   price,
   discount,
@@ -12,18 +12,16 @@ export default function InstrumentCard({
   img_small,
   sales,
 }) {
-
-//   const categoryName = category.find((v, i) => {
-//     return categoryID === v.id
-//   })
-//   // console.log(categoryName.name)
-//   // console.log('categoryName:', categoryName)
-//   // console.log(
-//   //   'categoryName.name:',
-//   //   categoryName ? categoryName.name : 'Category not found'
-//   // )
-//   console.log(categoryName.name)
-
+  //   const categoryName = category.find((v, i) => {
+  //     return categoryID === v.id
+  //   })
+  //   // console.log(categoryName.name)
+  //   // console.log('categoryName:', categoryName)
+  //   // console.log(
+  //   //   'categoryName.name:',
+  //   //   categoryName ? categoryName.name : 'Category not found'
+  //   // )
+  //   console.log(categoryName.name)
 
   return (
     <>
@@ -51,7 +49,7 @@ export default function InstrumentCard({
         <div className="product-details">
           <h3 className="product-title">{name}</h3>
           <p className="product-price">NT${price}</p>
-          <p className="product-sold">已售出 {}</p>
+          <p className="product-sold">已售出 {sales}</p>
         </div>
       </div>
       <style jsx>{`

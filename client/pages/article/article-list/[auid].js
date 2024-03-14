@@ -13,6 +13,7 @@ import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
+import { RiUserSettingsFill } from 'react-icons/ri'
 import Datetime from '@/components/article/datetime'
 
 export default function Auid() {
@@ -31,6 +32,8 @@ export default function Auid() {
   // 1. 執行(呼叫)useRouter，會回傳一個路由器
   // 2. router.isReady(布林值)，true代表本元件已完成水合作用(hydration)，可以取得router.query的值
   const router = useRouter()
+  const { auid } = router.query
+  // 動態路由參數
 
   // ----------------------全部資料----------------------
   const [articleDetail, setArticleDetail] = useState({})
@@ -142,6 +145,18 @@ export default function Auid() {
           <div className="">
             {/* 主內容 */}
             <main className="content">
+              <div className="d-flex justify-content-end">
+                <Link
+                  href={`/article/article-edit/${auid}`}
+                  className="icon-btn"
+                >
+                  <RiUserSettingsFill
+                    size={30}
+                    style={{ color: 'gray', cursor: 'pointer' }}
+                  />
+                  編輯
+                </Link>
+              </div>
               <h1 className="text-center">{articleDetail.title}</h1>
               <p className="pt-2">{articleDetail.content}</p>
               <div className="main-img">
