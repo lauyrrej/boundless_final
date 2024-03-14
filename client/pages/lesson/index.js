@@ -25,8 +25,13 @@ import { useParams } from 'react-router-dom'
 
 import Pagination from '@/components/lesson/pagination.js'
 
+
+export default function LessonList({ onSearch }) {
+
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
+export default function Test({ onSearch }) {
+
 
 
 export default function LessonList({ onSearch }) {
@@ -36,6 +41,11 @@ export default function LessonList({ onSearch }) {
     useAuth()
   const [userData, setUserData] = useState()
   //檢查token
+//   useEffect(() => {
+//     handleLoginStatus()
+//     //獲得資料
+//     getLoginUserData()
+//   }, [])
 //   useEffect(() => {
 //     handleLoginStatus()
 //     //獲得資料

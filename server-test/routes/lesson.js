@@ -150,4 +150,47 @@ router.get("/:id", async (req, res, next) => {
 //   });
 
 
+// 獲得單筆課程資料＋review
+router.get("/:id", async (req, res, next) => {
+    let luid = req.params.id;
+    console.log(luid);
+    let [data] = await db
+        .execute(
+            "SELECT p.*, pr.* FROM `product` AS p LEFT JOIN `product_review` AS pr ON p.id = pr.product_id WHERE p.`puid` = ?",
+            [luid]
+        )
+        .catch(() => {
+            return undefined;
+        });
+
+    if (data) {
+        console.log(data);
+        res.status(200).json(data);
+    } else {
+        res.status(400).send("發生錯誤");
+    }
+});
+
+// router.get("/:priceLow&;priceHigh", async (req, res, next) => {
+//   const { priceLow, priceHigh } = req.query;
+//   const query = `
+//         SELECT * FROM product
+//         WHERE price >= ? AND price <= ?
+//         ORDER BY price ASC;
+//     `;
+
+  db.query(query, [priceLow, priceHigh], (err, results) => {
+    if (err) throw err;
+    res.json(results);
+  });
+
+});
+//   // 排序用
+//   let orderDirection = req.query.order || "ASC";
+//   db.query(query, [priceLow, priceHigh], (err, results) => {
+//     if (err) throw err;
+//     res.json(results);
+//   });
+
+
 export default router;
