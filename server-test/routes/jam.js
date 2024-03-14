@@ -192,6 +192,7 @@ router.get("/singleJam/:juid/:uid", async (req, res) => {
   }
   // 檢查訪問的使用者是否有申請此樂團，並獲得其狀態
   const uid = req.params.uid;
+  console.log(uid);
   let myApplyState = [];
   if (uid) {
     [myApplyState] = await db
