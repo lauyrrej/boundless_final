@@ -7,7 +7,12 @@ import toast, { Toaster } from 'react-hot-toast'
 //跳轉頁面
 import Link from 'next/link'
 
-export default function ProductBriefCard({ name, homework, sales, price, length, info }) {
+
+
+export default function ProductBriefCard(
+  { img,name, homework, sales, price, length, info },
+  { addLessonItem = () => {} }
+) {
   //收藏按鍵的功能
   const [colorChange, setcolorChange] = useState(false)
   const colorToggle = () => {
@@ -93,17 +98,21 @@ export default function ProductBriefCard({ name, homework, sales, price, length,
           <div className="shoppingBtn">
             <div
               className="cartBtn"
-              onClick={() => addToCart({ id: 1, name: '商品名稱', price: 100 })}
+              onClick={() => addLessonItem({ img, name, price })}
             >
               <img
                 loading="lazy"
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
                 className=""
               />
-              <div className="cart">加入購物車</div>
+              <div
+                className="cart"
+              >
+                加入購物車
+              </div>
             </div>
             <div className="buyBtn">
-              <Link className="buy" href="/cart/checkorder">
+              <Link className="buy" href="/cart/check">
                 立即購買
               </Link>
             </div>
@@ -114,7 +123,6 @@ export default function ProductBriefCard({ name, homework, sales, price, length,
       <style jsx>
         {`
           .naughty-sticky {
-          
             position: sticky;
             top: 0;
             z-index: 1020;
@@ -130,7 +138,7 @@ export default function ProductBriefCard({ name, homework, sales, price, length,
           }
           .Right {
             margin-left: 45px;
-            top:80px;
+            top: 80px;
           }
 
           .prodBriefing {
