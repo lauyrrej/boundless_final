@@ -238,9 +238,9 @@ router.post("/editProfile/:id", checkToken, async function (req, res) {
   const id = req.params.id;
   let { email, name , password, phone, postcode, country, township, address, birthday, genre_like , play_instrument , info, gender , nickname , privacy } = req.body;
   // console.log(req.body)
-  console.log(email)
-  console.log(name)
-  console.log(birthday)
+  // console.log(email)
+  // console.log(name)
+  // console.log(birthday)
   // birthday = new Date(birthday)
   // if(birthday.length > 10){
   //   birthday = birthday.split('T')[0]
