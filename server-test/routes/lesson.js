@@ -3,57 +3,72 @@ import db from "../db.js";
 
 const router = express.Router();
 
-//整包product
 router.get("/", async (req, res) => {
+  try {
+    // Mandatory type filter
+    let baseQuery = "SELECT * FROM `product` WHERE `type` = ? ";
+    let queryParams = [2];
+    // Additional filters
+    const { priceLow, priceHigh, page } = req.query;
 
-    try {
-    let [lesson] = await db.execute("SELECT * FROM `product` WHERE `type` = 2");
+    if (priceLow && priceHigh) {
+      baseQuery += " AND price >= ? AND price <= ?";
+      queryParams.push(priceLow, priceHigh);
+    //   console.log(baseQuery);
+    }
 
-    if (lesson) {
-      res.json(lesson);
+    //Pagination
+    if (page) {
+      const perPage = 12; // Number of items per page
+      const startIndex = ((parseInt(page) || 1) - 1) * perPage;
+      baseQuery += " LIMIT ?, ?";
+        queryParams.push(startIndex, perPage);
+         console.log(baseQuery);
+    }
+
+    // Execute the query
+    const [results] = await db.execute(baseQuery, queryParams);
+
+    // Response
+    if (results.length > 0) {
+      res.json(results);
     } else {
-      res.json("沒有找到相應的資訊");
+      res.json({ message: "沒有找到相應的資訊" });
     }
   } catch (error) {
     console.error("發生錯誤：", error);
-    res.json("發生錯誤");
+    res.status(500).json({ error: "發生錯誤" });
   }
-
-//     try {
-//         const page = parseInt(req.query.page) || 1; // 從 URL 參數中獲取頁碼，默認為第1頁
-//         const perPage = 8; // 每頁顯示的商品數量
-//         const startIndex = (page - 1) * perPage;
-
-//         // 查詢資料庫，取得符合條件的商品
-//         const query = `SELECT * FROM products WHERE type = 2 LIMIT ${startIndex}, ${perPage}`;
-
-//          const [results] = await db.execute(query);
-
-//                 res.json({
-//                     products: results,
-//                 });
-//     }catch (error) {
-//     console.error("Error fetching products:", error);
-//     res.status(500).send("Internal Server Error");
-//   }
 });
-    
-    // try {
-    //     let [lesson] = await db.execute(
-    //         `SELECT * FROM product WHERE type = 2 LIMIT ${startIndex},${pageSize}`
-    //     );
 
-    //     if (lesson) {
-    //         res.json(lesson);
-    //     } else {
-    //         res.json("沒有找到相應的資訊");
-    //     }
-    // } catch (error) {
-    //     console.error("發生錯誤：", error);
-    //     res.json("發生錯誤");
-    // }
+//整包product
+// router.get("/", async (req, res) => {
+//   try {
+//     let [lesson] = await db.execute("SELECT * FROM `product` WHERE `type` = 2");
 
+//     if (lesson) {
+//       res.json(lesson);
+//     } else {
+//       res.json("沒有找到相應的資訊");
+//     }
+//   } catch (error) {
+//     console.error("發生錯誤：", error);
+//     res.json("發生錯誤");
+//   }
 
+//      const { priceLow, priceHigh } = req.query;
+//      const query = `
+//         SELECT * FROM product
+//         WHERE price >= ? AND price <= ?
+//         ORDER BY price ASC;
+//     `;
+
+//      db.query(query, [priceLow, priceHigh], (err, results) => {
+//        if (err) throw err;
+//        res.json(results);
+//      });
+
+// });
 
 //lesson_category
 router.get("/categories", async (req, res) => {
@@ -99,6 +114,13 @@ router.get("/:id", async (req, res, next) => {
   console.log(luid);
   let [data] = await db
     .execute(
+      //       ”SELECT p.*, pr.*, lc.*
+      // FROM `product` AS p
+      // LEFT JOIN `product_review` AS pr ON p.id = pr.product_id
+      // LEFT JOIN `lesson_category` AS lc ON p.lesson_category_id = lc.id
+      // WHERE p.`puid` = ?“,
+      //       [luid] //FIXME評論多連一張資料表
+
       "SELECT p.*, pr.* FROM `product` AS p LEFT JOIN `product_review` AS pr ON p.id = pr.product_id WHERE p.`puid` = ?",
       [luid]
     )
@@ -113,6 +135,7 @@ router.get("/:id", async (req, res, next) => {
     res.status(400).send("發生錯誤");
   }
 });
+
 
 // 獲得單筆課程資料＋review
 router.get("/:id", async (req, res, next) => {
@@ -133,8 +156,21 @@ router.get("/:id", async (req, res, next) => {
   } else {
     res.status(400).send("發生錯誤");
   }
-});
 
+router.get("/:priceLow&;priceHigh", async (req, res, next) => {
+  const { priceLow, priceHigh } = req.query;
+  const query = `
+        SELECT * FROM product
+        WHERE price >= ? AND price <= ?
+        ORDER BY price ASC;
+    `;
+
+  db.query(query, [priceLow, priceHigh], (err, results) => {
+    if (err) throw err;
+    res.json(results);
+  });
+
+});
 //   // 排序用
 //   let orderDirection = req.query.order || "ASC";
 
