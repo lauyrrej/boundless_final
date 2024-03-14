@@ -1,4 +1,4 @@
-import express, { json } from 'express';
+import express from 'express';
 import db from '../db.js';
 import multer from 'multer';
 
@@ -125,7 +125,7 @@ router.get('/allJam', async (req, res) => {
 
   if (data && data != undefined) {
     // 整理資料，把字串轉成陣列或物件
-    const jamData = data.map((v, i) => {
+    const jamData = data.map((v) => {
       // member可能為空值，先令其為空陣列
       let setMember = [];
       if (v.member) {
@@ -192,11 +192,14 @@ router.get('/singleJam/:juid/:uid', async (req, res) => {
   }
   // 檢查訪問的使用者是否有申請此樂團，並獲得其狀態
   const uid = req.params.uid;
-  console.log(uid);
+  // console.log(uid);
   let myApplyState = [];
   if (uid) {
     [myApplyState] = await db
-      .execute('SELECT `state` FROM `jam_apply` WHERE `applier_uid` = ?', [uid])
+      .execute(
+        'SELECT `state` FROM `jam_apply` WHERE `applier_uid` = ? AND `juid` = ?',
+        [uid, juid]
+      )
       .catch(() => {
         return undefined;
       });
@@ -394,7 +397,7 @@ router.get('/getMyApply/:uid', async (req, res) => {
         return undefined;
       });
 
-    const data = datas.map((v) => {
+    let data = datas.map((v) => {
       const match = playerData.find((pv) => {
         return pv.id === v.applier_play;
       }).name;
@@ -463,9 +466,10 @@ router.post('/form', upload.none(), async (req, res) => {
   }
   // 刪除所有該會員的申請
   let updateApply = await db
-    .execute('UPDATE `jam_apply` SET `valid` = 0 WHERE `applier_uid` = ?', [
-      uid,
-    ])
+    .execute(
+      'UPDATE `jam_apply` SET `valid` = 0 , `state` = 4 WHERE `applier_uid` = ?',
+      [uid]
+    )
     .then(() => {
       return 1;
     })
@@ -508,6 +512,22 @@ router.post('/apply', upload.none(), async (req, res) => {
     .execute(
       'INSERT INTO `jam_apply` (`id`, `juid`, `former_uid`, `applier_uid`,  `applier_play`, `message`) VALUES (NULL, ?, ?, ?, ?, ?)',
       [juid, former_uid, applier_uid, applier_play, message]
+    )
+    .then(() => {
+      res.status(200).json({ status: 'success' });
+    })
+    .catch((error) => {
+      res.status(500).json({ status: 'error', error });
+    });
+});
+
+// 修改表單
+router.put('/updateForm', upload.none(), async (req, res) => {
+  const { juid, title, condition, description } = req.body;
+  await db
+    .execute(
+      'UPDATE `jam` SET `title` = ?, `band_condition` = ?, `description` = ?  WHERE `juid` = ?',
+      [title, condition, description, juid]
     )
     .then(() => {
       res.status(200).json({ status: 'success' });
@@ -585,6 +605,48 @@ router.put('/decideApply', upload.none(), async (req, res) => {
       .catch((error) => {
         res.status(500).json({ status: 'error', error });
       });
+  }
+});
+
+// 解散樂團
+router.put('/disband', upload.none(), async (req, res) => {
+  // console.log(req.body);
+  const { juid, ids } = req.body;
+  const jamResult = await db
+    .execute('UPDATE `jam` SET `valid` = 0 WHERE `juid` = ?', [juid])
+    .then(() => {
+      return true;
+    })
+    .catch((error) => {
+      console.log(error);
+      return false;
+    });
+
+  let idString = '';
+  let idSql = 'UPDATE `user` SET `my_jam` = NULL WHERE `uid` IN ';
+  JSON.parse(ids).forEach((v, i) => {
+    if (i < JSON.parse(ids).length - 1) {
+      idString += `'${v}',`;
+    } else {
+      idString += `'${v}'`;
+    }
+  });
+  idSql += `(${idString})`;
+
+  const userResult = await db
+    .execute(idSql)
+    .then(() => {
+      return true;
+    })
+    .catch((error) => {
+      console.log(error);
+      return false;
+    });
+
+  if (jamResult && userResult) {
+    res.status(200).json({ status: 'success' });
+  } else {
+    res.status(500).json({ status: 'error' });
   }
 });
 

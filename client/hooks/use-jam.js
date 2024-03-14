@@ -5,6 +5,7 @@ export const JamContext = createContext()
 
 export function JamProvider({ children }) {
   const [invalidJam, setInvalidJam] = useState(true)
+  const [invalidEdit, setInvalidEdit] = useState(true)
 
   const notifyInvalidToast = () => {
     toast.error('指定樂團不存在或已解散', {
@@ -19,6 +20,22 @@ export function JamProvider({ children }) {
       duration: 3500,
     })
     setInvalidJam(true)
+  }
+
+  // 用非正當手段進入編輯頁面
+  const notifyInvalidEditToast = () => {
+    toast.error('指定樂團不存在或已解散', {
+      style: {
+        border: '1px solid #666666',
+        padding: '16px',
+        color: '#1d1d1d',
+      },
+      iconTheme: {
+        primary: '#ec3f3f',
+      },
+      duration: 3500,
+    })
+    setInvalidEdit(true)
   }
 
   const checkCancel = () => {
@@ -106,8 +123,11 @@ export function JamProvider({ children }) {
     <JamContext.Provider
       value={{
         invalidJam,
+        invalidEdit,
         setInvalidJam,
+        setInvalidEdit,
         notifyInvalidToast,
+        notifyInvalidEditToast,
         checkCancel,
         notifyAccept,
         notifyReject,

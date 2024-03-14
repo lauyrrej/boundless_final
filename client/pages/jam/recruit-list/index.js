@@ -24,7 +24,12 @@ import { useJam } from '@/hooks/use-jam'
 
 export default function RecruitList() {
   const router = useRouter()
-  const { invalidJam, notifyInvalidToast } = useJam()
+  const {
+    invalidJam,
+    invalidEdit,
+    notifyInvalidToast,
+    notifyInvalidEditToast,
+  } = useJam()
   // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
   const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
@@ -37,6 +42,9 @@ export default function RecruitList() {
     // 若使用者嘗試進入以解散或不存在的jam，跳出警告訊息
     if (invalidJam === false) {
       notifyInvalidToast()
+    }
+    if (invalidEdit === false) {
+      notifyInvalidEditToast()
     }
     document.addEventListener('click', () => {
       setFilterVisible(false)
@@ -188,10 +196,6 @@ export default function RecruitList() {
       // 進入狀態前檢查資料類型為陣列，以避免錯誤
       // console.log(datas)
       if (datas) {
-        // const genreName = jam.genre.map((g) => {
-        //   const matchedgenre = genre.find((gd) => gd.id === g)
-        //   return matchedgenre.name
-        // })
         const combineData = datas.jamData.map((v) => {
           const matchFormer = datas.formerData.find(
             (fv) => fv.id === v.former.id

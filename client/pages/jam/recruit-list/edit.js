@@ -3,11 +3,10 @@ import { useRouter } from 'next/router'
 import { debounce } from 'lodash'
 import { useAuth } from '@/hooks/user/use-auth'
 import { useJam } from '@/hooks/use-jam'
-import toast, { Toaster } from 'react-hot-toast'
+import { Toaster } from 'react-hot-toast'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import MemberInfo from '@/components/jam/member-info'
-import Apply from '@/components/jam/apply'
 import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
@@ -23,7 +22,7 @@ import styles from '@/pages/jam/jam.module.scss'
 
 export default function Info() {
   const router = useRouter()
-  const { setInvalidJam, checkCancel, notifyAccept, notifyReject } = useJam()
+  const { setInvalidEdit } = useJam()
   // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
   const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
@@ -34,6 +33,12 @@ export default function Info() {
     handleLoginStatus()
     //獲得資料
     getLoginUserData()
+    // 阻擋非法訪問
+    if (!LoginUserData) {
+      setInvalidEdit(false)
+      router.push('/jam/recruit-list')
+      return
+    }
   }, [])
   //登出功能
   const mySwal = withReactContent(Swal)
@@ -54,81 +59,6 @@ export default function Info() {
     former: {},
     member: [],
   })
-  // 申請資料
-  const [applies, setApplies] = useState([])
-  // 進入頁面者是否有申請此樂團
-  const [myApplyState, setMyApplyState] = useState(0)
-  // 根據申請狀態顯示不同內容
-  const switchSentence = (applyState) => {
-    switch (applyState) {
-      case 0:
-        return (
-          <div
-            className="b-btn-disable"
-            style={{
-              paddingInline: '38px',
-              backgroundColor: '#666666',
-            }}
-            role="presentation"
-          >
-            已送出申請
-          </div>
-        )
-      case 1:
-        return (
-          <div
-            className="b-btn b-btn-primary"
-            style={{
-              paddingInline: '38px',
-            }}
-            role="presentation"
-          >
-            正式加入
-          </div>
-        )
-      case 2:
-        return (
-          <div
-            className="b-btn-disable"
-            style={{
-              paddingInline: '38px',
-              backgroundColor: '#666666',
-            }}
-            role="presentation"
-          >
-            已被拒絕
-          </div>
-        )
-      case 3:
-        return (
-          <div
-            className="b-btn-disable"
-            style={{
-              paddingInline: '38px',
-              backgroundColor: '#666666',
-            }}
-            role="presentation"
-          >
-            已取消申請
-          </div>
-        )
-      case 4:
-        return (
-          <div
-            className="b-btn-disable"
-            style={{
-              paddingInline: '38px',
-              backgroundColor: '#666666',
-            }}
-            role="presentation"
-          >
-            不得再次申請
-          </div>
-        )
-      default:
-        return null
-    }
-  }
   // ---------------------- 手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -137,15 +67,6 @@ export default function Info() {
   }
 
   // ----------------------------- 讓player代碼對應樂器種類 -----------------------------
-  // 設定本頁可選的職位選項
-  const playerOption = player.filter((v) => {
-    return (
-      v.id ===
-      jam.player.find((jv) => {
-        return jv === v.id
-      })
-    )
-  })
   const playerName = jam.player.map((p) => {
     const matchedPlayer = player.find((pd) => pd.id === p) // 物件
     return matchedPlayer.name
@@ -219,197 +140,88 @@ export default function Info() {
       : false
 
   // ----------------------------- 入團申請表單 -----------------------------
+  // 表單完成狀態 0: 有欄位尚未填寫或不符規定, 1: 填寫完成, 2: 填寫中
   const [complete, setComplete] = useState(2)
-  // ---------------------- 擔任職位 ----------------------
-  // 控制表單狀態
-  const [myPlayer, setMyPlayer] = useState('')
+  // ---------------------- 標題 ----------------------
+  const [title, setTitle] = useState('')
+  const [titleCheck, setTitleCheck] = useState(true)
+  // ---------------------- 其他條件 ----------------------
+  const [condition, setCondition] = useState('')
+  const [conditionCheck, setConditionCheck] = useState(true)
   // ---------------------- 描述 ----------------------
-  const [message, setMessage] = useState('')
-  const [messageCheck, setMessageCheck] = useState(true)
+  const [description, setDescription] = useState('')
+  const [descriptionCheck, setDescriptionCheck] = useState(true)
 
-  const checkLogin = (LoginUserData) => {
-    if (
-      !LoginUserData ||
-      LoginUserData.status === 'error' ||
-      LoginUserData.length == 0
-    ) {
-      toast('請先登入', {
-        icon: 'ℹ️',
-        style: {
-          border: '1px solid #666666',
-          padding: '16px',
-          color: '#1d1d1d',
-        },
-        duration: 3000,
-      })
-      return false
-    } else {
-      return true
-    }
-  }
-
+  // ---------------------- 表單填寫 ----------------------
   // 檢查不雅字詞
   const checkBadWords = debounce(() => {
     const badWords = /幹|屎|尿|屁|糞|靠北|靠腰|雞掰|王八|你媽|妳媽|淫/g
-    setMessageCheck(message.search(badWords) < 0 ? true : false)
+    setTitleCheck(title.search(badWords) < 0 ? true : false)
+    setConditionCheck(condition.search(badWords) < 0 ? true : false)
+    setDescriptionCheck(description.search(badWords) < 0 ? true : false)
   }, 250)
 
   // 檢查表單是否填妥
   const checkComplete = () => {
-    if (messageCheck === false || message === '') {
+    if (titleCheck === false || title === '') {
       setComplete(0)
       return false
     }
-    if (myPlayer === '') {
+    if (conditionCheck === false) {
+      setComplete(0)
+      return false
+    }
+    if (descriptionCheck === false || description === '') {
       setComplete(0)
       return false
     }
     setComplete(1)
     return true
   }
-
-  // 送出申請表單
-  const sendApply = async (myPlayer, message) => {
+  // 送出更改
+  const sendForm = async (juid, title, condition, description) => {
     if (!checkComplete()) {
       return false
     }
     let formData = new FormData()
-    formData.append('juid', jam.juid)
-    formData.append('former_uid', jam.former.uid)
-    formData.append('applier_uid', LoginUserData.uid)
-    formData.append('applier_play', myPlayer)
-    formData.append('message', message)
-    // 確認formData內容
-    // for (let [key, value] of formData.entries()) {
-    //   console.log(`${key}: ${value}`)
-    // }
-    const res = await fetch('http://localhost:3005/api/jam/apply', {
-      method: 'POST',
+    formData.append('juid', juid)
+    formData.append('title', title)
+    formData.append('condition', condition)
+    formData.append('description', description)
+    const res = await fetch('http://localhost:3005/api/jam/updateForm', {
+      method: 'PUT',
       body: formData,
       credentials: 'include',
     })
     const result = await res.json()
     if (result.status === 'success') {
-      notifySuccess()
+      notifySuccess(juid)
     } else {
       console.log(result.error)
     }
   }
-
-  // 申請成功後，彈出訊息框
-  const notifySuccess = () => {
+  // 修改成功後，彈出訊息框，並返回資訊頁面
+  const notifySuccess = (juid) => {
     mySwal
       .fire({
         position: 'center',
         icon: 'success',
         iconColor: '#1581cc',
-        title: '申請成功，請靜候審核結果',
+        title: '修改成功，返回資訊頁',
         showConfirmButton: false,
         timer: 3000,
       })
       .then(
         setTimeout(() => {
-          window.location.reload()
+          router.push(`/jam/recruit-list/${juid}`)
         }, 3000)
       )
-  }
-
-  // 決定審核結果
-  const sendResult = async (id, state) => {
-    let formData = new FormData()
-    formData.append('id', id)
-    formData.append('state', state)
-    const res = await fetch('http://localhost:3005/api/jam/decideApply', {
-      method: 'PUT',
-      body: formData,
-      credentials: 'include',
-    })
-    const result = await res.json()
-    if (result.status === 'success') {
-      if (result.state === 1) {
-        notifyAccept()
-      } else if (result.state === 2) {
-        notifyReject()
-      }
-    } else if (result.status === 'cancel') {
-      checkCancel()
-    }
-  }
-
-  // 解散樂團
-  const sendDisband = async () => {
-    // 組合出所有樂團內的成員uid
-    let ids = []
-    ids.push(jam.former.uid)
-    for (let i = 0; i < jam.member.length; i++) {
-      ids.push(jam.member[i].uid)
-    }
-    let formData = new FormData()
-    formData.append('ids', JSON.stringify(ids))
-    formData.append('juid', jam.juid)
-    const res = await fetch('http://localhost:3005/api/jam/disband', {
-      method: 'PUT',
-      body: formData,
-      credentials: 'include',
-    })
-    const result = await res.json()
-    if (result.status === 'success') {
-      return true
-    } else {
-      return false
-    }
-  }
-
-  // 解散警示&成功訊息
-  const warningDisband = () => {
-    mySwal
-      .fire({
-        title: '即將解散樂團',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#1581cc',
-        cancelButtonColor: '#ec3f3f',
-        confirmButtonText: '確定',
-        cancelButtonText: '取消',
-        showClass: {
-          popup: `
-            animate__animated
-            animate__fadeInUp
-            animate__faster
-          `,
-        },
-        hideClass: {
-          popup: `
-            animate__animated
-            animate__fadeOutDown
-            animate__faster
-          `,
-        },
-      })
-      .then(async (result) => {
-        if (result.isConfirmed) {
-          const res = await sendDisband()
-          if (res) {
-            mySwal.fire({
-              title: '樂團已解散，重新導向至招募列表',
-              icon: 'success',
-              iconColor: '#1581cc',
-              showConfirmButton: false,
-              timer: 2500,
-            })
-            setTimeout(() => {
-              router.push('/jam/recruit-list')
-            }, 2500)
-          }
-        }
-      })
   }
 
   // 向伺服器要求資料，設定到狀態中用的函式
   const getSingleData = async (juid) => {
     try {
       const res = await fetch(
-        // 加入uid是為了檢查該使用者是否有申請此樂團，以及其申請狀態
         `http://localhost:3005/api/jam/singleJam/${juid}/${LoginUserData.uid}`
       )
       // res.json()是解析res的body的json格式資料，得到JS的資料格式
@@ -418,16 +230,6 @@ export default function Info() {
         setPlayer(data.playerData)
         setGenre(data.genreData)
         setJam(data.jamData)
-        setApplies(data.applyData)
-        if (data.myApplyState.length > 0) {
-          setMyApplyState(data.myApplyState[0])
-        }
-        // 若該樂團已成立，導向成團後的資訊頁面
-      } else if (data.status === 'formed') {
-        router.push(`/jam/jam-list/${juid}`)
-      } else if (data.status === 'error') {
-        setInvalidJam(false)
-        router.push(`/jam/recruit-list`)
       }
     } catch (e) {
       console.error(e)
@@ -437,13 +239,16 @@ export default function Info() {
   // ----------------------------- useEffect -----------------------------
   // 初次渲染後，向伺服器要求資料，設定到狀態中
   useEffect(() => {
-    if (router.isReady) {
-      const { juid } = router.query
-      getSingleData(juid)
+    if (LoginUserData.my_jam) {
+      getSingleData(LoginUserData.my_jam)
     }
-  }, [router.isReady, LoginUserData.uid])
+  }, [LoginUserData.my_jam])
 
+  // 確定讀取完jam資料後，把值設定到對應的狀態中
   useEffect(() => {
+    setTitle(jam.title)
+    setCondition(jam.band_condition)
+    setDescription(jam.description)
     setCountDown(calcTimeLeft())
     // 每秒更新一次倒數計時
     const timer = setInterval(() => {
@@ -452,21 +257,20 @@ export default function Info() {
 
     // 清除計時器
     return () => clearInterval(timer)
-  }, [jam.created_time])
+  }, [jam.created_time, jam.title])
 
-  // 申請表單填寫
+  // ---------------------- 偵測表單輸入變化，並執行檢查
   useEffect(() => {
     // 跳出未填寫完畢警告後再次輸入，消除警告
     setComplete(2)
     // 檢查不雅字詞
     checkBadWords.cancel() // 取消上一次的延遲
     checkBadWords()
-  }, [myPlayer, message])
-
+  }, [title, condition, description])
   return (
     <>
       <Head>
-        <title>JAM資訊</title>
+        <title>修改表單</title>
       </Head>
       <Toaster
         containerStyle={{
@@ -532,7 +336,7 @@ export default function Info() {
               </Link>
 
               <FaChevronRight />
-              <li style={{ marginLeft: '10px' }}>JAM資訊</li>
+              <li style={{ marginLeft: '10px' }}>修改表單</li>
             </ul>
           </div>
           {/*   ---------------------- 主要內容  ---------------------- */}
@@ -543,7 +347,7 @@ export default function Info() {
                 <div
                   className={`${styles.jamTitle} d-flex justify-content-between align-items-center`}
                 >
-                  <div>JAM資訊</div>
+                  <div>修改表單</div>
                   <div className={`${styles.cardBadge} ${styles.degree}`}>
                     {jam.degree == '1' ? '新手練功' : '老手同樂'}
                   </div>
@@ -553,9 +357,38 @@ export default function Info() {
                   <div className={`${styles.itemTitle} col-12 col-sm-2`}>
                     主旨
                   </div>
-                  <div className={`${styles.infoText} col-12 col-sm-10`}>
-                    {jam.title}
+                  <div
+                    className={`${styles.itemInputWrapper} col-12 col-sm-10 d-flex align-items-center`}
+                  >
+                    <input
+                      type="text"
+                      className={`${styles.itemInput} form-control`}
+                      placeholder="發起動機或目的，上限20字"
+                      maxLength={20}
+                      value={title}
+                      onChange={(e) => {
+                        setTitle(e.target.value)
+                      }}
+                    />
+                    {titleCheck ? (
+                      ''
+                    ) : (
+                      <div
+                        className={`${styles.warningText} ms-2 d-none d-sm-block`}
+                      >
+                        偵測到不雅字詞
+                      </div>
+                    )}
                   </div>
+                  {titleCheck ? (
+                    ''
+                  ) : (
+                    <div
+                      className={`${styles.warningText} d-block d-sm-none p-0`}
+                    >
+                      偵測到不雅字詞
+                    </div>
+                  )}
                 </div>
                 {/* -------------------------- 發起日期 -------------------------- */}
                 <div className={`${styles.formItem} row`}>
@@ -638,11 +471,40 @@ export default function Info() {
                 {/* -------------------------- 其他條件 -------------------------- */}
                 <div className={`${styles.formItem} row`}>
                   <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                    其他條件
+                    其他條件(選填)
                   </div>
-                  <div className={`${styles.infoText} col-12 col-sm-10`}>
-                    {jam.band_condition == '' ? '無' : jam.band_condition}
+                  <div
+                    className={`${styles.itemInputWrapper} col-12 col-sm-10`}
+                  >
+                    <input
+                      type="text"
+                      className={`form-control`}
+                      placeholder="事先說好要求，有助於玩團和樂哦～上限30字"
+                      maxLength={30}
+                      value={condition}
+                      onChange={(e) => {
+                        setCondition(e.target.value)
+                      }}
+                    />
+                    {conditionCheck ? (
+                      ''
+                    ) : (
+                      <div
+                        className={`${styles.warningText} mt-1 d-none d-sm-block`}
+                      >
+                        偵測到不雅字詞
+                      </div>
+                    )}
                   </div>
+                  {conditionCheck ? (
+                    ''
+                  ) : (
+                    <div
+                      className={`${styles.warningText} d-block d-sm-none p-0`}
+                    >
+                      偵測到不雅字詞
+                    </div>
+                  )}
                 </div>
                 {/* -------------------------- 描述 -------------------------- */}
                 <div className={`${styles.formItem} row`}>
@@ -650,190 +512,76 @@ export default function Info() {
                     描述
                   </div>
                   <div
-                    className={`${styles.infoText} col-12 col-sm-10`}
-                    style={{ textAlign: 'justify' }}
+                    className={`${styles.itemInputWrapper} col-12 col-sm-10`}
                   >
-                    {jam.description}
+                    <textarea
+                      className={`${styles.textArea} form-control`}
+                      placeholder="輸入清楚、吸引人的描述，讓大家瞭解你的成團動機吧！上限150字"
+                      name="description"
+                      maxLength={150}
+                      value={description}
+                      onChange={(e) => {
+                        setDescription(e.target.value)
+                      }}
+                    />
+                    {descriptionCheck ? (
+                      ''
+                    ) : (
+                      <div
+                        className={`${styles.warningText} mt-1 d-none d-sm-block`}
+                      >
+                        偵測到不雅字詞
+                      </div>
+                    )}
+                  </div>
+                  {descriptionCheck ? (
+                    ''
+                  ) : (
+                    <div
+                      className={`${styles.warningText} d-block d-sm-none p-0`}
+                    >
+                      偵測到不雅字詞
+                    </div>
+                  )}
+                </div>
+
+                <div className="d-flex justify-content-center gap-5">
+                  <Link
+                    className="b-btn b-btn-body"
+                    style={{ paddingInline: '38px' }}
+                    href={`/jam/recruit-list/${jam.juid}`}
+                  >
+                    取消
+                  </Link>
+                  <div
+                    className="b-btn b-btn-primary"
+                    style={{ paddingInline: '38px' }}
+                    role="presentation"
+                    onClick={() => {
+                      sendForm(
+                        LoginUserData.my_jam,
+                        title,
+                        condition,
+                        description
+                      )
+                    }}
+                  >
+                    提交
                   </div>
                 </div>
-                {LoginUserData.id === jam.former.id ? (
-                  <div className="d-flex justify-content-center">
-                    <Link
-                      className="b-btn b-btn-primary"
-                      style={{ paddingInline: '38px' }}
-                      href="/jam/recruit-list/edit"
-                    >
-                      修改表單
-                    </Link>
+                {complete === 0 ? (
+                  <div
+                    className="d-flex justify-content-center"
+                    style={{ marginTop: '-8px' }}
+                  >
+                    <div className={`${styles.warningText}`}>
+                      請遵照規則，並填寫所有必填內容
+                    </div>
                   </div>
                 ) : (
                   ''
                 )}
               </section>
-              {/* -------------------------- 入團申請 -------------------------- */}
-              {LoginUserData.my_jam ? (
-                <div>
-                  {LoginUserData.my_jam === jam.juid ? (
-                    <>
-                      {LoginUserData.id === jam.former.id ? (
-                        <>
-                          {/* 發起人進入所屬樂團頁面 */}
-                          <hr style={{ margin: '6px' }} />
-                          <section className={`${styles.jamLeftSection} mt-2`}>
-                            <div className={`${styles.jamTitle}`}>申請一覽</div>
-                            {applies.map((v) => {
-                              return (
-                                <Apply
-                                  key={v.id}
-                                  id={v.id}
-                                  applier={v.applier}
-                                  message={v.message}
-                                  play={v.play}
-                                  created_time={v.created_time}
-                                  state={v.state}
-                                  sendResult={sendResult}
-                                />
-                              )
-                            })}
-                          </section>
-                        </>
-                      ) : (
-                        <>
-                          <hr style={{ margin: '6px' }} />
-                          <div className="d-flex justify-content-center">
-                            <div
-                              className="b-btn b-btn-danger mt-1"
-                              style={{ paddingInline: '38px' }}
-                              role="presentation"
-                              onClick={() => {}}
-                            >
-                              退出
-                            </div>
-                          </div>
-                        </>
-                      )}
-                    </>
-                  ) : (
-                    ''
-                  )}
-                </div>
-              ) : (
-                <>
-                  {/* 無所屬樂團，顯示申請表單 */}
-                  <hr style={{ margin: '6px' }} />
-                  <section className={`${styles.jamLeftSection}`}>
-                    <div className={`${styles.jamTitle}`}>
-                      入團申請
-                      <div
-                        className={`${styles.noticeText}`}
-                        style={{ color: '#666666' }}
-                      >
-                        ※ 可同時申請多個 JAM，但最終只能擇一加入。
-                      </div>
-                    </div>
-                    {/* -------------------------- 擔任職位 -------------------------- */}
-                    <div className={`${styles.formItem} row`}>
-                      <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                        擔任職位
-                      </div>
-                      <div
-                        className={`${styles.itemInputWrapper} col-12 col-sm-10`}
-                      >
-                        <select
-                          className="form-select"
-                          style={{ width: 'auto' }}
-                          value={myPlayer}
-                          name="myPlayer"
-                          disabled={myApplyState ? true : false}
-                          onChange={(e) => {
-                            setMyPlayer(e.target.value)
-                          }}
-                        >
-                          <option value="" disabled>
-                            請選擇
-                          </option>
-                          {playerOption.map((v) => {
-                            return (
-                              <option key={v.id} value={v.id}>
-                                {v.name}
-                              </option>
-                            )
-                          })}
-                        </select>
-                      </div>
-                    </div>
-                    {/* -------------------------- 想說的話 -------------------------- */}
-                    <div className={`${styles.formItem} row`}>
-                      <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                        想說的話
-                      </div>
-                      <div
-                        className={`${styles.itemInputWrapper} col-12 col-sm-10`}
-                      >
-                        <textarea
-                          className={`${styles.textArea} form-control`}
-                          placeholder="建議可以提到自己喜歡的音樂、入團動機等，上限150字"
-                          name="message"
-                          maxLength={150}
-                          disabled={myApplyState ? true : false}
-                          onChange={(e) => {
-                            setMessage(e.target.value)
-                          }}
-                        />
-                        {messageCheck ? (
-                          ''
-                        ) : (
-                          <div
-                            className={`${styles.warningText} mt-1 d-none d-sm-block`}
-                          >
-                            偵測到不雅字詞
-                          </div>
-                        )}
-                      </div>
-                      {messageCheck ? (
-                        ''
-                      ) : (
-                        <div
-                          className={`${styles.warningText} d-block d-sm-none p-0`}
-                        >
-                          偵測到不雅字詞
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="d-flex justify-content-center">
-                      {myApplyState ? (
-                        <>{switchSentence(myApplyState.state)}</>
-                      ) : (
-                        <div
-                          className="b-btn b-btn-primary"
-                          style={{ paddingInline: '38px' }}
-                          role="presentation"
-                          onClick={() => {
-                            if (checkLogin(LoginUserData)) {
-                              sendApply(myPlayer, message)
-                            }
-                          }}
-                        >
-                          提交
-                        </div>
-                      )}
-                    </div>
-                    {complete === 0 ? (
-                      <div
-                        className="d-flex justify-content-center"
-                        style={{ marginTop: '-8px' }}
-                      >
-                        <div className={`${styles.warningText}`}>
-                          請遵照規則，並填寫所有必填內容
-                        </div>
-                      </div>
-                    ) : (
-                      ''
-                    )}
-                  </section>
-                </>
-              )}
             </div>
           </div>
 
@@ -886,20 +634,6 @@ export default function Info() {
                   ) : (
                     <span className="fw-medium">尚無人參加</span>
                   )}
-                </div>
-              </div>
-              <div className="d-flex justify-content-center gap-5 mt-4">
-                <div
-                  className="b-btn b-btn-danger px-3"
-                  role="presentation"
-                  onClick={() => {
-                    warningDisband()
-                  }}
-                >
-                  解散樂團
-                </div>
-                <div className="b-btn b-btn-primary px-3" role="presentation">
-                  立即成團
                 </div>
               </div>
             </div>
