@@ -11,11 +11,16 @@ import 'dotenv/config.js'
 // 從環境檔抓取secretKey(token加密用)
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 //得到所有會員資料
-let [userData] = await db.execute("SELECT * FROM `user` WHERE `valid` = 1");
+// let [userData] = await db.execute("SELECT * FROM `user` WHERE `valid` = 1");
 // console.log(userData)
+
+const currentTime = new Date();
+const taipeiTime = new Date(currentTime.getTime() + 8 * 60 * 60 * 1000);
+const YYYYMMDDTime = taipeiTime.toISOString().slice(0, 19).replace("T", " "); // 將時間轉換為 'YYYY-MM-DD HH:mm:ss' 格式
 
 
 router.post('/', upload.none(), async function (req, res, next) {
+  
   const uuid =  generateUid()
   // providerData =  req.body
   // console.log(JSON.stringify(req.body))
@@ -75,7 +80,7 @@ router.post('/', upload.none(), async function (req, res, next) {
     }
     // 新增會員資料
     // const newUser = await User.create(user)
-    const newUser = await db.execute('INSERT INTO user (name,uid, email, google_uid, photo_url, valid) VALUES (?,?, ?, ?, ? , 1);', [displayName, uuid, email, google_uid, photoURL]);
+    const newUser = await db.execute('INSERT INTO user (name,uid, email, google_uid, photo_url, nickname, created_time, valid) VALUES (?,?, ?, ?, ?, ?, ?,1);', [displayName, uuid, email, google_uid, photoURL, displayName, YYYYMMDDTime]);
     // const lastInsertIdResult = await db.execute('SELECT LAST_INSERT_ID() AS inserted_id');
 
 
