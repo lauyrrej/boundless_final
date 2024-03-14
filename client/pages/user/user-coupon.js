@@ -10,7 +10,7 @@ import Head from 'next/head'
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
 
-// lessoncard
+// lesson card
 import Card from '@/components/lesson/lesson-card'
 import Cardrwd from '@/components/lesson/lesson-card-rwd'
 

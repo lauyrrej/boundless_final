@@ -34,15 +34,15 @@ router.get("/FindAll/:user_id", async (req, res) => {
 router.post("/Create", async (req, res) => {
   try {
     const param = req.body;
-    // 前端給後端1. user_id，  2. coupon_template_id
+    // 前端給後端1. user_id，  2. coupontemplate_id
     // {
     //   user_id: "";
-    //   coupon_template_id: "";
+    //   coupontemplate_id: "";
     // }
 
     const obj = new Coupon();
     obj.user_id = param.user_id;
-    obj.coupon_template_id = param.coupon_template_id;
+    obj.coupontemplate_id = param.coupontemplate_id;
 
     const result = await obj.Create();
 
