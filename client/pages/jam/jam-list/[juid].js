@@ -43,186 +43,35 @@ export default function Info() {
   const [jam, setJam] = useState({
     id: 0,
     juid: '',
-    title: '',
-    degree: 0,
-    created_time: '',
+    name: '',
+    formed_time: '',
     genre: [],
-    player: [],
     region: '',
-    band_condition: '',
-    description: '',
+    introduce: '',
+    cover_img: '',
+    works_link: '',
     former: {},
     member: [],
   })
-  // 申請資料
-  const [applies, setApplies] = useState([])
-  // 進入頁面者是否有申請此樂團
-  const [myApplyState, setMyApplyState] = useState(0)
-  // 根據申請狀態顯示不同內容
-  const switchSentence = (applyState) => {
-    switch (applyState) {
-      case 0:
-        return (
-          <div
-            className="b-btn-disable"
-            style={{
-              paddingInline: '38px',
-              backgroundColor: '#666666',
-            }}
-            role="presentation"
-          >
-            已送出申請
-          </div>
-        )
-      case 1:
-        return (
-          <div
-            className="b-btn b-btn-primary"
-            style={{
-              paddingInline: '38px',
-            }}
-            role="presentation"
-          >
-            正式加入
-          </div>
-        )
-      case 2:
-        return (
-          <div
-            className="b-btn-disable"
-            style={{
-              paddingInline: '38px',
-              backgroundColor: '#666666',
-            }}
-            role="presentation"
-          >
-            已被拒絕
-          </div>
-        )
-      case 3:
-        return (
-          <div
-            className="b-btn-disable"
-            style={{
-              paddingInline: '38px',
-              backgroundColor: '#666666',
-            }}
-            role="presentation"
-          >
-            已取消申請
-          </div>
-        )
-      case 4:
-        return (
-          <div
-            className="b-btn-disable"
-            style={{
-              paddingInline: '38px',
-              backgroundColor: '#666666',
-            }}
-            role="presentation"
-          >
-            不得再次申請
-          </div>
-        )
-      default:
-        return null
-    }
-  }
   // ---------------------- 手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
   const menuMbToggle = () => {
     setShowMenu(!showMenu)
   }
-
-  // ----------------------------- 讓player代碼對應樂器種類 -----------------------------
-  // 設定本頁可選的職位選項
-  const playerOption = player.filter((v) => {
-    return (
-      v.id ===
-      jam.player.find((jv) => {
-        return jv === v.id
-      })
-    )
-  })
-  const playerName = jam.player.map((p) => {
-    const matchedPlayer = player.find((pd) => pd.id === p) // 物件
-    return matchedPlayer.name
-  })
-  // 累加重複的樂器種類 吉他變成吉他*2
-  const countPlayer = playerName.reduce((accumulator, count) => {
-    if (!accumulator[count]) {
-      accumulator[count] = 1
-    } else {
-      accumulator[count]++
-    }
-    return accumulator
-  }, {})
-  //   console.log(countPlayer)
-  const playerResult = Object.entries(countPlayer).map(([player, count]) => {
-    return count > 1 ? `${player}*${count}` : player
-  })
-  //   console.log(playerResult)
-
-  // ----------------------------- 預計人數 -----------------------------
-  const nowNumber = jam.member.length + 1
-  const totalNumber = jam.member.length + jam.player.length + 1
   // ----------------------------- genre對應 -----------------------------
   const genreName = jam.genre.map((g) => {
     const matchedgenre = genre.find((gd) => gd.id === g)
     return matchedgenre.name
   })
-
   // ----------------------------- 創立時間資料中，單獨取出日期 -----------------------------
   // 調出的時間是ISO格式，顯示時需要轉換成本地時區
   const createdDate = new Date(jam.created_time)
     .toLocaleString()
     .split(' ')[0]
     .replace(/\//g, '-')
-  // ----------------------------- 計算倒數時間 -----------------------------
-  const [countDown, setCountDown] = useState({
-    day: 0,
-    hour: 0,
-    minute: 0,
-    second: 0,
-  })
-
-  let interval
-  function calcTimeLeft() {
-    let countDownObj = {}
-    const now = Date.now()
-    // 創立日期 + 30天 - 目前時間 = 剩餘時間
-    const createdTime = new Date(jam.created_time).getTime()
-    interval = createdTime + 30 * 24 * 60 * 60 * 1000 - now
-    const cdDay = Math.floor(interval / (1000 * 60 * 60 * 24))
-    const cdHour = Math.floor(
-      (interval % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-    )
-    const cdMinute = Math.floor((interval % (1000 * 60 * 60)) / (1000 * 60))
-    const cdSecond = Math.floor((interval % (1000 * 60)) / 1000)
-    countDownObj = {
-      day: cdDay,
-      hour: cdHour,
-      minute: cdMinute,
-      second: cdSecond,
-    }
-    return countDownObj
-  }
-
-  // ----------------------------- 剩餘時間是否小於5天 -----------------------------
-  const timeWarningState =
-    (Date.now() - new Date(jam.created_time).getTime()) /
-      (1000 * 60 * 60 * 24) >=
-    25
-      ? true
-      : false
-
   // ----------------------------- 入團申請表單 -----------------------------
   const [complete, setComplete] = useState(2)
-  // ---------------------- 擔任職位 ----------------------
-  // 控制表單狀態
-  const [myPlayer, setMyPlayer] = useState('')
   // ---------------------- 描述 ----------------------
   const [message, setMessage] = useState('')
   const [messageCheck, setMessageCheck] = useState(true)
@@ -257,10 +106,6 @@ export default function Info() {
   // 檢查表單是否填妥
   const checkComplete = () => {
     if (messageCheck === false || message === '') {
-      setComplete(0)
-      return false
-    }
-    if (myPlayer === '') {
       setComplete(0)
       return false
     }
@@ -410,7 +255,7 @@ export default function Info() {
     try {
       const res = await fetch(
         // 加入uid是為了檢查該使用者是否有申請此樂團，以及其申請狀態
-        `http://localhost:3005/api/jam/singleJam/${juid}/${LoginUserData.uid}`
+        `http://localhost:3005/api/jam/singleFormedJam/${juid}`
       )
       // res.json()是解析res的body的json格式資料，得到JS的資料格式
       const data = await res.json()
@@ -418,10 +263,6 @@ export default function Info() {
         setPlayer(data.playerData)
         setGenre(data.genreData)
         setJam(data.jamData)
-        setApplies(data.applyData)
-        if (data.myApplyState.length > 0) {
-          setMyApplyState(data.myApplyState[0])
-        }
         // 若該樂團已成立，導向成團後的資訊頁面
       } else if (data.status === 'formed') {
         router.push(`/jam/jam-list/${juid}`)
@@ -671,169 +512,6 @@ export default function Info() {
                 )}
               </section>
               {/* -------------------------- 入團申請 -------------------------- */}
-              {LoginUserData.my_jam ? (
-                <div>
-                  {LoginUserData.my_jam === jam.juid ? (
-                    <>
-                      {LoginUserData.id === jam.former.id ? (
-                        <>
-                          {/* 發起人進入所屬樂團頁面 */}
-                          <hr style={{ margin: '6px' }} />
-                          <section className={`${styles.jamLeftSection} mt-2`}>
-                            <div className={`${styles.jamTitle}`}>申請一覽</div>
-                            {applies.map((v) => {
-                              return (
-                                <Apply
-                                  key={v.id}
-                                  id={v.id}
-                                  applier={v.applier}
-                                  message={v.message}
-                                  play={v.play}
-                                  created_time={v.created_time}
-                                  state={v.state}
-                                  sendResult={sendResult}
-                                />
-                              )
-                            })}
-                          </section>
-                        </>
-                      ) : (
-                        <>
-                          <hr style={{ margin: '6px' }} />
-                          <div className="d-flex justify-content-center">
-                            <div
-                              className="b-btn b-btn-danger mt-1"
-                              style={{ paddingInline: '38px' }}
-                              role="presentation"
-                              onClick={() => {}}
-                            >
-                              退出
-                            </div>
-                          </div>
-                        </>
-                      )}
-                    </>
-                  ) : (
-                    ''
-                  )}
-                </div>
-              ) : (
-                <>
-                  {/* 無所屬樂團，顯示申請表單 */}
-                  <hr style={{ margin: '6px' }} />
-                  <section className={`${styles.jamLeftSection}`}>
-                    <div className={`${styles.jamTitle}`}>
-                      入團申請
-                      <div
-                        className={`${styles.noticeText}`}
-                        style={{ color: '#666666' }}
-                      >
-                        ※ 可同時申請多個 JAM，但最終只能擇一加入。
-                      </div>
-                    </div>
-                    {/* -------------------------- 擔任職位 -------------------------- */}
-                    <div className={`${styles.formItem} row`}>
-                      <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                        擔任職位
-                      </div>
-                      <div
-                        className={`${styles.itemInputWrapper} col-12 col-sm-10`}
-                      >
-                        <select
-                          className="form-select"
-                          style={{ width: 'auto' }}
-                          value={myPlayer}
-                          name="myPlayer"
-                          disabled={myApplyState ? true : false}
-                          onChange={(e) => {
-                            setMyPlayer(e.target.value)
-                          }}
-                        >
-                          <option value="" disabled>
-                            請選擇
-                          </option>
-                          {playerOption.map((v) => {
-                            return (
-                              <option key={v.id} value={v.id}>
-                                {v.name}
-                              </option>
-                            )
-                          })}
-                        </select>
-                      </div>
-                    </div>
-                    {/* -------------------------- 想說的話 -------------------------- */}
-                    <div className={`${styles.formItem} row`}>
-                      <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                        想說的話
-                      </div>
-                      <div
-                        className={`${styles.itemInputWrapper} col-12 col-sm-10`}
-                      >
-                        <textarea
-                          className={`${styles.textArea} form-control`}
-                          placeholder="建議可以提到自己喜歡的音樂、入團動機等，上限150字"
-                          name="message"
-                          maxLength={150}
-                          disabled={myApplyState ? true : false}
-                          onChange={(e) => {
-                            setMessage(e.target.value)
-                          }}
-                        />
-                        {messageCheck ? (
-                          ''
-                        ) : (
-                          <div
-                            className={`${styles.warningText} mt-1 d-none d-sm-block`}
-                          >
-                            偵測到不雅字詞
-                          </div>
-                        )}
-                      </div>
-                      {messageCheck ? (
-                        ''
-                      ) : (
-                        <div
-                          className={`${styles.warningText} d-block d-sm-none p-0`}
-                        >
-                          偵測到不雅字詞
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="d-flex justify-content-center">
-                      {myApplyState ? (
-                        <>{switchSentence(myApplyState.state)}</>
-                      ) : (
-                        <div
-                          className="b-btn b-btn-primary"
-                          style={{ paddingInline: '38px' }}
-                          role="presentation"
-                          onClick={() => {
-                            if (checkLogin(LoginUserData)) {
-                              sendApply(myPlayer, message)
-                            }
-                          }}
-                        >
-                          提交
-                        </div>
-                      )}
-                    </div>
-                    {complete === 0 ? (
-                      <div
-                        className="d-flex justify-content-center"
-                        style={{ marginTop: '-8px' }}
-                      >
-                        <div className={`${styles.warningText}`}>
-                          請遵照規則，並填寫所有必填內容
-                        </div>
-                      </div>
-                    ) : (
-                      ''
-                    )}
-                  </section>
-                </>
-              )}
             </div>
           </div>
 
