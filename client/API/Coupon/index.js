@@ -47,7 +47,7 @@ class Coupon {
   Create(
     p = {
       userID: 0,
-      coupontemplate_id: 0,
+      coupon_template_id: 0,
     }
   ) {
     return new Promise((resolve, reject) => {

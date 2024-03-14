@@ -1,8 +1,8 @@
-import express from "express";
-import db from "../db.js";
+import express from 'express';
+import db from '../db.js';
 // 用於處理文件上傳
-import multer from "multer";
-import Coupon from "../controller/coupon.js";
+import multer from 'multer';
+import Coupon from '../controller/coupon.js';
 
 const router = express.Router();
 // 創建一個 multer 中間件，用於處理文件上傳
@@ -14,7 +14,7 @@ const upload = multer();
 // #endregion
 
 // 處理 GET 請求，路徑為 /public/coupon/FindAll
-router.get("/FindAll/:user_id", async (req, res) => {
+router.get('/FindAll/:user_id', async (req, res) => {
   try {
     const param = req.params.user_id;
     // 創建 Coupon 控制器的實例
@@ -31,7 +31,7 @@ router.get("/FindAll/:user_id", async (req, res) => {
 });
 
 // create
-router.post("/Create", async (req, res) => {
+router.post('/Create', async (req, res) => {
   try {
     const param = req.body;
     // 前端給後端1. user_id，  2. coupon_template_id
@@ -52,7 +52,7 @@ router.post("/Create", async (req, res) => {
   }
 });
 
-router.post("/Update", async (req, res) => {
+router.post('/Update', async (req, res) => {
   try {
     // 從請求的 body 中獲取 id 參數
     const param = req.body.id;

@@ -85,7 +85,7 @@ export default function Test() {
   const sidebarToggle = () => {
     setShowSidebar(!showSidebar)
   }
-  // ----------------------假資料  ----------------------
+  // ---假資料 ---
   // sidebar假資料
   // const sidebarData = [
   //   '會員資訊',
@@ -144,17 +144,19 @@ export default function Test() {
     setSales(false)
   }
   // #endregion
-  // sql???? --- 分類 0:全部 / 2:樂器 / 1:課程 / 3:已使用 ---
+  // sql --- 分類 0:全部 / 2:樂器 / 1:課程 / 3:已使用 ---
   const [kind, setKind] = useState(0)
   const [valid, setValid] = useState(1)
-  // sql???? --- 折扣幅度↓ / 即將到期↑ ---
-  // const [discount, setDiscount] = useState('ASC')
+
+  // sql --- 折扣幅度↓ / 即將到期↑ ---
+  // const [discount, setDiscount] = useState(true)
+  // 排序方式
+  // const [sortedItems, setSortedItems] = useState("SELECT * FROM items ORDER BY value ASC") // 預設的升冪排序
   // const [limit_time, setLimit_time] = useState('DESC')
 
   // 從後端加載商品數據
   useEffect(() => {
     // component did mounted 呼叫api，這樣只會做一遍
-    // ????
     CouponClass.FindAll(1).then(async (res) => {
       setDataSort(res)
     })
@@ -348,6 +350,7 @@ export default function Test() {
                   >
                     選單
                   </div>
+
                   {/* search */}
                   {/* <div className="search input-group">
                     <input
@@ -364,43 +367,50 @@ export default function Test() {
                   <div className="d-none d-sm-block pt-4">
                     <nav aria-label="breadcrumb sort d-flex justify-content-between align-items-center">
                       <ol className="breadcrumb">
-                        <li className="sort breadcrumb-item btn">
-                          <a href="#" onClick={() => setKind(0)}>
+                        <li className="sort breadcrumb-item">
+                          <a
+                            href="#"
+                            onClick={() => {
+                              if (valid !== 0) setKind(0)
+                            }}
+                          >
                             全部
                           </a>
                         </li>
                         <li
-                          className="sort breadcrumb-item btn"
-                          aria-current="page"
-                        >
-                          <a href="#" onClick={() => setKind(2)}>
-                            樂器
-                          </a>
-                        </li>
-                        <li
-                          className="sort breadcrumb-item btn"
-                          aria-current="page"
-                        >
-                          <a href="#" onClick={() => setKind(1)}>
-                            課程
-                          </a>
-                        </li>
-                        <li
-                          className="sort breadcrumb-item btn"
+                          className="sort breadcrumb-item"
                           aria-current="page"
                         >
                           <a
                             href="#"
-                            // 已過期valid=0????
-                            onClick={() => setValid(0)}
+                            onClick={() => {
+                              if (valid !== 0) setKind(2)
+                            }}
                           >
+                            樂器
+                          </a>
+                        </li>
+                        <li
+                          className="sort breadcrumb-item"
+                          aria-current="page"
+                        >
+                          <a
+                            href="#"
+                            onClick={() => {
+                              if (valid !== 0) setKind(1)
+                            }}
+                          >
+                            課程
+                          </a>
+                        </li>
+                        <li
+                          className="sort breadcrumb-item"
+                          aria-current="page"
+                        >
+                          <a href="#" onClick={() => setValid(0)}>
                             已使用
                           </a>
                         </li>
-                        {/* ???? */}
-                        {/* <li className="sort breadcrumb-item submit btn">
-                          領取Test
-                        </li> */}
                       </ol>
                     </nav>
                   </div>

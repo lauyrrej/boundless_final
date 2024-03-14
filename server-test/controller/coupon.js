@@ -19,6 +19,8 @@ class Basic {
     this.requirement = 0;
     // 創建日期
     this.created_time = "0000-00-00 00:00:00";
+    //有效與否/使用與否
+    this.valid=0
   }
 }
 
@@ -108,6 +110,7 @@ class Coupon extends Basic {
           created_time: v.created_time,
           limit_time: limit_time,
           limitNum: moment(limit_time).diff(v.created_time, "days"),
+          valid:v.valid,
         };
       });
 
