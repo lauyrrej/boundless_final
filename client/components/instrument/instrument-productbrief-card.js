@@ -7,7 +7,20 @@ import toast, { Toaster } from 'react-hot-toast'
 //跳轉頁面
 import Link from 'next/link'
 
-export default function ProductBriefCard({ name, sales, price, info }) {
+export default function ProductBriefCard({
+  id,
+  img,
+  img_small,
+  type,
+  instrument_category_id,
+  name,
+  sales,
+  price,
+  discount,
+  discount_state,
+  info,
+  addInstrumentItem = () => {},
+}) {
   //收藏按鍵的功能
   const [colorChange, setcolorChange] = useState(false)
   const colorToggle = () => {
@@ -45,7 +58,7 @@ export default function ProductBriefCard({ name, sales, price, info }) {
   }
   return (
     <>
-      <div className="Right sticky-top ">
+      <div className="Right sticky-top">
         <div className="prodBriefing sticky-top ">
           <div className="prodMainName">{name}</div>
           <div className="Rating">
@@ -92,10 +105,25 @@ export default function ProductBriefCard({ name, sales, price, info }) {
               </div>
             )}
           </div>
+
           <div className="shoppingBtn">
             <div
               className="cartBtn"
-              onClick={() => addToCart({ id: 1, name: '商品名稱', price: 100 })}
+              onClick={() =>
+                addInstrumentItem({
+                  id,
+                  img,
+                  img_small,
+                  type,
+                  instrument_category_id,
+                  name,
+                  sales,
+                  price,
+                  discount,
+                  discount_state,
+                  info,
+                })
+              }
             >
               <img
                 loading="lazy"
@@ -105,7 +133,7 @@ export default function ProductBriefCard({ name, sales, price, info }) {
               <div className="cart">加入購物車</div>
             </div>
             <div className="buyBtn">
-              <Link className="buy" href="/cart/checkorder">
+              <Link className="buy" href="/cart/check">
                 立即購買
               </Link>
             </div>

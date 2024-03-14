@@ -19,9 +19,9 @@ export function CartProvider({ children }) {
     localStorage.setItem('CartData', JSON.stringify(items))
   }, [items])
 
-  const addInstrumentItem = (item) => {
+  const addInstrumentItem = (item, qty) => {
     //擴充item的屬性多一個qty
-    const newItem = { ...item, qty: 1 }
+    const newItem = { ...item, qty: qty }
     const newItems = [...items, newItem]
 
     setItems(newItems)
@@ -155,10 +155,9 @@ export function CartProvider({ children }) {
     setinstrumentDiscount(e)
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     const lastInstrumentCoupon = 0
   })
-  
 
   const calcLessonDiscount = () => {
     let total = 0

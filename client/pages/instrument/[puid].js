@@ -14,6 +14,8 @@ import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 import { FaHeart } from 'react-icons/fa'
+//連購物車
+import { useCart } from '@/hooks/use-cart'
 
 import CardIns from '@/components/instrument/card'
 import ProductCardIns from '@/components/instrument/instrument-productbrief-card'
@@ -36,6 +38,8 @@ export default function InstrumentDetailPage() {
   const menuMbToggle = () => {
     setShowMenu(!showMenu)
   }
+
+  const { addInstrumentItem } = useCart
 
   // ----------------------假資料  ----------------------
 
@@ -168,9 +172,13 @@ export default function InstrumentDetailPage() {
               <li style={{ marginLeft: '10px' }}>音箱頭</li>
 
               {InstrumentDetail && InstrumentDetail.length > 0 && (
-                <li style={{ marginLeft: '10px' }}>
-                  {InstrumentDetail[0].instrument_category_id}
-                </li>
+                <ul>
+                  {InstrumentDetail[0].outline
+                    .split('\n')
+                    .map((line, index) => (
+                      <li key={index}>{line}</li>
+                    ))}
+                </ul>
               )}
             </ul>
           </div>
@@ -342,7 +350,9 @@ export default function InstrumentDetailPage() {
                           <div className="cart">加入購物車</div>
                         </div>
                         <div className="buyBtn">
-                          <div className="buy">立即購買</div>
+                          <Link href={'/pages/cart/check.js'}>
+                            <div className="buy">立即購買</div>
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -653,7 +663,9 @@ export default function InstrumentDetailPage() {
           <div className="cart">加入購物車</div>
         </div>
         <div className="buyBtn">
-          <div className="buy">立即購買</div>
+          <Link href="/pages/cart/check.js">
+            <div className="buy">立即購買</div>
+          </Link>
         </div>
       </div>
       <Footer />
@@ -805,6 +817,7 @@ border: 5px solid var(--primary-light, #18A1FF);
         .detail-title {
           color: var(--primary-deep, #0d3652);
           font: 700 24px Noto Sans TC, sans-serif;
+          margin-bottom:16px;
         }
 
         .list {
