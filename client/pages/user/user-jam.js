@@ -1,33 +1,31 @@
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+import { Toaster } from 'react-hot-toast'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
-import jamHero from '@/assets/jam-hero.png'
 import Head from 'next/head'
 
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
-
-// lessoncard
-import Card from '@/components/lesson/lesson-card'
-import Cardrwd from '@/components/lesson/lesson-card-rwd'
+import { useJam } from '@/hooks/use-jam'
 
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
-import { IoIosSearch } from 'react-icons/io'
-import { FaFilter } from 'react-icons/fa6'
-import { FaSortAmountDown } from 'react-icons/fa'
+import { FaExternalLinkAlt } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 
-export default function Test() {
+export default function UserJam() {
+  const router = useRouter()
+  const { cancelSuccess, deleteSuccess } = useJam()
   // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
   const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
     useAuth()
-  const [userData, setUserData] = useState()
+  const [myApply, setMyApply] = useState([])
   //檢查token
   useEffect(() => {
     handleLoginStatus()
@@ -49,22 +47,6 @@ export default function Test() {
   }
 
   // ----------------------會員登入狀態  ----------------------
-  // 在電腦版或手機版時
-  const [isSmallScreen, setIsSmallScreen] = useState(false)
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsSmallScreen(window.innerWidth <= 576)
-    }
-
-    handleResize()
-
-    window.addEventListener('resize', handleResize)
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [])
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -88,58 +70,139 @@ export default function Test() {
   //   '我的課程',
   //   '我的訊息',
   // ]
+  // 取消申請
+  const cancelApply = async (id) => {
+    let formData = new FormData()
+    formData.append('id', id)
+    try {
+      const res = await fetch(`http://localhost:3005/api/jam/cancelApply`, {
+        method: 'PUT',
+        body: formData,
+        credentials: 'include',
+      })
+      const result = await res.json()
+      if (result.status === 'success') {
+        cancelSuccess()
+      } else {
+        console.log(result.error)
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  // 刪除申請
+  const deleteApply = async (id) => {
+    let formData = new FormData()
+    formData.append('id', id)
+    try {
+      const res = await fetch(`http://localhost:3005/api/jam/deleteApply`, {
+        method: 'PUT',
+        body: formData,
+        credentials: 'include',
+      })
+      const result = await res.json()
+      if (result.status === 'success') {
+        deleteSuccess()
+      } else {
+        console.log(result.error)
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
-  // 資料排序
-  const [dataSort, setDataSort] = useState('latest')
-  // ----------------------條件篩選  ----------------------
-  const [filterVisible, setFilterVisible] = useState(false)
+  const getMyApply = async (uid) => {
+    // console.log(uid)
+    try {
+      const res = await fetch(`http://localhost:3005/api/jam/getMyApply/${uid}`)
+      const datas = await res.json()
+      if (datas.status === 'success') {
+        setMyApply(datas.data)
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  const switchSentence = (state) => {
+    switch (state) {
+      case 0:
+        return '審核中'
+      case 1:
+        return '通過'
+      case 2:
+        return '拒絕'
+      default:
+        return null
+    }
+  }
+
+  const switchOption = (state, id) => {
+    switch (state) {
+      case 0:
+        return (
+          <div
+            role="presentation"
+            className="b-btn b-btn-body"
+            style={{ width: '50px', height: '32px' }}
+            onClick={() => {
+              cancelApply(id)
+            }}
+          >
+            取消
+          </div>
+        )
+      case 1:
+        return (
+          <div
+            role="presentation"
+            className="b-btn b-btn-primary"
+            style={{ width: '50px', height: '32px' }}
+            onClick={() => {
+              cancelApply(id)
+            }}
+          >
+            加入
+          </div>
+        )
+      case 2:
+        return (
+          <div
+            role="presentation"
+            className="b-btn b-btn-body"
+            style={{ width: '50px', height: '32px' }}
+            onClick={() => {
+              deleteApply(id)
+            }}
+          >
+            刪除
+          </div>
+        )
+      default:
+        return null
+    }
+  }
+
+  // 若有樂團，則會直接導向所屬樂團
   useEffect(() => {
-    document.addEventListener('click', (e) => {
-      setFilterVisible(false)
-    })
-  }, [])
-  // 阻止事件冒泡造成篩選表單關閉
-  const stopPropagation = (e) => {
-    e.stopPropagation()
-  }
-  // 顯示表單
-  const onshow = (e) => {
-    stopPropagation(e)
-    setFilterVisible(!filterVisible)
-  }
-  // filter假資料
-  const brandData = [
-    { id: 1, name: 'YAMAHA' },
-    { id: 2, name: 'Roland' },
-    { id: 3, name: 'Fender' },
-    { id: 4, name: 'Gibson' },
-  ]
-  const [brandSelect, setBrandSelect] = useState('all')
-
-  const [priceLow, setPriceLow] = useState('')
-  const [priceHigh, setPriceHigh] = useState('')
-
-  // 課程評價
-  const scoreState = ['all', '5', '4', '3']
-  const [score, setScore] = useState('all')
-
-  // 活動促銷
-  const [sales, setSales] = useState(false)
-
-  // 清除表單內容
-  const cleanFilter = () => {
-    setBrandSelect('all')
-    setPriceLow('')
-    setPriceHigh('')
-    setScore('all')
-    setSales(false)
-  }
-
+    if (LoginUserData.my_jam) {
+      router.push(`../jam/recruit-list/${LoginUserData.my_jam}`)
+    }
+    getMyApply(LoginUserData.uid)
+    // 必須確定LoginUserData.uid已經讀入
+  }, [LoginUserData.uid])
+  // console.log(myApply)
   return (
     <>
       <Head>
-        <title>我的課程</title>
+        <title>我的樂團</title>
       </Head>
+      <Toaster
+        containerStyle={{
+          top: 80,
+          zIndex: 101,
+        }}
+      />
       <Navbar menuMbToggle={menuMbToggle} />
       {/* 先把HEROSECTION隱藏 */}
       {/* <div
@@ -242,13 +305,13 @@ export default function Test() {
                   <Link href="/user/user-order">我的訂單</Link>
                 </li>
                 <li key={4}>
-                  <Link href="/user/user-article">我的文章</Link>
+                  <Link href="/user/user-acticle">我的文章</Link>
                 </li>
                 <li key={5}>
                   <Link href="/user/user-favorite">我的收藏</Link>
                 </li>
                 <li key={6}>
-                  <Link href="/user/user-coupon">我的優惠券</Link>
+                  <Link href="/coupon/userCoupon">我的優惠券</Link>
                 </li>
                 <li key={7}>
                   <Link href="/user/user-lesson">我的課程</Link>
@@ -276,25 +339,49 @@ export default function Test() {
                   }}
                 />
               </div>
-              <Link href={`/jam/recruit-list`} className="sm-item active">
-                團員募集
+
+              <Link href="/user/user-info" className="sm-item">
+                會員資訊
               </Link>
-              <Link href={`/jam/jam-list`} className="sm-item">
-                活動中的JAM
+
+              <Link href="/user/user-jam" className="sm-item active">
+                我的樂團
               </Link>
-              <Link href={`/jam/Q&A`} className="sm-item">
-                什麼是JAM？
+
+              <Link href="/user/user-order" className="sm-item">
+                我的訂單
+              </Link>
+
+              <Link href="/user/user-acticle" className="sm-item">
+                我的文章
+              </Link>
+
+              <Link href="/user/user-favorite" className="sm-item">
+                我的收藏
+              </Link>
+
+              <Link href="/coupon/userCoupon" className="sm-item">
+                我的優惠券
+              </Link>
+
+              <Link href="/user/user-lesson" className="sm-item">
+                我的課程
+              </Link>
+
+              <Link href="/user/user-notify" className="sm-item">
+                我的訊息
               </Link>
             </div>
             {/*  ---------------------- 頂部功能列  ---------------------- */}
-            <div className="top-function-container">
+
+            <div className="user-top-container">
               {/*  ---------------------- 麵包屑  ---------------------- */}
-              <div className="breadcrumb-wrapper-ns">
+              <div className="breadcrumb-wrapper">
                 <ul className="d-flex align-items-center p-0 m-0">
                   <IoHome size={20} />
                   <li style={{ marginLeft: '8px' }}>會員中心</li>
                   <FaChevronRight />
-                  <li style={{ marginLeft: '10px' }}>我的收藏</li>
+                  <li style={{ marginLeft: '10px' }}>我的樂團</li>
                 </ul>
               </div>
 
@@ -309,55 +396,93 @@ export default function Test() {
                   >
                     選單
                   </div>
-                  <div className="search input-group">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="請輸入關鍵字..."
-                    />
-                    <div className="search-btn btn d-flex justify-content-center align-items-center p-0">
-                      <IoIosSearch size={25} />
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
             {/* 主內容 */}
             <main className="content">
               <div className="container custom-container">
-                <div className="row">
-                  <div
-                    className="col-sm-10 col-12"
-                    style={{
-                      backgroundColor: 'rgb(255, 255, 255)',
-                    }}
-                  >
-                    <div className="user-content col-12">
-                      <div className="user-content-top">
-                        <div className="user-title-userInfo">我的課程</div>
-                      </div>
+                <div
+                  className=""
+                  style={{
+                    backgroundColor: 'rgb(255, 255, 255)',
+                  }}
+                >
+                  <div className="user-content">
+                    <div className="user-content-top">
+                      <div className="user-title-userInfo">樂團申請</div>
+                    </div>
+                    <div className="noticeText" style={{ color: '#666666' }}>
+                      ※ 非招募中、已取消的申請資料不會列出。
+                    </div>
 
-                      {/* <div className="user-lesson-cardList">
-                        <div className="user-lesson-cardList-row">
-                          {isSmallScreen ? <Cardrwd /> : <Card />}
-                          {isSmallScreen ? <Cardrwd /> : <Card />}
-                          {isSmallScreen ? <Cardrwd /> : <Card />}
+                    <div className="user-notifyList ">
+                      <div className="user-notifyList-item row flex-nowrap">
+                        <div
+                          className="fw-medium text-center col-3"
+                          style={{ color: '#124365', paddingInline: '0' }}
+                        >
+                          樂團連結
                         </div>
-                        <div className="user-lesson-cardList-row">
-                          {isSmallScreen ? <Cardrwd /> : <Card />}
-                          {isSmallScreen ? <Cardrwd /> : <Card />}
-                          {isSmallScreen ? <Cardrwd /> : <Card />}
+                        <div
+                          className="fw-medium text-center col-3"
+                          style={{ color: '#124365', paddingInline: '0' }}
+                        >
+                          職位
                         </div>
-                        <div className="user-lesson-cardList-row">
-                          {isSmallScreen ? <Cardrwd /> : <Card />}
-                          {isSmallScreen ? <Cardrwd /> : <Card />}
-                          {isSmallScreen ? <Cardrwd /> : <Card />}
+                        <div
+                          className="fw-medium text-center col-3"
+                          style={{ color: '#124365', paddingInline: '0' }}
+                        >
+                          審核狀態
                         </div>
-                      </div> */}
-
-                      <div className="user-orderList-pagination">
-                        <p>待放分頁元件 注意class</p>
+                        <div
+                          className="fw-medium text-center col-3"
+                          style={{ color: '#124365', paddingInline: '0' }}
+                        >
+                          操作
+                        </div>
                       </div>
+                      <hr style={{ color: '#124365', marginInline: '0' }} />
+                      {myApply.map((v) => {
+                        return (
+                          <div
+                            className="user-notifyList-item row flex-nowrap mb-2"
+                            key={v.id}
+                          >
+                            <div
+                              className="d-flex justify-content-center col-3"
+                              style={{ color: '#124365', paddingInline: '0' }}
+                            >
+                              <Link
+                                href={`/jam/recruit-list/${v.juid}`}
+                                className="b-btn b-btn-primary"
+                                style={{ width: '50px', height: '32px' }}
+                              >
+                                <FaExternalLinkAlt />
+                              </Link>
+                            </div>
+                            <div
+                              className="text-center col-3"
+                              style={{ paddingInline: '0' }}
+                            >
+                              {v.applier_play}
+                            </div>
+                            <div
+                              className="text-center col-3"
+                              style={{ paddingInline: '0' }}
+                            >
+                              {switchSentence(v.state)}
+                            </div>
+                            <div
+                              className="d-flex justify-content-center col-3"
+                              style={{ color: '#124365', paddingInline: '0' }}
+                            >
+                              {switchOption(v.state, v.id)}
+                            </div>
+                          </div>
+                        )
+                      })}
                     </div>
                   </div>
                 </div>
@@ -369,6 +494,37 @@ export default function Test() {
       <Footer />
 
       <style jsx>{`
+        .content {
+          min-height: calc(100svh - 120px);
+          padding-bottom: 30px;
+          @media screen and (max-width: 576px) {
+            padding-top: 30px;
+            padding-inline: 20px;
+            min-height: calc(100svh - 146px);
+          }
+        }
+        .noticeText {
+          margin-block: 10px;
+          padding: 0;
+          color: '#666666';
+          font-size: 16px;
+          font-weight: 400;
+        }
+        .user-top-container {
+          width: 100%;
+          background-color: #fff;
+          padding-block: 20px 0px;
+          position: -webkit-sticky;
+          position: sticky;
+          top: 10px;
+          z-index: 100;
+          @media screen and (max-width: 576px) {
+            top: 60px;
+            padding-block: 20px 18px;
+            padding-inline: 12px;
+            box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.25);
+          }
+        }
         /* -------------------user sidebar-------------------- */
         .sidebar-user-info {
           display: flex;
@@ -392,6 +548,7 @@ export default function Test() {
           }
           .sidebar-user-info-text {
             display: flex;
+
             width: 140px;
             flex-direction: column;
             align-items: flex-start;
@@ -421,9 +578,10 @@ export default function Test() {
         }
 
         /* -------------------user sidebar-------------------- */
-
-        /* --------------- user-contect-acticle--------------- */
-
+        /* --------------- user-contect-notify--------------- */
+        hr {
+          margin: 10px;
+        }
         .custom-container {
           padding: 0;
           color: #000;
@@ -448,17 +606,22 @@ export default function Test() {
             color: var(--primary-deep, #124365);
           }
 
-          .user-content {
+          .user-orderList-pagination {
             display: flex;
-            width: 1070px;
-            padding: 20px 10px;
-            margin: 0;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 20px;
-            border-radius: 5px;
-            background: var(--gray-30, rgba(185, 185, 185, 0.3));
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            align-self: stretch;
           }
+        }
+
+        .user-content {
+          display: flex;
+          padding: 20px 10px;
+          flex-direction: column;
+          align-items: flex-start;
+          border-radius: 5px;
+          background: var(--gray-30, rgba(185, 185, 185, 0.3));
 
           .user-content-top {
             display: flex;
@@ -466,29 +629,44 @@ export default function Test() {
             align-self: stretch;
             color: var(--primary-deep, #124365);
             text-align: center;
-            /* h3 */
+            justify-content: space-between;
             font-family: 'Noto Sans TC';
             font-size: 28px;
             font-style: normal;
             font-weight: 700;
             line-height: normal;
-          }
 
-          .user-lesson-cardList {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 40px;
-            align-self: stretch;
-            .user-lesson-cardList-row {
-              display: flex;
-
-              justify-content: center;
-              align-items: flex-start;
-              gap: 90px;
-              align-self: stretch;
+            .user-notify-newBtn {
+              display: none;
             }
           }
+          /*----------------------notify css----------------------- */
+          .user-notifyList {
+            width: 100%;
+            overflow: auto;
+          }
+
+          .user-notifyList-item {
+            align-items: center;
+            padding-left: 4px;
+            margin-inline: auto;
+            /*height: 60px; */
+
+            .user-notifyList-item-notifyLabel {
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 1;
+              overflow: hidden;
+            }
+            .user-notifyList-item-type {
+              /*text-align: end;*/
+            }
+            .user-notifyList-item-message {
+              color: var(--primary-deep, #124365);
+            }
+          }
+
+          /*----------------------notify css----------------------- */
 
           .user-orderList-pagination {
             display: flex;
@@ -499,7 +677,7 @@ export default function Test() {
           }
         }
 
-        /*------------- RWD  ----------- */
+        /* RWD讓SIDEBAR消失 測試用記得刪 */
         @media screen and (max-width: 576px) {
           body {
             padding-inline: 20px;
@@ -512,26 +690,25 @@ export default function Test() {
               width: 390px;
               padding: 10px;
               overflow: hidden;
+            }
+          }
 
-              .user-lesson-cardList {
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-                align-self: stretch;
-                gap: 15px;
-                .user-lesson-cardList-row {
-                  display: flex;
-                  flex-direction: column;
-                  align-items: center;
-                  gap: 15px;
-                  align-self: stretch;
-                  padding: 0px;
-                }
+          .user-content {
+            .user-notifyList-item {
+              padding-left: 0px;
+              font-size: 16px;
+
+              .user-notifyList-item-notifyLabel {
+                -webkit-line-clamp: 2;
+              }
+
+              .user-notifyList-item-type {
+                font-size: 16px;
               }
             }
           }
         }
-        /*------------- RWD  ----------- */
+        /* RWD讓SIDEBAR消失 測試用記得刪 */
       `}</style>
     </>
   )

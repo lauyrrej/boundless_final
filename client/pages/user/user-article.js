@@ -3,8 +3,8 @@ import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
-import Head from 'next/head'
 import jamHero from '@/assets/jam-hero.png'
+import Head from 'next/head'
 
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
@@ -118,7 +118,7 @@ export default function Test() {
   return (
     <>
       <Head>
-        <title>我的訂單</title>
+        <title>我的文章</title>
       </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       {/* 先把HEROSECTION隱藏 */}
@@ -274,7 +274,7 @@ export default function Test() {
                   <IoHome size={20} />
                   <li style={{ marginLeft: '8px' }}>會員中心</li>
                   <FaChevronRight />
-                  <li style={{ marginLeft: '10px' }}>我的訂單</li>
+                  <li style={{ marginLeft: '10px' }}>我的文章</li>
                 </ul>
               </div>
 
@@ -486,96 +486,82 @@ export default function Test() {
                   >
                     <div className="user-content col-12">
                       <div className="user-content-top">
-                        <div className="user-title-userInfo">我的訂單</div>
+                        <div className="user-title-userInfo">我的文章</div>
+                        <div className="user-acticle-newBtn btn  btn-primary">
+                          <div>新文章</div>
+                        </div>
                       </div>
-                      <div className="user-orderList">
-                        <div className="user-order-item-instrument">
-                          <div className="user-order-item-instrument-leftSide">
-                            <div className="user-order-item-instrument-leftSide-img">
-                              <img src="" alt="" />
-                            </div>
-                            <div className="user-order-item-instrument-leftSide-btn btn btn-primary">
-                              退貨
-                            </div>
+
+                      <div className="user-acticleList ">
+                        <div className="user-acticleList-item-title d-flex row mb-2">
+                          <div className="form-check col-sm-6 col-6 ">
+                            <input
+                              className="form-check-input user-acticleList-item-title-acticleCheck"
+                              type="checkbox"
+                              defaultValue=""
+                              id="user-acticleList-item-title-acticleCheck"
+                            />
+                            <label
+                              className="form-check-label user-acticleList-item-title-acticleLabel"
+                              htmlFor="user-acticleList-item-title-acticleCheck"
+                            >
+                              文章標題
+                            </label>
                           </div>
-                          <div className="user-order-item-instrument-detail">
-                            <div className="user-order-item-instrument-detail-row">
-                              <div className="user-order-item-instrument-detail-row-col-productName">
-                                <p>
-                                  <span>商品名稱：</span> YBH_621S X 1
-                                </p>
-                              </div>
+                          <div className="user-acticleList-item-title-time col-sm-2 col-2">
+                            時間
+                          </div>
+                          <div className="user-acticleList-item-title-message col-sm-1 col-1 px-2">
+                            留言數
+                          </div>
+                          <div className="user-acticleList-item-title-btnGroup col-sm-3 col-4 row ">
+                            <div className=" btn btn-primary user-acticleList-item-title-newBtn col-sm-5 col-9">
+                              新文章
                             </div>
-                            <div className="user-order-item-instrument-detail-row">
-                              <div className="user-order-item-instrument-detail-row-col">
-                                <h5>訂單編號</h5>
-                                <p>31700023464729</p>
-                              </div>
-                              <div className="user-order-item-instrument-detail-row-col">
-                                <h5>購買日期</h5>
-                                <p>2024/01/14</p>
-                              </div>
-                              <div className="user-order-item-instrument-detail-row-col ">
-                                <h5>付款金額</h5>
-                                <p>$ 72000</p>
-                              </div>
-                            </div>
-                            <div className="user-order-item-instrument-detail-row">
-                              <div className="user-order-item-instrument-detail-row-col">
-                                <h5>付款方式</h5>
-                                <p>信用卡</p>
-                              </div>
-                              <div className="user-order-item-instrument-detail-row-col">
-                                <h5>商品狀態</h5>
-                                <p>配送完成</p>
-                              </div>
-                              <div className="user-order-item-instrument-detail-row-col-address">
-                                <h5>配送地址</h5>
-                                <p>320桃園市中壢區新生路二段421號</p>
-                              </div>
+                            <div className=" btn btn-primary user-acticleList-item-title-btn col-sm-5 col-9">
+                              刪除
                             </div>
                           </div>
                         </div>
-                        <div className="user-order-item-lesson">
-                          <div className="user-order-item-lesson-leftSide">
-                            <div className="user-order-item-lesson-leftSide-img">
-                              <img src="" alt="" />
-                            </div>
-                            <div className="user-order-item-lesson-leftSide-btn btn btn-primary">
-                              修改訂單
-                            </div>
+                        <hr />
+
+                        <div className="user-acticleList-item d-flex row mb-2">
+                          <div className="form-check col-sm-6 col-6 ">
+                            <input
+                              className="form-check-input user-acticleList-item-acticleCheck"
+                              type="checkbox"
+                              defaultValue=""
+                              id="user-acticleList-item-acticleCheck"
+                            />
+                            <label
+                              className="form-check-label user-acticleList-item-acticleLabel"
+                              htmlFor="user-acticleList-item-acticleCheck"
+                            >
+                              那些在買七弦吉他前，需要注意的調 Tone
+                              撇步！那些在買七弦吉他前，需要注意的調 Tone
+                              撇步！那些在買七弦吉他前，需要注意的調 Tone
+                              撇步！那些在買七弦吉他前，需要注意的調 Tone
+                              撇步！那些在買七弦吉他前，需要注意的調 Tone 撇步！
+                            </label>
                           </div>
-                          <div className="user-order-item-lesson-detail">
-                            <div className="user-order-item-lesson-detail-row">
-                              <div className="user-order-item-lesson-detail-row-col-productName">
-                                <p>
-                                  <span>商品名稱：</span> 上課
-                                </p>
-                              </div>
+                          <div className="user-acticleList-item-time col-sm-2 col-2">
+                            2024/01/14
+                          </div>
+                          <div className="user-acticleList-item-message col-sm-1 col-1 px-2">
+                            10
+                          </div>
+                          <div className="user-acticleList-item-btnGroup col-sm-3 col-4 row ">
+                            <div className="user-acticleList-item-text   col-sm-5 col-9 ">
+                              已發布
                             </div>
-                            <div className="user-order-item-lesson-detail-row">
-                              <div className="user-order-item-lesson-detail-row-col">
-                                <h5>訂單編號</h5>
-                                <p>31700023464729</p>
-                              </div>
-                              <div className="user-order-item-lesson-detail-row-col">
-                                <h5>購買日期</h5>
-                                <p>2024/01/14</p>
-                              </div>
-                              <div className="user-order-item-lesson-detail-row-col ">
-                                <h5>付款金額</h5>
-                                <p>$ 72000</p>
-                              </div>
-                            </div>
-                            <div className="user-order-item-lesson-detail-row">
-                              <div className="user-order-item-lesson-detail-row-col">
-                                <h5>付款方式</h5>
-                                <p>信用卡</p>
-                              </div>
+                            <div className=" btn btn-primary user-acticleList-item-btn col-sm-5 col-9">
+                              編輯
                             </div>
                           </div>
                         </div>
+                        <hr />
                       </div>
+
                       <div className="user-orderList-pagination">
                         <p>待放分頁元件 注意class</p>
                       </div>
@@ -613,7 +599,6 @@ export default function Test() {
           }
           .sidebar-user-info-text {
             display: flex;
-
             width: 140px;
             flex-direction: column;
             align-items: flex-start;
@@ -643,8 +628,14 @@ export default function Test() {
         }
 
         /* -------------------user sidebar-------------------- */
-        /* --------------- user-contect-order--------------- */
+        /* --------------- user-contect-acticle--------------- */
+        hr {
+          margin: 10px;
+        }
 
+        .btn-primary {
+          background-color: #18a1ff;
+        }
         .custom-container {
           padding: 0;
           color: #000;
@@ -669,17 +660,24 @@ export default function Test() {
             color: var(--primary-deep, #124365);
           }
 
-          .user-content {
+          .user-orderList-pagination {
             display: flex;
-            width: 1070px;
-            padding: 20px 10px;
-            margin: 0;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 20px;
-            border-radius: 5px;
-            background: var(--gray-30, rgba(185, 185, 185, 0.3));
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            align-self: stretch;
           }
+        }
+
+        .user-content {
+          display: flex;
+          width: 1070px;
+          padding: 20px 10px;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 20px;
+          border-radius: 5px;
+          background: var(--gray-30, rgba(185, 185, 185, 0.3));
 
           .user-content-top {
             display: flex;
@@ -687,195 +685,96 @@ export default function Test() {
             align-self: stretch;
             color: var(--primary-deep, #124365);
             text-align: center;
+            justify-content: space-between;
             /* h3 */
             font-family: 'Noto Sans TC';
             font-size: 28px;
             font-style: normal;
             font-weight: 700;
             line-height: normal;
+
+            .user-acticle-newBtn {
+              display: none;
+            }
+          }
+          /*----------------------acticle css----------------------- */
+          .user-acticleList {
+            width: 100%;
           }
 
-          .user-order-item-instrument {
-            /* padding-left: 25px;*/
-            display: flex;
-            width: 1050px;
-            height: 250px;
+          .user-acticleList-item {
             align-items: center;
-            gap: 20px;
-            border-bottom: 1px solid var(--body, #b9b9b9);
+            padding-left: 25px;
+            margin-inline: auto;
+            /*height: 60px; */
 
-            .user-order-item-instrument-leftSide {
-              /* padding-left: 25px; */
-              display: flex;
-              flex-direction: column;
-              justify-content: center;
-              align-items: center;
-              gap: 10px;
-
-              .user-order-item-instrument-leftSide-img {
-                display: flex;
-                width: 150px;
-                height: 150px;
-                align-items: flex-start;
-                gap: 10px;
-                border-radius: 10px;
-                border: 1px solid var(--body, #b9b9b9);
-                background: #fff;
-              }
-
-              .user-order-item-instrument-leftSide-btn {
-                display: flex;
-                padding: 3px 15px;
-                justify-content: center;
-                align-items: center;
-                gap: 10px;
-                border-radius: 5px;
-                background: var(--primary, #1581cc);
-              }
+            .user-acticleList-item-acticleCheck {
+            }
+            .user-acticleList-item-acticleLabel {
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 1;
+              overflow: hidden;
             }
 
-            .user-order-item-instrument-detail {
-              /*padding-left: 25px; */
-              display: flex;
-              flex-direction: column;
-              justify-content: center;
-              align-items: flex-start;
-              /* gap: 30px; */
-              flex: 1 0 0;
+            .user-acticleList-item-time {
+            }
 
-              .user-order-item-instrument-detail-row {
-                display: flex;
-                align-items: center;
-                gap: 5px;
-                align-self: stretch;
+            .user-acticleList-item-message {
+            }
 
-                .user-order-item-instrument-detail-row-col-productName {
-                  width: 700px;
-                  padding: 0px 20px 5px 0px;
-                  font-size: 20px;
+            .user-acticleList-item-btnGroup {
+              /* width: 200px; */
+              gap: 10px;
+              align-items: center;
+              justify-content: end;
 
-                  & span {
-                    font-family: 'Noto Sans TC';
-                    font-style: normal;
-                    font-weight: 400;
-                    line-height: normal;
-                    color: var(--primary-deep, #124365);
-                  }
-                }
-
-                .user-order-item-instrument-detail-row-col {
-                  width: 200px;
-                  display: flex;
-                  padding: 0px 20px 5px 0px;
-                  align-items: center;
-
-                  display: -webkit-box;
-                  -webkit-box-orient: vertical;
-                  -webkit-line-clamp: 2;
-                  overflow: hidden;
-
-                  text-overflow: ellipsis;
-                }
-
-                .user-order-item-instrument-detail-row-col-address {
-                  width: 800px;
-                  & h5 {
-                    font-family: 'Noto Sans TC';
-                    font-size: 20px;
-                    font-style: normal;
-                    font-weight: 400;
-                    line-height: normal;
-                    color: var(--primary-deep, #124365);
-                  }
-                }
+              .user-acticleList-item-text {
+                color: var(--primary-deep, #124365);
+                font-weight: bold;
+                font-size: 20px;
+              }
+              .user-acticleList-item-btn {
+                align-items: self-end;
               }
             }
           }
 
-          .user-order-item-lesson {
-            /* padding-left: 25px; */
-            display: flex;
-            width: 1050px;
-            height: 250px;
+          .user-acticleList-item-title {
             align-items: center;
-            gap: 20px;
-            border-bottom: 1px solid var(--body, #b9b9b9);
-
-            .user-order-item-lesson-leftSide {
-              /* padding-left: 25px; */
-              display: flex;
-              flex-direction: column;
-              justify-content: center;
-              align-items: center;
-              gap: 10px;
-
-              .user-order-item-lesson-leftSide-img {
-                display: flex;
-                width: 150px;
-                height: 150px;
-                align-items: flex-start;
-                gap: 10px;
-                border-radius: 10px;
-                border: 1px solid var(--body, #b9b9b9);
-                background: #fff;
-              }
-
-              .user-order-item-lesson-leftSide-btn {
-                display: flex;
-                padding: 3px 15px;
-                justify-content: center;
-                align-items: center;
-                gap: 10px;
-                border-radius: 5px;
-                background: var(--primary, #1581cc);
-              }
+            margin-inline: auto;
+            padding-left: 25px;
+            .user-acticleList-item-title-acticleCheck {
+            }
+            .user-acticleList-item-title-acticleLabel {
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 1;
+              overflow: hidden;
             }
 
-            .user-order-item-lesson-detail {
-              /*padding-left: 25px;*/
-              display: flex;
-              flex-direction: column;
-              justify-content: center;
-              align-items: flex-start;
-              /* gap: 30px; */
-              flex: 1 0 0;
+            .user-acticleList-item-title-time {
+            }
 
-              .user-order-item-lesson-detail-row {
-                display: flex;
-                align-items: center;
-                gap: 5px;
-                align-self: stretch;
+            .user-acticleList-item-title-message {
+            }
 
-                .user-order-item-lesson-detail-row-col-productName {
-                  width: 700px;
-                  padding: 0px 20px 5px 0px;
-                  font-size: 20px;
+            .user-acticleList-item-title-btnGroup {
+              /* width: 200px; */
+              gap: 10px;
+              justify-content: end;
 
-                  & span {
-                    font-family: 'Noto Sans TC';
-                    font-style: normal;
-                    font-weight: 400;
-                    line-height: normal;
-                    color: var(--primary-deep, #124365);
-                  }
-                }
-
-                .user-order-item-lesson-detail-row-col {
-                  width: 200px;
-                  display: flex;
-                  padding: 0px 20px 5px 0px;
-                  align-items: center;
-
-                  display: -webkit-box;
-                  -webkit-box-orient: vertical;
-                  -webkit-line-clamp: 2;
-                  overflow: hidden;
-
-                  text-overflow: ellipsis;
-                }
+              .user-acticleList-item-title-text {
+                color: var(--primary-deep, #124365);
+                font-weight: bold;
+              }
+              .user-acticleList-item-title-btn {
+                align-items: self-end;
               }
             }
           }
+
+          /*----------------------acticle css----------------------- */
 
           .user-orderList-pagination {
             display: flex;
@@ -885,6 +784,8 @@ export default function Test() {
             align-self: stretch;
           }
         }
+
+        /* RWD未生效 */
 
         /* RWD讓SIDEBAR消失 測試用記得刪 */
         @media screen and (max-width: 576px) {
@@ -899,20 +800,83 @@ export default function Test() {
               width: 390px;
               padding: 10px;
               overflow: hidden;
+
+              .user-acticle-newBtn {
+                display: flex;
+                margin-right: 25px;
+              }
             }
-            .user-order-item-instrument {
-              width: 370px;
-              overflow: hidden;
+          }
+
+          .user-content {
+            .user-acticleList-item-title {
+              padding-left: 15px;
+              .user-acticleList-item-title-acticleCheck {
+              }
+              .user-acticleList-item-title-acticleLabel {
+                -webkit-line-clamp: 2;
+              }
+              .user-acticleList-item-title-message {
+                display: none;
+              }
+              .user-acticleList-item-title-time {
+                text-align: right;
+                font-size: 12px;
+
+                /* display: none; */
+              }
+
+              .user-acticleList-item-title-btnGroup {
+                justify-content: flex-end;
+                font-size: 12px;
+
+                .user-acticleList-item-title-newBtn {
+                  display: none;
+                }
+                .user-acticleList-item-title-text {
+                  text-align: right;
+                  font-size: 12px;
+                  padding: 3px;
+                }
+
+                .user-acticleList-item-title-btn {
+                  font-size: 12px;
+                  padding: 3px;
+                }
+              }
             }
 
-            .user-order-item-instrument-detail-row-col-address {
-              width: 370px;
-              overflow: hidden;
-            }
+            .user-acticleList-item {
+              padding-left: 15px;
+              .user-acticleList-item-acticleCheck {
+                margin-top: 15px;
+              }
+              .user-acticleList-item-acticleLabel {
+                -webkit-line-clamp: 2;
+              }
+              .user-acticleList-item-message {
+                display: none;
+              }
+              .user-acticleList-item-time {
+                font-size: 12px;
+                /* display: none; */
+              }
 
-            .user-order-item-lesson {
-              width: 370px;
-              overflow: hidden;
+              .user-acticleList-item-btnGroup {
+                justify-content: flex-end;
+                font-size: 12px;
+
+                .user-acticleList-item-text {
+                  text-align: right;
+                  font-size: 20px;
+                  padding: 3px;
+                }
+
+                .user-acticleList-item-btn {
+                  font-size: 12px;
+                  padding: 3px;
+                }
+              }
             }
           }
         }
