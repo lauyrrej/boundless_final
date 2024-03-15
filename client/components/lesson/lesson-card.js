@@ -9,6 +9,8 @@ import { MdOutlinePeopleAlt } from 'react-icons/md'
 export default function CourseCard({
   luid,
   name,
+    average_rating,
+  review_count,
   price,
   teacher_id,
   img,
@@ -43,8 +45,8 @@ export default function CourseCard({
             <div className="course-info">
               <div className="rating">
                 <FaStar size={18} color="#faad14" />
-                <span className="rating-value">4.9</span>
-                <span className="review-count">(3)</span>
+                <span className="rating-value">{average_rating}</span>
+                <span className="review-count">({review_count})</span>
               </div>
               <div>
                 <span className="duration-time">
