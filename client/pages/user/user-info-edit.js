@@ -13,8 +13,9 @@ import jamHero from '@/assets/jam-hero.png'
 
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
+import { jwtDecode } from 'jwt-decode'
 
-//選項資料資料 data
+//選項資料 data
 import CityCountyData from '@/data/CityCountyData.json'
 import playerData from '@/data/player.json'
 import genreData from '@/data/genre.json'
@@ -41,7 +42,6 @@ export default function Test() {
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
   const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
     useAuth()
-  const [userData, setUserData] = useState()
   const router = useRouter()
   //檢查token
   useEffect(() => {
@@ -50,34 +50,318 @@ export default function Test() {
     getLoginUserData()
   }, [])
   //登出功能
-
   //檢查是否獲取資料
   // console.log(LoginUserData)
   //   讀取使用者資料後 定義大頭貼路徑
   let avatarImage
   if (LoginUserData.img) {
-    avatarImage = `/user/${LoginUserData.img}`
+    avatarImage = `http://localhost:3005/user/${LoginUserData.img}`
   } else if (LoginUserData.photo_url) {
     avatarImage = `${LoginUserData.photo_url}`
   } else {
-    avatarImage = `/user/avatar_userDefault.jpg`
+    avatarImage = `http://localhost:3005/user/avatar_userDefault.jpg`
   }
-  // 舊版會警告 因為先渲染但沒路徑 bad
-  // const avatarImage = `/user/${LoginUserData.img}`
-  // const avatargoogle = `${LoginUserData.photo_url}`
-  // const avatarDefault = `/user/avatar_userDefault.jpg`
+  //-------------------------------------------------------------
+  const appKey = 'userToken'
+  // const [userData, setuserData] = useState({
+  //   id: '',
+  //
+  //   name: '',
+  //   email: '',
+  //   phone: '',
+  //   postcode: '',
+  //   country: '',
+  //   township: '',
+  //   address: '',
+  //   birthday: '',
+  //   genre_like: '',
+  //   play_instrument: '',
+  //   info: '',
+  //   img: '',
+  //   gender: '',
+  //   nickname: '',
+  //   google_uid: '',
+  //   photo_url: '',
+  //   privacy: '',
+  //   my_lesson: '',
+  //   my_jam: '',
+  // })
+
+  //讓userData有預設值
+  const [userData, setuserData] = useState({
+    id: '',
+    uid: '',
+    name: '',
+    email: '',
+    password: '',
+    phone: '',
+    postcode: '',
+    country: '',
+    township: '',
+    address: '',
+    birthday: '',
+    genre_like: '',
+    play_instrument: '',
+    info: '',
+    img: '',
+    gender: '',
+    nickname: '',
+    google_uid: '',
+    photo_url: '',
+    privacy: '',
+    my_lesson: '',
+    my_jam: '',
+    updated_time: '',
+    valid: '',
+  })
+  //------獲取單一使用者全部資料 包含密碼
+  const getLoginUserProfile = async (e) => {
+    // 拿取Token回傳後端驗證狀態
+    const Loginusertoken = localStorage.getItem(appKey)
+
+    if (!Loginusertoken) {
+      console.error('沒有登入的token 故無法取得使用者資料。')
+      return null
+    }
+    const userID = jwtDecode(Loginusertoken)
+    const id = userID.id
+
+    try {
+      const response = await fetch(
+        `http://localhost:3005/api/user/profile/${id}`,
+        {
+          method: 'get',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${Loginusertoken}`,
+          },
+          body: JSON.stringify(),
+        }
+      )
+      const LoginUserProfile = await response.json()
+      // console.log('Response from server:', LoginUserData)
+      // setUserData(LoginUserData)
+      // console.log(LoginUserProfile)
+      setuserData(LoginUserProfile)
+      // console.log(LoginUserData)
+      // 在這裡處理後端返回的資料
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error)
+    }
+  }
+  //-------------------------------------------------------------
+  //執行一次，如果有登入，獲得該使用者全部資料寫入userData 狀態
+  useEffect(() => {
+    if (LoginUserData) {
+      getLoginUserProfile()
+      //   console.log(userData)
+    }
+  }, []) // 在 LoginUserData.name 改變時觸發 useEffect
+
+  // console.log(userData.id)
+  // console.log(userData)
 
   // ----------------------會員登入狀態  ----------------------
 
   // ----------------------會員資料處理  ----------------------
   // 處理生日
-  let birthday
-  if (LoginUserData.birthday) {
-    birthday = LoginUserData.birthday.split('T')[0]
+  let finalbirthday = '2000-01-01'
+
+  if (userData.birthday) {
+    // 原本處理方式 但和SQL資料庫有時區差異------------
+    // birthday = userData.birthday.split('T')[0]
+
+    // testTime = new Date(testTime)
+    // const taipeiTime = new Date(testTime.getTime() + 8 * 60 * 60 * 1000)
+    // YYYYMMDDTime = taipeiTime.toISOString().slice(0, 19).replace('T', ' ')
+    // 原本處理方式 但和SQL資料庫有時區差異------------
+    let defaultTime = userData.birthday
+    let inputDate = new Date(defaultTime)
+    let year = inputDate.getFullYear()
+    let month = String(inputDate.getMonth() + 1).padStart(2, '0') // 月份從0開始，需要加1，並保持兩位數
+    let day = String(inputDate.getDate()).padStart(2, '0') // 日期需保持兩位數
+
+    finalbirthday = `${year}-${month}-${day}`
+
+    // console.log(finalbirthday)
   }
-  // console.log(birthday)
+  useEffect(() => {
+    setuserData({ ...userData, birthday: finalbirthday })
+  }, [finalbirthday])
+
+  // ---------------曲風-------------
+  let totalGenreData = genreData.map((v) => ({
+    key: v.id,
+    value: v.id,
+    label: v.name,
+  }))
+
+  let genreLike,
+    genreLike1,
+    genreLike2,
+    genreLike3,
+    finalGenreLike = `尚未填寫`
+  if (LoginUserData.genre_like) {
+    genreLike = LoginUserData.genre_like
+    // 使用 split 方法將字串拆分成陣列
+    let ArrGenreLike = genreLike.split(',')
+    genreLike1 = ArrGenreLike[0]
+    genreLike2 = ArrGenreLike[1]
+    genreLike3 = ArrGenreLike[2]
+  }
+
+  const [genreSelect1, setgenreSelect1] = useState('')
+  const [genreSelect2, setgenreSelect2] = useState('')
+  const [genreSelect3, setgenreSelect3] = useState('')
+  useEffect(() => {
+ 
+    if (genreSelect1 && genreSelect2 && genreSelect3 !== undefined && genreSelect1 !== '9999' && genreSelect2 !== '9999' && genreSelect3 !== '9999') {
+      finalGenreLike = `${genreSelect1},${genreSelect2},${genreSelect3}`;
+  } else if (genreSelect1 && genreSelect2 !== undefined && genreSelect1 !== '9999' && genreSelect2 !== '9999') {
+      finalGenreLike = `${genreSelect1},${genreSelect2}`;
+  } else if (genreSelect1 !== undefined && genreSelect1 !== '9999') {
+      finalGenreLike = `${genreSelect1}`;
+  } else {
+      finalGenreLike = ``;
+  }
+
+    setuserData({ ...userData, genre_like: finalGenreLike })
+  }, [genreSelect1, genreSelect2, genreSelect3])
+
+
+  // ---------------演奏樂器-------------
+  let totalPlayerData = playerData.map((v) => ({
+    key: v.id,
+    value: v.id,
+    label: v.name,
+  }))
+
+  let playInstrument,
+  playInstrument1,
+  playInstrument2,
+  playInstrument3,
+    finalPlayInstrument = `尚未填寫`
+  if (LoginUserData.play_instrument) {
+    playInstrument = LoginUserData.play_instrument
+    // 使用 split 方法將字串拆分成陣列
+    let ArrPlayInstrument = playInstrument.split(',')
+    playInstrument1 = ArrPlayInstrument[0]
+    playInstrument2 = ArrPlayInstrument[1]
+    playInstrument3 = ArrPlayInstrument[2]
+  }
+
+  const [playSelect1, setplaySelect1] = useState('')
+  const [playSelect2, setplaySelect2] = useState('')
+  const [playSelect3, setplaySelect3] = useState('')
+  useEffect(() => {
+ 
+    if (playSelect1 && playSelect2 && playSelect3 !== undefined && playSelect1 !== '9999' && playSelect2 !== '9999' && playSelect3 !== '9999') {
+      finalPlayInstrument = `${playSelect1},${playSelect2},${playSelect3}`;
+  } else if (playSelect1 && playSelect2 !== undefined && playSelect1 !== '9999' && playSelect2 !== '9999') {
+    finalPlayInstrument = `${playSelect1},${playSelect2}`;
+  } else if (playSelect1 !== undefined && playSelect1 !== '9999') {
+    finalPlayInstrument = `${playSelect1}`;
+  } else {
+    finalPlayInstrument = ``;
+  }
+
+    setuserData({ ...userData, play_instrument: finalPlayInstrument })
+  }, [playSelect1, playSelect2, playSelect3])
+
+  //-----------------隱私設定進來--------------
+  let privacy,
+    privacyBD = '',
+    privacyPhone = '',
+    privacyEmail = '',
+    ArrPrivacy,
+    finalPrivacy
+  if (LoginUserData.privacy) {
+    privacy = LoginUserData.privacy
+    ArrPrivacy = privacy.split(',')
+    privacyBD = ArrPrivacy[0]
+    privacyPhone = ArrPrivacy[1]
+    privacyEmail = ArrPrivacy[2]
+    finalPrivacy = `${privacyBD},${privacyPhone},${privacyEmail}`;
+  }
+
+  const [privacySelect1, setprivacySelect1] = useState('9999')
+  const [privacySelect2, setprivacySelect2] = useState('9999')
+  const [privacySelect3, setprivacySelect3] = useState('9999')
+  
+  
+  useEffect(() => {
+    finalPrivacy = `${privacySelect1},${privacySelect2},${privacySelect3}`;
+    setuserData({ ...userData, privacy: finalPrivacy })
+  }, [privacySelect1, privacySelect2, privacySelect3])
+  // console.log(privacyBD)
+  // console.log(privacyPhone)
+  // console.log(privacyEmail)
+
+  // 頭像上傳-------------------------------------------------------
+ 
+
+  
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const handleFileChange = (event) => {
+      setSelectedFile(event.target.files[0]);}
+ 
   // ----------------------會員資料處理  ----------------------
 
+  // ----------------------表單資料傳送處理  ----------------------
+  const postForm = async (e) => {
+    //取消表單預設submit跳頁
+    e.preventDefault()
+
+    const Loginusertoken = localStorage.getItem(appKey)
+    if (!Loginusertoken) {
+      console.error('沒有登入的token 故無法取得使用者資料。')
+      return null
+    }
+    const userID = jwtDecode(Loginusertoken)
+    const id = userID.id
+    const res = await fetch(
+      `http://localhost:3005/api/user/editProfile/${id}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Loginusertoken}`,
+        },
+        body: JSON.stringify(userData),
+      }
+    )
+    const result = await res.json()
+    console.log(result)
+    if (result.status === 'success') {
+      postAlert()
+    } else {
+      console.log(result.error)
+    }
+  }
+  // ----------------------表單資料傳送處理  ----------------------
+
+  //----------------------------sweetalert--------------------------------------
+  //登入 跳轉 還沒加入判定 應該要先判斷再跳轉
+  
+  const mySwal = withReactContent(Swal)
+  const postAlert = () => {
+    mySwal
+      .fire({
+        position: 'center',
+        icon: 'success',
+        iconColor: '#1581cc',
+        title: '修改成功，將為您跳轉到會員資訊頁面',
+        showConfirmButton: false,
+        timer: 2000,
+      })
+      .then(
+        setTimeout(() => {
+          router.push(`/user/user-info`).then(() => window.location.reload());
+          // window.location.reload();
+        }, 2000)
+      )
+  }
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -148,41 +432,7 @@ export default function Test() {
     setSales(false)
   }
 
-  //-------------引用jam表單設定
 
-  const [fakeUser, setFakeUser] = useState({
-    id: 110,
-    uid: 'n500ef48Ibat',
-    juid: '6q3SoqnuPEXJ',
-  })
-  const mySwal = withReactContent(Swal)
-  // ---------------------- 標題 ----------------------
-  const [title, setTitle] = useState('')
-  const [titleCheck, setTitleCheck] = useState(true)
-  // ---------------------- 技術程度
-  const [degree, setDegree] = useState('')
-
-  // ---------------------- 曲風 ----------------------
-  // 儲存選擇的曲風
-  const [genre, setgenre] = useState([])
-  const [genreCheck, setGenreCheck] = useState(true)
-  // 變更曲風下拉選單的數量時，陣列會多一個元素
-  const [genreSelect, setgenreSelect] = useState([1])
-  // 實際使用的曲風陣列，避免使用者未照順序新增樂手
-  const [finalgenre, setFinalgenre] = useState('')
-
-  // ---------------------- 擔任職位 ----------------------
-  // 控制表單狀態
-  const [myPlayer, setMyPlayer] = useState('')
-  // 表單實際送出的內容
-  const [finalMyPlayer, setFinalMyPlayer] = useState('')
-  // console.log(finalMyPlayers)
-
-  // ---------------------- 徵求樂手 ----------------------
-  const [players, setplayers] = useState([])
-  const [playersSelect, setPlayersSelect] = useState([1])
-  // 實際使用的樂手陣列，避免使用者未照順序新增樂手
-  const [finalPlayers, setFinalPlayers] = useState([])
 
   // ---------------------- 篩選城市用的資料 ----------------------
   const cityData = CityCountyData.map((v, i) => {
@@ -192,144 +442,21 @@ export default function Test() {
   })
   const [region, setRegion] = useState('')
 
-  // ---------------------- 其他條件 ----------------------
-  const [condition, setCondition] = useState('')
-  const [conditionCheck, setConditionCheck] = useState(true)
-  // ---------------------- 描述 ----------------------
-  const [description, setDescription] = useState('')
-  const [descriptionCheck, setDescriptionCheck] = useState(true)
+  // const townData = CityCountyData.map((v, i) => {
+  //   return v.CityName.AreaList.AreaName
+  // }).filter((v) => {
+  //   return v !== '釣魚臺' && v !== '南海島'
+  // })
 
-  // ---------------------- 表單填寫 ----------------------
-  // 表單完成狀態 0: 有欄位尚未填寫或不符規定, 1: 填寫完成, 2: 填寫中
-  const [complete, setComplete] = useState(2)
-  // 檢查不雅字詞
-  const checkBadWords = debounce(() => {
-    const badWords = /幹|屎|尿|屁|糞|靠北|靠腰|雞掰|王八|你媽|妳媽|淫/g
-    setTitleCheck(title.search(badWords) < 0 ? true : false)
-    setConditionCheck(condition.search(badWords) < 0 ? true : false)
-    setDescriptionCheck(description.search(badWords) < 0 ? true : false)
-  }, 250)
-  // 檢查是否重複填寫曲風
-  const checkGenre = debounce(() => {
-    const genreSet = new Set(genre) // 建立 set 物件，該物件中的每個屬性都是唯一值
-    // 若長度不同，則代表陣列中有重複的值
-    if (genre.length !== genreSet.size) {
-      setGenreCheck(false)
-    } else {
-      setGenreCheck(true)
-    }
-  }, 250)
-  // 檢查表單是否填妥
-  const checkComplete = () => {
-    if (titleCheck === false || title === '') {
-      setComplete(0)
-      return false
-    }
-    if (degree === '') {
-      setComplete(0)
-      return false
-    }
-    if (genreCheck === false || finalgenre === '') {
-      setComplete(0)
-      return false
-    }
-    if (finalMyPlayer === '') {
-      setComplete(0)
-      return false
-    }
-    if (finalPlayers === '') {
-      setComplete(0)
-      return false
-    }
-    if (region === '') {
-      setComplete(0)
-      return false
-    }
-    if (conditionCheck === false) {
-      setComplete(0)
-      return false
-    }
-    if (descriptionCheck === false || description === '') {
-      setComplete(0)
-      return false
-    }
-    setComplete(1)
-    return true
-  }
-  const sendForm = async (
-    uid,
-    title,
-    degree,
-    finalgenre,
-    finalMyPlayer,
-    finalPlayers,
-    region,
-    condition,
-    description
-  ) => {
-    if (!checkComplete()) {
-      return false
-    }
-    let formData = new FormData()
-    formData.append('uid', uid)
-    formData.append('title', title)
-    formData.append('degree', degree)
-    formData.append('genre', finalgenre)
-    formData.append('former', finalMyPlayer)
-    formData.append('players', finalPlayers)
-    formData.append('region', region)
-    formData.append('condition', condition)
-    formData.append('description', description)
-    // 確認formData內容
-    // for (let [key, value] of formData.entries()) {
-    //   console.log(`${key}: ${value}`)
-    // }
-    const res = await fetch('http://localhost:3005/api/jam/form', {
-      method: 'POST',
-      body: formData,
-      credentials: 'include',
+  const townData = CityCountyData.flatMap((city) => {
+    return city.AreaList.map((area) => {
+      return area.AreaName
     })
-    const result = await res.json()
-    if (result.status === 'success') {
-      notifySuccess(result.juid)
-    } else {
-      console.log(result.error)
-    }
-  }
-  // 發起成功後，彈出訊息框，並跳轉到資訊頁面
-  const notifySuccess = (juid) => {
-    mySwal
-      .fire({
-        position: 'center',
-        icon: 'success',
-        iconColor: '#1581cc',
-        title: '發起成功，將為您跳轉到資訊頁',
-        showConfirmButton: false,
-        timer: 3000,
-      })
-      .then(
-        setTimeout(() => {
-          router.push(`/jam/recruit-list/${juid}`)
-        }, 3000)
-      )
-  }
-  // ---------------------- 偵測表單輸入變化，並執行檢查
-  useEffect(() => {
-    // 跳出未填寫完畢警告後再次輸入，消除警告
-    setComplete(2)
-    // 檢查不雅字詞
-    checkBadWords.cancel() // 取消上一次的延遲
-    checkBadWords()
-    // 檢查無重複的曲風
-    checkGenre.cancel()
-    checkGenre()
-    // 把曲風&徵求樂手轉換成表單實際接收的字串格式
-    const fgArr = genre.filter((v) => v != (null || undefined))
-    setFinalgenre(`[${fgArr.toString()}]`)
-    const fpArr = players.filter((v) => v != (null || undefined))
-    setFinalPlayers(`[${fpArr.toString()}]`)
-    // 檢查表單是否完成
-  }, [title, degree, genre, myPlayer, players, region, condition, description])
+  }).filter((areaName) => {
+    return areaName !== '釣魚臺' && areaName !== '南海島'
+  })
+
+  
 
   return (
     <>
@@ -528,388 +655,7 @@ export default function Test() {
             </div>
             {/* 主內容 */}
 
-            {/* //----------------------參考jam------------------------- */}
-
-            <section className="col-12 col-sm-8" style={{ padding: 0 }}>
-              {/* 主內容 */}
-              <div className={`${styles.jamLeft}`}>
-                <div className="row align-items-center">
-                  <div className={`${styles.jamTitle} col-12 col-sm-2`}>
-                    發起表單
-                  </div>
-                  <div
-                    className="col-12 col-sm-10 mt-sm-0"
-                    style={{ color: '#666666' }}
-                  >
-                    ※ 點擊&nbsp;
-                    <FaCirclePlus
-                      size={18}
-                      style={{ color: '#18a1ff' }}
-                      className="mb-1"
-                    />
-                    &nbsp;可增加項目
-                  </div>
-                </div>
-
-                {/* -------------------------- 主旨 -------------------------- */}
-                <div className={`${styles.formItem} row`}>
-                  <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                    主旨
-                  </div>
-                  <div
-                    className={`${styles.itemInputWrapper} col-12 col-sm-10 d-flex align-items-center`}
-                  >
-                    <input
-                      type="text"
-                      className={`${styles.itemInput} form-control`}
-                      placeholder="發起動機或目的，上限20字"
-                      maxLength={20}
-                      onChange={(e) => {
-                        setTitle(e.target.value)
-                      }}
-                    />
-                    {titleCheck ? (
-                      ''
-                    ) : (
-                      <div
-                        className={`${styles.warningText} ms-2 d-none d-sm-block`}
-                      >
-                        偵測到不雅字詞
-                      </div>
-                    )}
-                  </div>
-                  {titleCheck ? (
-                    ''
-                  ) : (
-                    <div
-                      className={`${styles.warningText} d-block d-sm-none p-0`}
-                    >
-                      偵測到不雅字詞
-                    </div>
-                  )}
-                </div>
-                {/* -------------------------- 技術程度 -------------------------- */}
-                <div className={`${styles.formItem} row`}>
-                  <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                    技術程度
-                  </div>
-                  <div
-                    className={`${styles.itemInputWrapper} col-12 col-sm-10`}
-                  >
-                    <select
-                      className="form-select"
-                      style={{ width: 'auto' }}
-                      value={degree}
-                      name="degree"
-                      onChange={(e) => {
-                        setDegree(e.target.value)
-                      }}
-                    >
-                      <option value="">請選擇</option>
-                      <option value="1">新手練功</option>
-                      <option value="2">老手同樂</option>
-                    </select>
-                  </div>
-                </div>
-                {/* -------------------------- 音樂風格 -------------------------- */}
-                <div className={`${styles.formItem} row`}>
-                  <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                    音樂風格
-                  </div>
-                  <div
-                    className={`${styles.itemInputWrapper} col-12 col-sm-10`}
-                  >
-                    <div className={`${styles.selectGroup}`}>
-                      {genreSelect.map((v, i) => {
-                        return (
-                          <select
-                            key={i}
-                            className="form-select"
-                            style={{ width: 'auto' }}
-                            value={genre[i]}
-                            name="genre"
-                            onChange={(e) => {
-                              let newgenre = [...genre]
-                              newgenre[i] = e.target.value
-                              setgenre(newgenre)
-                            }}
-                          >
-                            <option value="">請選擇</option>
-                            {genreData.map((v) => {
-                              return (
-                                <option key={v.id} value={v.id}>
-                                  {v.name}
-                                </option>
-                              )
-                            })}
-                          </select>
-                        )
-                      })}
-                      {genreSelect.length < 3 ? (
-                        <div className={`${styles.plusBtnWrapper}`}>
-                          <FaCirclePlus
-                            size={24}
-                            className={`${styles.plusBtn}`}
-                            onClick={() => {
-                              const newArr = [...genreSelect, 1]
-                              setgenreSelect(newArr)
-                            }}
-                          />
-                          <span className="mb-1" style={{ color: '#1d1d1d' }}>
-                            (剩餘 {3 - genreSelect.length})
-                          </span>
-                        </div>
-                      ) : (
-                        ''
-                      )}
-                      {genreCheck ? (
-                        ''
-                      ) : (
-                        <div
-                          className={`${styles.warningText} d-none d-sm-block`}
-                          style={{ marginTop: '5px' }}
-                        >
-                          無法選擇重複曲風
-                        </div>
-                      )}
-                    </div>
-                    {genreCheck ? (
-                      ''
-                    ) : (
-                      <div
-                        className={`${styles.warningText} d-block d-sm-none mt-2 p-0`}
-                      >
-                        無法選擇重複曲風
-                      </div>
-                    )}
-                  </div>
-                </div>
-                {/* -------------------------- 擔任職位 -------------------------- */}
-                <div className={`${styles.formItem} row`}>
-                  <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                    擔任職位
-                  </div>
-                  <div
-                    className={`${styles.itemInputWrapper} col-12 col-sm-10`}
-                  >
-                    <select
-                      className="form-select"
-                      style={{ width: 'auto' }}
-                      value={myPlayer}
-                      name="myPlayer"
-                      onChange={(e) => {
-                        setMyPlayer(e.target.value)
-                        setFinalMyPlayer(
-                          `{"id": ${fakeUser.id}, "play": ${e.target.value}}`
-                        )
-                      }}
-                    >
-                      <option value="">請選擇</option>
-                      {playerData.map((v) => {
-                        return (
-                          <option key={v.id} value={v.id}>
-                            {v.name}
-                          </option>
-                        )
-                      })}
-                    </select>
-                  </div>
-                </div>
-                {/* -------------------------- 徵求樂手 -------------------------- */}
-                <div className={`${styles.formItem} row`}>
-                  <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                    徵求樂手
-                  </div>
-                  <div
-                    className={`${styles.itemInputWrapper} col-12 col-sm-10`}
-                  >
-                    <div className={`${styles.selectGroup}`}>
-                      {playersSelect.map((v, i) => {
-                        return (
-                          <select
-                            key={i}
-                            className="form-select"
-                            style={{ width: 'auto' }}
-                            value={players[i]}
-                            name="players"
-                            onChange={(e) => {
-                              let newplayer = [...players]
-                              newplayer[i] = e.target.value
-                              setplayers(newplayer)
-                            }}
-                          >
-                            <option value="">請選擇</option>
-                            {playerData.map((v) => {
-                              return (
-                                <option key={v.id} value={v.id}>
-                                  {v.name}
-                                </option>
-                              )
-                            })}
-                          </select>
-                        )
-                      })}
-                      {playersSelect.length < 6 ? (
-                        <div className={`${styles.plusBtnWrapper}`}>
-                          <FaCirclePlus
-                            size={24}
-                            className={`${styles.plusBtn}`}
-                            onClick={() => {
-                              const newArr = [...playersSelect, 1]
-                              setPlayersSelect(newArr)
-                            }}
-                          />
-                          <span style={{ color: '#1d1d1d' }}>
-                            (剩餘 {6 - playersSelect.length})
-                          </span>
-                        </div>
-                      ) : (
-                        ''
-                      )}
-                    </div>
-                  </div>
-                </div>
-                {/* -------------------------- 地區 -------------------------- */}
-                <div className={`${styles.formItem} row`}>
-                  <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                    地區
-                  </div>
-                  <div
-                    className={`${styles.itemInputWrapper} col-12 col-sm-10`}
-                  >
-                    <select
-                      className="form-select"
-                      style={{ width: 'auto' }}
-                      value={region}
-                      name="region"
-                      onChange={(e) => {
-                        setRegion(e.target.value)
-                      }}
-                    >
-                      <option value="">請選擇</option>
-                      {cityData.map((v, i) => {
-                        return (
-                          <option key={i} value={v}>
-                            {v}
-                          </option>
-                        )
-                      })}
-                    </select>
-                  </div>
-                </div>
-                {/* -------------------------- 其他條件 -------------------------- */}
-                <div className={`${styles.formItem} row`}>
-                  <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                    其他條件(選填)
-                  </div>
-                  <div
-                    className={`${styles.itemInputWrapper} col-12 col-sm-10`}
-                  >
-                    <input
-                      type="text"
-                      className={`form-control`}
-                      placeholder="事先說好要求，有助於玩團和樂哦～上限30字"
-                      maxLength={30}
-                      onChange={(e) => {
-                        setCondition(e.target.value)
-                      }}
-                    />
-                    {conditionCheck ? (
-                      ''
-                    ) : (
-                      <div
-                        className={`${styles.warningText} mt-1 d-none d-sm-block`}
-                      >
-                        偵測到不雅字詞
-                      </div>
-                    )}
-                  </div>
-                  {conditionCheck ? (
-                    ''
-                  ) : (
-                    <div
-                      className={`${styles.warningText} d-block d-sm-none p-0`}
-                    >
-                      偵測到不雅字詞
-                    </div>
-                  )}
-                </div>
-                {/* -------------------------- 描述 -------------------------- */}
-                <div className={`${styles.formItem} row`}>
-                  <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                    描述
-                  </div>
-                  <div
-                    className={`${styles.itemInputWrapper} col-12 col-sm-10`}
-                  >
-                    <textarea
-                      className={`${styles.textArea} form-control`}
-                      placeholder="輸入清楚、吸引人的描述，讓大家瞭解你的成團動機吧！上限150字"
-                      name="description"
-                      maxLength={150}
-                      onChange={(e) => {
-                        setDescription(e.target.value)
-                      }}
-                    />
-                    {descriptionCheck ? (
-                      ''
-                    ) : (
-                      <div
-                        className={`${styles.warningText} mt-1 d-none d-sm-block`}
-                      >
-                        偵測到不雅字詞
-                      </div>
-                    )}
-                  </div>
-                  {descriptionCheck ? (
-                    ''
-                  ) : (
-                    <div
-                      className={`${styles.warningText} d-block d-sm-none p-0`}
-                    >
-                      偵測到不雅字詞
-                    </div>
-                  )}
-                </div>
-
-                <div className="d-flex justify-content-center">
-                  <div
-                    className="b-btn b-btn-primary"
-                    style={{ paddingInline: '38px' }}
-                    role="presentation"
-                    onClick={() => {
-                      sendForm(
-                        fakeUser.uid,
-                        title,
-                        degree,
-                        finalgenre,
-                        finalMyPlayer,
-                        finalPlayers,
-                        region,
-                        condition,
-                        description
-                      )
-                    }}
-                  >
-                    提交
-                  </div>
-                </div>
-                {complete === 0 ? (
-                  <div
-                    className="d-flex justify-content-center"
-                    style={{ marginTop: '-8px' }}
-                  >
-                    <div className={`${styles.warningText}`}>
-                      請遵照規則，並填寫所有必填內容
-                    </div>
-                  </div>
-                ) : (
-                  ''
-                )}
-              </div>
-            </section>
-
-            {/* //----------------------參考jam------------------------- */}
+           
 
             <main className="content">
               <div className="container custom-container">
@@ -925,13 +671,13 @@ export default function Test() {
                         <div className="user-title-userInfo">會員資訊</div>
 
                         <div className="user-btnGroup">
-                          ※ 點擊&nbsp;
+                          {/* ※ 點擊&nbsp;
                           <FaCirclePlus
                             size={18}
                             style={{ color: '#18a1ff' }}
                             className="mb-1"
                           />
-                          &nbsp;可增加項目
+                          &nbsp;可增加項目 */}
                           {/* <div className="user-btnGroup-btn1">
                             <div>
                               <Link href="/user/user-homepage">
@@ -949,55 +695,49 @@ export default function Test() {
                         <div className="user-info-item-Content-avatar">
                           <div className="user-info-item-contentText-imgBox">
                             <Image
-                              src={avatarImage}
+                              src={selectedFile? URL.createObjectURL(selectedFile) : avatarImage }
                               alt="user photo mb"
                               fill
                               priority="default" //不加的話Next 會問是否要加優先級
                               sizes="(max-width: 150px)"
                             ></Image>
                           </div>
-                          <div>
-                            <input
-                              type="file"
-                              name="myFile2"
-                              class="form-control"
-                              // accept=".png, .jpg, .jpeg"
-                              accept="image/png, image/jpeg"
-                            ></input>
-                            <div className="user-info-item-contentText">
-                              可選擇的圖片格式: .jpg .png
-                            </div>
-
-                            {/* //-----------------測試上傳 */}
+                          <div>                          
                             <form
                               action="http://localhost:3005/api/user/upload1"
                               method="post"
-                              enctype="multipart/form-data"
+                              encType="multipart/form-data"
+                              className=""
                             >
-                              <div className="input-group mb-2">
-                                <span className="input-group-text">名稱</span>
+                              <div className="input-group d-none mb-2">
+                                <span className="input-group-text"></span>
                                 <input
                                   type="text"
                                   name="name"
-                                  // value={LoginUserData}
+                                  value={LoginUserData.id}
                                   className="form-control"
                                 />
                               </div>
-                              <div className="input-group mb-2">
+
+                              <div className="input-group mb-2 ">
                                 <input
                                   type="file"
                                   name="myFile"
                                   id={LoginUserData}
-                                  accept="image/png, image/jpeg"
+                                  accept="image/jpeg"
                                   className="form-control"
+                                  // onChange={handleFileChange}
+                                  onChange={handleFileChange}
                                 />
                               </div>
-                              <div className="d-flex">
-                                <button className="btn btn-primary ms-auto">
-                                  送出
+                              
+                              <div className="d-flex ">
+                                <button className="btn btn-primary ms-auto ">
+                                  確認變更
                                 </button>
                               </div>
                             </form>
+                            {/* //-----------------測試上傳 */}
                           </div>
                         </div>
                       </div>
@@ -1010,8 +750,12 @@ export default function Test() {
                               className={`${styles.itemInput} form-control`}
                               placeholder="真實姓名"
                               maxLength={20}
+                              value={userData.name}
                               onChange={(e) => {
-                                setTitle(e.target.value)
+                                setuserData({
+                                  ...userData,
+                                  name: e.target.value,
+                                })
                               }}
                             />
                             {/* {LoginUserData.name} */}
@@ -1027,8 +771,12 @@ export default function Test() {
                               className={`${styles.itemInput} form-control`}
                               placeholder="暱稱 上限14字"
                               maxLength={20}
+                              value={userData.nickname}
                               onChange={(e) => {
-                                setTitle(e.target.value)
+                                setuserData({
+                                  ...userData,
+                                  nickname: e.target.value,
+                                })
                               }}
                             />
                             {/* {LoginUserData.nickname} */}
@@ -1042,15 +790,19 @@ export default function Test() {
                             <select
                               className="form-select"
                               style={{ width: 'auto' }}
-                              value={degree}
-                              name="degree"
+                              value={userData.gender}
+                              name="gender"
                               onChange={(e) => {
-                                setDegree(e.target.value)
+                                setuserData({
+                                  ...userData,
+                                  gender: e.target.value,
+                                })
                               }}
                             >
                               <option value="">請選擇</option>
-                              <option value="1">新手練功</option>
-                              <option value="2">老手同樂</option>
+                              <option value="1">男</option>
+                              <option value="2">女</option>
+                              <option value="3">其他</option>
                             </select>
                             {/* {LoginUserData.gender} */}
                           </div>
@@ -1064,73 +816,95 @@ export default function Test() {
                               className={`${styles.itemInputWrapper} col-12 col-sm-10`}
                             >
                               <div className={`${styles.selectGroup}`}>
-                                {genreSelect.map((v, i) => {
-                                  return (
-                                    <select
-                                      key={i}
-                                      className="form-select"
-                                      style={{ width: 'auto' }}
-                                      value={genre[i]}
-                                      name="genre"
-                                      onChange={(e) => {
-                                        let newgenre = [...genre]
-                                        newgenre[i] = e.target.value
-                                        setgenre(newgenre)
-                                      }}
-                                    >
-                                      <option value="">請選擇</option>
-                                      {genreData.map((v) => {
-                                        return (
-                                          <option key={v.id} value={v.id}>
-                                            {v.name}
-                                          </option>
-                                        )
-                                      })}
-                                    </select>
-                                  )
-                                })}
-                                {genreSelect.length < 3 ? (
-                                  <div className={`${styles.plusBtnWrapper}`}>
-                                    <FaCirclePlus
-                                      size={24}
-                                      className={`${styles.plusBtn}`}
-                                      onClick={() => {
-                                        const newArr = [...genreSelect, 1]
-                                        setgenreSelect(newArr)
-                                      }}
-                                    />
-                                    <span
-                                      className="mb-1"
-                                      style={{ color: '#1d1d1d' }}
-                                    >
-                                      (剩餘 {3 - genreSelect.length})
-                                    </span>
-                                  </div>
-                                ) : (
-                                  ''
-                                )}
-                                {genreCheck ? (
-                                  ''
-                                ) : (
-                                  <div
-                                    className={`${styles.warningText} d-none d-sm-block`}
-                                    style={{ marginTop: '5px' }}
-                                  >
-                                    無法選擇重複曲風
-                                  </div>
-                                )}
-                              </div>
-                              {genreCheck ? (
-                                ''
-                              ) : (
-                                <div
-                                  className={`${styles.warningText} d-block d-sm-none mt-2 p-0`}
+                                <select
+                                  className="form-select"
+                                  style={{ width: 'auto' }}
+                                  value={genreSelect1 != '' ? genreSelect1 : genreLike1}                                  
+                                  name="genre"
+                                  onChange={(e) => {
+                                    // let genreLike1 = e.target.value
+                                    setgenreSelect1(e.target.value)
+                                    if (genreSelect2 == '') {
+                                        setgenreSelect2(genreLike2);
+                                    }else{
+                                      setgenreSelect2(genreSelect2);
+                                    }
+                                    if (genreSelect3 == '') {
+                                        setgenreSelect3(genreLike3);
+                                    }else{
+                                      setgenreSelect3(genreSelect3);
+                                    }                 
+                                  }}
                                 >
-                                  無法選擇重複曲風
-                                </div>
-                              )}
-                            </div>
+                                  <option  value="9999">無</option>
+                                  {genreData.map((v) => {
+                                    return (
+                                      <option key={v.id} value={v.id}>
+                                        {v.name}
+                                      </option>
+                                    )
+                                  })}
+                                </select>
+                                <select
+                                  className="form-select"
+                                  style={{ width: 'auto' }}
+                                  value={genreSelect2 != '' ? genreSelect2 : genreLike2}
+                                  name="genre2"
+                                  onChange={(e) => {
+                                    // genreLike2 = e.target.value 
+                                    setgenreSelect2(e.target.value)
+                                    if (genreSelect1 == '') {
+                                        setgenreSelect1(genreLike1);
+                                    }else{
+                                      setgenreSelect1(genreSelect1);
+                                    }
+                                    if (genreSelect3 == '') {
+                                        setgenreSelect3(genreLike3);
+                                    }else{
+                                      setgenreSelect3(genreSelect3);
+                                    }    
+                                  }}
+                                >
+                                  <option  value="9999">無</option>
+                                  {genreData.map((v) => {
+                                    return (
+                                      <option key={v.id} value={v.id}>
+                                        {v.name}
+                                      </option>
+                                    )
+                                  })}
+                                </select>
 
+                                <select
+                                  className="form-select"
+                                  style={{ width: 'auto' }}
+                                  value={genreSelect3 != '' ? genreSelect3 : genreLike3}
+                                  name="genre3"
+                                  onChange={(e) => {
+                                    setgenreSelect3(e.target.value)
+                                    if (genreSelect1 == '') {
+                                        setgenreSelect1(genreLike1);
+                                    }else{
+                                      setgenreSelect1(genreSelect1);
+                                    }
+                                    if (genreSelect2 == '') {
+                                        setgenreSelect2(genreLike2);
+                                    }else{
+                                      setgenreSelect2(genreSelect2);
+                                    }
+                                  }}
+                                >
+                                  <option value="9999">無</option>
+                                  {genreData.map((v) => {
+                                    return (
+                                      <option key={v.id} value={v.id}>
+                                        {v.name}
+                                      </option>
+                                    )
+                                  })}
+                                </select>
+                              </div>
+                            </div>
                             {/* {LoginUserData.genre_like} */}
                           </div>
                         </div>
@@ -1139,30 +913,97 @@ export default function Test() {
                         <div className="user-info-item-titleText">演奏樂器</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            <div
+                          <div
                               className={`${styles.itemInputWrapper} col-12 col-sm-10`}
                             >
-                              <select
-                                className="form-select"
-                                style={{ width: 'auto' }}
-                                value={myPlayer}
-                                name="myPlayer"
-                                onChange={(e) => {
-                                  setMyPlayer(e.target.value)
-                                  setFinalMyPlayer(
-                                    `{"id": ${fakeUser.id}, "play": ${e.target.value}}`
-                                  )
-                                }}
-                              >
-                                <option value="">請選擇</option>
-                                {playerData.map((v) => {
-                                  return (
-                                    <option key={v.id} value={v.id}>
-                                      {v.name}
-                                    </option>
-                                  )
-                                })}
-                              </select>
+                              <div className={`${styles.selectGroup}`}>
+                                <select
+                                  className="form-select"
+                                  style={{ width: 'auto' }}
+                                  value={playSelect1 != '' ? playSelect1 : playInstrument1}                                  
+                                  name="play"
+                                  onChange={(e) => {
+                                    setplaySelect1(e.target.value)
+                                    if (playSelect2 == '') {
+                                        setplaySelect2(playInstrument2);
+                                    }else{
+                                      setplaySelect2(playSelect2);
+                                    }
+                                    if (playSelect3 == '') {
+                                        setplaySelect3(playInstrument3);
+                                    }else{
+                                      setplaySelect3(playSelect3);
+                                    }                                                                   
+                                  }}
+                                >
+                                  <option  value="9999">無</option>
+                                  {playerData.map((v) => {
+                                    return (
+                                      <option key={v.id} value={v.id}>
+                                        {v.name}
+                                      </option>
+                                    )
+                                  })}
+                                </select>
+                                <select
+                                  className="form-select"
+                                  style={{ width: 'auto' }}
+                                  value={playSelect2 != '' ? playSelect2 : playInstrument2}
+                                  name="play2"
+                                  onChange={(e) => {
+                                    // playLike2 = e.target.value 
+                                    setplaySelect2(e.target.value)
+                                    if (playSelect1 == '') {
+                                        setplaySelect1(playInstrument1);
+                                    }else{
+                                      setplaySelect1(playSelect1);
+                                    }
+                                    if (playSelect3 == '') {
+                                        setplaySelect3(playInstrument3);
+                                    }else{
+                                      setplaySelect3(playSelect3);
+                                    }  
+                                  }}
+                                >
+                                  <option  value="9999">無</option>
+                                  {playerData.map((v) => {
+                                    return (
+                                      <option key={v.id} value={v.id}>
+                                        {v.name}
+                                      </option>
+                                    )
+                                  })}
+                                </select>
+
+                                <select
+                                  className="form-select"
+                                  style={{ width: 'auto' }}
+                                  value={playSelect3 != '' ? playSelect3 : playInstrument3}
+                                  name="play3"
+                                  onChange={(e) => {
+                                    setplaySelect3(e.target.value)
+                                    if (playSelect2 == '') {
+                                        setplaySelect2(playInstrument2);
+                                    }else{
+                                      setplaySelect2(playSelect2);
+                                    }
+                                    if (playSelect1 == '') {
+                                        setplaySelect1(playInstrument1);
+                                    }else{
+                                      setplaySelect1(playSelect1);
+                                    }  
+                                  }}
+                                >
+                                  <option value="9999">無</option>
+                                  {playerData.map((v) => {
+                                    return (
+                                      <option key={v.id} value={v.id}>
+                                        {v.name}
+                                      </option>
+                                    )
+                                  })}
+                                </select>
+                              </div>
                             </div>
                             {/* {LoginUserData.play_instrument} */}
                           </div>
@@ -1177,7 +1018,22 @@ export default function Test() {
                               type="checkbox"
                               defaultValue=""
                               id="privacyBD"
-                              defaultChecked=""
+                              defaultChecked={privacyBD == '1' ? true : false}
+                              onChange={(e)=>{
+                                setprivacySelect1(e.target.checked  ? '1' : '0');
+                                setprivacySelect1(e.target.checked  ? '1' : '0');
+                                if(privacySelect2 == "9999"){
+                                  setprivacySelect2(privacyPhone)
+                                }else{
+                                  setprivacySelect2(privacySelect2)
+                                }
+                                if(privacySelect3  == "9999"){
+                                  setprivacySelect3(privacyEmail)
+                                } else{
+                                  setprivacySelect3(privacySelect3)
+                                }
+                                // console.log(privacySelect2)
+                              }}
                             />
                             <label
                               className="form-check-label"
@@ -1192,7 +1048,21 @@ export default function Test() {
                               type="checkbox"
                               defaultValue=""
                               id="privacyPhone"
-                              defaultChecked=""
+                              defaultChecked={privacyPhone == '1' ? '1' : ''}
+                              onChange={(e)=>{
+                                setprivacySelect2(e.target.checked ? '1' : '0');
+                                if(privacySelect1 == "9999"){
+                                  setprivacySelect1(privacyBD)
+                                }else{
+                                  setprivacySelect1(privacySelect1)
+                                }
+                                if(privacySelect3  == "9999"){
+                                  setprivacySelect3(privacyEmail)
+                                } else{
+                                  setprivacySelect3(privacySelect3)
+                                }
+                                // console.log(privacySelect2)
+                              }}
                             />
                             <label
                               className="form-check-label"
@@ -1207,7 +1077,20 @@ export default function Test() {
                               type="checkbox"
                               defaultValue=""
                               id="privacyEmail"
-                              defaultChecked=""
+                              defaultChecked={privacyEmail == '1' ? "1" : ''}
+                              onChange={(e)=>{
+                                setprivacySelect3(e.target.checked ? '1' : '0');
+                                if(privacySelect2 == "9999"){
+                                  setprivacySelect2(privacyPhone)
+                                }else{
+                                  setprivacySelect2(privacySelect2)
+                                }
+                                if(privacySelect1  == "9999"){
+                                  setprivacySelect1(privacyBD)
+                                } else{
+                                  setprivacySelect1(privacySelect1)
+                                }
+                              }}
                             />
                             <label
                               className="form-check-label"
@@ -1226,13 +1109,17 @@ export default function Test() {
                               type="date"
                               className={`${styles.itemInput} form-control`}
                               placeholder=""
+                              value={finalbirthday}
                               maxLength={20}
                               onChange={(e) => {
-                                setTitle(e.target.value)
+                                setuserData({
+                                  ...userData,
+                                  birthday: e.target.value,
+                                })
                               }}
                             />
 
-                            {birthday}
+                            {/* {birthday} */}
                           </div>
                         </div>
                       </div>
@@ -1241,57 +1128,51 @@ export default function Test() {
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
                             <input
-                              type="date"
+                              type="tel"
                               className={`${styles.itemInput} form-control`}
                               placeholder="電話號碼"
+                              value={userData.phone}
                               maxLength={20}
                               onChange={(e) => {
-                                setTitle(e.target.value)
+                                setuserData({
+                                  ...userData,
+                                  phone: e.target.value,
+                                })
                               }}
                             />
                             {/* {LoginUserData.phone} */}
                           </div>
                         </div>
                       </div>
-                      <div className="user-info-item">
-                        <div className="user-info-item-titleText">電子信箱</div>
-                        <div className="user-info-item-Content">
-                          <div className="user-info-item-contentText">
-                            <input
-                              type="mail"
-                              className={`${styles.itemInput} form-control`}
-                              placeholder="請輸入電子信箱"
-                              maxLength={20}
-                              onChange={(e) => {
-                                setTitle(e.target.value)
-                              }}
-                            />
 
-                            {/* {LoginUserData.email} */}
-                          </div>
-                        </div>
-                      </div>
                       <div className="user-info-item">
                         <div className="user-info-item-titleText">地址</div>
-                        <div className="user-info-item-Content">
-                          <div className="user-info-item-contentText d-flex">
+                        <div className="user-info-item-Content-address">
+                          <div className="user-info-item-contentText d-flex  flex-wrap">
                             <input
                               type="text"
-                              className={`${styles.itemInputPostcode} form-control `}
+                              className={`${styles.itemInputPostcode} form-control col-sm1 col-3 `}
                               placeholder="郵遞區號"
+                              value={userData.postcode}
                               maxLength={3}
                               onChange={(e) => {
-                                setTitle(e.target.value)
+                                setuserData({
+                                  ...userData,
+                                  postcode: e.target.value,
+                                })
                               }}
                             />
                             <div className={`${styles.itemInputWrapper} `}>
                               <select
-                                className="form-select"
+                                className="form-select col-4 col-sm1"
                                 style={{ width: 'auto' }}
-                                value={region}
+                                value={userData.country}
                                 name="region"
                                 onChange={(e) => {
-                                  setRegion(e.target.value)
+                                  setuserData({
+                                    ...userData,
+                                    country: e.target.value,
+                                  })
                                 }}
                               >
                                 <option value="">請選擇</option>
@@ -1307,16 +1188,19 @@ export default function Test() {
 
                             <div className={`${styles.itemInputWrapper}`}>
                               <select
-                                className="form-select"
+                                className="form-select col-4 col-sm1"
                                 style={{ width: 'auto' }}
-                                value={region}
+                                value={userData.township}
                                 name="region"
                                 onChange={(e) => {
-                                  setRegion(e.target.value)
+                                  setuserData({
+                                    ...userData,
+                                    township: e.target.value,
+                                  })
                                 }}
                               >
                                 <option value="">請選擇</option>
-                                {cityData.map((v, i) => {
+                                {townData.map((v, i) => {
                                   return (
                                     <option key={i} value={v}>
                                       {v}
@@ -1328,11 +1212,17 @@ export default function Test() {
 
                             <input
                               type="text"
-                              className={`${styles.itemInput} form-control `}
+                              className={`${styles.itemInput} form-control col-sm6 col-12 `}
                               placeholder="地址"
+                              // style={{ width: 'auto' }}
                               maxLength={100}
+                              value={userData.address}
+                              name="address"
                               onChange={(e) => {
-                                setTitle(e.target.value)
+                                setuserData({
+                                  ...userData,
+                                  address: e.target.value,
+                                })
                               }}
                             />
 
@@ -1350,10 +1240,18 @@ export default function Test() {
                         <div className="user-info-item-info2">
                           <div className="user-info-item-info-contentText form-floating">
                             <textarea
-                              class="form-control"
+                              className="form-control"
+                              style={{ height: '200px', width: '100%' }}
                               id="exampleFormControlTextarea1"
                               rows="3"
                               cols="50"
+                              defaultValue={userData.info}
+                              onChange={(e) => {
+                                setuserData({
+                                  ...userData,
+                                  info: e.target.value,
+                                })
+                              }}
                             ></textarea>
                             {/* <input
                               type="text"
@@ -1368,6 +1266,30 @@ export default function Test() {
                             {/* {LoginUserData.info} */}
                           </div>
                         </div>
+                      </div>
+                      <div className="d-flex justify-content-center w-100 m-3 ">
+                      <Link href="/user/user-info"     >
+                        <div className="b-btn b-btn-danger "
+                              style={{ paddingInline: '38px' }}
+                              role="presentation"    >
+                            
+                                                   
+                            
+                              返回
+                            
+                          </div>
+                          </Link>
+                          <div
+                            className="b-btn b-btn-primary"
+                            style={{ paddingInline: '38px' , marginInline:50}}
+                            role="presentation"
+                            onClick={(e) => {                           
+                              postForm(e)
+                            }}
+                          >
+                            提交
+                          </div>
+                        
                       </div>
                     </div>
                   </div>
@@ -1577,6 +1499,26 @@ export default function Test() {
                 font-family: Noto Sans TC;
                 font-weight: 400;
                 word-wrap: break-word;
+                
+              }
+            }
+            .user-info-item-Content-address{
+              display: flex;
+              height: 38px;
+              max-width: 900px;
+              padding: 3px 0px;
+              align-items: center;
+              gap: 10px;
+              flex: 1 0 0;
+              
+              .user-info-item-contentText {
+                flex: 1 1 0;
+                color: black;
+                font-size: 16px;
+                font-family: Noto Sans TC;
+                font-weight: 400;
+                word-wrap: break-word;
+                
               }
             }
             .user-info-item-Content-avatar {
@@ -1665,8 +1607,13 @@ export default function Test() {
               .user-info-item-info {
                 display: block;
               }
+
+              .user-info-item-Content-address{ 
+                height: 76px;
+              }
             }
           }
+          
           /*------------- RWD  ----------- */
         }
       `}</style>
