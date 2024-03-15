@@ -177,10 +177,10 @@ export default function InstrumentDetailPage() {
               </Link>
               <FaChevronRight />
 
-              <li style={{ marginLeft: '10px' }}>音響設備</li>
+              {/* <li style={{ marginLeft: '10px' }}>音響設備</li>
 
               <FaChevronRight />
-              <li style={{ marginLeft: '10px' }}>音箱頭</li>
+              <li style={{ marginLeft: '10px' }}>音箱頭</li> */}
 
               {InstrumentDetail && InstrumentDetail.length > 0 && (
                 <ul>
@@ -646,14 +646,24 @@ export default function InstrumentDetailPage() {
           </div>
         </div>
         {/* 猜你喜歡 */}
-        <div className="you-will-like">
+        <div className="you-may-like">
           <div className="detail-title ">猜你喜歡...</div>
           <div className="card-con">
-            <CardIns />
-            <CardIns />
-            <CardIns />
-            <CardIns />
-            <CardIns />
+            {InstrumentDetail.youmaylike &&
+              InstrumentDetail.youmaylike
+                .sort((a, b) => b.sales - a.sales)
+                .slice(0, 5)
+                .map((v, i) => (
+                  <CardIns
+                    key={i}
+                    id={v.id}
+                    puid={v.puid}
+                    name={v.name}
+                    price={v.price}
+                    img={v.img}
+                    sales={v.sales}
+                  />
+                ))}
           </div>
         </div>
         <div className="you-will-like-mobile">

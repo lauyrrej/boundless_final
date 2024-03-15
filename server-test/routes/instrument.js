@@ -122,31 +122,52 @@ router.get("/categories", async (req, res) => {
     
 
 
-// 獲得單筆樂器資料
-// router.get("/:id", async (req, res, next) => {
-//   let puid = req.params.id;
-//   console.log(puid);
-//   let [data] = await db
-//     .execute("SELECT * FROM `product` WHERE `puid` = ? ", [puid])
-//     .catch(() => {
-//       return undefined;
-//     });
+//獲得單筆樂器資料跟評論
+router.get("/:id", async (req, res, next) => {
+  let puid = req.params.id;
+  console.log(puid);
+  try {
+    let [data] = await db.execute(
+      'SELECT p.*, pr.*, ic.* ,u.*' +
+      'FROM `product` AS p ' +
+      'LEFT JOIN `product_review` AS pr ON p.id = pr.product_id ' +
+      'LEFT JOIN `instrument_category` AS ic ON p.instrument_category_id = ic.id ' +
+      'LEFT JOIN `user` AS u ON pr.user_id = u.id ' +
+      'WHERE p.`puid` = ? AND p.`instrument_category_id` IN (' +
+      'SELECT `instrument_category_id` FROM `product` WHERE `puid` = ?' +
+      ')',
+    [puid, puid]
+  ); 
 
-//   if (data) {
-//     console.log(data);
-//     res.status(200).json(data);
-//   } else {
-//     res.status(400).send("發生錯誤");
-//   }
-// });
-function App() {
-  const [selectedBrand, setSelectedBrand] = useState(null)
+  let [youmaylike] = await db.execute(
+    'SELECT p.* FROM `product` AS p ' +
+      'JOIN (SELECT `instrument_category_id` FROM `product` WHERE `puid` = ?) AS icn ' +
+      'ON p.`instrument_category_id` = icn.`instrument_category_id`',
+    [puid]
+  );
 
-  // Input Filter
-  const [query, setQuery] = useState("")
-  const handleInputChange = event => {
-    setQuery(event.target.value)
+
+  if ({ data, youmaylike }) {
+    console.log({data});
+    res.status(200).json({ data, youmaylike });
+  } else {
+    res.status(400).send("發生錯誤");
   }
-} 
+  }catch (error) {
+    console.error('Database error:', error);
+    res.status(500).send('Internal server error');
+  }
+});
+
+
+// function App() {
+//   const [selectedBrand, setSelectedBrand] = useState(null)
+
+//   // Input Filter
+//   const [query, setQuery] = useState("")
+//   const handleInputChange = event => {
+//     setQuery(event.target.value)
+//   }
+// } 
 
 export default router;
