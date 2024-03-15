@@ -32,7 +32,7 @@ export default function Publish() {
   const router = useRouter()
   const [title, setTitle] = useState('')
   const [titleCheck, setTitleCheck] = useState(true)
-
+  const [img, setImg] = useState('')
   // 文章分類
   const [category_id, setCategory] = useState(true)
 
@@ -58,6 +58,10 @@ export default function Publish() {
       setComplete(0)
       return false
     }
+    if (img === '') {
+      setComplete(0)
+      return false
+    }
     if (descriptionCheck === false || content === '') {
       setComplete(0)
       return false
@@ -65,7 +69,7 @@ export default function Publish() {
     setComplete(1)
     return true
   }
-  const sendForm = async (title, category_id, content) => {
+  const sendForm = async (title, category_id, content, img) => {
     if (!checkComplete()) {
       return false
     }
@@ -73,6 +77,8 @@ export default function Publish() {
     formData.append('title', title)
     formData.append('category_id', category_id)
     formData.append('content', content)
+    formData.append('img', img)
+
     // 確認formData內容
     for (let [key, value] of formData.entries()) {
       // console.log(`${key}: ${value}`)
@@ -116,7 +122,7 @@ export default function Publish() {
     // 檢查不雅字詞
     checkBadWords.cancel() // 取消上一次的延遲
     checkBadWords()
-  }, [title, category_id, content])
+  }, [title, category_id, content, img])
 
   // ----------------------手機版本  ----------------------
   // 主選單
@@ -259,9 +265,8 @@ export default function Publish() {
                   }}
                   value={category_id}
                 >
-                  <option value={1}>技術</option>
-                  <option value={2}>樂評</option>
-                  <option value={3}>公告</option>
+                  <option value={1}>樂評</option>
+                  <option value={2}>技術</option>
                 </select>
               </div>
             </div>
@@ -310,13 +315,16 @@ export default function Publish() {
                   選擇或上傳照片作為文章縮圖(同時也是社群分享文章連結時的縮圖)。
                 </h5>
                 <div className="upload-img d-flex align-items-center mt-4">
-                  <Image
-                    src="/article/singer.png"
-                    alt=""
-                    width={150}
-                    height={150}
+                  <input
+                    className="form-control"
+                    type="file"
+                    name="myFile"
+                    src={img}
+                    id="myFile"
+                    onChange={(e) => {
+                      setImg(e.target.value)
+                    }}
                   />
-                  {/* <h5 className="text-secondary ms-5">上傳圖片</h5> */}
                 </div>
                 <h5 className="text-secondary mt-4">
                   建議尺寸: 寬1200 x 高630 像素的等比例圖片 <br />
@@ -385,7 +393,7 @@ export default function Publish() {
               </button>
               <button
                 onClick={() => {
-                  sendForm(title, category_id, content)
+                  sendForm(title, category_id, content, img)
                 }}
                 type="button"
                 className="btn btn-primary"
