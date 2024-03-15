@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef} from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
@@ -17,20 +17,19 @@ import { FaHeart } from 'react-icons/fa'
 
 import Card from '@/components/lesson/lesson-card-data'
 import HoriCard from '@/components/lesson/lesson-card-hori'
+//右半部
 import ProductCard from '@/components/lesson/lesson-productbrief-card'
 
-//試抓資料區
-import Lesson from '@/data/Lesson.json'
 //toast
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { ToastProvider } from 'react-hot-toast'
 import App from '@/pages/_app'
 
-export default function LessonDetailPage() {
-  // -------試抓資料區----------
-  //   console.log(Lesson)
+// 購物車hook
+import { useCart } from '@/hooks/use-cart'
 
+export default function LessonDetailPage() {
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -65,15 +64,7 @@ export default function LessonDetailPage() {
   }
   // ----------------------加入右上角購物車的功能  ----------------------
 
-  //FIXME
-  // ReactDOM.render(
-  //   <React.StrictMode>
-  //     <ToastProvider>
-  //       <App />
-  //     </ToastProvider>
-  //   </React.StrictMode>,
-  //   document.getElementById('root')
-  // )
+  const { addLessonItem } = useCart()
 
   //-----------------------動態路由
   //  由router中獲得動態路由(屬性名稱pid，即檔案[pid].js)的值，router.query中會包含pid屬性
@@ -82,7 +73,7 @@ export default function LessonDetailPage() {
   const router = useRouter()
 
   const [LessonDetail, setLessonDetail] = useState()
- const prevLidRef = useRef(null)
+
   // 向伺服器要求資料，設定到狀態中用的函式
   const getLessonDetail = async (luid) => {
     try {
@@ -110,16 +101,14 @@ export default function LessonDetailPage() {
     if (router.isReady) {
       const { luid } = router.query
       console.log(luid)
-      // 如果lid與上一次的不同，觸發getLessonDetail
-      if (luid !== prevLidRef.current) {
-        getLessonDetail(luid)
-        prevLidRef.current = luid
-      }
+      getLessonDetail(luid)
     }
   }, [router.isReady])
 
   console.log('render')
+
   console.log(router.query, ' isReady=', router.isReady)
+
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
@@ -269,58 +258,54 @@ export default function LessonDetailPage() {
                     <div className="outline detail-wrapp  mt40">
                       <div className="detail-title">單元一覽</div>
                       <div className="list">
-                        {LessonDetail && LessonDetail.length > 0 && (
-                          <ul>
-                            {LessonDetail[0].outline}
-                            //FIXME做斷行
-                            <li>Logic Pro X 從零開始</li>
-                            <li>正式課程開始</li>
-                            <li>編曲Arrange</li>
-                            <li>數位錄音Recording</li>
-                            <li>混音Mixing</li>
-                            <li>專題課程</li>
-                            <li>【 iPad 版】Logic Pro</li>
-                          </ul>
-                        )}
+                        {/* 斷行處理 */}
+                        <ul>
+                          {LessonDetail && LessonDetail.length > 0 && (
+                            <ul>
+                              {LessonDetail[0].outline
+                                .split('\n')
+                                .map((line, index) => (
+                                  <li key={index}>{line}</li>
+                                ))}
+                            </ul>
+                          )}
+                        </ul>
                       </div>
                     </div>
                     {/* 適合對象 */}
                     <div className="suitable   mt40">
                       <div className="detail-title">適合對象</div>
                       <div className="list">
+                        <ul>
+                          {LessonDetail && LessonDetail.length > 0 && (
+                            <ul>
+                              {LessonDetail[0].suitable
+                                .split('\n')
+                                .map((line, index) => (
+                                  <li key={index}>{line}</li>
+                                ))}
+                            </ul>
+                          )}
+                        </ul>
+                      </div>
+                    </div>
+                    {/* 你將學到 */}
+                    <div className="achievement mt40">
+                      <div className="detail-title">你將學到</div>
+                      <div className="list">
                         {LessonDetail && LessonDetail.length > 0 && (
                           <ul>
-                            {LessonDetail[0].suitable}
-                            <li>本身熱愛音樂，但從沒機會學習過。</li>
-                            <li>
-                              會至少一樣樂器，但不會音樂製作，想學錄音編曲和混音。
-                            </li>
-                            <li>
-                              本身有接觸過數位音樂，但沒使用過 Logic Pro X。
-                            </li>
+                            {LessonDetail[0].achievement
+                              .split('\n')
+                              .map((line, index) => (
+                                <li key={index}>{line}</li>
+                              ))}
                           </ul>
                         )}
                       </div>
                     </div>
-                    {/* 你將學到 */}
-                    <div className="achievement  -secondary mt40">
-                      <div className="detail-title">你將學到</div>
-                      <div className="list">
-                        {LessonDetail && LessonDetail.length > 0 && (
-                          <ol>
-                            {LessonDetail[0].achievement}
-                            <li>
-                              用Logic Pro X 獨立完成一首或更多首屬於自己的音樂。
-                            </li>
-                            <li>
-                              了解音樂製作完整的步驟流程，若有興趣可再專精音樂方面的造詣。
-                            </li>
-                          </ol>
-                        )}
-                      </div>
-                    </div>
                     {/* 學員回饋 */}
-                    <div className="reviews  -secondary mt40">
+                    <div className="reviews mt40">
                       <div className="detail-title">學員回饋</div>
                       <div className="list">
                         {/* 評論 */}
@@ -410,7 +395,7 @@ export default function LessonDetailPage() {
                     </div>
                   </div>
                   {/* 講師資訊 */}
-                  <div className="teacher-info  -secondary mt40">
+                  <div className="teacher-info mt40">
                     <div className="detail-title">講師資訊</div>
                     <div className="teacher-info-area">
                       <div className="teacher-img-con ">
@@ -443,12 +428,14 @@ export default function LessonDetailPage() {
             {LessonDetail && LessonDetail.length > 0 && (
               <ProductCard
                 className="Right-card"
+                img={LessonDetail[0].img}
                 name={LessonDetail[0].name}
                 homework={LessonDetail[0].homework}
                 sales={LessonDetail[0].sales}
                 price={LessonDetail[0].price}
                 length={LessonDetail[0].length}
                 info={LessonDetail[0].info}
+                addLessonItem={addLessonItem}
               />
             )}
           </div>
@@ -456,7 +443,7 @@ export default function LessonDetailPage() {
         {/* 猜你喜歡 */}
         <div className="you-will-like">
           <div className="detail-title ">猜你喜歡...</div>
-          <div className="card-con">
+          <div className="card-con" style={{ overflowX: 'scroll' }}>
             <Card />
             <Card />
             <Card />
@@ -481,7 +468,14 @@ export default function LessonDetailPage() {
             src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
             className="cartIcon"
           />
-          <div className="cart">加入購物車</div>
+          <div
+            className="cart"
+            onClick={() => {
+              addLessonItem(v)
+            }}
+          >
+            加入購物車
+          </div>
         </div>
         <div className="buyBtn">
           <div className="buy">立即購買</div>
@@ -603,6 +597,7 @@ export default function LessonDetailPage() {
         .detail-title {
           color: var(--primary-deep, #0d3652);
           font: 700 24px Noto Sans TC, sans-serif;
+          margin-bottom:16px;
         }
 
         .list {
@@ -614,19 +609,12 @@ export default function LessonDetailPage() {
           {/* height: 243px;
           width: 660px; */}
         }
+.outline ul,
+.suitable ul {
+    list-style-type: disc;
+}
 
-        .outline ul{
-list-style-type: disc; 
-        }
-
-        .suitable {
-          {/* height: 130px;
-          width: 660px; */}
-        }
-        .achievement {
-          {/* height: 107px;
-          width: 660px; */}
-        }
+       
         .review-title {
           display: flex;
         }
@@ -676,6 +664,7 @@ list-style-type: disc;
         .teacher-img-con {
           width: 140px;
           height: 140px;
+          margin:8px 16px 8px 12px;
         }
         .teacherImg {
           width: 100%;

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import toast, { Toaster } from 'react-hot-toast'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
@@ -19,21 +20,28 @@ import { IoClose } from 'react-icons/io5'
 import RecruitCard from '@/components/jam/recruit-card'
 import BS5Pagination from '@/components/common/pagination'
 import { useAuth } from '@/hooks/user/use-auth'
+import { useJam } from '@/hooks/use-jam'
 
 export default function RecruitList() {
   const router = useRouter()
+  const { invalidJam, notifyInvalidToast } = useJam()
   // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
   const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
     useAuth()
-  // console.log(LoginUserData)
   //檢查token
   useEffect(() => {
     handleLoginStatus()
     //獲得資料
     getLoginUserData()
+    // 若使用者嘗試進入以解散或不存在的jam，跳出警告訊息
+    if (invalidJam === false) {
+      notifyInvalidToast()
+    }
+    document.addEventListener('click', () => {
+      setFilterVisible(false)
+    })
   }, [])
-  //登出功能
 
   // ----------------------手機版本  ----------------------
   // 主選單
@@ -49,11 +57,6 @@ export default function RecruitList() {
 
   // ----------------------條件篩選  ----------------------
   const [filterVisible, setFilterVisible] = useState(false)
-  useEffect(() => {
-    document.addEventListener('click', () => {
-      setFilterVisible(false)
-    })
-  }, [])
   // 阻止事件冒泡造成篩選表單關閉
   const stopPropagation = (e) => {
     e.stopPropagation()
@@ -144,6 +147,26 @@ export default function RecruitList() {
     })
   }
 
+  const checkLogin = (LoginUserData) => {
+    if (
+      !LoginUserData ||
+      LoginUserData.status === 'error' ||
+      LoginUserData.length == 0
+    ) {
+      toast('請先登入', {
+        icon: 'ℹ️',
+        style: {
+          border: '1px solid #666666',
+          padding: '16px',
+          color: '#1d1d1d',
+        },
+        duration: 3000,
+      })
+    } else {
+      router.push('/jam/recruit-list/form')
+    }
+  }
+
   const [jams, setJams] = useState([])
   const [genreData, setGenreData] = useState([])
   const [playerData, setPlayerData] = useState([])
@@ -216,6 +239,12 @@ export default function RecruitList() {
       <Head>
         <title>團員募集</title>
       </Head>
+      <Toaster
+        containerStyle={{
+          top: 80,
+          zIndex: 101,
+        }}
+      />
       <Navbar menuMbToggle={menuMbToggle} />
       <div className="page-hero d-none d-sm-block">
         <Image
@@ -318,12 +347,15 @@ export default function RecruitList() {
                 我的JAM
               </Link>
             ) : (
-              <Link
-                href="/jam/recruit-list/form"
+              <div
+                role="presentation"
                 className="fixed-btn b-btn b-btn-primary d-block d-sm-none"
+                onClick={() => {
+                  checkLogin(LoginUserData)
+                }}
               >
                 發起JAM
-              </Link>
+              </div>
             )}
 
             {/*  ---------------------- 頂部功能列  ---------------------- */}
@@ -357,12 +389,15 @@ export default function RecruitList() {
                       我的JAM
                     </Link>
                   ) : (
-                    <Link
-                      href="/jam/recruit-list/form"
+                    <div
+                      role="presentation"
                       className="b-btn b-btn-primary px-3 d-none d-sm-block"
+                      onClick={() => {
+                        checkLogin(LoginUserData)
+                      }}
                     >
                       發起JAM
-                    </Link>
+                    </div>
                   )}
                 </div>
 
@@ -550,37 +585,41 @@ export default function RecruitList() {
             </div>
             {/* 主內容 */}
             <main className="content">
-              {jams.map((v, i) => {
-                const {
-                  id,
-                  juid,
-                  former,
-                  member,
-                  title,
-                  degree,
-                  genre,
-                  player,
-                  region,
-                  created_time,
-                } = v
-                return (
-                  <RecruitCard
-                    key={id}
-                    id={id}
-                    juid={juid}
-                    former={former}
-                    member={member}
-                    title={title}
-                    degree={degree}
-                    genre={genre}
-                    player={player}
-                    region={region}
-                    created_time={created_time}
-                    genreData={genreData}
-                    playerData={playerData}
-                  />
-                )
-              })}
+              {jams.length > 0 ? (
+                jams.map((v, i) => {
+                  const {
+                    id,
+                    juid,
+                    former,
+                    member,
+                    title,
+                    degree,
+                    genre,
+                    player,
+                    region,
+                    created_time,
+                  } = v
+                  return (
+                    <RecruitCard
+                      key={id}
+                      id={id}
+                      juid={juid}
+                      former={former}
+                      member={member}
+                      title={title}
+                      degree={degree}
+                      genre={genre}
+                      player={player}
+                      region={region}
+                      created_time={created_time}
+                      genreData={genreData}
+                      playerData={playerData}
+                    />
+                  )
+                })
+              ) : (
+                <div className="no-result">查無資料</div>
+              )}
             </main>
             <div className="d-flex justify-content-center">
               <BS5Pagination

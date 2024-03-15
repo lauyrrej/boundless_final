@@ -45,18 +45,17 @@ export default function Test() {
     //取消表單預設submit跳頁
     e.preventDefault()
 
-    try {
-      const response = await fetch('http://localhost:3005/api/user/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(user),
-      })
+    const response = await fetch('http://localhost:3005/api/user/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(user),
+    })
 
-      const loginData = await response.json()
-      console.log('Response from server:', loginData)
-
+    const loginData = await response.json()
+    console.log('Response from server:', loginData)
+    if (loginData.status === 'success') {
       const token = loginData.token
       userData = jwtDecode(token)
       // 先將 token 字串存入 localStorage
@@ -64,10 +63,12 @@ export default function Test() {
       // 更新 React state 中的 token
       setToken(token)
       console.log(userData)
+
+      loginAlert()
       return token, userData
       // 在這裡處理後端返回的資料
-    } catch (error) {
-      console.error('There was a problem with the fetch operation:', error)
+    } else {
+      alert(`錯誤 - 使用者帳號或密碼錯誤。`)
     }
   }
   //登出功能
@@ -104,14 +105,30 @@ export default function Test() {
   //登入 跳轉 還沒加入判定 應該要先判斷再跳轉
   const router = useRouter()
   const mySwal = withReactContent(Swal)
-  const loginAlert = (e) => {
-    e.preventDefault()
+  const loginAlert = () => {
     mySwal
       .fire({
         position: 'center',
         icon: 'success',
         iconColor: '#1581cc',
         title: '登入成功，將為您跳轉到首頁',
+        showConfirmButton: false,
+        timer: 2000,
+      })
+      .then(
+        setTimeout(() => {
+          router.push(`/user/user-info`)
+        }, 2000)
+      )
+  }
+
+  const googleloginAlert = () => {
+    mySwal
+      .fire({
+        position: 'center',
+        icon: 'success',
+        iconColor: '#1581cc',
+        title: 'Google登入成功，將為您跳轉到首頁',
         showConfirmButton: false,
         timer: 2000,
       })
@@ -165,7 +182,7 @@ export default function Test() {
     // 向伺服器進行登入動作
     const res = await googleLogin(providerData)
     console.log(res)
-
+    // console.log(res.status)
     if (res.status === 'success') {
       // 從JWT存取令牌中解析出會員資料
       // 注意JWT存取令牌中只有id, username, google_uid, 在登入時可以得到
@@ -177,11 +194,13 @@ export default function Test() {
       setToken(googletoken)
 
       // console.log(googletoken)
-      console.log(userData)
-      alert('已成功登入')
-      setTimeout(() => {
-        router.push(`/user/user-info`)
-      }, 2000)
+      // console.log(userData)
+      // alert('已成功登入')
+      // setTimeout(() => {
+      //   router.push(`/user/user-info`)
+      // }, 2000)
+
+      googleloginAlert()
       return googletoken, userData
     } else {
       alert(`登入失敗`)
@@ -195,6 +214,10 @@ export default function Test() {
 
     handleLogout()
   }
+  // useEffect(() => {
+  //   logoutFirebase()
+  //   handleLogout()
+  // }, [])
 
   return (
     <>
@@ -299,7 +322,6 @@ export default function Test() {
                 className="loginByEmail-form"
                 onSubmit={(e) => {
                   handleLogin(e)
-                  loginAlert(e)
                 }}
               >
                 <div className="loginByEmail-form-box">
