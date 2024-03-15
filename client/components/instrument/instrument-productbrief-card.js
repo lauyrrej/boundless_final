@@ -7,7 +7,15 @@ import toast, { Toaster } from 'react-hot-toast'
 //跳轉頁面
 import Link from 'next/link'
 
-export default function ProductBriefCard({ name, sales, price, info }) {
+export default function ProductBriefCard({
+  data = {},
+  quantity = 1,
+  setQuantity = {},
+  addInstrumentItem = () => {},
+  increment = () => {},
+  decrement = () => {},
+  remove = () => {},
+}) {
   //收藏按鍵的功能
   const [colorChange, setcolorChange] = useState(false)
   const colorToggle = () => {
@@ -15,39 +23,22 @@ export default function ProductBriefCard({ name, sales, price, info }) {
     setcolorChange(!colorChange)
   }
 
+  // name={InstrumentDetail[0].name}
+  // sales={InstrumentDetail[0].sales}
+  // price={InstrumentDetail[0].price}
+  // discount={InstrumentDetail[0].discount}
+  // stock={InstrumentDetail[0].stock}
+  // info={InstrumentDetail[0].info}
+
   // ----------------------加入右上角購物車的功能
   const [cartItems, setCartItems] = useState([])
   const [cartCount, setCartCount] = useState(0)
 
-  const addToCart = (product) => {
-    const existingItem = cartItems.find((item) => item.id === product.id)
-    if (existingItem) {
-      existingItem.quantity += 1
-    } else {
-      const newItem = { ...product, quantity: 1 }
-      setCartItems([...cartItems, newItem])
-    }
-    setCartCount(cartCount + 1)
-    toast(`${Instrument[0].name}已加入購物車中`)
-  }
-
-  //數量增減功能
-  const [quantity, setQuantity] = useState(1)
-
-  const increaseQuantity = () => {
-    setQuantity(quantity + 1)
-  }
-
-  const decreaseQuantity = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1)
-    }
-  }
   return (
     <>
-      <div className="Right sticky-top ">
+      <div className="Right sticky-top">
         <div className="prodBriefing sticky-top ">
-          <div className="prodMainName">{name}</div>
+          <div className="prodMainName">{data.name}</div>
           <div className="Rating">
             <div className="star">
               <img
@@ -58,10 +49,10 @@ export default function ProductBriefCard({ name, sales, price, info }) {
               <div className="ratingNumber">4.9</div>
               <div className="commentNumber">(3)</div>
             </div>
-            <div className="sales">已售出 {sales}</div>
+            <div className="sales">已售出 {data.sales}</div>
           </div>
           <div className="productPrice">
-            <div className="price">NT$ {price}</div>
+            <div className="price">NT$ {data.price}</div>
             {/* 收藏功能 */}
             {/* 做好的 onClick*/}
             <div className="likesIcon icon-container ">
@@ -73,39 +64,55 @@ export default function ProductBriefCard({ name, sales, price, info }) {
               />
             </div>
           </div>
-          <div className="Intro">{info}</div>
+          <div className="Intro">{data.info}</div>
           {/* 數量選擇器 */}
           {/* 庫存等於0時應該顯示 暫無庫存*/}
 
           <div>
-            {quantity === 0 ? (
+            {data.stock === 0 ? (
               <h6 className="ms-4 mt-2">暫無庫存</h6>
             ) : (
               <div className="quantitySelector">
-                <div className="btn decrease-btn" onClick={decreaseQuantity}>
+                <div
+                  className="btn decrease-btn"
+                  role="presentation"
+                  onClick={() => {}}
+                >
                   -
                 </div>
                 <div className="quantity">{quantity}</div>
-                <div className="btn increase-btn" onClick={increaseQuantity}>
+                <div
+                  className="btn increase-btn"
+                  role="presentation"
+                  onClick={() => {
+                    setQuantity(quantity + 1)
+                  }}
+                >
                   +
                 </div>
               </div>
             )}
           </div>
+
           <div className="shoppingBtn">
-            <div
-              className="cartBtn"
-              onClick={() => addToCart({ id: 1, name: '商品名稱', price: 100 })}
-            >
+            <div className="cartBtn">
               <img
                 loading="lazy"
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
                 className="cartIcon"
               />
-              <div className="cart">加入購物車</div>
+              <div
+                className="cart"
+                role="presentation"
+                onClick={() => {
+                  addInstrumentItem(data, quantity)
+                }}
+              >
+                加入購物車
+              </div>
             </div>
             <div className="buyBtn">
-              <Link className="buy" href="/cart/checkorder">
+              <Link className="buy" href="/cart/check">
                 立即購買
               </Link>
             </div>

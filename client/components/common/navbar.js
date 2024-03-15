@@ -39,11 +39,11 @@ export default function Navbar({ menuMbToggle }) {
   //   讀取使用者資料後 定義大頭貼路徑
   let avatarImage
   if (LoginUserData.img) {
-    avatarImage = `/user/${LoginUserData.img}`
+    avatarImage = `http://localhost:3005/user/${LoginUserData.img}`
   } else if (LoginUserData.photo_url) {
     avatarImage = `${LoginUserData.photo_url}`
   } else {
-    avatarImage = `/user/avatar_userDefault.jpg`
+    avatarImage = `http://localhost:3005/user/avatar_userDefault.jpg`
   }
 
   //--------------------------登入狀態下 點擊右上角叫出小視窗-------------------

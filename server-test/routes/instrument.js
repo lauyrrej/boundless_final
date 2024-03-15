@@ -25,8 +25,6 @@ WHERE
 `);
 
 // 变量instrument现在包含了查询结果
-
-    
         if (instrument) {
           res.json(instrument);
         //  console.log(instrument);
@@ -39,21 +37,23 @@ WHERE
       }
 
         // 取得資料總筆數，用於製作分頁
-       let [dataCount] = await db
-       .execute("SELECT * FROM `product` WHERE `type` = 1")
-       .catch(() => {
-        return undefined;
-      });
-    
-       // 排序用
-  // let orderDirection = req.query.order || "ASC";
+      //  let [dataCount] = await db
+      //  .execute("SELECT * FROM `product` WHERE `type` = 1")
+      //  .catch(() => {
+      //   return undefined;
+      // });
+   
+   
 
-  let page = Number(req.query.page) || 1; // 目前頁碼
-  let dataPerpage = 20; // 每頁20筆
-  let offset = (page - 1) * dataPerpage; // 取得下一批資料
-  let pageTotal = Math.ceil(dataCount.length / dataPerpage); // 計算總頁數
-  let pageString = " LIMIT " + offset + "," + dataPerpage;
+    
+  // let page = Number(req.query.page) || 1; // 目前頁碼
+  // let dataPerpage = 20; // 每頁20筆
+  // let offset = (page - 1) * dataPerpage; // 取得下一批資料
+  // let pageTotal = Math.ceil(dataCount.length / dataPerpage); // 計算總頁數
+  // let pageString = " LIMIT " + offset + "," + dataPerpage;
   });
+
+
 
 //instrument_category
 router.get("/categories", async (req, res) => {
@@ -121,22 +121,32 @@ router.get("/categories", async (req, res) => {
 });
     
 
-// 獲得單筆樂器資料
-router.get("/:id", async (req, res, next) => {
-  let puid = req.params.id;
-  console.log(puid);
-  let [data] = await db
-    .execute("SELECT * FROM `product` WHERE `puid` = ? ", [puid])
-    .catch(() => {
-      return undefined;
-    });
 
-  if (data) {
-    console.log(data);
-    res.status(200).json(data);
-  } else {
-    res.status(400).send("發生錯誤");
+// 獲得單筆樂器資料
+// router.get("/:id", async (req, res, next) => {
+//   let puid = req.params.id;
+//   console.log(puid);
+//   let [data] = await db
+//     .execute("SELECT * FROM `product` WHERE `puid` = ? ", [puid])
+//     .catch(() => {
+//       return undefined;
+//     });
+
+//   if (data) {
+//     console.log(data);
+//     res.status(200).json(data);
+//   } else {
+//     res.status(400).send("發生錯誤");
+//   }
+// });
+function App() {
+  const [selectedBrand, setSelectedBrand] = useState(null)
+
+  // Input Filter
+  const [query, setQuery] = useState("")
+  const handleInputChange = event => {
+    setQuery(event.target.value)
   }
-});
+} 
 
 export default router;

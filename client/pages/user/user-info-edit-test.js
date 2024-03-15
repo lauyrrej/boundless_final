@@ -55,11 +55,11 @@ export default function Test() {
   //   讀取使用者資料後 定義大頭貼路徑
   let avatarImage
   if (LoginUserData.img) {
-    avatarImage = `/user/${LoginUserData.img}`
+    avatarImage = `http://localhost:3005/user/${LoginUserData.img}`
   } else if (LoginUserData.photo_url) {
     avatarImage = `${LoginUserData.photo_url}`
   } else {
-    avatarImage = `/user/avatar_userDefault.jpg`
+    avatarImage = `http://localhost:3005/user/avatar_userDefault.jpg`
   }
   //-------------------------------------------------------------
   const appKey = 'userToken'
@@ -158,12 +158,8 @@ export default function Test() {
     }
   }, []) // 在 LoginUserData.name 改變時觸發 useEffect
 
-  //   console.log(userData.id)
+  // console.log(userData.id)
   console.log(userData)
-  // 舊版會警告 因為先渲染但沒路徑 bad
-  // const avatarImage = `/user/${LoginUserData.img}`
-  // const avatargoogle = `${LoginUserData.photo_url}`
-  // const avatarDefault = `/user/avatar_userDefault.jpg`
 
   // ----------------------會員登入狀態  ----------------------
 
@@ -199,9 +195,7 @@ export default function Test() {
     value: v.id,
     label: v.name,
   }))
-  // console.log(totalGenreData)
-  // console.log(totalGenreData[0].value)
-  // console.log(totalGenreData[0].label)
+
   let genreLike,
     genreLike1,
     genreLike2,
@@ -213,53 +207,96 @@ export default function Test() {
     let ArrGenreLike = genreLike.split(',')
     genreLike1 = ArrGenreLike[0]
     genreLike2 = ArrGenreLike[1]
-    genreLike3 = ArrGenreLike[3]
-    // 傻人方法
-    // for (let i = 0; i < totalGenreData.length; i++) {
-    //   if ([genreLike1] == totalGenreData[i].value) {
-    //     genreLike1 = totalGenreData[i].label
-    //     break // 找到匹配後就跳出迴圈
-    //   }
-    // }
-    // for (let i = 0; i < totalGenreData.length; i++) {
-    //   if ([genreLike2] == totalGenreData[i].value) {
-    //     genreLike2 = totalGenreData[i].label
-    //     break // 找到匹配後就跳出迴圈
-    //   }
-    // }
-    // for (let i = 0; i < totalGenreData.length; i++) {
-    //   if ([genreLike3] == totalGenreData[i].value) {
-    //     genreLike3 = totalGenreData[i].label
-    //     break // 找到匹配後就跳出迴圈
-    //   }
-    // }
-    //判斷最後結果
-    // if (genreLike1 && genreLike2 && genreLike3 !== undefined) {
-    //   finalGenreLike = `${genreLike1}, ${genreLike2}, ${genreLike3}`
-    // } else if (genreLike1 && genreLike2 !== undefined) {
-    //   finalGenreLike = `${genreLike1}, ${genreLike2}`
-    // } else if (genreLike1 !== undefined) {
-    //   finalGenreLike = `${genreLike1}`
-    // }
+    genreLike3 = ArrGenreLike[2]
   }
 
   const [genreSelect1, setgenreSelect1] = useState('')
+  const [genreSelect2, setgenreSelect2] = useState('')
+  const [genreSelect3, setgenreSelect3] = useState('')
   useEffect(() => {
-    if (genreSelect1 && genreLike2 && genreLike3 !== undefined) {
-      finalGenreLike = `${genreSelect1},${genreLike2},${genreLike3}`
-    } else if (genreSelect1 && genreLike2 !== undefined) {
-      finalGenreLike = `${genreSelect1},${genreLike2}`
-    } else if (genreSelect1 !== undefined) {
-      finalGenreLike = `${genreSelect1}`
-    }
+ 
+    if (genreSelect1 && genreSelect2 && genreSelect3 !== undefined && genreSelect1 !== '9999' && genreSelect2 !== '9999' && genreSelect3 !== '9999') {
+      finalGenreLike = `${genreSelect1},${genreSelect2},${genreSelect3}`;
+  } else if (genreSelect1 && genreSelect2 !== undefined && genreSelect1 !== '9999' && genreSelect2 !== '9999') {
+      finalGenreLike = `${genreSelect1},${genreSelect2}`;
+  } else if (genreSelect1 !== undefined && genreSelect1 !== '9999') {
+      finalGenreLike = `${genreSelect1}`;
+  } else {
+      finalGenreLike = ``;
+  }
 
-    // finalGenreLike = `${genreSelect1},${genreLike2},${genreLike3}`
     setuserData({ ...userData, genre_like: finalGenreLike })
-  }, [genreSelect1])
-  // console.log(finalGenreLike)
+  }, [genreSelect1, genreSelect2, genreSelect3])
 
-  // console.log(genreLike1)
-  // console.log(genreLike3)
+
+  // ---------------演奏樂器-------------
+  let totalPlayerData = playerData.map((v) => ({
+    key: v.id,
+    value: v.id,
+    label: v.name,
+  }))
+
+  let playInstrument,
+  playInstrument1,
+  playInstrument2,
+  playInstrument3,
+    finalPlayInstrument = `尚未填寫`
+  if (LoginUserData.play_instrument) {
+    playInstrument = LoginUserData.play_instrument
+    // 使用 split 方法將字串拆分成陣列
+    let ArrPlayInstrument = playInstrument.split(',')
+    playInstrument1 = ArrPlayInstrument[0]
+    playInstrument2 = ArrPlayInstrument[1]
+    playInstrument3 = ArrPlayInstrument[2]
+  }
+
+  const [playSelect1, setplaySelect1] = useState('')
+  const [playSelect2, setplaySelect2] = useState('')
+  const [playSelect3, setplaySelect3] = useState('')
+  useEffect(() => {
+ 
+    if (playSelect1 && playSelect2 && playSelect3 !== undefined && playSelect1 !== '9999' && playSelect2 !== '9999' && playSelect3 !== '9999') {
+      finalPlayInstrument = `${playSelect1},${playSelect2},${playSelect3}`;
+  } else if (playSelect1 && playSelect2 !== undefined && playSelect1 !== '9999' && playSelect2 !== '9999') {
+    finalPlayInstrument = `${playSelect1},${playSelect2}`;
+  } else if (playSelect1 !== undefined && playSelect1 !== '9999') {
+    finalPlayInstrument = `${playSelect1}`;
+  } else {
+    finalPlayInstrument = ``;
+  }
+
+    setuserData({ ...userData, play_instrument: finalPlayInstrument })
+  }, [playSelect1, playSelect2, playSelect3])
+
+  //-----------------隱私設定進來--------------
+  let privacy,
+    privacyBD = '',
+    privacyPhone = '',
+    privacyEmail = '',
+    ArrPrivacy,
+    finalPrivacy
+  if (LoginUserData.privacy) {
+    privacy = LoginUserData.privacy
+    ArrPrivacy = privacy.split(',')
+    privacyBD = ArrPrivacy[0]
+    privacyPhone = ArrPrivacy[1]
+    privacyEmail = ArrPrivacy[2]
+    finalPrivacy = `${privacyBD},${privacyPhone},${privacyEmail}`;
+  }
+
+  const [privacySelect1, setprivacySelect1] = useState('9999')
+  const [privacySelect2, setprivacySelect2] = useState('9999')
+  const [privacySelect3, setprivacySelect3] = useState('9999')
+  
+  
+  useEffect(() => {
+    finalPrivacy = `${privacySelect1},${privacySelect2},${privacySelect3}`;
+    setuserData({ ...userData, privacy: finalPrivacy })
+  }, [privacySelect1, privacySelect2, privacySelect3])
+  // console.log(privacyBD)
+  // console.log(privacyPhone)
+  // console.log(privacyEmail)
+ 
   // ----------------------會員資料處理  ----------------------
 
   // ----------------------表單資料傳送處理  ----------------------
@@ -295,6 +332,20 @@ export default function Test() {
     // }
   }
   // ----------------------表單資料傳送處理  ----------------------
+// 頭像上傳
+ 
+
+  
+    const [selectedFile, setSelectedFile] = useState(null);
+
+    const handleFileChange = (event) => {
+        setSelectedFile(event.target.files[0]);}
+    
+
+
+
+
+
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -365,42 +416,7 @@ export default function Test() {
     setSales(false)
   }
 
-  //-------------引用jam表單設定
 
-  const [fakeUser, setFakeUser] = useState({
-    id: 110,
-    uid: 'n500ef48Ibat',
-    juid: '6q3SoqnuPEXJ',
-  })
-  const mySwal = withReactContent(Swal)
-  // ---------------------- 標題 ----------------------
-  const [title, setTitle] = useState('')
-  const [titleCheck, setTitleCheck] = useState(true)
-  // ---------------------- 技術程度
-  const [degree, setDegree] = useState('')
-
-  // ---------------------- 曲風 ----------------------
-  // 儲存選擇的曲風
-  const [genre, setgenre] = useState([])
-
-  const [genreCheck, setGenreCheck] = useState(true)
-  // 變更曲風下拉選單的數量時，陣列會多一個元素
-  const [genreSelect, setgenreSelect] = useState([1])
-  // 實際使用的曲風陣列，避免使用者未照順序新增樂手
-  const [finalgenre, setFinalgenre] = useState('')
-
-  // ---------------------- 擔任職位 ----------------------
-  // 控制表單狀態
-  const [myPlayer, setMyPlayer] = useState('')
-  // 表單實際送出的內容
-  const [finalMyPlayer, setFinalMyPlayer] = useState('')
-  // console.log(finalMyPlayers)
-
-  // ---------------------- 徵求樂手 ----------------------
-  const [players, setplayers] = useState([])
-  const [playersSelect, setPlayersSelect] = useState([1])
-  // 實際使用的樂手陣列，避免使用者未照順序新增樂手
-  const [finalPlayers, setFinalPlayers] = useState([])
 
   // ---------------------- 篩選城市用的資料 ----------------------
   const cityData = CityCountyData.map((v, i) => {
@@ -424,148 +440,7 @@ export default function Test() {
     return areaName !== '釣魚臺' && areaName !== '南海島'
   })
 
-  // ---------------------- 其他條件 ----------------------
-  const [condition, setCondition] = useState('')
-  const [conditionCheck, setConditionCheck] = useState(true)
-  // ---------------------- 描述 ----------------------
-  const [description, setDescription] = useState('')
-  const [descriptionCheck, setDescriptionCheck] = useState(true)
-
-  // ---------------------- 表單填寫 ----------------------
-  // 表單完成狀態 0: 有欄位尚未填寫或不符規定, 1: 填寫完成, 2: 填寫中
-  const [complete, setComplete] = useState(2)
-  // 檢查不雅字詞
-  const checkBadWords = debounce(() => {
-    const badWords = /幹|屎|尿|屁|糞|靠北|靠腰|雞掰|王八|你媽|妳媽|淫/g
-    setTitleCheck(title.search(badWords) < 0 ? true : false)
-    setConditionCheck(condition.search(badWords) < 0 ? true : false)
-    setDescriptionCheck(description.search(badWords) < 0 ? true : false)
-  }, 250)
-  // 檢查是否重複填寫曲風
-  const checkGenre = debounce(() => {
-    const genreSet = new Set(genre) // 建立 set 物件，該物件中的每個屬性都是唯一值
-    // 若長度不同，則代表陣列中有重複的值
-    if (genre.length !== genreSet.size) {
-      setGenreCheck(false)
-    } else {
-      setGenreCheck(true)
-    }
-  }, 250)
-  // 檢查表單是否填妥
-  const checkComplete = () => {
-    if (titleCheck === false || title === '') {
-      setComplete(0)
-      return false
-    }
-    if (degree === '') {
-      setComplete(0)
-      return false
-    }
-    if (genreCheck === false || finalgenre === '') {
-      setComplete(0)
-      return false
-    }
-    if (finalMyPlayer === '') {
-      setComplete(0)
-      return false
-    }
-    if (finalPlayers === '') {
-      setComplete(0)
-      return false
-    }
-    if (region === '') {
-      setComplete(0)
-      return false
-    }
-    if (conditionCheck === false) {
-      setComplete(0)
-      return false
-    }
-    if (descriptionCheck === false || description === '') {
-      setComplete(0)
-      return false
-    }
-    setComplete(1)
-    return true
-  }
-  const sendForm = async (
-    uid,
-    title,
-    degree,
-    finalgenre,
-    finalMyPlayer,
-    finalPlayers,
-    region,
-    condition,
-    description
-  ) => {
-    if (!checkComplete()) {
-      return false
-    }
-    let formData = new FormData()
-    formData.append('uid', uid)
-    formData.append('title', title)
-    formData.append('degree', degree)
-    formData.append('genre', finalgenre)
-    formData.append('former', finalMyPlayer)
-    formData.append('players', finalPlayers)
-    formData.append('region', region)
-    formData.append('condition', condition)
-    formData.append('description', description)
-    // 確認formData內容
-    // for (let [key, value] of formData.entries()) {
-    //   console.log(`${key}: ${value}`)
-    // }
-    const res = await fetch('http://localhost:3005/api/jam/form', {
-      method: 'POST',
-      body: formData,
-      credentials: 'include',
-    })
-    const result = await res.json()
-    if (result.status === 'success') {
-      notifySuccess(result.juid)
-    } else {
-      console.log(result.error)
-    }
-  }
-  // 發起成功後，彈出訊息框，並跳轉到資訊頁面
-  const notifySuccess = (juid) => {
-    mySwal
-      .fire({
-        position: 'center',
-        icon: 'success',
-        iconColor: '#1581cc',
-        title: '發起成功，將為您跳轉到資訊頁',
-        showConfirmButton: false,
-        timer: 3000,
-      })
-      .then(
-        setTimeout(() => {
-          router.push(`/jam/recruit-list/${juid}`)
-        }, 3000)
-      )
-  }
-
-  useEffect(() => {
-    setuserData({ ...userData, genre_like: genre })
-  }, [finalgenre])
-  // ---------------------- 偵測表單輸入變化，並執行檢查
-  useEffect(() => {
-    // 跳出未填寫完畢警告後再次輸入，消除警告
-    setComplete(2)
-    // 檢查不雅字詞
-    checkBadWords.cancel() // 取消上一次的延遲
-    checkBadWords()
-    // 檢查無重複的曲風
-    checkGenre.cancel()
-    checkGenre()
-    // 把曲風&徵求樂手轉換成表單實際接收的字串格式
-    const fgArr = genre.filter((v) => v != (null || undefined))
-    setFinalgenre(`[${fgArr.toString()}]`)
-    const fpArr = players.filter((v) => v != (null || undefined))
-    setFinalPlayers(`[${fpArr.toString()}]`)
-    // 檢查表單是否完成
-  }, [title, degree, genre, myPlayer, players, region, condition, description])
+  
 
   return (
     <>
@@ -782,13 +657,13 @@ export default function Test() {
                         <div className="user-title-userInfo">會員資訊</div>
 
                         <div className="user-btnGroup">
-                          ※ 點擊&nbsp;
+                          {/* ※ 點擊&nbsp;
                           <FaCirclePlus
                             size={18}
                             style={{ color: '#18a1ff' }}
                             className="mb-1"
                           />
-                          &nbsp;可增加項目
+                          &nbsp;可增加項目 */}
                           {/* <div className="user-btnGroup-btn1">
                             <div>
                               <Link href="/user/user-homepage">
@@ -806,7 +681,7 @@ export default function Test() {
                         <div className="user-info-item-Content-avatar">
                           <div className="user-info-item-contentText-imgBox">
                             <Image
-                              src={avatarImage}
+                              src={selectedFile? URL.createObjectURL(selectedFile) : avatarImage }
                               alt="user photo mb"
                               fill
                               priority="default" //不加的話Next 會問是否要加優先級
@@ -814,7 +689,7 @@ export default function Test() {
                             ></Image>
                           </div>
                           <div>
-                            <input
+                            {/* <input
                               type="file"
                               name="myFile2"
                               className="form-control"
@@ -823,38 +698,45 @@ export default function Test() {
                             ></input>
                             <div className="user-info-item-contentText">
                               可選擇的圖片格式: .jpg .png
-                            </div>
+                            </div> */}
 
                             {/* //-----------------測試上傳 */}
-                            {/* <form
+                            <form
                               action="http://localhost:3005/api/user/upload1"
                               method="post"
+                              // onSubmit={handleSubmit}
                               enctype="multipart/form-data"
+                              className=""
                             >
-                              <div className="input-group mb-2">
-                                <span className="input-group-text">名稱</span>
+                            
+                              <div className="input-group d-none mb-2">
+                                <span className="input-group-text"></span>
                                 <input
                                   type="text"
                                   name="name"
-                                  // value={LoginUserData}
+                                  value={LoginUserData.id}
                                   className="form-control"
                                 />
                               </div>
-                              <div className="input-group mb-2">
+
+                              <div className="input-group mb-2 ">
                                 <input
                                   type="file"
                                   name="myFile"
                                   id={LoginUserData}
-                                  accept="image/png, image/jpeg"
+                                  accept="image/jpeg"
                                   className="form-control"
+                                  // onChange={handleFileChange}
+                                  onChange={handleFileChange}
                                 />
                               </div>
-                              <div className="d-flex">
-                                <button className="btn btn-primary ms-auto">
-                                  送出
+                              
+                              <div className="d-flex ">
+                                <button className="btn btn-primary ms-auto ">
+                                  確認變更
                                 </button>
                               </div>
-                            </form> */}
+                            </form>
                             {/* //-----------------測試上傳 */}
                           </div>
                         </div>
@@ -937,16 +819,24 @@ export default function Test() {
                                 <select
                                   className="form-select"
                                   style={{ width: 'auto' }}
-                                  value={genreLike1}
-                                  name="genre1"
+                                  value={genreSelect1 != '' ? genreSelect1 : genreLike1}                                  
+                                  name="genre"
                                   onChange={(e) => {
-                                    genreLike1 = e.target.value
-                                    setgenreSelect1(`${genreLike1}`)
-                                    console.log(genreLike1)
-                                    console.log(genreSelect1)
+                                    // let genreLike1 = e.target.value
+                                    setgenreSelect1(e.target.value)
+                                    if (genreSelect2 == '') {
+                                        setgenreSelect2(genreLike2);
+                                    }else{
+                                      setgenreSelect2(genreSelect2);
+                                    }
+                                    if (genreSelect3 == '') {
+                                        setgenreSelect3(genreLike3);
+                                    }else{
+                                      setgenreSelect3(genreSelect3);
+                                    }                 
                                   }}
                                 >
-                                  <option value="0">請選擇</option>
+                                  <option  value="9999">無</option>
                                   {genreData.map((v) => {
                                     return (
                                       <option key={v.id} value={v.id}>
@@ -958,16 +848,24 @@ export default function Test() {
                                 <select
                                   className="form-select"
                                   style={{ width: 'auto' }}
-                                  value={genreLike2}
+                                  value={genreSelect2 != '' ? genreSelect2 : genreLike2}
                                   name="genre2"
                                   onChange={(e) => {
-                                    genreLike2 = e.target.value
-                                    let newgenre = [...genre]
-
-                                    setgenre(newgenre)
+                                    // genreLike2 = e.target.value 
+                                    setgenreSelect2(e.target.value)
+                                    if (genreSelect1 == '') {
+                                        setgenreSelect1(genreLike1);
+                                    }else{
+                                      setgenreSelect1(genreSelect1);
+                                    }
+                                    if (genreSelect3 == '') {
+                                        setgenreSelect3(genreLike3);
+                                    }else{
+                                      setgenreSelect3(genreSelect3);
+                                    }    
                                   }}
                                 >
-                                  <option value="">請選擇</option>
+                                  <option  value="9999">無</option>
                                   {genreData.map((v) => {
                                     return (
                                       <option key={v.id} value={v.id}>
@@ -976,17 +874,27 @@ export default function Test() {
                                     )
                                   })}
                                 </select>
+
                                 <select
                                   className="form-select"
                                   style={{ width: 'auto' }}
-                                  value={genreLike3}
+                                  value={genreSelect3 != '' ? genreSelect3 : genreLike3}
                                   name="genre3"
                                   onChange={(e) => {
-                                    genreLike3 = e.target.value
-                                    console.log(genreLike3)
+                                    setgenreSelect3(e.target.value)
+                                    if (genreSelect1 == '') {
+                                        setgenreSelect1(genreLike1);
+                                    }else{
+                                      setgenreSelect1(genreSelect1);
+                                    }
+                                    if (genreSelect2 == '') {
+                                        setgenreSelect2(genreLike2);
+                                    }else{
+                                      setgenreSelect2(genreSelect2);
+                                    }
                                   }}
                                 >
-                                  <option value="">請選擇</option>
+                                  <option value="9999">無</option>
                                   {genreData.map((v) => {
                                     return (
                                       <option key={v.id} value={v.id}>
@@ -997,7 +905,6 @@ export default function Test() {
                                 </select>
                               </div>
                             </div>
-
                             {/* {LoginUserData.genre_like} */}
                           </div>
                         </div>
@@ -1006,31 +913,98 @@ export default function Test() {
                         <div className="user-info-item-titleText">演奏樂器</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            {/* <div
+                          <div
                               className={`${styles.itemInputWrapper} col-12 col-sm-10`}
                             >
-                              <select
-                                className="form-select"
-                                style={{ width: 'auto' }}
-                                value={myPlayer}
-                                name="myPlayer"
-                                onChange={(e) => {
-                                  setMyPlayer(e.target.value)
-                                  setFinalMyPlayer(
-                                    `{"id": ${fakeUser.id}, "play": ${e.target.value}}`
-                                  )
-                                }}
-                              >
-                                <option value="">請選擇</option>
-                                {playerData.map((v) => {
-                                  return (
-                                    <option key={v.id} value={v.id}>
-                                      {v.name}
-                                    </option>
-                                  )
-                                })}
-                              </select>
-                            </div> */}
+                              <div className={`${styles.selectGroup}`}>
+                                <select
+                                  className="form-select"
+                                  style={{ width: 'auto' }}
+                                  value={playSelect1 != '' ? playSelect1 : playInstrument1}                                  
+                                  name="play"
+                                  onChange={(e) => {
+                                    setplaySelect1(e.target.value)
+                                    if (playSelect2 == '') {
+                                        setplaySelect2(playInstrument2);
+                                    }else{
+                                      setplaySelect2(playSelect2);
+                                    }
+                                    if (playSelect3 == '') {
+                                        setplaySelect3(playInstrument3);
+                                    }else{
+                                      setplaySelect3(playSelect3);
+                                    }                                                                   
+                                  }}
+                                >
+                                  <option  value="9999">無</option>
+                                  {playerData.map((v) => {
+                                    return (
+                                      <option key={v.id} value={v.id}>
+                                        {v.name}
+                                      </option>
+                                    )
+                                  })}
+                                </select>
+                                <select
+                                  className="form-select"
+                                  style={{ width: 'auto' }}
+                                  value={playSelect2 != '' ? playSelect2 : playInstrument2}
+                                  name="play2"
+                                  onChange={(e) => {
+                                    // playLike2 = e.target.value 
+                                    setplaySelect2(e.target.value)
+                                    if (playSelect1 == '') {
+                                        setplaySelect1(playInstrument1);
+                                    }else{
+                                      setplaySelect1(playSelect1);
+                                    }
+                                    if (playSelect3 == '') {
+                                        setplaySelect3(playInstrument3);
+                                    }else{
+                                      setplaySelect3(playSelect3);
+                                    }  
+                                  }}
+                                >
+                                  <option  value="9999">無</option>
+                                  {playerData.map((v) => {
+                                    return (
+                                      <option key={v.id} value={v.id}>
+                                        {v.name}
+                                      </option>
+                                    )
+                                  })}
+                                </select>
+
+                                <select
+                                  className="form-select"
+                                  style={{ width: 'auto' }}
+                                  value={playSelect3 != '' ? playSelect3 : playInstrument3}
+                                  name="play3"
+                                  onChange={(e) => {
+                                    setplaySelect3(e.target.value)
+                                    if (playSelect2 == '') {
+                                        setplaySelect2(playInstrument2);
+                                    }else{
+                                      setplaySelect2(playSelect2);
+                                    }
+                                    if (playSelect1 == '') {
+                                        setplaySelect1(playInstrument1);
+                                    }else{
+                                      setplaySelect1(playSelect1);
+                                    }  
+                                  }}
+                                >
+                                  <option value="9999">無</option>
+                                  {playerData.map((v) => {
+                                    return (
+                                      <option key={v.id} value={v.id}>
+                                        {v.name}
+                                      </option>
+                                    )
+                                  })}
+                                </select>
+                              </div>
+                            </div>
                             {/* {LoginUserData.play_instrument} */}
                           </div>
                         </div>
@@ -1044,7 +1018,22 @@ export default function Test() {
                               type="checkbox"
                               defaultValue=""
                               id="privacyBD"
-                              defaultChecked=""
+                              defaultChecked={privacyBD == '1' ? true : false}
+                              onChange={(e)=>{
+                                setprivacySelect1(e.target.checked  ? '1' : '0');
+                                setprivacySelect1(e.target.checked  ? '1' : '0');
+                                if(privacySelect2 == "9999"){
+                                  setprivacySelect2(privacyPhone)
+                                }else{
+                                  setprivacySelect2(privacySelect2)
+                                }
+                                if(privacySelect3  == "9999"){
+                                  setprivacySelect3(privacyEmail)
+                                } else{
+                                  setprivacySelect3(privacySelect3)
+                                }
+                                // console.log(privacySelect2)
+                              }}
                             />
                             <label
                               className="form-check-label"
@@ -1059,7 +1048,21 @@ export default function Test() {
                               type="checkbox"
                               defaultValue=""
                               id="privacyPhone"
-                              defaultChecked=""
+                              defaultChecked={privacyPhone == '1' ? '1' : ''}
+                              onChange={(e)=>{
+                                setprivacySelect2(e.target.checked ? '1' : '0');
+                                if(privacySelect1 == "9999"){
+                                  setprivacySelect1(privacyBD)
+                                }else{
+                                  setprivacySelect1(privacySelect1)
+                                }
+                                if(privacySelect3  == "9999"){
+                                  setprivacySelect3(privacyEmail)
+                                } else{
+                                  setprivacySelect3(privacySelect3)
+                                }
+                                // console.log(privacySelect2)
+                              }}
                             />
                             <label
                               className="form-check-label"
@@ -1074,7 +1077,20 @@ export default function Test() {
                               type="checkbox"
                               defaultValue=""
                               id="privacyEmail"
-                              defaultChecked=""
+                              defaultChecked={privacyEmail == '1' ? "1" : ''}
+                              onChange={(e)=>{
+                                setprivacySelect3(e.target.checked ? '1' : '0');
+                                if(privacySelect2 == "9999"){
+                                  setprivacySelect2(privacyPhone)
+                                }else{
+                                  setprivacySelect2(privacySelect2)
+                                }
+                                if(privacySelect1  == "9999"){
+                                  setprivacySelect1(privacyBD)
+                                } else{
+                                  setprivacySelect1(privacySelect1)
+                                }
+                              }}
                             />
                             <label
                               className="form-check-label"
@@ -1131,11 +1147,11 @@ export default function Test() {
 
                       <div className="user-info-item">
                         <div className="user-info-item-titleText">地址</div>
-                        <div className="user-info-item-Content">
-                          <div className="user-info-item-contentText d-flex">
+                        <div className="user-info-item-Content-address">
+                          <div className="user-info-item-contentText d-flex  flex-wrap">
                             <input
                               type="text"
-                              className={`${styles.itemInputPostcode} form-control `}
+                              className={`${styles.itemInputPostcode} form-control col-sm1 col-3 `}
                               placeholder="郵遞區號"
                               value={userData.postcode}
                               maxLength={3}
@@ -1148,7 +1164,7 @@ export default function Test() {
                             />
                             <div className={`${styles.itemInputWrapper} `}>
                               <select
-                                className="form-select"
+                                className="form-select col-4 col-sm1"
                                 style={{ width: 'auto' }}
                                 value={userData.country}
                                 name="region"
@@ -1172,7 +1188,7 @@ export default function Test() {
 
                             <div className={`${styles.itemInputWrapper}`}>
                               <select
-                                className="form-select"
+                                className="form-select col-4 col-sm1"
                                 style={{ width: 'auto' }}
                                 value={userData.township}
                                 name="region"
@@ -1196,8 +1212,9 @@ export default function Test() {
 
                             <input
                               type="text"
-                              className={`${styles.itemInput} form-control `}
+                              className={`${styles.itemInput} form-control col-sm6 col-12 `}
                               placeholder="地址"
+                              // style={{ width: 'auto' }}
                               maxLength={100}
                               value={userData.address}
                               name="address"
@@ -1224,7 +1241,7 @@ export default function Test() {
                           <div className="user-info-item-info-contentText form-floating">
                             <textarea
                               className="form-control"
-                              style={{ height: '300px', width: '84%' }}
+                              style={{ height: '200px', width: '100%' }}
                               id="exampleFormControlTextarea1"
                               rows="3"
                               cols="50"
@@ -1250,28 +1267,27 @@ export default function Test() {
                           </div>
                         </div>
                       </div>
-                      <div className="d-flex justify-content-center">
-                        <div
-                          className="b-btn b-btn-primary"
-                          style={{ paddingInline: '38px' }}
-                          role="presentation"
-                          onClick={(e) => {
-                            // sendForm(
-                            //   fakeUser.uid,
-                            //   title,
-                            //   degree,
-                            //   finalgenre,
-                            //   finalMyPlayer,
-                            //   finalPlayers,
-                            //   region,
-                            //   condition,
-                            //   description
-                            // )
-                            postForm(e)
-                          }}
-                        >
-                          提交
-                        </div>
+                      <div className="d-flex justify-content-center w-100 m-3 ">
+                        <div className="b-btn b-btn-danger "
+                              style={{ paddingInline: '38px' }}
+                              role="presentation"    >
+                            <Link
+                              href="/user/user-info"                           
+                            >
+                              返回
+                            </Link>
+                          </div>
+                          <div
+                            className="b-btn b-btn-primary"
+                            style={{ paddingInline: '38px' , marginInline:50}}
+                            role="presentation"
+                            onClick={(e) => {                           
+                              postForm(e)
+                            }}
+                          >
+                            提交
+                          </div>
+                        
                       </div>
                     </div>
                   </div>
@@ -1481,6 +1497,26 @@ export default function Test() {
                 font-family: Noto Sans TC;
                 font-weight: 400;
                 word-wrap: break-word;
+                
+              }
+            }
+            .user-info-item-Content-address{
+              display: flex;
+              height: 38px;
+              max-width: 900px;
+              padding: 3px 0px;
+              align-items: center;
+              gap: 10px;
+              flex: 1 0 0;
+              
+              .user-info-item-contentText {
+                flex: 1 1 0;
+                color: black;
+                font-size: 16px;
+                font-family: Noto Sans TC;
+                font-weight: 400;
+                word-wrap: break-word;
+                
               }
             }
             .user-info-item-Content-avatar {
@@ -1500,6 +1536,15 @@ export default function Test() {
                 position: relative;
                 overflow: hidden;
               }
+
+              .user-info-item-contentText-imgBox-btn{
+              position:absolute;
+              width: 100px;
+              height: 100px;
+              border-radius: 100px;
+              /* react Image 要加上這兩條參數 家在外層容器的css , Image本身要fill */
+              position: relative;
+              overflow: hidden;
             }
           }
 
@@ -1569,8 +1614,13 @@ export default function Test() {
               .user-info-item-info {
                 display: block;
               }
+
+              .user-info-item-Content-address{ 
+                height: 76px;
+              }
             }
           }
+          
           /*------------- RWD  ----------- */
         }
       `}</style>
