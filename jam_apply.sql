@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2024-03-15 15:03:59
+-- 產生時間： 2024-03-15 20:54:12
 -- 伺服器版本： 10.4.28-MariaDB
 -- PHP 版本： 8.0.28
 
@@ -44,7 +44,9 @@ CREATE TABLE `jam_apply` (
 --
 
 INSERT INTO `jam_apply` (`id`, `juid`, `former_uid`, `applier_uid`, `applier_play`, `message`, `state`, `created_time`, `valid`) VALUES
-(3, '6q3SoqnuPEXJ', 'n500ef48Ibat', 'n500ef48Ib22', 1, '我想加入!', 1, '2024-03-14 00:24:41', 1);
+(3, '6q3SoqnuPEXJ', 'n500ef48Ibat', 'n500ef48Ib22', 1, '我想加入!', 4, '2024-03-14 00:24:41', 0),
+(4, '6q3SoqnuPEXJ', 'n500ef48Ibat', 'LkFxTyBxEHWO', 3, '我也想加入!', 4, '2024-03-15 17:52:13', 0),
+(5, '8BgBgtJkv5f7', 'vF1V9si8MRF6', 'n500ef48Ib22', 8, '再申請一個', 3, '2024-03-15 18:02:48', 0);
 
 --
 -- 已傾印資料表的索引
@@ -64,7 +66,7 @@ ALTER TABLE `jam_apply`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `jam_apply`
 --
 ALTER TABLE `jam_apply`
-  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

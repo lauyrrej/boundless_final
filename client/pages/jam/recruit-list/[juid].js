@@ -338,6 +338,68 @@ export default function Info() {
       checkCancel()
     }
   }
+  // ----------------------------------------------- 立即成團 ----------------------------------------------------
+  const formRightNow = async () => {
+    let formData = new FormData()
+    formData.append('juid', jam.juid)
+    const res = await fetch('http://localhost:3005/api/jam/formRightNow', {
+      method: 'PUT',
+      body: formData,
+      credentials: 'include',
+    })
+    const result = await res.json()
+    if (result.status === 'success') {
+      return true
+    } else if (res.status === 'error') {
+      console.log(res.error);
+    }
+  }
+
+  // 成團提醒&成功訊息
+  const notifyFormRightNow = () => {
+    mySwal
+      .fire({
+        title: '確定以現有成員立即成團？',
+        icon: 'question',
+        iconColor: '#1581cc',
+        showCancelButton: true,
+        confirmButtonColor: '#1581cc',
+        cancelButtonColor: '#666666',
+        confirmButtonText: '確定',
+        cancelButtonText: '取消',
+        showClass: {
+          popup: `
+            animate__animated
+            animate__fadeInUp
+            animate__faster
+          `,
+        },
+        hideClass: {
+          popup: `
+            animate__animated
+            animate__fadeOutDown
+            animate__faster
+          `,
+        },
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          const res = await formRightNow()
+          if (res) {
+            mySwal.fire({
+              title: '恭喜樂團成立！為您導向新資訊頁',
+              icon: 'success',
+              iconColor: '#1581cc',
+              showConfirmButton: false,
+              timer: 2500,
+            })
+            setTimeout(() => {
+              router.push(`/jam/jam-list/${jam.juid}`)
+            }, 2500)
+          }
+        }
+      })
+  }
   // ----------------------------------------------- 解散樂團 ----------------------------------------------------
   const sendDisband = async () => {
     // 組合出所有樂團內的成員uid，用於清空所有my_jam欄位
@@ -409,15 +471,15 @@ export default function Info() {
 
   // ----------------------------------------------- 退出樂團 ----------------------------------------------------
   const sendQuit = async () => {
-    // 組合出所有樂團內的成員uid
-    let ids = []
-    ids.push(jam.former.uid)
-    for (let i = 0; i < jam.member.length; i++) {
-      ids.push(jam.member[i].uid)
-    }
+    // 獲得該使用者在樂團的職位，用於復原招募樂手
+    const quitMemberPlay = jam.member.find((v) => {
+      return (v.id = LoginUserData.id)
+    }).play
+
     let formData = new FormData()
-    formData.append('ids', JSON.stringify(ids))
+    formData.append('id', LoginUserData.id)
     formData.append('juid', jam.juid)
+    formData.append('playname', quitMemberPlay)
     const res = await fetch('http://localhost:3005/api/jam/quit', {
       method: 'PUT',
       body: formData,
@@ -431,7 +493,7 @@ export default function Info() {
     }
   }
 
-  // 解散警示&成功訊息
+  // 退出警示&成功訊息
   const warningQuit = () => {
     mySwal
       .fire({
@@ -779,7 +841,9 @@ export default function Info() {
                               className="b-btn b-btn-danger mt-1"
                               style={{ paddingInline: '38px' }}
                               role="presentation"
-                              onClick={() => {}}
+                              onClick={() => {
+                                warningQuit()
+                              }}
                             >
                               退出
                             </div>
@@ -973,7 +1037,7 @@ export default function Info() {
                   >
                     解散樂團
                   </div>
-                  <div className="b-btn b-btn-primary px-3" role="presentation">
+                  <div className="b-btn b-btn-primary px-3" role="presentation" onClick={() => {notifyFormRightNow()}}>
                     立即成團
                   </div>
                 </div>

@@ -75,25 +75,73 @@ export default function Info() {
   const [introduce, setIntroduce] = useState('')
   const [introduceCheck, setIntroduceCheck] = useState(true)
 
-  const checkLogin = (LoginUserData) => {
-    if (
-      !LoginUserData ||
-      LoginUserData.status === 'error' ||
-      LoginUserData.length == 0
-    ) {
-      toast('請先登入', {
-        icon: 'ℹ️',
-        style: {
-          border: '1px solid #666666',
-          padding: '16px',
-          color: '#1d1d1d',
-        },
-        duration: 3000,
-      })
-      return false
-    } else {
+  // ----------------------------------------------- 退出樂團 ----------------------------------------------------
+  const sendQuit = async () => {
+    // 獲得該使用者在樂團的職位，用於復原招募樂手
+    const quitMemberPlay = jam.member.find((v) => {
+      return (v.id = LoginUserData.id)
+    }).play
+
+    let formData = new FormData()
+    formData.append('id', LoginUserData.id)
+    formData.append('juid', jam.juid)
+    formData.append('playname', quitMemberPlay)
+    const res = await fetch('http://localhost:3005/api/jam/quit', {
+      method: 'PUT',
+      body: formData,
+      credentials: 'include',
+    })
+    const result = await res.json()
+    if (result.status === 'success') {
       return true
+    } else {
+      return false
     }
+  }
+
+  // 退出警示&成功訊息
+  const warningQuit = () => {
+    mySwal
+      .fire({
+        title: '確定退出樂團？',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ec3f3f',
+        cancelButtonColor: '#666666',
+        confirmButtonText: '確定',
+        cancelButtonText: '取消',
+        showClass: {
+          popup: `
+            animate__animated
+            animate__fadeInUp
+            animate__faster
+          `,
+        },
+        hideClass: {
+          popup: `
+            animate__animated
+            animate__fadeOutDown
+            animate__faster
+          `,
+        },
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          const res = await sendQuit()
+          if (res) {
+            mySwal.fire({
+              title: '已退出，即將回到招募列表',
+              icon: 'success',
+              iconColor: '#1581cc',
+              showConfirmButton: false,
+              timer: 2500,
+            })
+            setTimeout(() => {
+              router.push('/jam/recruit-list')
+            }, 2500)
+          }
+        }
+      })
   }
 
   // 檢查不雅字詞
@@ -427,19 +475,6 @@ export default function Info() {
                     {jam.introduce !== '' || null ? jam.introduce : '暫無介紹'}
                   </div>
                 </div>
-                {LoginUserData.id === jam.former.id ? (
-                  <div className="d-flex justify-content-center">
-                    <Link
-                      className="b-btn b-btn-primary"
-                      style={{ paddingInline: '38px' }}
-                      href="/jam/recruit-list/edit"
-                    >
-                      編輯資訊
-                    </Link>
-                  </div>
-                ) : (
-                  ''
-                )}
               </section>
               <hr style={{ margin: '6px' }} />
               <section className={`${styles.jamLeftSection}`}>
@@ -455,6 +490,35 @@ export default function Info() {
                       style={{ width: '100%', height: '100%' }}
                     ></iframe>
                   </div>
+                ) : (
+                  ''
+                )}
+                {LoginUserData.my_jam === jam.juid ? (
+                  <>
+                    {LoginUserData.id === jam.former.id ? (
+                      <div className="d-flex justify-content-center gap-5">
+                        <div
+                          className="b-btn b-btn-danger px-3"
+                          role="presentation"
+                          onClick={() => {
+                            warningDisband()
+                          }}
+                        >
+                          解散樂團
+                        </div>
+                        <div className="d-flex justify-content-center">
+                          <Link
+                            className="b-btn b-btn-primary px-3"
+                            href="/jam/jam-list/edit"
+                          >
+                            編輯資訊
+                          </Link>
+                        </div>
+                      </div>
+                    ) : (
+                      ''
+                    )}
+                  </>
                 ) : (
                   ''
                 )}

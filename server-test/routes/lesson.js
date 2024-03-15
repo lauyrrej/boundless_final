@@ -174,6 +174,4 @@ router.get('/:priceLow&;priceHigh', async (req, res, next) => {
 //   let orderDirection = req.query.order || "ASC";
 
 
-});
-
 export default router

@@ -521,7 +521,7 @@ export default function UserJam() {
                         console.log(v)
                         return (
                           <div
-                            className="user-notifyList-item row flex-nowrap mb-2"
+                            className="user-notifyList-item row flex-nowrap my-3"
                             key={v.id}
                           >
                             <div
