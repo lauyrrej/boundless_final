@@ -73,7 +73,7 @@ export default function UserJam() {
   //   '我的訊息',
   // ]
 
-  // 確認申請(正式加入)
+  // 正式加入
   const joinJam = async (id, user_id, juid, applier_play) => {
     let formData = new FormData()
     formData.append('id', id)
@@ -87,13 +87,9 @@ export default function UserJam() {
         credentials: 'include',
       })
       const result = await res.json()
-      if (result.status === 'success') {
-        cancelSuccess()
-      } else {
-        console.log(result.error)
-      }
-    } catch (e) {
-      console.log(e)
+      return result
+    } catch {
+      alert('加入失敗')
     }
   }
 
@@ -127,7 +123,7 @@ export default function UserJam() {
       .then(async (result) => {
         if (result.isConfirmed) {
           const res = await joinJam(id, user_id, juid, applier_play)
-          if (res) {
+          if (res.status === 'success') {
             mySwal.fire({
               title: '加入成功，導向樂團資訊頁',
               icon: 'success',

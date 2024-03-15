@@ -56,7 +56,8 @@ export default function Info() {
     former: {},
     member: [],
   })
-  // 申請資料
+
+  // -------------------------------------------------- 申請資料 --------------------------------------------------
   const [applies, setApplies] = useState([])
   // 進入頁面者是否有申請此樂團
   const [myApplyState, setMyApplyState] = useState(0)
@@ -78,15 +79,15 @@ export default function Info() {
         )
       case 1:
         return (
-          <div
+          <Link
             className="b-btn b-btn-primary"
             style={{
               paddingInline: '38px',
             }}
-            role="presentation"
+            href="/user/user-jam"
           >
-            正式加入
-          </div>
+            至會員中心正式加入
+          </Link>
         )
       case 2:
         return (
@@ -131,14 +132,14 @@ export default function Info() {
         return null
     }
   }
-  // ---------------------- 手機版本  ----------------------
+  // -------------------------------------------------- 手機版本  --------------------------------------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
   const menuMbToggle = () => {
     setShowMenu(!showMenu)
   }
 
-  // ----------------------------- 讓player代碼對應樂器種類 -----------------------------
+  // -------------------------------------------------- 讓player代碼對應樂器種類 --------------------------------------------------
   // 設定本頁可選的職位選項
   const playerOption = player.filter((v) => {
     return (
@@ -167,22 +168,22 @@ export default function Info() {
   })
   //   console.log(playerResult)
 
-  // ----------------------------- 預計人數 -----------------------------
+  // -------------------------------------------------- 預計人數 --------------------------------------------------
   const nowNumber = jam.member.length + 1
   const totalNumber = jam.member.length + jam.player.length + 1
-  // ----------------------------- genre對應 -----------------------------
+  // -------------------------------------------------- genre對應 --------------------------------------------------
   const genreName = jam.genre.map((g) => {
     const matchedgenre = genre.find((gd) => gd.id === g)
     return matchedgenre.name
   })
 
-  // ----------------------------- 創立時間資料中，單獨取出日期 -----------------------------
+  // -------------------------------------------------- 創立時間資料中，單獨取出日期 --------------------------------------------------
   // 調出的時間是ISO格式，顯示時需要轉換成本地時區
   const createdDate = new Date(jam.created_time)
     .toLocaleString()
     .split(' ')[0]
     .replace(/\//g, '-')
-  // ----------------------------- 計算倒數時間 -----------------------------
+  // -------------------------------------------------- 計算倒數時間
   const [countDown, setCountDown] = useState({
     day: 0,
     hour: 0,
@@ -212,7 +213,7 @@ export default function Info() {
     return countDownObj
   }
 
-  // ----------------------------- 剩餘時間是否小於5天 -----------------------------
+  // -------------------------------------------------- 剩餘時間是否小於5天
   const timeWarningState =
     (Date.now() - new Date(jam.created_time).getTime()) /
       (1000 * 60 * 60 * 24) >=
@@ -220,15 +221,15 @@ export default function Info() {
       ? true
       : false
 
-  // ----------------------------- 入團申請表單 -----------------------------
+  // ---------------------------------------------- 入團申請表單 ---------------------------------------------------------
   const [complete, setComplete] = useState(2)
-  // ---------------------- 擔任職位 ----------------------
+  // ----------------------------------------- 擔任職位
   // 控制表單狀態
   const [myPlayer, setMyPlayer] = useState('')
-  // ---------------------- 描述 ----------------------
+  // ----------------------------------------- 描述
   const [message, setMessage] = useState('')
   const [messageCheck, setMessageCheck] = useState(true)
-
+  // ----------------------------------------- 檢查登入狀態，未登入不得提交表單
   const checkLogin = (LoginUserData) => {
     if (
       !LoginUserData ||
@@ -250,13 +251,13 @@ export default function Info() {
     }
   }
 
-  // 檢查不雅字詞
+  // ----------------------------------------- 檢查不雅字詞
   const checkBadWords = debounce(() => {
     const badWords = /幹|屎|尿|屁|糞|靠北|靠腰|雞掰|王八|你媽|妳媽|淫/g
     setMessageCheck(message.search(badWords) < 0 ? true : false)
   }, 250)
 
-  // 檢查表單是否填妥
+  // ----------------------------------------- 檢查表單是否填妥
   const checkComplete = () => {
     if (messageCheck === false || message === '') {
       setComplete(0)
@@ -270,7 +271,7 @@ export default function Info() {
     return true
   }
 
-  // 送出申請表單
+  // ----------------------------------------- 送出申請表單
   const sendApply = async (myPlayer, message) => {
     if (!checkComplete()) {
       return false
@@ -298,7 +299,7 @@ export default function Info() {
     }
   }
 
-  // 申請成功後，彈出訊息框
+  // ----------------------------------------- 申請成功後，彈出訊息框
   const notifySuccess = () => {
     mySwal
       .fire({
@@ -316,7 +317,7 @@ export default function Info() {
       )
   }
 
-  // 決定審核結果
+  // --------------------------------------------------- 決定審核結果 -------------------------------------------------
   const sendResult = async (id, state) => {
     let formData = new FormData()
     formData.append('id', id)
@@ -337,10 +338,9 @@ export default function Info() {
       checkCancel()
     }
   }
-
-  // 解散樂團
+  // ----------------------------------------------- 解散樂團 ----------------------------------------------------
   const sendDisband = async () => {
-    // 組合出所有樂團內的成員uid
+    // 組合出所有樂團內的成員uid，用於清空所有my_jam欄位
     let ids = []
     ids.push(jam.former.uid)
     for (let i = 0; i < jam.member.length; i++) {
@@ -393,7 +393,7 @@ export default function Info() {
           const res = await sendDisband()
           if (res) {
             mySwal.fire({
-              title: '樂團已解散，重新導向至招募列表',
+              title: '樂團已解散，即將回到招募列表',
               icon: 'success',
               iconColor: '#1581cc',
               showConfirmButton: false,
@@ -407,7 +407,76 @@ export default function Info() {
       })
   }
 
-  // 向伺服器要求資料，設定到狀態中用的函式
+  // ----------------------------------------------- 退出樂團 ----------------------------------------------------
+  const sendQuit = async () => {
+    // 組合出所有樂團內的成員uid
+    let ids = []
+    ids.push(jam.former.uid)
+    for (let i = 0; i < jam.member.length; i++) {
+      ids.push(jam.member[i].uid)
+    }
+    let formData = new FormData()
+    formData.append('ids', JSON.stringify(ids))
+    formData.append('juid', jam.juid)
+    const res = await fetch('http://localhost:3005/api/jam/quit', {
+      method: 'PUT',
+      body: formData,
+      credentials: 'include',
+    })
+    const result = await res.json()
+    if (result.status === 'success') {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  // 解散警示&成功訊息
+  const warningQuit = () => {
+    mySwal
+      .fire({
+        title: '確定退出樂團？',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ec3f3f',
+        cancelButtonColor: '#666666',
+        confirmButtonText: '確定',
+        cancelButtonText: '取消',
+        showClass: {
+          popup: `
+            animate__animated
+            animate__fadeInUp
+            animate__faster
+          `,
+        },
+        hideClass: {
+          popup: `
+            animate__animated
+            animate__fadeOutDown
+            animate__faster
+          `,
+        },
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          const res = await sendQuit()
+          if (res) {
+            mySwal.fire({
+              title: '已退出，即將回到招募列表',
+              icon: 'success',
+              iconColor: '#1581cc',
+              showConfirmButton: false,
+              timer: 2500,
+            })
+            setTimeout(() => {
+              router.push('/jam/recruit-list')
+            }, 2500)
+          }
+        }
+      })
+  }
+
+  // ------------------------------------------------- 獲取資料 ---------------------------------------------------
   const getSingleData = async (juid) => {
     try {
       const res = await fetch(

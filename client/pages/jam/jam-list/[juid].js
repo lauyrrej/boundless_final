@@ -350,7 +350,7 @@ export default function Info() {
                 </div>
                 {/* -------------------------- 封面圖 -------------------------- */}
                 <div className={`${styles.coverWrapper}`}>
-                  {jam.cover_img !== '' ? (
+                  {jam.cover_img ? (
                     <Image
                       src={`http://localhost:3005/jam/${jam.cover_img}`}
                       fill

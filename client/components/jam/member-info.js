@@ -25,7 +25,10 @@ export default function MemberInfo({ uid, name, nickname, img, play }) {
           </div>
         )}
       </div>
-      <Link href={`../../user/${uid}`} className={`${styles.memberName}`}>
+      <Link
+        href={`../../user/user-homepage/${uid}`}
+        className={`${styles.memberName}`}
+      >
         {nickname ? nickname : name}
       </Link>
     </div>

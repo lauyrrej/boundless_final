@@ -754,7 +754,7 @@ router.put('/joinJam', upload.none(), async (req, res) => {
   const { id, user_id, juid, applier_play } = req.body;
 
   // 更新樂團member、play欄位
-  const newMember = { id: user_id, play: applier_play };
+  const newMember = { id: parseInt(user_id), play: parseInt(applier_play) };
   // 取得原資料
   const [rawData] = await db
     .execute('SELECT `players`, `member` FROM `jam` WHERE juid = ?', [juid])
@@ -765,11 +765,13 @@ router.put('/joinJam', upload.none(), async (req, res) => {
   // play
   let players = JSON.parse(rawData[0].players);
   players.splice(players.indexOf(parseInt(applier_play)), 1); // 找到該樂器對應的數字，並刪除一項
+  players = JSON.stringify(players);
   // member
   let member = JSON.parse(rawData[0].member);
   member.push(newMember);
-  // console.log(JSON.stringify(member));
-  // console.log(JSON.stringify(players));
+  member = JSON.stringify(member);
+  // console.log(players);
+  // console.log(member);
   // return;
 
   let jamResult;
@@ -781,7 +783,7 @@ router.put('/joinJam', upload.none(), async (req, res) => {
     jamResult = await db
       .execute(
         'UPDATE `jam` SET `member` ? , `players` = ? , `name` = ? , `formed_time` = ? , `state` = 1 WHERE `juid` = ?',
-        [JSON.stringify(member), JSON.stringify(players), newName, now, juid]
+        [member, players, newName, now, juid]
       )
       .then(() => {
         return 1;
@@ -794,8 +796,8 @@ router.put('/joinJam', upload.none(), async (req, res) => {
     // 未招滿人的情況
     jamResult = await db
       .execute(
-        'UPDATE `jam` SET `member` ? , `players` = ? , `state` = 1 WHERE `juid` = ?',
-        [JSON.stringify(member), JSON.stringify(players), juid]
+        'UPDATE `jam` SET `member` = ? , `players` = ? WHERE `juid` = ?',
+        [member, players, juid]
       )
       .then(() => {
         return 1;
