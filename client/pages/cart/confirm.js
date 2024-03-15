@@ -18,8 +18,10 @@ import { FaTrash } from 'react-icons/fa6'
 
 //hook
 import { useCart } from '@/hooks/use-cart'
+import { wrap } from 'lodash'
 
 export default function Test() {
+  let UserInfo = JSON.parse(localStorage.getItem('UserInfo'))
   //hook
   const {
     calcInstrumentItems,
@@ -184,7 +186,7 @@ export default function Test() {
                     >
                       購買者姓名
                     </label>
-                    <div className="col-sm-3 col-3">李宗盛</div>
+                    <div className="col-sm-3 col-3">{UserInfo[0].Name}</div>
                   </div>
                   <div className="row g-3 align-items-center">
                     <label
@@ -193,7 +195,7 @@ export default function Test() {
                     >
                       電話號碼
                     </label>
-                    <div className="col-sm-3 col-4">0922333444</div>
+                    <div className="col-sm-3 col-4">{UserInfo[0].Phone}</div>
                   </div>
                   <div className="row g-3">
                     <label
@@ -204,7 +206,7 @@ export default function Test() {
                     </label>
                     <div className="address-location col-sm-10 col-6">
                       <div>320</div>
-                      <div>桃園市中壢區新生路二段421號</div>
+                      <div className="col-10">{UserInfo[0].Address}</div>
                     </div>
                   </div>
                 </div>
