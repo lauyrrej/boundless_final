@@ -215,11 +215,11 @@ export default function Test() {
   const [genreSelect3, setgenreSelect3] = useState('')
   useEffect(() => {
  
-    if (genreSelect1 && genreSelect2 && genreSelect3 !== undefined && genreSelect1 !== '' && genreSelect2 !== '' && genreSelect3 !== '') {
+    if (genreSelect1 && genreSelect2 && genreSelect3 !== undefined && genreSelect1 !== '9999' && genreSelect2 !== '9999' && genreSelect3 !== '9999') {
       finalGenreLike = `${genreSelect1},${genreSelect2},${genreSelect3}`;
-  } else if (genreSelect1 && genreSelect2 !== undefined && genreSelect1 !== '' && genreSelect2 !== '') {
+  } else if (genreSelect1 && genreSelect2 !== undefined && genreSelect1 !== '9999' && genreSelect2 !== '9999') {
       finalGenreLike = `${genreSelect1},${genreSelect2}`;
-  } else if (genreSelect1 !== undefined && genreSelect1 !== '') {
+  } else if (genreSelect1 !== undefined && genreSelect1 !== '9999') {
       finalGenreLike = `${genreSelect1}`;
   } else {
       finalGenreLike = ``;
@@ -255,11 +255,11 @@ export default function Test() {
   const [playSelect3, setplaySelect3] = useState('')
   useEffect(() => {
  
-    if (playSelect1 && playSelect2 && playSelect3 !== undefined && playSelect1 !== '' && playSelect2 !== '' && playSelect3 !== '') {
+    if (playSelect1 && playSelect2 && playSelect3 !== undefined && playSelect1 !== '9999' && playSelect2 !== '9999' && playSelect3 !== '9999') {
       finalPlayInstrument = `${playSelect1},${playSelect2},${playSelect3}`;
-  } else if (playSelect1 && playSelect2 !== undefined && playSelect1 !== '' && playSelect2 !== '') {
+  } else if (playSelect1 && playSelect2 !== undefined && playSelect1 !== '9999' && playSelect2 !== '9999') {
     finalPlayInstrument = `${playSelect1},${playSelect2}`;
-  } else if (playSelect1 !== undefined && playSelect1 !== '') {
+  } else if (playSelect1 !== undefined && playSelect1 !== '9999') {
     finalPlayInstrument = `${playSelect1}`;
   } else {
     finalPlayInstrument = ``;
@@ -284,9 +284,9 @@ export default function Test() {
     finalPrivacy = `${privacyBD},${privacyPhone},${privacyEmail}`;
   }
 
-  const [privacySelect1, setprivacySelect1] = useState('')
-  const [privacySelect2, setprivacySelect2] = useState('')
-  const [privacySelect3, setprivacySelect3] = useState('')
+  const [privacySelect1, setprivacySelect1] = useState('9999')
+  const [privacySelect2, setprivacySelect2] = useState('9999')
+  const [privacySelect3, setprivacySelect3] = useState('9999')
   
   
   useEffect(() => {
@@ -803,15 +803,19 @@ export default function Test() {
                                   onChange={(e) => {
                                     // let genreLike1 = e.target.value
                                     setgenreSelect1(e.target.value)
-                                    if (genreLike2) {
+                                    if (genreSelect2 == '') {
                                         setgenreSelect2(genreLike2);
+                                    }else{
+                                      setgenreSelect2(genreSelect2);
                                     }
-                                    if (genreLike3) {
+                                    if (genreSelect3 == '') {
                                         setgenreSelect3(genreLike3);
-                                    }                                    
+                                    }else{
+                                      setgenreSelect3(genreSelect3);
+                                    }                 
                                   }}
                                 >
-                                  <option  value="">無</option>
+                                  <option  value="9999">無</option>
                                   {genreData.map((v) => {
                                     return (
                                       <option key={v.id} value={v.id}>
@@ -828,15 +832,19 @@ export default function Test() {
                                   onChange={(e) => {
                                     // genreLike2 = e.target.value 
                                     setgenreSelect2(e.target.value)
-                                    if (genreLike1) {
+                                    if (genreSelect1 == '') {
                                         setgenreSelect1(genreLike1);
+                                    }else{
+                                      setgenreSelect1(genreSelect1);
                                     }
-                                    if (genreLike3) {
+                                    if (genreSelect3 == '') {
                                         setgenreSelect3(genreLike3);
-                                    }
+                                    }else{
+                                      setgenreSelect3(genreSelect3);
+                                    }    
                                   }}
                                 >
-                                  <option  value="">無</option>
+                                  <option  value="9999">無</option>
                                   {genreData.map((v) => {
                                     return (
                                       <option key={v.id} value={v.id}>
@@ -852,16 +860,20 @@ export default function Test() {
                                   value={genreSelect3 != '' ? genreSelect3 : genreLike3}
                                   name="genre3"
                                   onChange={(e) => {
-                                    if (genreLike1) {
-                                        setgenreSelect1(genreLike1);
-                                    }
-                                    if (genreLike2) {
-                                        setgenreSelect2(genreLike2);
-                                    }
                                     setgenreSelect3(e.target.value)
+                                    if (genreSelect1 == '') {
+                                        setgenreSelect1(genreLike1);
+                                    }else{
+                                      setgenreSelect1(genreSelect1);
+                                    }
+                                    if (genreSelect2 == '') {
+                                        setgenreSelect2(genreLike2);
+                                    }else{
+                                      setgenreSelect2(genreSelect2);
+                                    }
                                   }}
                                 >
-                                  <option value="">無</option>
+                                  <option value="9999">無</option>
                                   {genreData.map((v) => {
                                     return (
                                       <option key={v.id} value={v.id}>
@@ -890,17 +902,20 @@ export default function Test() {
                                   value={playSelect1 != '' ? playSelect1 : playInstrument1}                                  
                                   name="play"
                                   onChange={(e) => {
-                                    // let playLike1 = e.target.value
                                     setplaySelect1(e.target.value)
-                                    if (playInstrument2) {
+                                    if (playSelect2 == '') {
                                         setplaySelect2(playInstrument2);
+                                    }else{
+                                      setplaySelect2(playSelect2);
                                     }
-                                    if (playInstrument3) {
+                                    if (playSelect3 == '') {
                                         setplaySelect3(playInstrument3);
-                                    }                                    
+                                    }else{
+                                      setplaySelect3(playSelect3);
+                                    }                                                                   
                                   }}
                                 >
-                                  <option  value="">無</option>
+                                  <option  value="9999">無</option>
                                   {playerData.map((v) => {
                                     return (
                                       <option key={v.id} value={v.id}>
@@ -917,15 +932,19 @@ export default function Test() {
                                   onChange={(e) => {
                                     // playLike2 = e.target.value 
                                     setplaySelect2(e.target.value)
-                                    if (playInstrument1) {
+                                    if (playSelect1 == '') {
                                         setplaySelect1(playInstrument1);
+                                    }else{
+                                      setplaySelect1(playSelect1);
                                     }
-                                    if (playInstrument3) {
+                                    if (playSelect3 == '') {
                                         setplaySelect3(playInstrument3);
-                                    }
+                                    }else{
+                                      setplaySelect3(playSelect3);
+                                    }  
                                   }}
                                 >
-                                  <option  value="">無</option>
+                                  <option  value="9999">無</option>
                                   {playerData.map((v) => {
                                     return (
                                       <option key={v.id} value={v.id}>
@@ -941,16 +960,20 @@ export default function Test() {
                                   value={playSelect3 != '' ? playSelect3 : playInstrument3}
                                   name="play3"
                                   onChange={(e) => {
-                                    if (playInstrument1) {
-                                        setplaySelect1(playInstrument1);
-                                    }
-                                    if (playInstrument2) {
-                                        setplaySelect2(playInstrument2);
-                                    }
                                     setplaySelect3(e.target.value)
+                                    if (playSelect2 == '') {
+                                        setplaySelect2(playInstrument2);
+                                    }else{
+                                      setplaySelect2(playSelect2);
+                                    }
+                                    if (playSelect1 == '') {
+                                        setplaySelect1(playInstrument1);
+                                    }else{
+                                      setplaySelect1(playSelect1);
+                                    }  
                                   }}
                                 >
-                                  <option value="">無</option>
+                                  <option value="9999">無</option>
                                   {playerData.map((v) => {
                                     return (
                                       <option key={v.id} value={v.id}>
@@ -974,16 +997,21 @@ export default function Test() {
                               type="checkbox"
                               defaultValue=""
                               id="privacyBD"
-                              defaultChecked={privacyBD == '1' ? '1' : ''}
+                              defaultChecked={privacyBD == '1' ? true : false}
                               onChange={(e)=>{
-                                setprivacySelect1(e.target.checked ? '1' : '0');
-                                if(privacySelect2){
+                                setprivacySelect1(e.target.checked  ? '1' : '0');
+                                setprivacySelect1(e.target.checked  ? '1' : '0');
+                                if(privacySelect2 == "9999"){
+                                  setprivacySelect2(privacyPhone)
+                                }else{
                                   setprivacySelect2(privacySelect2)
                                 }
-                                if(privacySelect3){
+                                if(privacySelect3  == "9999"){
+                                  setprivacySelect3(privacyEmail)
+                                } else{
                                   setprivacySelect3(privacySelect3)
-                                }                              
-                                console.log(privacySelect1)
+                                }
+                                // console.log(privacySelect2)
                               }}
                             />
                             <label
@@ -1002,17 +1030,17 @@ export default function Test() {
                               defaultChecked={privacyPhone == '1' ? '1' : ''}
                               onChange={(e)=>{
                                 setprivacySelect2(e.target.checked ? '1' : '0');
-                                if(privacySelect1 != ""){
-                                  setprivacySelect1(privacySelect1)
-                                }else{
+                                if(privacySelect1 == "9999"){
                                   setprivacySelect1(privacyBD)
+                                }else{
+                                  setprivacySelect1(privacySelect1)
                                 }
-                                if(privacySelect3 != ""){
-                                  setprivacySelect3(privacySelect3)
-                                } else{
+                                if(privacySelect3  == "9999"){
                                   setprivacySelect3(privacyEmail)
+                                } else{
+                                  setprivacySelect3(privacySelect3)
                                 }
-                                console.log(privacySelect2)
+                                // console.log(privacySelect2)
                               }}
                             />
                             <label
@@ -1030,18 +1058,17 @@ export default function Test() {
                               id="privacyEmail"
                               defaultChecked={privacyEmail == '1' ? "1" : ''}
                               onChange={(e)=>{
-                                
                                 setprivacySelect3(e.target.checked ? '1' : '0');
-
-                                // setprivacySelect3(privacySelect3 === '1' ? '0' : '1')
-                                
-                                if(privacyBD){
-                                  setprivacySelect1(privacyBD)
-                                } 
-                                if(privacyPhone){
+                                if(privacySelect2 == "9999"){
                                   setprivacySelect2(privacyPhone)
+                                }else{
+                                  setprivacySelect2(privacySelect2)
                                 }
-                                 
+                                if(privacySelect1  == "9999"){
+                                  setprivacySelect1(privacyBD)
+                                } else{
+                                  setprivacySelect1(privacySelect1)
+                                }
                               }}
                             />
                             <label
@@ -1099,11 +1126,11 @@ export default function Test() {
 
                       <div className="user-info-item">
                         <div className="user-info-item-titleText">地址</div>
-                        <div className="user-info-item-Content">
-                          <div className="user-info-item-contentText d-flex">
+                        <div className="user-info-item-Content-address">
+                          <div className="user-info-item-contentText d-flex  flex-wrap">
                             <input
                               type="text"
-                              className={`${styles.itemInputPostcode} form-control `}
+                              className={`${styles.itemInputPostcode} form-control col-sm1 col-3 `}
                               placeholder="郵遞區號"
                               value={userData.postcode}
                               maxLength={3}
@@ -1116,7 +1143,7 @@ export default function Test() {
                             />
                             <div className={`${styles.itemInputWrapper} `}>
                               <select
-                                className="form-select"
+                                className="form-select col-4 col-sm1"
                                 style={{ width: 'auto' }}
                                 value={userData.country}
                                 name="region"
@@ -1140,7 +1167,7 @@ export default function Test() {
 
                             <div className={`${styles.itemInputWrapper}`}>
                               <select
-                                className="form-select"
+                                className="form-select col-4 col-sm1"
                                 style={{ width: 'auto' }}
                                 value={userData.township}
                                 name="region"
@@ -1164,8 +1191,9 @@ export default function Test() {
 
                             <input
                               type="text"
-                              className={`${styles.itemInput} form-control `}
+                              className={`${styles.itemInput} form-control col-sm6 col-12 `}
                               placeholder="地址"
+                              // style={{ width: 'auto' }}
                               maxLength={100}
                               value={userData.address}
                               name="address"
@@ -1192,7 +1220,7 @@ export default function Test() {
                           <div className="user-info-item-info-contentText form-floating">
                             <textarea
                               className="form-control"
-                              style={{ height: '300px', width: '84%' }}
+                              style={{ height: '200px', width: '100%' }}
                               id="exampleFormControlTextarea1"
                               rows="3"
                               cols="50"
@@ -1218,28 +1246,27 @@ export default function Test() {
                           </div>
                         </div>
                       </div>
-                      <div className="d-flex justify-content-center">
-                        <div
-                          className="b-btn b-btn-primary"
-                          style={{ paddingInline: '38px' }}
-                          role="presentation"
-                          onClick={(e) => {
-                            // sendForm(
-                            //   fakeUser.uid,
-                            //   title,
-                            //   degree,
-                            //   finalgenre,
-                            //   finalMyPlayer,
-                            //   finalPlayers,
-                            //   region,
-                            //   condition,
-                            //   description
-                            // )
-                            postForm(e)
-                          }}
-                        >
-                          提交
-                        </div>
+                      <div className="d-flex justify-content-center w-100 m-3 ">
+                        <div className="b-btn b-btn-danger "
+                              style={{ paddingInline: '38px' }}
+                              role="presentation"    >
+                            <Link
+                              href="/user/user-info"                           
+                            >
+                              返回
+                            </Link>
+                          </div>
+                          <div
+                            className="b-btn b-btn-primary"
+                            style={{ paddingInline: '38px' , marginInline:50}}
+                            role="presentation"
+                            onClick={(e) => {                           
+                              postForm(e)
+                            }}
+                          >
+                            提交
+                          </div>
+                        
                       </div>
                     </div>
                   </div>
@@ -1449,6 +1476,26 @@ export default function Test() {
                 font-family: Noto Sans TC;
                 font-weight: 400;
                 word-wrap: break-word;
+                
+              }
+            }
+            .user-info-item-Content-address{
+              display: flex;
+              height: 38px;
+              max-width: 900px;
+              padding: 3px 0px;
+              align-items: center;
+              gap: 10px;
+              flex: 1 0 0;
+              
+              .user-info-item-contentText {
+                flex: 1 1 0;
+                color: black;
+                font-size: 16px;
+                font-family: Noto Sans TC;
+                font-weight: 400;
+                word-wrap: break-word;
+                
               }
             }
             .user-info-item-Content-avatar {
@@ -1537,8 +1584,13 @@ export default function Test() {
               .user-info-item-info {
                 display: block;
               }
+
+              .user-info-item-Content-address{ 
+                height: 76px;
+              }
             }
           }
+          
           /*------------- RWD  ----------- */
         }
       `}</style>
