@@ -24,7 +24,7 @@ export function JamProvider({ children }) {
 
   // 用非正當手段進入編輯頁面
   const notifyInvalidEditToast = () => {
-    toast.error('指定樂團不存在或已解散', {
+    toast.error('請勿進行非法操作', {
       style: {
         border: '1px solid #666666',
         padding: '16px',
@@ -39,22 +39,22 @@ export function JamProvider({ children }) {
   }
 
   const checkCancel = () => {
-    toast('申請者已取消申請', {
+    toast('申請者已取消申請，將重整頁面', {
       icon: '❕',
       style: {
         border: '1px solid #666666',
         padding: '16px',
         color: '#1d1d1d',
       },
-      duration: 2200,
+      duration: 2500,
     })
     setTimeout(() => {
       window.location.reload()
-    }, 2200)
+    }, 2500)
   }
 
   const notifyAccept = () => {
-    toast.success('已接受，等待對方確認', {
+    toast.success('已接受，等待對方確認加入', {
       style: {
         border: '1px solid #666666',
         padding: '16px',
@@ -63,11 +63,8 @@ export function JamProvider({ children }) {
       iconTheme: {
         primary: '#1581cc',
       },
-      duration: 2200,
+      duration: 2500,
     })
-    setTimeout(() => {
-      window.location.reload()
-    }, 2200)
   }
 
   const notifyReject = () => {
@@ -78,11 +75,8 @@ export function JamProvider({ children }) {
         padding: '16px',
         color: '#1d1d1d',
       },
-      duration: 2200,
+      duration: 2500,
     })
-    setTimeout(() => {
-      window.location.reload()
-    }, 2200)
   }
 
   const cancelSuccess = () => {
@@ -95,11 +89,11 @@ export function JamProvider({ children }) {
       iconTheme: {
         primary: '#1581cc',
       },
-      duration: 2000,
+      duration: 2500,
     })
     setTimeout(() => {
       window.location.reload()
-    }, 2000)
+    }, 2500)
   }
 
   const deleteSuccess = () => {
@@ -112,11 +106,11 @@ export function JamProvider({ children }) {
       iconTheme: {
         primary: '#1581cc',
       },
-      duration: 2000,
+      duration: 2500,
     })
     setTimeout(() => {
       window.location.reload()
-    }, 2000)
+    }, 2500)
   }
 
   return (

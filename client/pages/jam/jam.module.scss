@@ -194,3 +194,28 @@
   text-decoration: underline;
   flex: 1 0 0;
 }
+
+.coverWrapper {
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 3.02;
+  max-height: 280px;
+  @media screen and (max-width: 576px) {
+    max-height: 117px;
+  }
+}
+.noCoverBackground {
+  width: 100%;
+  height: 100%;
+  background-color: #1581cc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.videoWrapper {
+  overflow: hidden;
+  aspect-ratio: 1.78;
+  max-height: 504px;
+  border-radius: 5px;
+}

@@ -98,7 +98,7 @@ export default function JamList() {
   const [page, setPage] = useState(1)
   const [pageTotal, setPageTotal] = useState(0)
   // 資料排序
-  const [order, setOrder] = useState('DESC')
+  const [order, setOrder] = useState('ASC')
   // 點按分頁時，要送至伺服器的query string參數
   const handlePageClick = (event) => {
     router.push({
@@ -212,14 +212,14 @@ export default function JamList() {
 
       // 設定回所有狀態(注意所有從查詢字串來都是字串類型)，都要給預設值
       setPage(Number(page) || 1)
-      setOrder(order || 'DESC')
+      setOrder(order || 'ASC')
       setgenre(genre || 'all')
       setRegion(region || 'all')
       setSearch(search || '')
 
       // 載入資料
       getDatas(router.query)
-      console.log(router.query)
+      // console.log(router.query)
     }
 
     // eslint-disable-next-line
@@ -357,13 +357,13 @@ export default function JamList() {
                   <IoHome size={20} />
                   <li style={{ marginLeft: '8px' }}>Let&apos;s JAM!</li>
                   <FaChevronRight />
-                  <li style={{ marginLeft: '10px' }}>團員募集</li>
+                  <li style={{ marginLeft: '10px' }}>活動中的JAM</li>
                 </ul>
               </div>
 
               <div className="top-function-flex">
                 {/*  ---------------------- 搜尋欄  ---------------------- */}
-                <div className="search-sidebarBtn d-sm-flex">
+                <div className="search-sidebarBtn d-sm-flex align-items-center">
                   <div
                     className="d-flex d-sm-none b-btn b-btn-body"
                     role="presentation"
@@ -402,6 +402,7 @@ export default function JamList() {
                     <div
                       role="presentation"
                       className="b-btn b-btn-primary px-3 d-none d-sm-block"
+                      style={{ height: '36px' }}
                       onClick={() => {
                         checkLogin(LoginUserData)
                       }}
@@ -443,8 +444,8 @@ export default function JamList() {
                         handleOrder(e.target.value)
                       }}
                     >
-                      <option value="DESC">新到舊</option>
                       <option value="ASC">舊到新</option>
+                      <option value="DESC">新到舊</option>
                     </select>
                   </div>
                   {/*  ---------------------- 條件篩選  ---------------------- */}
@@ -545,6 +546,15 @@ export default function JamList() {
                       <FaSortAmountDown size={14} />
                     </div>
                     <div
+                      className={`sort-item ${order === 'ASC' ? 'active' : ''}`}
+                      role="presentation"
+                      onClick={() => {
+                        handleOrder('ASC')
+                      }}
+                    >
+                      舊到新
+                    </div>
+                    <div
                       className={`sort-item ${
                         order === 'DESC' ? 'active' : ''
                       }`}
@@ -554,15 +564,6 @@ export default function JamList() {
                       }}
                     >
                       新到舊
-                    </div>
-                    <div
-                      className={`sort-item ${order === 'ASC' ? 'active' : ''}`}
-                      role="presentation"
-                      onClick={() => {
-                        handleOrder('ASC')
-                      }}
-                    >
-                      舊到新
                     </div>
                   </div>
                 </div>

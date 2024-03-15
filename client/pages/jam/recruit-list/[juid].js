@@ -36,6 +36,8 @@ export default function Info() {
     getLoginUserData()
   }, [])
   //登出功能
+
+  // sweetalert
   const mySwal = withReactContent(Swal)
 
   const [genre, setGenre] = useState([])
@@ -671,10 +673,13 @@ export default function Info() {
                 )}
               </section>
               {/* -------------------------- 入團申請 -------------------------- */}
+              {/* 是否有所屬樂團? */}
               {LoginUserData.my_jam ? (
                 <div>
+                  {/* 是否屬於此樂團? */}
                   {LoginUserData.my_jam === jam.juid ? (
                     <>
+                      {/* 是否是發起人? */}
                       {LoginUserData.id === jam.former.id ? (
                         <>
                           {/* 發起人進入所屬樂團頁面 */}

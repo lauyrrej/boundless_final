@@ -36,7 +36,7 @@ export default function JamCard({
             />
           ) : (
             <div className={`${styles.noCoverBackground}`}>
-              <Image src={logoMb} alt="logo-mobile" style={{ width: '60px' }} />
+              <Image src={logoMb} alt="logo-mobile" />
             </div>
           )}
         </div>

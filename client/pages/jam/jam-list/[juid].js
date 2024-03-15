@@ -7,7 +7,7 @@ import toast, { Toaster } from 'react-hot-toast'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import MemberInfo from '@/components/jam/member-info'
-import Apply from '@/components/jam/apply'
+import logoMb from '@/assets/logo_mb.svg'
 import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
@@ -23,7 +23,7 @@ import styles from '@/pages/jam/jam.module.scss'
 
 export default function Info() {
   const router = useRouter()
-  const { setInvalidJam, checkCancel, notifyAccept, notifyReject } = useJam()
+  const { setInvalidJam } = useJam()
   // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
   const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
@@ -39,7 +39,6 @@ export default function Info() {
   const mySwal = withReactContent(Swal)
 
   const [genre, setGenre] = useState([])
-  const [player, setPlayer] = useState([])
   const [jam, setJam] = useState({
     id: 0,
     juid: '',
@@ -66,15 +65,15 @@ export default function Info() {
   })
   // ----------------------------- 創立時間資料中，單獨取出日期 -----------------------------
   // 調出的時間是ISO格式，顯示時需要轉換成本地時區
-  const createdDate = new Date(jam.created_time)
+  const formedDate = new Date(jam.formed_time)
     .toLocaleString()
     .split(' ')[0]
     .replace(/\//g, '-')
   // ----------------------------- 入團申請表單 -----------------------------
   const [complete, setComplete] = useState(2)
   // ---------------------- 描述 ----------------------
-  const [message, setMessage] = useState('')
-  const [messageCheck, setMessageCheck] = useState(true)
+  const [introduce, setIntroduce] = useState('')
+  const [introduceCheck, setIntroduceCheck] = useState(true)
 
   const checkLogin = (LoginUserData) => {
     if (
@@ -100,12 +99,12 @@ export default function Info() {
   // 檢查不雅字詞
   const checkBadWords = debounce(() => {
     const badWords = /幹|屎|尿|屁|糞|靠北|靠腰|雞掰|王八|你媽|妳媽|淫/g
-    setMessageCheck(message.search(badWords) < 0 ? true : false)
+    setIntroduceCheck(introduce.search(badWords) < 0 ? true : false)
   }, 250)
 
   // 檢查表單是否填妥
   const checkComplete = () => {
-    if (messageCheck === false || message === '') {
+    if (introduceCheck === false || introduce === '') {
       setComplete(0)
       return false
     }
@@ -114,7 +113,7 @@ export default function Info() {
   }
 
   // 送出申請表單
-  const sendApply = async (myPlayer, message) => {
+  const sendApply = async (myPlayer, introduce) => {
     if (!checkComplete()) {
       return false
     }
@@ -123,7 +122,7 @@ export default function Info() {
     formData.append('former_uid', jam.former.uid)
     formData.append('applier_uid', LoginUserData.uid)
     formData.append('applier_play', myPlayer)
-    formData.append('message', message)
+    formData.append('introduce', introduce)
     // 確認formData內容
     // for (let [key, value] of formData.entries()) {
     //   console.log(`${key}: ${value}`)
@@ -157,28 +156,6 @@ export default function Info() {
           window.location.reload()
         }, 3000)
       )
-  }
-
-  // 決定審核結果
-  const sendResult = async (id, state) => {
-    let formData = new FormData()
-    formData.append('id', id)
-    formData.append('state', state)
-    const res = await fetch('http://localhost:3005/api/jam/decideApply', {
-      method: 'PUT',
-      body: formData,
-      credentials: 'include',
-    })
-    const result = await res.json()
-    if (result.status === 'success') {
-      if (result.state === 1) {
-        notifyAccept()
-      } else if (result.state === 2) {
-        notifyReject()
-      }
-    } else if (result.status === 'cancel') {
-      checkCancel()
-    }
   }
 
   // 解散樂團
@@ -260,15 +237,11 @@ export default function Info() {
       // res.json()是解析res的body的json格式資料，得到JS的資料格式
       const data = await res.json()
       if (data.status === 'success') {
-        setPlayer(data.playerData)
         setGenre(data.genreData)
         setJam(data.jamData)
-        // 若該樂團已成立，導向成團後的資訊頁面
-      } else if (data.status === 'formed') {
-        router.push(`/jam/jam-list/${juid}`)
       } else if (data.status === 'error') {
         setInvalidJam(false)
-        router.push(`/jam/recruit-list`)
+        router.push(`/jam/jam-list`)
       }
     } catch (e) {
       console.error(e)
@@ -284,17 +257,6 @@ export default function Info() {
     }
   }, [router.isReady, LoginUserData.uid])
 
-  useEffect(() => {
-    setCountDown(calcTimeLeft())
-    // 每秒更新一次倒數計時
-    const timer = setInterval(() => {
-      setCountDown(calcTimeLeft())
-    }, 1000)
-
-    // 清除計時器
-    return () => clearInterval(timer)
-  }, [jam.created_time])
-
   // 申請表單填寫
   useEffect(() => {
     // 跳出未填寫完畢警告後再次輸入，消除警告
@@ -302,7 +264,7 @@ export default function Info() {
     // 檢查不雅字詞
     checkBadWords.cancel() // 取消上一次的延遲
     checkBadWords()
-  }, [myPlayer, message])
+  }, [introduce])
 
   return (
     <>
@@ -368,8 +330,8 @@ export default function Info() {
               <IoHome size={20} />
               <li style={{ marginLeft: '8px' }}>Let&apos;s JAM!</li>
               <FaChevronRight />
-              <Link href="/jam/recruit-list">
-                <li style={{ marginLeft: '10px' }}>團員募集</li>
+              <Link href="/jam/jam-list">
+                <li style={{ marginLeft: '10px' }}>活動中的JAM</li>
               </Link>
 
               <FaChevronRight />
@@ -382,29 +344,32 @@ export default function Info() {
               {/*   ---------------------- 樂團資訊  ---------------------- */}
               <section className={`${styles.jamLeftSection}`}>
                 <div
-                  className={`${styles.jamTitle} d-flex justify-content-between align-items-center`}
+                  className={`${styles.jamTitle} d-flex justify-content-start align-items-center`}
                 >
                   <div>JAM資訊</div>
-                  <div className={`${styles.cardBadge} ${styles.degree}`}>
-                    {jam.degree == '1' ? '新手練功' : '老手同樂'}
-                  </div>
                 </div>
-                {/* -------------------------- 主旨 -------------------------- */}
+                {/* -------------------------- 封面圖 -------------------------- */}
+                <div className={`${styles.coverWrapper}`}>
+                  {jam.cover_img !== '' ? (
+                    <Image
+                      src={`http://localhost:3005/jam/${jam.cover_img}`}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                      alt={jam.cover_img}
+                    />
+                  ) : (
+                    <div className={`${styles.noCoverBackground}`}>
+                      <Image src={logoMb} alt="logo-mobile" />
+                    </div>
+                  )}
+                </div>
+                {/* -------------------------- 團名 -------------------------- */}
                 <div className={`${styles.formItem} row`}>
                   <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                    主旨
+                    團名
                   </div>
                   <div className={`${styles.infoText} col-12 col-sm-10`}>
-                    {jam.title}
-                  </div>
-                </div>
-                {/* -------------------------- 發起日期 -------------------------- */}
-                <div className={`${styles.formItem} row`}>
-                  <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                    發起日期
-                  </div>
-                  <div className={`${styles.infoText} col-12 col-sm-10`}>
-                    {createdDate}
+                    {jam.name}
                   </div>
                 </div>
                 {/* -------------------------- 音樂風格 -------------------------- */}
@@ -432,41 +397,6 @@ export default function Info() {
                     </div>
                   </div>
                 </div>
-                {/* -------------------------- 徵求樂手 -------------------------- */}
-                <div className={`${styles.formItem} row`}>
-                  <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                    徵求樂手
-                  </div>
-                  <div
-                    className={`${styles.itemInputWrapper} col-12 col-sm-10`}
-                  >
-                    <div
-                      className="d-flex flex-wrap"
-                      style={{ gap: '8px', flex: '1 0 0' }}
-                    >
-                      {playerResult.map((v, i) => {
-                        return (
-                          <div
-                            key={i}
-                            className={`${styles.cardBadge} ${styles.player}`}
-                          >
-                            {v}
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </div>
-                </div>
-                {/* -------------------------- 預計人數 -------------------------- */}
-                <div className={`${styles.formItem} row`}>
-                  <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                    預計人數
-                  </div>
-                  <div className={`${styles.infoText} col-12 col-sm-10`}>
-                    <span style={{ color: '#1581cc' }}>{nowNumber}</span> /{' '}
-                    {totalNumber} 人
-                  </div>
-                </div>
                 {/* -------------------------- 地區 -------------------------- */}
                 <div className={`${styles.formItem} row`}>
                   <div className={`${styles.itemTitle} col-12 col-sm-2`}>
@@ -476,25 +406,25 @@ export default function Info() {
                     {jam.region}
                   </div>
                 </div>
-                {/* -------------------------- 其他條件 -------------------------- */}
+                {/* -------------------------- 成立日期 -------------------------- */}
                 <div className={`${styles.formItem} row`}>
                   <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                    其他條件
+                    成立日期
                   </div>
                   <div className={`${styles.infoText} col-12 col-sm-10`}>
-                    {jam.band_condition == '' ? '無' : jam.band_condition}
+                    {formedDate}
                   </div>
                 </div>
-                {/* -------------------------- 描述 -------------------------- */}
+                {/* -------------------------- 樂團介紹 -------------------------- */}
                 <div className={`${styles.formItem} row`}>
                   <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                    描述
+                    樂團介紹
                   </div>
                   <div
                     className={`${styles.infoText} col-12 col-sm-10`}
                     style={{ textAlign: 'justify' }}
                   >
-                    {jam.description}
+                    {jam.introduce !== '' || null ? jam.introduce : '暫無介紹'}
                   </div>
                 </div>
                 {LoginUserData.id === jam.former.id ? (
@@ -504,14 +434,31 @@ export default function Info() {
                       style={{ paddingInline: '38px' }}
                       href="/jam/recruit-list/edit"
                     >
-                      修改表單
+                      編輯資訊
                     </Link>
                   </div>
                 ) : (
                   ''
                 )}
               </section>
-              {/* -------------------------- 入團申請 -------------------------- */}
+              <hr style={{ margin: '6px' }} />
+              <section className={`${styles.jamLeftSection}`}>
+                <div className={`${styles.jamTitle}`}>展示牆</div>
+                {jam.works_link ? (
+                  <div className={`${styles.videoWrapper}`}>
+                    <iframe
+                      src={`https://www.youtube.com/embed/${jam.works_link}`}
+                      title="YouTube video player"
+                      frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowfullscreen
+                      style={{ width: '100%', height: '100%' }}
+                    ></iframe>
+                  </div>
+                ) : (
+                  ''
+                )}
+              </section>
             </div>
           </div>
 
@@ -551,24 +498,6 @@ export default function Info() {
                   })}
                 </div>
               </div>
-              {LoginUserData.id === jam.former.id ? (
-                <div className="d-flex justify-content-center gap-5 mt-4">
-                  <div
-                    className="b-btn b-btn-danger px-3"
-                    role="presentation"
-                    onClick={() => {
-                      warningDisband()
-                    }}
-                  >
-                    解散樂團
-                  </div>
-                  <div className="b-btn b-btn-primary px-3" role="presentation">
-                    立即成團
-                  </div>
-                </div>
-              ) : (
-                ''
-              )}
             </div>
           </div>
         </div>
