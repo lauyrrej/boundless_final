@@ -332,6 +332,20 @@ export default function Test() {
     // }
   }
   // ----------------------表單資料傳送處理  ----------------------
+// 頭像上傳
+ 
+
+  
+    const [selectedFile, setSelectedFile] = useState(null);
+
+    const handleFileChange = (event) => {
+        setSelectedFile(event.target.files[0]);}
+    
+
+
+
+
+
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -667,7 +681,7 @@ export default function Test() {
                         <div className="user-info-item-Content-avatar">
                           <div className="user-info-item-contentText-imgBox">
                             <Image
-                              src={avatarImage}
+                              src={selectedFile? URL.createObjectURL(selectedFile) : avatarImage }
                               alt="user photo mb"
                               fill
                               priority="default" //不加的話Next 會問是否要加優先級
@@ -675,7 +689,7 @@ export default function Test() {
                             ></Image>
                           </div>
                           <div>
-                            <input
+                            {/* <input
                               type="file"
                               name="myFile2"
                               className="form-control"
@@ -684,38 +698,45 @@ export default function Test() {
                             ></input>
                             <div className="user-info-item-contentText">
                               可選擇的圖片格式: .jpg .png
-                            </div>
+                            </div> */}
 
                             {/* //-----------------測試上傳 */}
-                            {/* <form
+                            <form
                               action="http://localhost:3005/api/user/upload1"
                               method="post"
+                              // onSubmit={handleSubmit}
                               enctype="multipart/form-data"
+                              className=""
                             >
-                              <div className="input-group mb-2">
-                                <span className="input-group-text">名稱</span>
+                            
+                              <div className="input-group d-none mb-2">
+                                <span className="input-group-text"></span>
                                 <input
                                   type="text"
                                   name="name"
-                                  // value={LoginUserData}
+                                  value={LoginUserData.id}
                                   className="form-control"
                                 />
                               </div>
-                              <div className="input-group mb-2">
+
+                              <div className="input-group mb-2 ">
                                 <input
                                   type="file"
                                   name="myFile"
                                   id={LoginUserData}
-                                  accept="image/png, image/jpeg"
+                                  accept="image/jpeg"
                                   className="form-control"
+                                  // onChange={handleFileChange}
+                                  onChange={handleFileChange}
                                 />
                               </div>
-                              <div className="d-flex">
-                                <button className="btn btn-primary ms-auto">
-                                  送出
+                              
+                              <div className="d-flex ">
+                                <button className="btn btn-primary ms-auto ">
+                                  確認變更
                                 </button>
                               </div>
-                            </form> */}
+                            </form>
                             {/* //-----------------測試上傳 */}
                           </div>
                         </div>
@@ -1515,6 +1536,15 @@ export default function Test() {
                 position: relative;
                 overflow: hidden;
               }
+
+              .user-info-item-contentText-imgBox-btn{
+              position:absolute;
+              width: 100px;
+              height: 100px;
+              border-radius: 100px;
+              /* react Image 要加上這兩條參數 家在外層容器的css , Image本身要fill */
+              position: relative;
+              overflow: hidden;
             }
           }
 

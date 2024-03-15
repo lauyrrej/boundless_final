@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
@@ -16,7 +17,228 @@ import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 import ArticleCard from '@/components/article/article-card'
 
+
+//選項資料 data
+// import CityCountyData from '@/data/CityCountyData.json'
+import playerData from '@/data/player.json'
+import genreData from '@/data/genre.json'
+
 export default function Test() {
+
+  const [userHomePageData, setuserHomePageData] = useState({
+    id: '',
+    uid: '',
+    name: '',
+    email: '',
+    phone: '',
+    postcode: '',
+    country: '',
+    township: '',
+    address: '',
+    birthday: '',
+    genre_like: '',
+    play_instrument: '',
+    info: '',
+    img: '',
+    gender: '',
+    nickname: '',
+    google_uid: '',
+    photo_url: '',
+    privacy: '',
+    my_lesson: '',
+    my_jam: '',
+    updated_time: '',
+    valid: '',
+  })
+
+  const router = useRouter();
+  const { uid } = router.query;
+
+
+  const getHomePageData = async (uid) => {
+    // console.log(uid)
+  try {
+    const response = await fetch(
+      `http://localhost:3005/api/user/user-homepage/${uid}`,
+      {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(),
+      }
+    )
+    const uiduserHomePageData = await response.json()
+    // console.log('Response from server:', uiduserHomePageData)
+
+
+    
+    setuserHomePageData(uiduserHomePageData)
+
+    
+    console.log(uiduserHomePageData)
+    // 在這裡處理後端返回的資料
+  } catch (error) {
+    console.error('There was a problem with the fetch operation:', error)
+  }
+}
+  //-------------------------------獲得UID------------------------------
+  useEffect(() => {
+    if(uid){
+      getHomePageData(uid)
+    }
+  }, [uid]) 
+  //-------------------------------資料處理-------------------------------
+
+  let avatarImage
+  if (userHomePageData.img) {
+    avatarImage = `http://localhost:3005/user/${userHomePageData.img}`
+  } else if (userHomePageData.photo_url) {
+    avatarImage = `${userHomePageData.photo_url}`
+  } else {
+    avatarImage = `http://localhost:3005/user/avatar_userDefault.jpg`
+  }
+
+
+  // ---------------性別-------------
+  let gender = '讀取中'
+  if (userHomePageData.gender == 1) {
+    gender = '男'
+  } else if (userHomePageData.gender == 2) {
+    gender = '女'
+  } else if (userHomePageData.gender == 3) {
+    gender = '其他'
+  } else {
+    gender = '尚未填寫'
+  }
+
+  // ---------------生日-------------
+  let birthday = '2000-01-01'
+  if (userHomePageData.birthday) {
+    // 原本處理方式 但和SQL資料庫有時區差異------------
+    // birthday = userData.birthday.split('T')[0]
+
+    // testTime = new Date(testTime)
+    // const taipeiTime = new Date(testTime.getTime() + 8 * 60 * 60 * 1000)
+    // YYYYMMDDTime = taipeiTime.toISOString().slice(0, 19).replace('T', ' ')
+    // 原本處理方式 但和SQL資料庫有時區差異------------
+    let defaultTime = userHomePageData.birthday
+    let inputDate = new Date(defaultTime)
+    let year = inputDate.getFullYear()
+    let month = String(inputDate.getMonth() + 1).padStart(2, '0') // 月份從0開始，需要加1，並保持兩位數
+    let day = String(inputDate.getDate()).padStart(2, '0') // 日期需保持兩位數
+    birthday = `${year}-${month}-${day}`
+    // console.log(birthday)
+  }
+
+  // ---------------曲風-------------
+  let totalGenreData = genreData.map((v) => ({
+    key: v.id,
+    value: v.id,
+    label: v.name,
+  }))
+  // console.log(totalGenreData)
+  // console.log(totalGenreData[0].value)
+  // console.log(totalGenreData[0].label)
+  let genreLike,
+    finalGenreLike = `尚未填寫`
+  if (userHomePageData.genre_like) {
+    genreLike = userHomePageData.genre_like
+    // 使用 split 方法將字串拆分成陣列
+    let [genreLike1, genreLike2, genreLike3] = genreLike.split(',')
+    // 傻人方法
+    for (let i = 0; i < totalGenreData.length; i++) {
+      if ([genreLike1] == totalGenreData[i].value) {
+        genreLike1 = totalGenreData[i].label
+        break // 找到匹配後就跳出迴圈
+      }
+    }
+    for (let i = 0; i < totalGenreData.length; i++) {
+      if ([genreLike2] == totalGenreData[i].value) {
+        genreLike2 = totalGenreData[i].label
+        break // 找到匹配後就跳出迴圈
+      }
+    }
+    for (let i = 0; i < totalGenreData.length; i++) {
+      if ([genreLike3] == totalGenreData[i].value) {
+        genreLike3 = totalGenreData[i].label
+        break // 找到匹配後就跳出迴圈
+      }
+    }
+    //判斷最後結果
+    if (genreLike1 && genreLike2 && genreLike3 !== undefined) {
+      finalGenreLike = `${genreLike1}, ${genreLike2}, ${genreLike3}`
+    } else if (genreLike1 && genreLike2 !== undefined) {
+      finalGenreLike = `${genreLike1}, ${genreLike2}`
+    } else if (genreLike1 !== undefined) {
+      finalGenreLike = `${genreLike1}`
+    }
+  }
+  // console.log(finalGenreLike)
+
+  // ---------------演奏樂器-------------
+  let totalPlayerData = playerData.map((v) => ({
+    key: v.id,
+    value: v.id,
+    label: v.name,
+  }))
+
+  // console.log(totalPlayerData[0].value)
+  // console.log(totalPlayerData[0].label)
+  let playInstrument,
+    finalPlayInstrument = `尚未填寫`
+  if (userHomePageData.play_instrument) {
+    playInstrument = userHomePageData.play_instrument
+    // 使用 split 方法將字串拆分成陣列
+    let [playInstrument1, playInstrument2, playInstrument3] =
+      playInstrument.split(',')
+    // 傻人方法
+    for (let i = 0; i < totalPlayerData.length; i++) {
+      if ([playInstrument1] == totalPlayerData[i].value) {
+        playInstrument1 = totalPlayerData[i].label
+        break // 找到匹配後就跳出迴圈
+      }
+    }
+    for (let i = 0; i < totalPlayerData.length; i++) {
+      if ([playInstrument2] == totalPlayerData[i].value) {
+        playInstrument2 = totalPlayerData[i].label
+        break // 找到匹配後就跳出迴圈
+      }
+    }
+    for (let i = 0; i < totalPlayerData.length; i++) {
+      if ([playInstrument3] == totalPlayerData[i].value) {
+        playInstrument3 = totalPlayerData[i].label
+        break // 找到匹配後就跳出迴圈
+      }
+    }
+    //判斷最後結果
+    if (playInstrument1 && playInstrument2 && playInstrument3 !== undefined) {
+      finalPlayInstrument = `${playInstrument1}, ${playInstrument2}, ${playInstrument3}`
+    } else if (playInstrument1 && playInstrument2 !== undefined) {
+      finalPlayInstrument = `${playInstrument1}, ${playInstrument2}`
+    } else if (playInstrument1 !== undefined) {
+      finalPlayInstrument = `${playInstrument1}`
+    }
+  }
+  // console.log(finalPlayInstrument)
+  // ---------------公開資訊-------------
+  //帶入隱私設定進來, 但是不可更改
+  let privacy,
+    privacyBD = '',
+    privacyPhone = '',
+    privacyEmail = '',
+    ArrPrivacy
+  if (userHomePageData.privacy) {
+    privacy = userHomePageData.privacy
+    ArrPrivacy = privacy.split(',')
+    privacyBD = ArrPrivacy[0]
+    privacyPhone = ArrPrivacy[1]
+    privacyEmail = ArrPrivacy[2]
+  }
+  // console.log(privacyBD)
+  // console.log(privacyPhone)
+  // console.log(privacyEmail)
+
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -62,6 +284,7 @@ export default function Test() {
                 src="/jam/amazingshow.jpg"
                 alt="user photo mb"
                 fill
+                priority
               ></Image>
             </div>
             <div>用戶名稱</div>
@@ -99,7 +322,7 @@ export default function Test() {
             >
               <ul className="d-flex align-items-center p-0 m-0">
                 <IoHome size={20} />
-                <li style={{ marginLeft: '8px' }}>棉悠悠的個人首頁</li>
+                <li style={{ marginLeft: '8px' }}>{userHomePageData.nickname}的個人首頁</li>
                 {/* <FaChevronRight />
                 <Link href="/jam/recruit-list">
                   <li style={{ marginLeft: '10px' }}>團員募集</li>
@@ -118,11 +341,11 @@ export default function Test() {
                       <div className="user-homePage-content-left">
                         <div className="user-homePage-topInfo">
                           <div className="user-homePage-avatar">
-                            {/* <Image className="avatar" src={avatar} alt="" /> */}
+                            <Image className="avatar" src={avatarImage} alt="" priority  width={150} height={150}/>
                           </div>
-                          <div className="user-homePage-name">棉悠悠</div>
+                          <div className="user-homePage-name">{userHomePageData.nickname}</div>
                           <div className="user-homePage-bandName">
-                            PalWorld樂團
+                          {userHomePageData.my_jam}
                           </div>
                         </div>
                         <div className="user-homePage-Info">
@@ -136,7 +359,7 @@ export default function Test() {
                               </div>
                               <div className="user-homePage-info-item-Content">
                                 <div className="user-homePage-info-item-contentText">
-                                  棉悠悠
+                                {userHomePageData.nickname}
                                 </div>
                               </div>
                             </div>
@@ -146,7 +369,7 @@ export default function Test() {
                               </div>
                               <div className="user-homePage-info-item-Content">
                                 <div className="user-homePage-info-item-contentText">
-                                  男
+                                {gender}
                                 </div>
                               </div>
                             </div>
@@ -156,7 +379,7 @@ export default function Test() {
                               </div>
                               <div className="user-homePage-info-item-Content">
                                 <div className="user-homePage-info-item-contentText">
-                                  2024/01/19
+                                {birthday}
                                 </div>
                               </div>
                             </div>
@@ -166,7 +389,7 @@ export default function Test() {
                               </div>
                               <div className="user-homePage-info-item-Content">
                                 <div className="user-homePage-info-item-contentText">
-                                  金屬、搖滾
+                                {finalGenreLike}
                                 </div>
                               </div>
                             </div>
@@ -176,7 +399,7 @@ export default function Test() {
                               </div>
                               <div className="user-homePage-info-item-Content">
                                 <div className="user-homePage-info-item-contentText">
-                                  貝斯
+                                {finalPlayInstrument}
                                 </div>
                               </div>
                             </div>
@@ -193,7 +416,7 @@ export default function Test() {
                               </div>
                               <div className="user-homePage-info-item-Content">
                                 <div className="user-homePage-info-item-contentText">
-                                  0912456789
+                                {userHomePageData.phone}
                                 </div>
                               </div>
                             </div>
@@ -203,7 +426,7 @@ export default function Test() {
                               </div>
                               <div className="user-homePage-info-item-Content">
                                 <div className="user-homePage-info-item-contentText">
-                                  boundless@gmail.com
+                                {userHomePageData.email}
                                 </div>
                               </div>
                             </div>
@@ -218,17 +441,7 @@ export default function Test() {
                         自我介紹
                       </div>
                       <div className="user-homePage-content-right-infoText">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;那個帕魯我已經觀察你很久了，我對你是有些失望的，進了這個營地，不是把事情做好就可以的，你需要有體系化思考的能力。
-                        你做的事情，他的價值在哪裡？
-                        你是否作出了壁壘，形成了核心競爭力？
-                        你做的事情，和其他帕魯的差異化在哪裡？
-                        為什麼是你來做，其他帕魯不能做嗎？
-                        是否對得起你泡的這兩分鐘溫泉、吃的這兩顆莓果？
-                        你要有自己的判斷力，不是我說什麼你才做什麼！
-                        現在的年輕帕魯就是太年輕，工作量稍微大一點就憂鬱生病，你不干有得是帕魯幹，幹得不好能力差就會被優化掉。
-                        我招你進來時為了讓你解決其他帕魯解決不了的問題的，你需要證明你的價值在哪裡！
-                        你沒有緊迫感，一到時間就睡覺，別人新來的實習帕魯，通宵挖礦。
-                        但我希望你再進步點，有壓力才有動力。
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{userHomePageData.info}
                       </div>
                       <div className="user-homePage-content-right-socialMedia"></div>
                     </div>
@@ -298,6 +511,8 @@ export default function Test() {
                 height: 150px;
                 justify-content: center;
                 align-items: center;
+                border-radius: 150px;
+                overflow:hidden;
 
                 .avatar {
                   width: 150px;
