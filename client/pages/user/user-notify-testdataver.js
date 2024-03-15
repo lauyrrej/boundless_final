@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import Navbar from '@/components/common/navbar'
+// import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -25,25 +25,34 @@ export default function Test() {
     useAuth()
   const [userData, setUserData] = useState()
   //檢查token
-  useEffect(() => {
-    handleLoginStatus()
-    //獲得資料
-    getLoginUserData()
-  }, [])
+  //   useEffect(() => {
+  //     handleLoginStatus()
+  //     getLoginUserData()
+  //   }, [])
   //登出功能
+  let test
+  useEffect(() => {
+    console.log(LoginUserData)
+    // console.log([LoginUserData])
+    // let test = LoginUserData
+    // console.log(test)
+    // console.log(test.id)
+  }, [LoginUserData])
 
+  //   let test = LoginUserData
+  //   console.log(test)
+  //   console.log(test.id)
   //檢查是否獲取資料
-  useEffect(console.log(LoginUserData), [LoginUserData])
-
+  console.log(LoginUserData)
   //   讀取使用者資料後 定義大頭貼路徑
-  let avatarImage
-  if (LoginUserData.img) {
-    avatarImage = `/user/${LoginUserData.img}`
-  } else if (LoginUserData.photo_url) {
-    avatarImage = `${LoginUserData.photo_url}`
-  } else {
-    avatarImage = `/user/avatar_userDefault.jpg`
-  }
+  //   let avatarImage
+  //   if (LoginUserData.img) {
+  //     avatarImage = `/user/${LoginUserData.img}`
+  //   } else if (LoginUserData.photo_url) {
+  //     avatarImage = `${LoginUserData.photo_url}`
+  //   } else {
+  //     avatarImage = `/user/avatar_userDefault.jpg`
+  //   }
 
   // ----------------------會員登入狀態  ----------------------
   // ----------------------手機版本  ----------------------
@@ -121,7 +130,7 @@ export default function Test() {
       <Head>
         <title>我的通知</title>
       </Head>
-      <Navbar menuMbToggle={menuMbToggle} />
+      {/* <Navbar menuMbToggle={menuMbToggle} /> */}
       {/* 先把HEROSECTION隱藏 */}
       {/* <div
         className="page-shero d-none d-sm-block"
@@ -139,14 +148,14 @@ export default function Test() {
           {/* 用戶資訊 */}
           <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
             <div className="mb-photo-wrapper mb-2">
-              <Image
+              {/* <Image
                 src={avatarImage}
                 alt="user photo mb"
                 fill
                 sizes="(max-width: 150px)"
-              ></Image>
+              ></Image> */}
             </div>
-            <div>{LoginUserData.nickname}</div>
+            {/* <div>{LoginUserData.nickname}</div> */}
           </div>
           <Link
             className="mm-item"
@@ -185,17 +194,17 @@ export default function Test() {
             <div className="sidebar">
               <div className="sidebar-user-info">
                 <div className="sidebar-user-info-imgBox">
-                  <Image
+                  {/* <Image
                     src={avatarImage}
                     alt="user photo mb"
                     fill
                     priority="default" //不加的話Next 會問是否要加優先級
                     sizes="(max-width: 150px)"
-                  ></Image>
+                  ></Image> */}
                 </div>
                 <div className="sidebar-user-info-text">
                   <div className="sidebar-user-info-name">
-                    {LoginUserData.nickname}
+                    {/* {LoginUserData.nickname} */}
                   </div>
                   <div className="sidebar-user-info-band">樂團名稱</div>
                 </div>

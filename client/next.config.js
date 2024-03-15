@@ -4,6 +4,7 @@ const nextConfig = {
   images: {
     domains: ['via.placeholder.com', 'localhost', 'lh3.googleusercontent.com'],
   },
+
   // comment for render twice issue
   // avoid cors with proxy
   // async rewrites() {
