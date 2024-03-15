@@ -6,7 +6,8 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     // Mandatory type filter
-const baseQuery = `
+    //評價篩選
+    const baseQuery = `
   SELECT product.*, COUNT(product_review.product_id) AS review_count, AVG(product_review.stars) AS average_rating
   FROM product
   LEFT JOIN product_review ON product.id = product_review.product_id
@@ -14,7 +15,7 @@ const baseQuery = `
   GROUP BY product.id
   ORDER BY product.id
 `;
-
+    //價格篩選
     let queryParams = [2];
     // Additional filters
     const { priceLow, priceHigh, page } = req.query;
