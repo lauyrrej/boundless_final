@@ -24,8 +24,6 @@ import InstrumentList from '@/components/cart/instrument-cart-list.js'
 import InstrumentCouponList from '@/components/cart/instrument-coupons.js'
 import LessonCouponList from '@/components/cart/lesson-coupons.js'
 
-//cart-data
-
 //hook
 import { useCart } from '@/hooks/use-cart'
 
