@@ -19,11 +19,19 @@ export function CartProvider({ children }) {
     localStorage.setItem('CartData', JSON.stringify(items))
   }, [items])
 
+  // 新增商品至購物車
   const addInstrumentItem = (item, qty) => {
+    // 檢查購物車是否已存在該商品
+    const index = items.findIndex((v) => {
+      return (v.id = item.id)
+    })
+    if (index > -1) {
+      increment(item, qty)
+    }
+    // 不存在購物車中，擴充該商品的"數量"屬性
     //擴充item的屬性多一個qty
     const newItem = { ...item, qty: qty }
     const newItems = [...items, newItem]
-
     setItems(newItems)
     localStorage.setItem('CartData', JSON.stringify(newItems))
   }
@@ -47,9 +55,9 @@ export function CartProvider({ children }) {
   }
 
   //遞增某商品id數量
-  const increment = (items, id) => {
-    const newItems = items.map((v, i) => {
-      if (v.id === id) return { ...v, qty: v.qty + 1 }
+  const increment = (item, qty) => {
+    const newItems = items.map((v) => {
+      if (v.id === item.id) return { ...v, qty: v.qty + qty }
       else return v
     })
 
@@ -59,9 +67,9 @@ export function CartProvider({ children }) {
   }
 
   //遞減某商品id數量
-  const decrement = (items, id) => {
+  const decrement = (item) => {
     const newItems = items.map((v, i) => {
-      if (v.id === id) return { ...v, qty: v.qty - 1 }
+      if (v.id === item.id) return { ...v, qty: v.qty - 1 }
       else return v
     })
     setItems(newItems)

@@ -23,10 +23,11 @@ import ProductCardIns from '@/components/instrument/instrument-productbrief-card
 //試抓資料區
 import Instrument from '@/data/instrument/instrument.json'
 //toast
+import toast, { Toaster } from 'react-hot-toast'
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { ToastProvider } from 'react-hot-toast'
-import App from '@/pages/_app'
+// import ReactDOM from 'react-dom'
+
+// import App from '@/pages/_app'
 
 export default function InstrumentDetailPage() {
   // -------試抓資料區----------
@@ -39,7 +40,8 @@ export default function InstrumentDetailPage() {
     setShowMenu(!showMenu)
   }
 
-  const { addInstrumentItem } = useCart
+  // ----------------------加入右上角購物車的功能  ----------------------
+  const { addInstrumentItem, increment, decrement, remove } = useCart()
 
   // ----------------------假資料  ----------------------
 
@@ -67,11 +69,15 @@ export default function InstrumentDetailPage() {
     setcolorChange(!colorChange)
   }
 
+  //-----------------------動態路由
+  //  由router中獲得動態路由(屬性名稱pid，即檔案[pid].js)的值，router.query中會包含pid屬性
+  // 1. 執行(呼叫)useRouter，會回傳一個路由器
+  // 2. router.isReady(布林值)，true代表本元件已完成水合作用(hydration)，可以取得router.query的值
   const router = useRouter()
 
-  const [InstrumentDetail, setInstrumentDetail] = useState([])
-
-  const prevPuidRef = useRef(null)
+  const [InstrumentDetail, setInstrumentDetail] = useState()
+  const [quantity, setQuantity] = useState(1)
+  // const prevPuidRef = useRef(null)
   // 向伺服器要求資料，設定到狀態中用的函式
   const getInstrumentDetail = async (puid) => {
     try {
@@ -108,6 +114,11 @@ export default function InstrumentDetailPage() {
   console.log('render')
   console.log(router.query, ' isReady=', router.isReady)
 
+  const notify = () => toast('{InstrumentDetail[0].name)}已加入購物車.')
+
+  // const quantity = localStorage.getItem('quantity')
+
+  // console.log(quantity)
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
@@ -347,7 +358,15 @@ export default function InstrumentDetailPage() {
                             className="cartIcon"
                           />
 
-                          <div className="cart">加入購物車</div>
+                          <div
+                            className="cart"
+                            role="presentation"
+                            onClick={() => {
+                              addInstrumentItem(InstrumentDetail, quantity)
+                            }}
+                          >
+                            加入購物車
+                          </div>
                         </div>
                         <div className="buyBtn">
                           <Link href={'/pages/cart/check.js'}>
@@ -615,10 +634,13 @@ export default function InstrumentDetailPage() {
             {InstrumentDetail && InstrumentDetail.length > 0 && (
               <ProductCardIns
                 className="Right-card"
-                name={InstrumentDetail[0].name}
-                sales={InstrumentDetail[0].sales}
-                price={InstrumentDetail[0].price}
-                info={InstrumentDetail[0].info}
+                data={InstrumentDetail[0]}
+                quantity={quantity}
+                setQuantity={setQuantity}
+                addInstrumentItem={addInstrumentItem}
+                increment={increment}
+                decrement={decrement}
+                remove={remove}
               />
             )}
           </div>
@@ -651,21 +673,6 @@ export default function InstrumentDetailPage() {
               <CardIns />
             </div>
           </div>
-        </div>
-      </div>
-      <div className="shoppingBtn sticky-top" id="shoppingBtn">
-        <div className="cartBtn">
-          <img
-            loading="lazy"
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
-            className="cartIcon"
-          />
-          <div className="cart">加入購物車</div>
-        </div>
-        <div className="buyBtn">
-          <Link href="/pages/cart/check.js">
-            <div className="buy">立即購買</div>
-          </Link>
         </div>
       </div>
       <Footer />
