@@ -198,6 +198,7 @@ export default function LessonList({}) {
   const [data, setData] = useState(Lesson)
 
   //-----------------篩選功能 //FIXME
+  // 價格篩選
   //確保 priceLow 和 priceHigh 有被定義後再呼叫 priceRange 函式
   const priceRange = (priceLow, priceHigh) => {
     if (priceLow !== '' && priceHigh !== '') {
@@ -213,28 +214,27 @@ export default function LessonList({}) {
       console.log(data)
     }
   }
-  // 課程評價
+  // 課程評價篩選
   const scoreState = ['all', '5', '4', '3']
   const [score, setScore] = useState('all')
 
   // 当选中的星级变化时，筛选商品列表
-useEffect(() => {
-//   console.log('当前选择的评分:', score) // 调试日志，查看当前选择的评分
-  if (score === 'all') {
-    // console.log('显示所有课程')
-    setData(Lesson)
-  } else {
-    const scoreNum = parseInt(score, 10)
-    // console.log('筛选评分为', scoreNum, '的课程')
-    const filtered = Lesson.filter(
-      (lesson) => Math.round(lesson.average_rating) === scoreNum
-    )
-    // console.log('筛选结果:', filtered) // 调试日志，查看筛选结果
+  useEffect(() => {
+    //   console.log('当前选择的评分:', score) // 调试日志，查看当前选择的评分
+    if (score === 'all') {
+      // console.log('显示所有课程')
+      setData(Lesson)
+    } else {
+      const scoreNum = parseInt(score, 10)
+      // console.log('筛选评分为', scoreNum, '的课程')
+      const filtered = Lesson.filter(
+        (lesson) => Math.round(lesson.average_rating) === scoreNum
+      )
+      // console.log('筛选结果:', filtered) // 调试日志，查看筛选结果
       setData(filtered)
       setIsFiltered(true)
-  }
-}, [score, Lesson])
-
+    }
+  }, [score, Lesson])
 
   //-------------------搜尋功能
   const [search, setSearch] = useState('')
@@ -266,7 +266,13 @@ useEffect(() => {
   }
 
   //依評價
-  //FIXME沒有資料？
+  const sortByRating = () => {
+    const sortedProducts = [...Lesson].sort(
+      (a, b) => b.average_rating - a.average_rating
+    )
+    setData(sortedProducts)
+    setIsFiltered(true)
+  }
   //依時數
   const sortBylength = () => {
     const sortedProducts = [...Lesson].sort((a, b) => b.length - a.length)
@@ -597,9 +603,9 @@ useEffect(() => {
                                       name="score"
                                       value={v}
                                       checked={v === score}
-                                    //   onChange={(e) => {
-                                    //     setScore(e.target.value)
-                                    //   }}
+                                      //   onChange={(e) => {
+                                      //     setScore(e.target.value)
+                                      //   }}
                                       onChange={(e) => {
                                         const value = e.target.value
                                         setScore(
@@ -660,7 +666,9 @@ useEffect(() => {
                     <div className="sort-item " onClick={sortBySales}>
                       最熱門
                     </div>
-                    <div className="sort-item">依評價</div>
+                    <div className="sort-item" onClick={sortByRating}>
+                      依評價
+                    </div>
                     <div className="sort-item" onClick={sortBylength}>
                       依時數
                     </div>
@@ -687,7 +695,7 @@ useEffect(() => {
                               name={v.name}
                               average_rating={averageRating}
                               price={v.price}
-                              teacher_id={v.teacher_id}
+                              teacher_name={v.teacher_name}
                               img={v.img}
                               length={v.length}
                               sales={v.sales}
@@ -713,7 +721,7 @@ useEffect(() => {
                       average_rating,
                       review_count,
                       price,
-                      lesson_category_id,
+                      teacher_name,
                       teacher_id,
                       img,
                       sales,
@@ -729,7 +737,7 @@ useEffect(() => {
                             average_rating={Math.round(average_rating)}
                             review_count={review_count}
                             price={price}
-                            teacher_id={teacher_id}
+                            teacher_name={teacher_name}
                             img={img}
                             sales={sales}
                             length={length}
@@ -744,7 +752,7 @@ useEffect(() => {
                             average_rating={Math.round(average_rating)}
                             review_count={review_count}
                             price={price}
-                            teacher_id={teacher_id}
+                            teacher_name={teacher_name}
                             img={img}
                             sales={sales}
                             length={length}
@@ -764,7 +772,7 @@ useEffect(() => {
                       average_rating,
                       review_count,
                       price,
-                      lesson_category_id,
+                      teacher_name,
                       teacher_id,
                       img,
                       sales,
@@ -780,7 +788,7 @@ useEffect(() => {
                             average_rating={Math.round(average_rating)}
                             review_count={review_count}
                             price={price}
-                            teacher_id={teacher_id}
+                            teacher_name={teacher_name}
                             img={img}
                             sales={sales}
                             length={length}
@@ -795,7 +803,7 @@ useEffect(() => {
                             average_rating={Math.round(average_rating)}
                             review_count={review_count}
                             price={price}
-                            teacher_id={teacher_id}
+                            teacher_name={teacher_name}
                             img={img}
                             sales={sales}
                             length={length}

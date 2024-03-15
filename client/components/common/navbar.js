@@ -238,9 +238,9 @@ export default function Navbar({ menuMbToggle }) {
         }
         .button__badge {
           background-color: #fa3e3e;
-          border-radius: 2px;
+          border-radius: 10px;
           color: white;
-          padding: 1px 3px;
+          padding: 3px 6px;
           font-size: 10px;
           position: absolute;
           top: 1px;

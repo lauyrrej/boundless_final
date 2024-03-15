@@ -8,9 +8,10 @@ router.get('/', async (req, res) => {
     // Mandatory type filter
     //評價篩選
     const baseQuery = `
-  SELECT product.*, COUNT(product_review.product_id) AS review_count, AVG(product_review.stars) AS average_rating
+  SELECT product.*, COUNT(product_review.product_id) AS review_count, AVG(product_review.stars) AS average_rating, teacher_info.* 
   FROM product
   LEFT JOIN product_review ON product.id = product_review.product_id
+  LEFT JOIN teacher_info ON product.teacher_id = teacher_info.id 
   WHERE product.type = 2
   GROUP BY product.id
   ORDER BY product.id
@@ -97,10 +98,11 @@ router.get('/:id', async (req, res, next) => {
   console.log(luid);
   try {
     let [data] = await db.execute(
-      'SELECT p.*, pr.*, lc.* ' +
+      'SELECT p.*, pr.*, lc.* ,u.*' +
         'FROM `product` AS p ' +
         'LEFT JOIN `product_review` AS pr ON p.id = pr.product_id ' +
         'LEFT JOIN `lesson_category` AS lc ON p.lesson_category_id = lc.id ' +
+        'LEFT JOIN `user` AS u ON pr.user_id = u.id ' +
         'WHERE p.`puid` = ? AND p.`lesson_category_id` IN (' +
         'SELECT `lesson_category_id` FROM `product` WHERE `puid` = ?' +
         ')',
@@ -115,7 +117,7 @@ router.get('/:id', async (req, res, next) => {
     );
 
     if ({ data, youwilllike }) {
-      console.log({ data, youwilllike });
+      console.log({ data});
       res.status(200).json({ data, youwilllike });
     } else {
       res.status(404).send('Data not found');
