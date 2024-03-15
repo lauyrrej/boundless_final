@@ -68,37 +68,27 @@ router.get("/categories", async (req, res) => {
 // });
 
 // publish
-router.post("/article-publish", upload.none(), async (req, res) => {
-  console.log(req.body);
-  // POST /api/user/status 500Internal error
-  const {
-    id,
-    auid,
-    title,
-    content,
-    img,
-    category_id,
-  } = req.body;
-
-  await db
-    .execute(
-      "INSERT INTO `article` (`id`,`auid`, `title`, `content`, `img`, `category_id`) VALUES (NULL, NULL, ?, ?, ?, ?)",
-      [
-        id,
-        auid,
-        title,
-        content,
-        img,
-        category_id,
-      ]
-    )
-    .then(() => {
-      res.status(200).json({ status: "success", auid });
-    })
-    .catch((error) => {
-      res.status(409).json({ status: "error", error });
-    });
-});
+router.post(
+  '/article-list/article-publish',
+  upload.none(),
+  async (req, res) => {
+    console.log(req.body);
+    // POST /api/user/status 409
+    const { title, content, category_id } = req.body;
+    const auid = generateUid();
+    await db
+      .execute(
+        'INSERT INTO `article` (`id`,`auid`, `title`, `content`, `category_id`) VALUES (NULL, ?, ?, ?, ?)',
+        [auid, title, content, category_id]
+      )
+      .then(() => {
+        res.status(200).json({ status: 'success', auid });
+      })
+      .catch((error) => {
+        res.status(409).json({ status: 'error', error });
+      });
+  }
+);
 
 //特定分類的資料
 // router.get("/category/:category", async (req, res) => {
@@ -119,5 +109,27 @@ router.post("/article-publish", upload.none(), async (req, res) => {
 //     res.json("發生錯誤");
 //   }
 // });
+
+function generateUid() {
+  let characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let codeLength = 12;
+  let createdCodes = [];
+  let createCodes = '';
+
+  let Code = '';
+  do {
+    Code = '';
+    for (let i = 0; i < codeLength; i++) {
+      let randomIndex = Math.floor(Math.random() * characters.length);
+      //   回傳characters當中的隨機一值
+      Code += characters.charAt(randomIndex);
+    }
+  } while (createdCodes.includes(Code));
+
+  createdCodes.push(Code);
+  createCodes += Code;
+  return createCodes;
+}
 
 export default router;

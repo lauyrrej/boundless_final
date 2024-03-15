@@ -78,7 +78,7 @@ export default function Publish() {
       // console.log(`${key}: ${value}`)
     }
     const res = await fetch(
-      'http://localhost:3005/api/article/article-publish',
+      'http://localhost:3005/api/article/article-list/article-publish',
       {
         method: 'POST',
         body: formData,
@@ -254,6 +254,10 @@ export default function Publish() {
                 <select
                   className="form-select"
                   aria-label="Default select example"
+                  onChange={(e) => {
+                    setCategory(e.target.value)
+                  }}
+                  value={category_id}
                 >
                   <option value={1}>技術</option>
                   <option value={2}>樂評</option>
@@ -269,8 +273,7 @@ export default function Publish() {
               </div>
               <div className="rwd-content">
                 <h5 className="text-secondary">
-                  上限150個字，系統已經先擷取，你也可以自行修改摘要說明。(
-                  {content.length}/150)
+                  系統已經先擷取，你也可以自行修改摘要說明。
                 </h5>
                 <div>
                   <label
@@ -286,7 +289,6 @@ export default function Publish() {
                       setContent(e.target.value)
                     }}
                     placeholder="輸入內容..."
-                    maxLength={150}
                     defaultValue={''}
                   />
                 </div>
@@ -325,45 +327,6 @@ export default function Publish() {
               </div>
             </div>
             <hr />
-            {/* setting tag */}
-            {/* <div className="set-rwd">
-              <div className="rwd-title">
-                <h3>自訂文章摘要</h3>
-              </div>
-              <div className="rwd-content">
-                <h5 className="text-secondary">
-                  設定關鍵字，讓文章更容易被讀者搜尋跟瀏覽
-                  <br />
-                  <br />
-                  請按 Enter鍵進行分隔 最多4個
-                </h5>
-                <br />
-                <br />
-                <div className="tag-btns">
-                  <button type="button" className="btn btn-outline-secondary">
-                    標籤1
-                    <i className="fa-solid fa-circle-xmark ms-2" />
-                  </button>
-                  <button type="button" className="btn btn-outline-secondary">
-                    標籤1
-                    <i className="fa-solid fa-circle-xmark ms-2" />
-                  </button>
-                  <button type="button" className="btn btn-outline-secondary">
-                    標籤1
-                    <i className="fa-solid fa-circle-xmark ms-2" />
-                  </button>
-                  <button type="button" className="btn btn-outline-secondary">
-                    標籤1
-                    <i className="fa-solid fa-circle-xmark ms-2" />
-                  </button>
-                  <button type="button" className="btn btn-outline-secondary">
-                    標籤1
-                    <i className="fa-solid fa-circle-xmark ms-2" />
-                  </button>
-                </div>
-              </div>
-            </div>
-            <hr /> */}
             {/* setting publish */}
             <div className="set-rwd">
               <div className="rwd-title">
