@@ -6,10 +6,15 @@ export default function Twzipcode({
   initPostcode = '',
   onPostcodeChange = (country, township, postcode) => {},
 }) {
-  const [countryIndex, setCountryIndex] = useState(-1)
+  const [countryIndex, setCountryIndex] = useState(1)
   const [townshipIndex, setTownshipIndex] = useState(-1)
 
   const [postcode, setPostcode] = useState('')
+
+
+
+
+
 
   useEffect(() => {
     if (initPostcode) {
@@ -31,6 +36,7 @@ export default function Twzipcode({
   useEffect(() => {
     if (countryIndex > -1 && townshipIndex > -1) {
       setPostcode(postcodes[countryIndex][townshipIndex])
+      localStorage.setItem('Postcode', postcode)
     }
   }, [countryIndex, townshipIndex])
 
@@ -41,6 +47,7 @@ export default function Twzipcode({
         townships[countryIndex][townshipIndex],
         postcode
       )
+      localStorage.setItem('Postcode', postcode)
     }
   }, [postcode])
 
@@ -55,7 +62,10 @@ export default function Twzipcode({
           name="country"
           id="country"
           value={countryIndex}
-          onChange={(e) => setCountryIndex(Number(e.target.value))}
+          onChange={(e) => {setCountryIndex(Number(e.target.value))
+            let newCountry = countries[countryIndex]
+          localStorage.setItem('Country', newCountry)
+          }}
         >
           <option value={-1}>請選擇縣市</option>
           {countries.map((v, i) => {
@@ -76,7 +86,10 @@ export default function Twzipcode({
           name="district"
           id="district"
           value={townshipIndex}
-          onChange={(e) => setTownshipIndex(Number(e.target.value))}
+          onChange={(e) => {setTownshipIndex(Number(e.target.value))
+            let newTownship = townships[countryIndex][townshipIndex]
+            localStorage.setItem('Township', newTownship)
+          }}
         >
           <option value={-1}>請選擇鄉鎮區</option>
           {countryIndex > -1 &&

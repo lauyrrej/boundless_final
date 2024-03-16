@@ -35,8 +35,8 @@ export default function Test() {
     instrumentCoupons,
     lessonData,
     lessonCoupons,
-    increment,
-    decrement,
+    increment_cart,
+    decrement_cart,
     remove,
     calcInstrumentItems,
     calcInstrumentPrice,
@@ -200,8 +200,8 @@ export default function Test() {
                 <InstrumentList
                   items={items}
                   instrumentData={instrumentData}
-                  increment={increment}
-                  decrement={decrement}
+                  increment_cart={increment_cart}
+                  decrement_cart={decrement_cart}
                   remove={remove}
                 />
                 <div className="cart-subtotal h6">

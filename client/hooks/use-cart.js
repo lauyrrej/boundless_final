@@ -19,7 +19,6 @@ export function CartProvider({ children }) {
     localStorage.setItem('CartData', JSON.stringify(items))
   }, [items])
 
-
   // 新增商品至購物車
   const addInstrumentItem = (item, qty) => {
     // 檢查購物車是否已存在該商品
@@ -30,7 +29,6 @@ export function CartProvider({ children }) {
       increment(item, qty)
     }
     // 不存在購物車中，擴充該商品的"數量"屬性
-
     //擴充item的屬性多一個qty
     const newItem = { ...item, qty: qty }
     const newItems = [...items, newItem]
@@ -39,6 +37,13 @@ export function CartProvider({ children }) {
   }
 
   const addLessonItem = (item) => {
+    const index = items.findIndex((v) =>{
+      return (v.id =  item.id)
+    })
+
+    if(index > -1){
+      return
+    }
     const newItems = [...items, item]
     setItems(newItems)
     localStorage.setItem('CartData', JSON.stringify(newItems))
@@ -66,10 +71,31 @@ export function CartProvider({ children }) {
     localStorage.setItem('CartData', JSON.stringify(newItems))
   }
 
+  const increment_cart = (items, id) => {
+    const newItems = items.map((v) => {
+      if (v.id === id) return { ...v, qty: v.qty + 1 }
+      else return v
+    })
+
+    setItems(newItems)
+
+    localStorage.setItem('CartData', JSON.stringify(newItems))
+  }
+
   //遞減某商品id數量
   const decrement = (item) => {
     const newItems = items.map((v, i) => {
       if (v.id === item.id) return { ...v, qty: v.qty - 1 }
+      else return v
+    })
+    setItems(newItems)
+
+    localStorage.setItem('CartData', JSON.stringify(newItems))
+  }
+
+  const decrement_cart = (items, id) => {
+    const newItems = items.map((v, i) => {
+      if (v.id === id) return { ...v, qty: v.qty - 1 }
       else return v
     })
     setItems(newItems)
@@ -165,7 +191,6 @@ export function CartProvider({ children }) {
   }
 
   useEffect(() => {
-
     const lastInstrumentCoupon = JSON.parse(
       localStorage.getItem('InstrumentCoupon') ?? '[]'
     )
@@ -190,7 +215,6 @@ export function CartProvider({ children }) {
   //   //   localStorage.setItem('UserInfo', UserInfo)
   //   // }, [UserInfo])
   // }
-
 
   const calcLessonDiscount = () => {
     let total = 0
@@ -232,7 +256,9 @@ export function CartProvider({ children }) {
         addLessonItem,
         addInstrumentItem,
         increment,
+        increment_cart,
         decrement,
+        decrement_cart,
         remove,
         calcInstrumentItems,
         calcInstrumentPrice,
