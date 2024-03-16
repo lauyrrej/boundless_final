@@ -9,7 +9,9 @@ export default function InstrumentCouponDropdowns({
       </option>
     )
   })
+  
   var select = localStorage.getItem('InstrumentCoupon')
+
   return (
     <>
       <select

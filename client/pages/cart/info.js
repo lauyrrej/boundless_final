@@ -67,6 +67,21 @@ export default function Test() {
 
 let UserInfoData = JSON.parse(UserInfo)
 
+if(typeof window !== 'undefined'){
+    const country = localStorage.getItem('Country')
+    const township = localStorage.getItem('Township')
+    const postcode = localStorage.getItem('Postcode')
+}
+
+const [data, setData] = useState({
+  country: '',
+  township: '',
+  postcode: '',
+})
+
+
+
+
 console.log(UserInfoData[0].Name);
 
 
@@ -237,7 +252,14 @@ console.log(UserInfoData[0].Name);
                       寄送地址
                     </label>
                     <div className="address-location col-sm-10">
-                      <Twzipcode />
+                      <Twzipcode initPostcode={data.postcode}
+                                  onPostcodeChange={(country, township, postcode) => {
+                                    setData({
+                                      country,
+                                      township,
+                                      postcode,
+                                    })
+                                  }}/>
 
                       <div className="col-sm-7 col-7">
                         <label htmlFor="addressinfo" className="form-label">

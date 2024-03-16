@@ -37,6 +37,13 @@ export function CartProvider({ children }) {
   }
 
   const addLessonItem = (item) => {
+    const index = items.findIndex((v) =>{
+      return (v.id =  item.id)
+    })
+
+    if(index > -1){
+      return
+    }
     const newItems = [...items, item]
     setItems(newItems)
     localStorage.setItem('CartData', JSON.stringify(newItems))
@@ -64,10 +71,31 @@ export function CartProvider({ children }) {
     localStorage.setItem('CartData', JSON.stringify(newItems))
   }
 
+  const increment_cart = (items, id) => {
+    const newItems = items.map((v) => {
+      if (v.id === id) return { ...v, qty: v.qty + 1 }
+      else return v
+    })
+
+    setItems(newItems)
+
+    localStorage.setItem('CartData', JSON.stringify(newItems))
+  }
+
   //遞減某商品id數量
   const decrement = (item) => {
     const newItems = items.map((v, i) => {
       if (v.id === item.id) return { ...v, qty: v.qty - 1 }
+      else return v
+    })
+    setItems(newItems)
+
+    localStorage.setItem('CartData', JSON.stringify(newItems))
+  }
+
+  const decrement_cart = (items, id) => {
+    const newItems = items.map((v, i) => {
+      if (v.id === id) return { ...v, qty: v.qty - 1 }
       else return v
     })
     setItems(newItems)
@@ -228,7 +256,9 @@ export function CartProvider({ children }) {
         addLessonItem,
         addInstrumentItem,
         increment,
+        increment_cart,
         decrement,
+        decrement_cart,
         remove,
         calcInstrumentItems,
         calcInstrumentPrice,
