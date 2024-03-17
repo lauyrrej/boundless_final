@@ -20,6 +20,8 @@ import { FiMinus } from 'react-icons/fi'
 //hook
 import { useCart } from '@/hooks/use-cart'
 
+import Twzipcode from '@/components/cart/twzipcode'
+
 export default function Test() {
   //hook
   const {
@@ -46,27 +48,42 @@ export default function Test() {
     console.log(e.target)
   }
 
-  //credit-card data
+  //User-Info Data
 
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
   const [address, setAddress] = useState('')
 
-
-
   let UserInfo = JSON.stringify([
-    { Name: name },
-    { Phone: phone },
-    { Email: email },
-    { Address: address}
+    { Name: name, Phone: phone, Email: email, Address: address },
   ])
+
 
   useEffect(() => {
     localStorage.setItem('UserInfo', UserInfo)
   }, [UserInfo])
 
-  const [creditcardNum1, setCreditcardNum1] = useState('')
+
+let UserInfoData = JSON.parse(UserInfo)
+
+if(typeof window !== 'undefined'){
+    const country = localStorage.getItem('Country')
+    const township = localStorage.getItem('Township')
+    const postcode = localStorage.getItem('Postcode')
+}
+
+const [data, setData] = useState({
+  country: '',
+  township: '',
+  postcode: '',
+})
+
+
+
+
+console.log(UserInfoData[0].Name);
+
 
   // ----------------------手機版本  ----------------------
   // 主選單
@@ -188,7 +205,7 @@ export default function Test() {
                         type="text"
                         className="form-control"
                         id="name"
-                        value={UserInfo.Name}
+                        value={UserInfoData[0].Name}
                         onChange={(e) => setName(e.target.value)}
                       />
                     </div>
@@ -235,35 +252,16 @@ export default function Test() {
                       寄送地址
                     </label>
                     <div className="address-location col-sm-10">
-                      <div className="col-sm-3">
-                        <label htmlFor="country" className="form-label">
-                          縣/市
-                        </label>
-                        <select
-                          className="form-select"
-                          name="country"
-                          id="country"
-                        >
-                          <option value="" selected="">
-                            台北市
-                          </option>
-                        </select>
-                      </div>
-                      <div className="col-sm-3">
-                        <label htmlFor="district" className="form-label">
-                          區/鎮/鄉
-                        </label>
-                        <select
-                          className="form-select"
-                          name="district"
-                          id="district"
-                        >
-                          <option value="" selected="">
-                            中正區
-                          </option>
-                        </select>
-                      </div>
-                      <div className="col-sm-7">
+                      <Twzipcode initPostcode={data.postcode}
+                                  onPostcodeChange={(country, township, postcode) => {
+                                    setData({
+                                      country,
+                                      township,
+                                      postcode,
+                                    })
+                                  }}/>
+
+                      <div className="col-sm-7 col-7">
                         <label htmlFor="addressinfo" className="form-label">
                           詳細地址
                         </label>
@@ -747,7 +745,6 @@ export default function Test() {
       }
       .address-location{
         display: flex;
-        /* width: 664px; */
         align-items: flex-start;
         align-content: flex-start;
         gap: 12px 45px;

@@ -60,6 +60,28 @@ export default function Test() {
     }
   }
 
+  //----------------------------sweetalert--------------------------------------
+  //登入 跳轉 還沒加入判定 應該要先判斷再跳轉
+
+  const mySwal = withReactContent(Swal)
+
+  const googleloginAlert = () => {
+    mySwal
+      .fire({
+        position: 'center',
+        icon: 'success',
+        iconColor: '#1581cc',
+        title: 'Google登入成功，將為您跳轉到首頁',
+        showConfirmButton: false,
+        timer: 2000,
+      })
+      .then(
+        setTimeout(() => {
+          router.push(`/user/user-info`)
+        }, 2000)
+      )
+  }
+
   // ----------------------google登入  ----------------------
 
   // const [user, setUser] = useState({ email: '', password: '' })
@@ -122,11 +144,13 @@ export default function Test() {
       setToken(googletoken)
 
       // console.log(googletoken)
-      console.log(userData)
-      alert('已成功登入')
-      setTimeout(() => {
-        router.push(`/user/user-info`)
-      }, 2000)
+      // console.log(userData)
+      // alert('已成功登入')
+      // setTimeout(() => {
+      //   router.push(`/user/user-info`)
+      // }, 2000)
+
+      googleloginAlert()
       return googletoken, userData
     } else {
       alert(`登入失敗`)

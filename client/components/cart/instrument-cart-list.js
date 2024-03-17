@@ -12,8 +12,8 @@ import InstrumentCategory from '@/data/cart/instrument_category.json'
 export default function InstrumentList({
   items,
   instrumentData,
-  increment,
-  decrement,
+  increment_cart,
+  decrement_cart,
   remove,
 }) {
   const instruments = items.filter((v, i) => {
@@ -57,7 +57,7 @@ export default function InstrumentList({
                       if (v.qty === 1) {
                         remove(items, v.id)
                       } else {
-                        decrement(items, v.id)
+                        decrement_cart(items, v.id)
                       }
                     }}
                   >
@@ -68,14 +68,15 @@ export default function InstrumentList({
                     className={`${Instrument.input_number} form-control`}
                     id="quantity"
                     name="quantity"
-                    defaultValue={v.qty}
+                    defaultValue={1}
+                    value={v.qty}
                     min={1}
                     max={100}
                   />
                   <button
                     className={`${Instrument.quantity_right_plus} btn btn-primary`}
                     onClick={() => {
-                      increment(items, v.id)
+                      increment_cart(items,v.id)
                     }}
                   >
                     <FaPlus />
