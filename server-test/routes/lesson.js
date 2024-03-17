@@ -173,6 +173,5 @@ router.get("/:priceLow&;priceHigh", async (req, res, next) => {
 
 });
 //   // 排序用
-//   let orderDirection = req.query.order || "ASC";
 
-export default router;
+export default router

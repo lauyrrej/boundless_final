@@ -1,6 +1,5 @@
 export default function LessonCouponDropdowns({
   lessonCoupons,
-  lessonDiscount,
   handleLessonSelector,
 }) {
   const coupons = lessonCoupons.map((v) => {
@@ -11,6 +10,11 @@ export default function LessonCouponDropdowns({
     )
   })
 
+  
+  let select = localStorage.getItem('LessonCoupon')
+
+  
+
   return (
     <>
       <select
@@ -18,7 +22,7 @@ export default function LessonCouponDropdowns({
         className="form-select"
         aria-label="Default select example"
         defaultValue={'Default'}
-        value={lessonDiscount}
+        value={select}
         onChange={(e) => {
           handleLessonSelector(e.target.value)
         }}
