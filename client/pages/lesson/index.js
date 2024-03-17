@@ -132,41 +132,19 @@ export default function LessonList({}) {
     setSales(false)
   }
 
-  //FIXME分頁功能
-  // ------------------------------------- 製作分頁 not done
-  const [products, setProducts] = useState([])
-  const [CurrentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-
-  useEffect(() => {
-    handlePageClick()
-  }, [CurrentPage])
-
-  const handlePageClick = async () => {
-    try {
-      const response = await fetch(
-        `http://localhost:3005/api/lesson/page/${page}`
-      )
-      setProducts(response.data.products)
-      setTotalPages(response.data.totalPages)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  //   const handlePrevPage = () => {
-  //     setCurrentPage(prevPage => prevPage - 1);
-  //   };
-
-  //   const handleNextPage = () => {
-  //     setCurrentPage(prevPage => prevPage + 1);
-  //   };
-
   //-------------------連資料庫
-  const initialUrl = 'http://localhost:3005/api/lesson'
-  const [Lesson, setLesson] = useState([])
+  const perPage = 12
+  const [currentPage, setCurrentPage] = useState(0)
+  const [totalPage, setTotalPage] = useState(0)
+  const [LessonArray, setLessonArray] = useState([])
 
-  function getLesson(initialUrl) {
+  //   const perPage = 12; // Number of items per page
+  //   const startIndex = ((parseInt(page) || 1) - 1) * perPage;
+  //   baseQuery += " LIMIT ?, ?";
+  //     queryParams.push(startIndex, perPage);
+  //      console.log(baseQuery);
+
+  function getLesson() {
     return new Promise((resolve, reject) => {
       let url = 'http://localhost:3005/api/lesson'
       fetch(url, {
@@ -177,9 +155,17 @@ export default function LessonList({}) {
           return response.json()
         })
         .then((result) => {
-          resolve(result)
-          console.log(result)
-          setLesson(result)
+          // 将 result 每 perPage 条记录分成一页一页的数组
+          const pages = result.reduce((acc, current, index) => {
+            const tempPage = Math.floor(index / perPage) // 当前记录所在的页码
+            if (!acc[tempPage]) {
+              acc[tempPage] = [] // 如果该页不存在，则创建一个新的页数组
+            }
+            acc[tempPage].push(current) // 将当前记录添加到相应的页数组中
+            return acc
+          }, [])
+          setTotalPage(pages.length)
+          setLessonArray(pages[currentPage]) // 将分页后的结果传递给 resolve
         })
         .catch((error) => {
           console.log(error)
@@ -188,14 +174,19 @@ export default function LessonList({}) {
     })
   }
   useEffect(() => {
-    getLesson(initialUrl)
-  }, [initialUrl])
+    getLesson()
+  }, [currentPage])
+
+  const handlePageClick = (event) => {
+    const newPage = event.selected
+    setCurrentPage(newPage)
+  }
 
   // 在组件中定义 isFiltered 状态，并提供一个函数来更新它的值
   const [isFiltered, setIsFiltered] = useState(false)
   //-----------所有過濾資料功能傳回來的地方
 
-  const [data, setData] = useState(Lesson)
+  const [data, setData] = useState(LessonArray)
 
   //-----------------篩選功能 //FIXME
   // 價格篩選
@@ -223,18 +214,18 @@ export default function LessonList({}) {
     //   console.log('当前选择的评分:', score) // 调试日志，查看当前选择的评分
     if (score === 'all') {
       // console.log('显示所有课程')
-      setData(Lesson)
+      setData(LessonArray)
     } else {
       const scoreNum = parseInt(score, 10)
       // console.log('筛选评分为', scoreNum, '的课程')
-      const filtered = Lesson.filter(
+      const filtered = LessonArray.filter(
         (lesson) => Math.round(lesson.average_rating) === scoreNum
       )
       // console.log('筛选结果:', filtered) // 调试日志，查看筛选结果
       setData(filtered)
       setIsFiltered(true)
     }
-  }, [score, Lesson])
+  }, [score, LessonArray])
 
   //-------------------搜尋功能
   const [search, setSearch] = useState('')
@@ -242,10 +233,10 @@ export default function LessonList({}) {
     // console.log('按鈕被點擊了')
     let newData
     if (search.trim() === '') {
-      newData = Lesson
+      newData = LessonArray
       //   console.log(newData)
     } else {
-      newData = Lesson.filter((v, i) => {
+      newData = LessonArray.filter((v, i) => {
         return v.name.includes(search)
       })
     }
@@ -260,14 +251,14 @@ export default function LessonList({}) {
   //-------------------排序功能
   //最熱門
   const sortBySales = () => {
-    const sortedProducts = [...Lesson].sort((a, b) => b.sales - a.sales)
+    const sortedProducts = [...LessonArray].sort((a, b) => b.sales - a.sales)
     setData(sortedProducts)
     setIsFiltered(true)
   }
 
   //依評價
   const sortByRating = () => {
-    const sortedProducts = [...Lesson].sort(
+    const sortedProducts = [...LessonArray].sort(
       (a, b) => b.average_rating - a.average_rating
     )
     setData(sortedProducts)
@@ -275,13 +266,14 @@ export default function LessonList({}) {
   }
   //依時數
   const sortBylength = () => {
-    const sortedProducts = [...Lesson].sort((a, b) => b.length - a.length)
+    const sortedProducts = [...LessonArray].sort((a, b) => b.length - a.length)
     setData(sortedProducts)
     setIsFiltered(true)
   }
 
   //-------------------渲染分類功能li
   const [LessonCategory, setLessonCategory] = useState([])
+
   function getLessonCategory() {
     return new Promise((resolve, reject) => {
       let url = 'http://localhost:3005/api/lesson/categories'
@@ -682,7 +674,7 @@ export default function LessonList({}) {
                 <div className="hot-lesson">
                   <h4 className="text-primary">熱門課程</h4>
                   <div className="hot-lesson-card-group">
-                    {Lesson.slice() // Create a copy of data array to avoid mutating original array
+                    {LessonArray.slice() // Create a copy of data array to avoid mutating original array
                       .sort((a, b) => b.sales - a.sales) // Sort courses based on sales volume
                       .slice(0, 4) // Get top 4 courses */
                       .map((v, i) => {
@@ -764,7 +756,7 @@ export default function LessonList({}) {
 
                 {!isFiltered &&
                   // 如果没有进行筛选或搜索，渲染原始的 Lesson 数据
-                  Lesson.map((v, i) => {
+                  LessonArray.map((v, i) => {
                     const {
                       id,
                       puid,
@@ -819,15 +811,10 @@ export default function LessonList({}) {
       </div>
       <div className="d-flex justify-content-center">
         <BS5Pagination
-          forcePage={CurrentPage - 1}
+          forcePage={currentPage}
           onPageChange={handlePageClick}
-          pageCount={totalPages}
+          pageCount={totalPage}
         />
-        {/* <Pagination
-          totalPages={Math.ceil(filteredProducts.length / perPage)}
-                  setFilterSettings={setFilterSettings}
-                  page={setFilterSettings.page}
-        /> */}
       </div>
       <Footer />
       <style jsx>{`
