@@ -106,6 +106,9 @@ export default function Test() {
   const [dataSort, setDataSort] = useState([])
   const [dataPage, setDataPage] = useState([])
 
+  // 折扣幅度↓ / 即將到期↑ ---
+  const [dataLatest, setDataLatest] = useState('latest')
+
   // #region ---條件篩選 ---
   const [filterVisible, setFilterVisible] = useState(false)
   useEffect(() => {
@@ -153,15 +156,14 @@ export default function Test() {
   const [kind, setKind] = useState(0)
   const [valid, setValid] = useState(1)
 
-  // 折扣幅度↓ / 即將到期↑ ---
-  const [dataFilter, setDataFilter] = useState('latest')
-
   // 從後端加載商品數據
   useEffect(() => {
     // component did mounted 呼叫api，這樣只會做一遍
     // userID=1
     CouponClass.FindAll(1).then(async (res) => {
       setDataSort(res)
+
+      setDataLatest(res)
 
       setDataPage(res.length / 9 + 1)
       const page = res.length / 9 + 1
@@ -464,10 +466,10 @@ export default function Test() {
                   <div className="sort-mb d-block d-sm-none">
                     <select
                       className="form-select"
-                      value={dataFilter}
-                      name="dataFilter"
+                      value={dataLatest}
+                      name="dataLatest"
                       onChange={(e) => {
-                        setDataFilter(e.target.value)
+                        setDataLatest(e.target.value)
                       }}
                     >
                       <option selected value="#">
@@ -621,18 +623,18 @@ export default function Test() {
                     </div>
                     <div
                       className={`sort-item ${
-                        dataFilter === 'latest' ? 'active' : ''
+                        dataLatest === 'latest' ? 'active' : ''
                       }`}
                       role="presentation"
                       onClick={(e) => {
-                        setDataFilter('latest')
+                        setDataLatest('latest')
                       }}
                     >
                       新到舊
                     </div>
                     <div
                       className={`sort-item ${
-                        dataFilter === 'oldest' ? 'active' : ''
+                        dataLatest === 'oldest' ? 'active' : ''
                       }`}
                       role="presentation"
                       onClick={(e) => {
@@ -665,35 +667,37 @@ export default function Test() {
                       <div className="couponImage">
                         {/* 如果 kind 不等於 0，則只保留具有與 kind 變數相等的 kind 屬性的元素；如果 kind 等於 0，則保留所有元素。最終返回符合條件的元素組成的新陣列。 */}
                         {dataSort
-                          .filter((i) => (kind !== 0 ? i.kind === kind : true))
-                          .filter((i) =>
-                            valid !== 1 ? i.valid === valid : true
-                          )
-                          .map((v, i) => {
-                            const {
-                              id,
-                              name,
-                              type,
-                              discount,
-                              kind,
-                              created_time,
-                              limit_time,
-                              valid,
-                            } = v
-                            return (
-                              <Coupon
-                                key={id}
-                                name={name}
-                                type={type}
-                                discount={discount}
-                                kind={kind}
-                                created_time={created_time}
-                                limit_time={limit_time}
-                                className={`${styles.couponItem} `}
-                                valid={valid}
-                              />
+                            .filter((i) =>
+                              kind !== 0 ? i.kind === kind : true
                             )
-                          })}
+                            .filter((i) =>
+                              valid !== 1 ? i.valid === valid : true
+                            )
+                            .map((v, i) => {
+                              const {
+                                id,
+                                name,
+                                type,
+                                discount,
+                                kind,
+                                created_time,
+                                limit_time,
+                                valid,
+                              } = v
+                              return (
+                                <Coupon
+                                  key={id}
+                                  name={name}
+                                  type={type}
+                                  discount={discount}
+                                  kind={kind}
+                                  created_time={created_time}
+                                  limit_time={limit_time}
+                                  className={`${styles.couponItem} `}
+                                  valid={valid}
+                                />
+                              )
+                            })}
                       </div>
 
                       {/*pagination*/}
