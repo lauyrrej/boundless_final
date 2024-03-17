@@ -14,8 +14,8 @@ import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 import Datetime from '@/components/article/datetime'
-import { Tiptap } from '@/components/article/TipTap'
-import Details from '@/components/article/Details'
+import { Tiptap } from '@/components/article/tiptap'
+// import Details from '@/components/article/Details'
 
 export default function Auid() {
   // ----------------------手機版本  ----------------------
@@ -78,6 +78,8 @@ export default function Auid() {
     stopPropagation(e)
     setFilterVisible(!filterVisible)
   }
+  // ----------------------Tiptap  ----------------------
+  const [description, setDescription] = useState('')
 
   return (
     <>
@@ -144,7 +146,8 @@ export default function Auid() {
             {/* 主內容 */}
             <main className="content">
               <div className="">
-                <Tiptap />
+                <Tiptap setDescription={setDescription} />
+                {/* <Details description={description} /> */}
               </div>
               <div className="main-img">
                 <Image
