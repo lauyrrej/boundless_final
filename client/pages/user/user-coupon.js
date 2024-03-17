@@ -29,6 +29,9 @@ import Coupon from '@/components/coupon/coupon.js'
 // API
 import CouponClass from '@/API/Coupon'
 
+//  Sweet Alert
+import Swal from 'sweetalert2'
+
 export default function Test() {
   // #region ---會員登入狀態 & 會員資料獲取 ---
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
@@ -99,8 +102,10 @@ export default function Test() {
   // ]
   // #endregion
 
-  // 資料排序
+  // 資料排序 / 分頁
   const [dataSort, setDataSort] = useState([])
+  const [dataPage, setDataPage] = useState([])
+
   // #region ---條件篩選 ---
   const [filterVisible, setFilterVisible] = useState(false)
   useEffect(() => {
@@ -148,17 +153,18 @@ export default function Test() {
   const [kind, setKind] = useState(0)
   const [valid, setValid] = useState(1)
 
-  // sql --- 折扣幅度↓ / 即將到期↑ ---
-  // const [discount, setDiscount] = useState(true)
-  // 排序方式
-  // const [sortedItems, setSortedItems] = useState("SELECT * FROM items ORDER BY value ASC") // 預設的升冪排序
-  // const [limit_time, setLimit_time] = useState('DESC')
+  // 折扣幅度↓ / 即將到期↑ ---
+  const [dataFilter, setDataFilter] = useState('latest')
 
   // 從後端加載商品數據
   useEffect(() => {
     // component did mounted 呼叫api，這樣只會做一遍
+    // userID=1
     CouponClass.FindAll(1).then(async (res) => {
       setDataSort(res)
+
+      setDataPage(res.length / 9 + 1)
+      const page = res.length / 9 + 1
     })
   }, [])
 
@@ -371,7 +377,12 @@ export default function Test() {
                           <a
                             href="#"
                             onClick={() => {
-                              if (valid !== 0) setKind(0)
+                              {
+                                // 1. 找到還沒被使用過的目標
+                                setValid(1)
+                                // 2. 撈全部的資料
+                                setKind(0)
+                              }
                             }}
                           >
                             全部
@@ -384,7 +395,8 @@ export default function Test() {
                           <a
                             href="#"
                             onClick={() => {
-                              if (valid !== 0) setKind(2)
+                              setValid(1)
+                              setKind(1)
                             }}
                           >
                             樂器
@@ -397,7 +409,8 @@ export default function Test() {
                           <a
                             href="#"
                             onClick={() => {
-                              if (valid !== 0) setKind(1)
+                              setValid(1)
+                              setKind(2)
                             }}
                           >
                             課程
@@ -407,10 +420,40 @@ export default function Test() {
                           className="sort breadcrumb-item"
                           aria-current="page"
                         >
-                          <a href="#" onClick={() => setValid(0)}>
+                          <a
+                            href="#"
+                            onClick={() => {
+                              setValid(0)
+                              setKind(0)
+                            }}
+                          >
                             已使用
                           </a>
                         </li>
+                        {/* userID???? */}
+                        <button
+                          className="sort breadcrumb-item btn"
+                          onClick={async () => {
+                            const obj = {
+                              user_id: 1,
+                              coupon_template_id: 3,
+                            }
+                            const res = await CouponClass.Create(obj)
+                            const swal = await Swal.fire({
+                              title: res === true ? '領取成功' : '領取失敗',
+                              icon: res === true ? 'success' : 'error',
+                              showConfirmButton: false,
+                              timer: 1000,
+                            })
+
+                            if (res === true) {
+                              const data = await CouponClass.FindAll(1)
+                              setDataSort(data)
+                            }
+                          }}
+                        >
+                          領取
+                        </button>
                       </ol>
                     </nav>
                   </div>
@@ -421,22 +464,20 @@ export default function Test() {
                   <div className="sort-mb d-block d-sm-none">
                     <select
                       className="form-select"
-                      //????
-                      // value={order}
-                      name="order"
-                      //????
-                      // onChange={(e) => {
-                      //   handleOrder(e.target.value)
-                      // }}
+                      value={dataFilter}
+                      name="dataFilter"
+                      onChange={(e) => {
+                        setDataFilter(e.target.value)
+                      }}
                     >
                       <option selected value="#">
                         全部
                       </option>
-                      <option value="ASC">樂器</option>
-                      <option value="ASC">課程</option>
-                      <option value="ASC">已使用</option>
-                      <option value="ASC">折扣幅度</option>
-                      <option value="DESC">即將到期</option>
+                      <option>樂器</option>
+                      <option>課程</option>
+                      <option>已使用</option>
+                      <option value="latest">新到舊</option>
+                      <option value="oldest">舊到新</option>
                     </select>
                   </div>
                   {/*篩選*/}
@@ -579,25 +620,26 @@ export default function Test() {
                       <FaSortAmountDown size={14} />
                     </div>
                     <div
-                      // className={`sort-item ${order === 'ASC' ? 'active' : ''}`}
+                      className={`sort-item ${
+                        dataFilter === 'latest' ? 'active' : ''
+                      }`}
                       role="presentation"
-                      // onClick={(e) => {
-                      //   handleOrder('ASC')
-                      // }}
+                      onClick={(e) => {
+                        setDataFilter('latest')
+                      }}
                     >
-                      即將到期
+                      新到舊
                     </div>
                     <div
-                      //discount
-                      // className={`sort-item ${
-                      //     order === 'DESC' ? 'active' : ''
-                      //   }`}
+                      className={`sort-item ${
+                        dataFilter === 'oldest' ? 'active' : ''
+                      }`}
                       role="presentation"
-                      // onClick={(e) => {
-                      //   handleOrder('DESC')
-                      // }}
+                      onClick={(e) => {
+                        setDataSort('oldest')
+                      }}
                     >
-                      折扣幅度
+                      舊到新
                     </div>
                   </div>
                 </div>
@@ -636,6 +678,7 @@ export default function Test() {
                               kind,
                               created_time,
                               limit_time,
+                              valid,
                             } = v
                             return (
                               <Coupon
@@ -644,15 +687,17 @@ export default function Test() {
                                 type={type}
                                 discount={discount}
                                 kind={kind}
+                                created_time={created_time}
                                 limit_time={limit_time}
                                 className={`${styles.couponItem} `}
+                                valid={valid}
                               />
                             )
                           })}
                       </div>
 
                       {/*pagination*/}
-                      <div className="coupon-pagination">
+                      {/* <div className="coupon-pagination">
                         <div className="d-flex justify-content-center pages d-none d-sm-block">
                           <nav aria-label="Page navigation example">
                             <ul className="pagination">
@@ -662,37 +707,28 @@ export default function Test() {
                                   href="#"
                                   aria-label="Previous"
                                 >
-                                  <span aria-hidden="true">«</span>
+                                  <span aria-hidden="true">«上頁</span>
                                 </a>
                               </li>
                               <li className="page-item">
                                 <a className="page-link" href="#">
-                                  1
+                                  page=1
                                 </a>
                               </li>
-                              <li className="page-item">
-                                <a className="page-link" href="#">
-                                  2
-                                </a>
-                              </li>
-                              <li className="page-item">
-                                <a className="page-link" href="#">
-                                  3
-                                </a>
-                              </li>
+
                               <li className="page-item">
                                 <a
                                   className="page-link"
                                   href="#"
                                   aria-label="Next"
                                 >
-                                  <span aria-hidden="true">»</span>
+                                  <span aria-hidden="true">»下頁</span>
                                 </a>
                               </li>
                             </ul>
                           </nav>
                         </div>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>

@@ -46,7 +46,7 @@ class Coupon {
   // create
   Create(
     p = {
-      userID: 0,
+      user_id: 0,
       coupon_template_id: 0,
     }
   ) {
@@ -72,6 +72,9 @@ class Coupon {
       })
     })
   }
+
+  // 折價物件:sql-product-type、coupon_ctemplate-id
+  CalcDiscount() {}
 }
 
 export default new Coupon()

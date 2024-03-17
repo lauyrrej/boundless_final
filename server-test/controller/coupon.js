@@ -1,12 +1,12 @@
-import moment from "moment";
-import db from "../db.js";
+import moment from 'moment';
+import db from '../db.js';
 
 class Basic {
   constructor() {
     // 定義優惠券的屬性
     this.id = 0;
     // 優惠卷的姓名
-    this.name = "";
+    this.name = '';
     // 折扣金額
     this.discount = 0;
     // 目標類型，1代表課程，2代表樂器
@@ -14,13 +14,13 @@ class Basic {
     // 折價的方式，1代表折多少，2代表百分比
     this.type = 1;
     // 優惠券序號
-    this.coupon_code = "";
+    this.coupon_code = '';
     // 低消要求
     this.requirement = 0;
     // 創建日期
-    this.created_time = "0000-00-00 00:00:00";
+    this.created_time = '0000-00-00 00:00:00';
     //有效與否/使用與否
-    this.valid=0
+    this.valid = 0;
   }
 }
 
@@ -28,7 +28,7 @@ class Basic {
 class Coupon_template extends Basic {
   constructor() {
     super();
-    this.limit_time = "";
+    this.limit_time = '';
     // 是否有效
     this.valid = true;
   }
@@ -56,7 +56,7 @@ class Coupon_template extends Basic {
   // 將coupon從未使用更新為已使用的方法(1->0)
   async Update() {
     try {
-      const queryString = "Update coupon Set valid = 0 Where id = ?";
+      const queryString = 'Update coupon Set valid = 0 Where id = ?';
       const [target, useless] = await db.query(queryString, this.id);
       console.log(target);
       // 回傳更新成功
@@ -80,12 +80,11 @@ class Coupon extends Basic {
   }
 
   //#region Find
-
   // 找到某個使用者下面的所有優惠券
   async FindAll(user_id = 0) {
     try {
       const [target, useless] = await db.query(
-        "Select * From coupon Where user_id = ?",
+        'Select * From coupon Where user_id = ?',
         [user_id]
       );
 
@@ -99,8 +98,8 @@ class Coupon extends Basic {
           (i) => i.id === v.coupon_template_id
         );
         const limit_time = moment(v.created_time)
-          .add(7, "d")
-          .format("YYYY-MM-DD HH:mm:ss");
+          .add(7, 'd')
+          .format('YYYY-MM-DD HH:mm:ss');
         return {
           id: v.id,
           name: target.name,
@@ -109,8 +108,9 @@ class Coupon extends Basic {
           type: target.type,
           created_time: v.created_time,
           limit_time: limit_time,
-          limitNum: moment(limit_time).diff(v.created_time, "days"),
-          valid:v.valid,
+          limitNum: moment(limit_time).diff(v.created_time, 'days'),
+          valid: v.valid,
+          template_id: target.id,
         };
       });
 
@@ -127,10 +127,10 @@ class Coupon extends Basic {
 
   async Create() {
     try {
-      const now = moment().format("YYYY-MM-DD HH:mm:ss");
+      const now = moment().format('YYYY-MM-DD HH:mm:ss');
 
       const queryString = await db.query(
-        "Insert Into coupon(user_id,coupon_template_id,created_time,valid) values(?,?,?,1)",
+        'Insert Into coupon(user_id,coupon_template_id,created_time,valid) values(?,?,?,1)',
         [this.user_id, this.coupon_template_id, now]
       );
 
@@ -142,6 +142,70 @@ class Coupon extends Basic {
   }
 
   //#endregion
+  // 算單筆折價，不知道能不能用到，他媽的
+  async CalcDiscountSingle(product_id = 0) {
+    try {
+      // 先找出product價格
+      const [product] = await db.query(
+        `SELECT price FROM product WHERE id = ${product_id} `
+      );
+      const price = product[0].price;
+      // 找出coupon折扣價格
+      const [coupon] = await db.query(
+        `SELECT discount,type FORM coupon_template WHERE id = ${this.coupon_template_id}`
+      );
+      // [{discount:xxx}]
+      const discount = coupon[0].discount;
+      const type = coupon[0].type;
+      // const res = type === 1 ? price - discount : price * discount;
+      if (type === 1) {
+        return price - discount;
+      } else {
+        return price * discount;
+      }
+    } catch (err) {
+      console.error(err.message);
+      return 0;
+    }
+  }
+
+  // 算整包折價
+  async CalcDiscount(data = []) {
+    try {
+      // 1. 優惠券的模板
+      const [template] = await db.query(
+        `Select discount,type From coupon_template Where id = ${this.coupon_template_id}`
+      );
+      // 折價金額
+      const discount = template[0].discount;
+      const type = template[0].type;
+
+      // data : [{id:1,qty:1}]
+      let total = 0;
+      for (let i = 0; i < data.length; i++) {
+        const { id, qty } = data[i];
+
+        const [product] = await db.query(
+          `Select price, type From product Where id = ${id}`
+        );
+        const price = product[0].price;
+        const product_type = product[0].type;
+
+        total = total + price * qty;
+      }
+
+      db.end();
+
+      if (type === 1) {
+        return total - discount;
+      } else {
+        return total * discount;
+      }
+    } catch (err) {
+      console.error(err.message);
+      return 0;
+    }
+  }
 }
 
 export default Coupon;
