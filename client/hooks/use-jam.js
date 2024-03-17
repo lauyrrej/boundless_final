@@ -7,6 +7,7 @@ export function JamProvider({ children }) {
   const [invalidJam, setInvalidJam] = useState(true)
   const [invalidEdit, setInvalidEdit] = useState(true)
 
+  // 網址輸入無效juid
   const notifyInvalidToast = () => {
     toast.error('指定樂團不存在或已解散', {
       style: {
@@ -38,6 +39,22 @@ export function JamProvider({ children }) {
     setInvalidEdit(true)
   }
 
+  // 成團人數不足提示
+  const notEnough = () => {
+    toast.error('僅有一人無法成團', {
+      style: {
+        border: '1px solid #666666',
+        padding: '16px',
+        color: '#1d1d1d',
+      },
+      iconTheme: {
+        primary: '#ec3f3f',
+      },
+      duration: 2500,
+    })
+  }
+
+  // 取消申請提示
   const checkCancel = () => {
     toast('申請者已取消申請，將重整頁面', {
       icon: '❕',
@@ -53,6 +70,7 @@ export function JamProvider({ children }) {
     }, 2500)
   }
 
+  // 接受申請提示
   const notifyAccept = () => {
     toast.success('已接受，等待對方確認加入', {
       style: {
@@ -67,6 +85,7 @@ export function JamProvider({ children }) {
     })
   }
 
+  // 拒絕申請提示
   const notifyReject = () => {
     toast('已拒絕', {
       icon: '❕',
@@ -79,6 +98,7 @@ export function JamProvider({ children }) {
     })
   }
 
+  // 取消申請提示
   const cancelSuccess = () => {
     toast.success('已取消申請', {
       style: {
@@ -96,6 +116,7 @@ export function JamProvider({ children }) {
     }, 2500)
   }
 
+  // 刪除申請提示
   const deleteSuccess = () => {
     toast.success('資料已刪除', {
       style: {
@@ -122,6 +143,7 @@ export function JamProvider({ children }) {
         setInvalidEdit,
         notifyInvalidToast,
         notifyInvalidEditToast,
+        notEnough,
         checkCancel,
         notifyAccept,
         notifyReject,

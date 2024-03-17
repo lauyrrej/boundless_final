@@ -69,11 +69,6 @@ export default function Info() {
     .toLocaleString()
     .split(' ')[0]
     .replace(/\//g, '-')
-  // ----------------------------- 入團申請表單 -----------------------------
-  const [complete, setComplete] = useState(2)
-  // ---------------------- 描述 ----------------------
-  const [introduce, setIntroduce] = useState('')
-  const [introduceCheck, setIntroduceCheck] = useState(true)
 
   // ----------------------------------------------- 退出樂團 ----------------------------------------------------
   const sendQuit = async () => {
@@ -144,69 +139,7 @@ export default function Info() {
       })
   }
 
-  // 檢查不雅字詞
-  const checkBadWords = debounce(() => {
-    const badWords = /幹|屎|尿|屁|糞|靠北|靠腰|雞掰|王八|你媽|妳媽|淫/g
-    setIntroduceCheck(introduce.search(badWords) < 0 ? true : false)
-  }, 250)
-
-  // 檢查表單是否填妥
-  const checkComplete = () => {
-    if (introduceCheck === false || introduce === '') {
-      setComplete(0)
-      return false
-    }
-    setComplete(1)
-    return true
-  }
-
-  // 送出申請表單
-  const sendApply = async (myPlayer, introduce) => {
-    if (!checkComplete()) {
-      return false
-    }
-    let formData = new FormData()
-    formData.append('juid', jam.juid)
-    formData.append('former_uid', jam.former.uid)
-    formData.append('applier_uid', LoginUserData.uid)
-    formData.append('applier_play', myPlayer)
-    formData.append('introduce', introduce)
-    // 確認formData內容
-    // for (let [key, value] of formData.entries()) {
-    //   console.log(`${key}: ${value}`)
-    // }
-    const res = await fetch('http://localhost:3005/api/jam/apply', {
-      method: 'POST',
-      body: formData,
-      credentials: 'include',
-    })
-    const result = await res.json()
-    if (result.status === 'success') {
-      notifySuccess()
-    } else {
-      console.log(result.error)
-    }
-  }
-
-  // 申請成功後，彈出訊息框
-  const notifySuccess = () => {
-    mySwal
-      .fire({
-        position: 'center',
-        icon: 'success',
-        iconColor: '#1581cc',
-        title: '申請成功，請靜候審核結果',
-        showConfirmButton: false,
-        timer: 3000,
-      })
-      .then(
-        setTimeout(() => {
-          window.location.reload()
-        }, 3000)
-      )
-  }
-
-  // 解散樂團
+  // ----------------------------------------------- 解散樂團 ----------------------------------------------------
   const sendDisband = async () => {
     // 組合出所有樂團內的成員uid
     let ids = []
@@ -275,7 +208,7 @@ export default function Info() {
       })
   }
 
-  // 向伺服器要求資料，設定到狀態中用的函式
+  // ----------------------------------------------- 獲得頁面資料 ----------------------------------------------------
   const getSingleData = async (juid) => {
     try {
       const res = await fetch(
@@ -304,15 +237,6 @@ export default function Info() {
       getSingleData(juid)
     }
   }, [router.isReady, LoginUserData.uid])
-
-  // 申請表單填寫
-  useEffect(() => {
-    // 跳出未填寫完畢警告後再次輸入，消除警告
-    setComplete(2)
-    // 檢查不雅字詞
-    checkBadWords.cancel() // 取消上一次的延遲
-    checkBadWords()
-  }, [introduce])
 
   return (
     <>
@@ -472,7 +396,7 @@ export default function Info() {
                     className={`${styles.infoText} col-12 col-sm-10`}
                     style={{ textAlign: 'justify' }}
                   >
-                    {jam.introduce !== '' || null ? jam.introduce : '暫無介紹'}
+                    {jam.introduce ? jam.introduce : '暫無介紹'}
                   </div>
                 </div>
               </section>
@@ -493,12 +417,14 @@ export default function Info() {
                 ) : (
                   ''
                 )}
+                {/* 使用者是否屬於此樂團 */}
                 {LoginUserData.my_jam === jam.juid ? (
                   <>
+                    {/* 是否是發起人 */}
                     {LoginUserData.id === jam.former.id ? (
                       <div className="d-flex justify-content-center gap-5">
                         <div
-                          className="b-btn b-btn-danger px-3"
+                          className="b-btn b-btn-danger px-4"
                           role="presentation"
                           onClick={() => {
                             warningDisband()
@@ -508,7 +434,7 @@ export default function Info() {
                         </div>
                         <div className="d-flex justify-content-center">
                           <Link
-                            className="b-btn b-btn-primary px-3"
+                            className="b-btn b-btn-primary px-4"
                             href="/jam/jam-list/edit"
                           >
                             編輯資訊
@@ -516,7 +442,18 @@ export default function Info() {
                         </div>
                       </div>
                     ) : (
-                      ''
+                      <div className="d-flex justify-content-center">
+                        <div
+                          className="b-btn b-btn-danger"
+                          style={{ paddingInline: '38px' }}
+                          role="presentation"
+                          onClick={() => {
+                            warningQuit()
+                          }}
+                        >
+                          退出
+                        </div>
+                      </div>
                     )}
                   </>
                 ) : (
@@ -546,7 +483,7 @@ export default function Info() {
                 />
               </div>
               <div className="d-flex">
-                <div className={`${styles.itemTitle} me-3`}>參加者</div>
+                <div className={`${styles.itemTitle} me-3 mt-1`}>參加者</div>
                 <div className="d-flex flex-column gap-2">
                   {jam.member.map((v) => {
                     return (

@@ -25,9 +25,9 @@ export default function JamCard({
   const combineDate = `${createdYear}-${createdMonth}-${createdDate}`
   return (
     <>
-      <Link href={`/jam/jam-list/${juid}`} className={`${styles.recruitCard}`}>
+      <Link href={`/jam/jam-list/${juid}`} className={`${styles.recruitCard}`} target='_blank'>
         <div className={`${styles.coverWrapper}`}>
-          {cover_img !== '' ? (
+          {cover_img ? (
             <Image
               src={`http://localhost:3005/jam/${cover_img}`}
               fill

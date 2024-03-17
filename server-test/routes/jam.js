@@ -172,7 +172,7 @@ router.get('/allJam', async (req, res) => {
 });
 
 // 組團資訊頁，獲得單筆資料
-router.get('/singleJam/:juid/:uid', async (req, res) => {
+router.get('/singleJam/:juid/:uid?', async (req, res) => {
   const juid = req.params.juid;
 
   // console.log(juid);
@@ -190,11 +190,11 @@ router.get('/singleJam/:juid/:uid', async (req, res) => {
     res.status(200).json({ status: 'formed' });
     return;
   }
-  // 檢查訪問的使用者是否有申請此樂團，並獲得其狀態
-  const uid = req.params.uid;
-  // console.log(uid);
+
   let myApplyState = [];
-  if (uid) {
+  // 檢查訪問的使用者是否有申請此樂團，並獲得其狀態
+  if (req.params.uid) {
+    const uid = req.params.uid;
     [myApplyState] = await db
       .execute(
         'SELECT `state` FROM `jam_apply` WHERE `applier_uid` = ? AND `juid` = ?',
@@ -613,7 +613,8 @@ router.get('/singleFormedJam/:juid', async (req, res) => {
     });
     memberSql += `(${membersID})`;
     // console.log(formerSql);
-    const [memberData] = await db.execute(memberSql).catch(() => {
+    const [memberData] = await db.execute(memberSql).catch((error) => {
+      console.log(error);
       return undefined;
     });
     // ------------------------------------------ 合併資料 (member)
@@ -767,7 +768,7 @@ router.put('/joinJam', upload.none(), async (req, res) => {
   // play
   let players = JSON.parse(rawData[0].players);
   players.splice(players.indexOf(parseInt(applier_play)), 1); // 找到該樂器對應的數字，並刪除一項
-  players = JSON.stringify(players);
+  let playersStr = JSON.stringify(players);
   // member
   let member = JSON.parse(rawData[0].member);
   member.push(newMember);
@@ -782,10 +783,10 @@ router.put('/joinJam', upload.none(), async (req, res) => {
     jamResult = await db
       .execute(
         'UPDATE `jam` SET `member` = ? , `players` = ? , `name` = ? , `formed_time` = ? , `state` = 1 WHERE `juid` = ?',
-        [member, players, defaultName, now, juid]
+        [member, playersStr, defaultName, now, juid]
       )
       .then(() => {
-        return 1;
+        return 2;
       })
       .catch((error) => {
         res.status(500).json({ status: 'error', error });
@@ -796,7 +797,7 @@ router.put('/joinJam', upload.none(), async (req, res) => {
     jamResult = await db
       .execute(
         'UPDATE `jam` SET `member` = ? , `players` = ? WHERE `juid` = ?',
-        [member, players, juid]
+        [member, playersStr, juid]
       )
       .then(() => {
         return 1;
@@ -833,6 +834,8 @@ router.put('/joinJam', upload.none(), async (req, res) => {
 
   if (applyResult == 1 && userResult == 1 && jamResult == 1) {
     res.status(200).json({ status: 'success' });
+  } else if (applyResult == 1 && userResult == 1 && jamResult == 2) {
+    res.status(200).json({ status: 'form_success' });
   }
 });
 
@@ -1003,6 +1006,7 @@ router.put('/quit', upload.none(), async (req, res) => {
   }
 });
 
+// 立即成團
 router.put('/formRightNow', upload.none(), async (req, res) => {
   const { juid } = req.body;
   // 更新jam
@@ -1017,25 +1021,45 @@ router.put('/formRightNow', upload.none(), async (req, res) => {
       return 1;
     })
     .catch((error) => {
-      res.status(500).json({status: 'error', error})
+      res.status(500).json({ status: 'error', error });
       return;
     });
   // 刪除所有所屬的申請
-  const applyResult = await db.execute(
-    'UPDATE `jam_apply` SET `state` = 4, `valid` = 0 WHERE `juid` = ?',
-    [juid]
-  ).then(() => {
-    return 1
-  }).catch((error) => {
-    res.status(500).json({status: 'error', error})
-    return;
-  })
+  const applyResult = await db
+    .execute(
+      'UPDATE `jam_apply` SET `state` = 4, `valid` = 0 WHERE `juid` = ?',
+      [juid]
+    )
+    .then(() => {
+      return 1;
+    })
+    .catch((error) => {
+      res.status(500).json({ status: 'error', error });
+      return;
+    });
 
-  if(jamResult === 1 && applyResult === 1) {
-    res.status(200).json({status: 'success'})
+  if (jamResult === 1 && applyResult === 1) {
+    res.status(200).json({ status: 'success' });
   } else {
-    res.status(500).json({status: 'error'})
+    res.status(500).json({ status: 'error' });
   }
+});
+
+// 編輯資訊
+router.put('/editInfo', upload.none(), async (req, res) => {
+  const now = new Date().toISOString();
+  const { juid, title, condition, description } = req.body;
+  await db
+    .execute(
+      'UPDATE `jam` SET `title` = ?, `band_condition` = ?, `description` = ?, `updated_time` = ?  WHERE `juid` = ?',
+      [title, condition, description, now, juid]
+    )
+    .then(() => {
+      res.status(200).json({ status: 'success' });
+    })
+    .catch((error) => {
+      res.status(500).json({ status: 'error', error });
+    });
 });
 
 function generateUid() {

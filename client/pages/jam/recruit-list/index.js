@@ -374,7 +374,7 @@ export default function RecruitList() {
                 </ul>
               </div>
 
-              <div className="top-function-flex">
+              <div className="top-function-flex" style={{paddingBlock: '2px'}}>
                 {/*  ---------------------- 搜尋欄  ---------------------- */}
                 <div className="search-sidebarBtn">
                   <div

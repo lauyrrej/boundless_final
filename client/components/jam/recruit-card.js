@@ -68,6 +68,7 @@ export default function RecruitCard({
       <Link
         href={`/jam/recruit-list/${juid}`}
         className={`${styles.recruitCard}`}
+        target='_blank'
       >
         {/* card-header */}
         <div

@@ -69,10 +69,10 @@ header {
 // 手機版主選單
 .menu-mb {
   position: fixed;
-  transform: translateY(-100%);
+  transform: translateY(-105%);
   left: 0;
   z-index: 120;
-  padding-top: 85px;
+  padding-top: 50px;
   background-color: #fff;
   color: $secondary;
   font-size: $h5;
@@ -169,6 +169,31 @@ header {
   // justify-content: start;
   align-items: center;
   font-weight: bold;
+}
+
+.carousel-section {
+  margin-top: 20px;
+  margin-inline: 0;
+  padding-inline: 30px;
+  @media screen and (max-width: 576px) {
+    padding-inline: 10px;
+  }
+}
+.carousel {
+
+}
+// .carousel-item img{
+//   height: 450px;
+//   object-fit: cover;
+//   object-position: center;
+//   overflow: hidden;
+// }
+.carousel-indicators [data-bs-target] {
+  background-color: $light-primary;
+  opacity: 0.3;
+}
+.carousel-indicators .active {
+  opacity: 1;
 }
 
 .page-control {

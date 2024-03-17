@@ -13,7 +13,7 @@ export default function MemberInfo({ uid, name, nickname, img, play }) {
       <div className={`${styles.userPhotoWrapper}`}>
         {img ? (
           <Image
-            src={`/user/${img}`}
+            src={`http://localhost:3005/user/${img}`}
             alt={`${name}'s photo`}
             width={32}
             height={32}
@@ -28,6 +28,7 @@ export default function MemberInfo({ uid, name, nickname, img, play }) {
       <Link
         href={`../../user/user-homepage/${uid}`}
         className={`${styles.memberName}`}
+        target='_blank'
       >
         {nickname ? nickname : name}
       </Link>

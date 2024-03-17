@@ -134,6 +134,18 @@ export default function UserJam() {
             setTimeout(() => {
               router.push(`/jam/recruit-list/${juid}`)
             }, 2500)
+          } else if (res.status === 'form_success') {
+            mySwal.fire({
+              title: '樂團成立！即將導向新資訊頁',
+              text: '謝謝你，關鍵人物！',
+              icon: 'success',
+              iconColor: '#1581cc',
+              showConfirmButton: false,
+              timer: 2500,
+            })
+            setTimeout(() => {
+              router.push(`/jam/jam-list/${juid}`)
+            }, 2500)
           }
         }
       })

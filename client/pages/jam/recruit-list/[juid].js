@@ -23,7 +23,7 @@ import styles from '@/pages/jam/jam.module.scss'
 
 export default function Info() {
   const router = useRouter()
-  const { setInvalidJam, checkCancel, notifyAccept, notifyReject } = useJam()
+  const { setInvalidJam, notEnough, checkCancel, notifyAccept, notifyReject } = useJam()
   // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
   const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
@@ -351,54 +351,59 @@ export default function Info() {
     if (result.status === 'success') {
       return true
     } else if (res.status === 'error') {
-      console.log(res.error);
+      console.log(res.error)
     }
   }
 
   // 成團提醒&成功訊息
   const notifyFormRightNow = () => {
-    mySwal
-      .fire({
-        title: '確定以現有成員立即成團？',
-        icon: 'question',
-        iconColor: '#1581cc',
-        showCancelButton: true,
-        confirmButtonColor: '#1581cc',
-        cancelButtonColor: '#666666',
-        confirmButtonText: '確定',
-        cancelButtonText: '取消',
-        showClass: {
-          popup: `
+    if (jam.member.length === 0) {
+      // 顯示人數不足提示
+      notEnough()
+    } else {
+      mySwal
+        .fire({
+          title: '確定以現有成員立即成團？',
+          icon: 'question',
+          iconColor: '#1581cc',
+          showCancelButton: true,
+          confirmButtonColor: '#1581cc',
+          cancelButtonColor: '#666666',
+          confirmButtonText: '確定',
+          cancelButtonText: '取消',
+          showClass: {
+            popup: `
             animate__animated
             animate__fadeInUp
             animate__faster
           `,
-        },
-        hideClass: {
-          popup: `
+          },
+          hideClass: {
+            popup: `
             animate__animated
             animate__fadeOutDown
             animate__faster
           `,
-        },
-      })
-      .then(async (result) => {
-        if (result.isConfirmed) {
-          const res = await formRightNow()
-          if (res) {
-            mySwal.fire({
-              title: '恭喜樂團成立！為您導向新資訊頁',
-              icon: 'success',
-              iconColor: '#1581cc',
-              showConfirmButton: false,
-              timer: 2500,
-            })
-            setTimeout(() => {
-              router.push(`/jam/jam-list/${jam.juid}`)
-            }, 2500)
+          },
+        })
+        .then(async (result) => {
+          if (result.isConfirmed) {
+            const res = await formRightNow()
+            if (res) {
+              mySwal.fire({
+                title: '恭喜樂團成立！為您導向新資訊頁',
+                icon: 'success',
+                iconColor: '#1581cc',
+                showConfirmButton: false,
+                timer: 2500,
+              })
+              setTimeout(() => {
+                router.push(`/jam/jam-list/${jam.juid}`)
+              }, 2500)
+            }
           }
-        }
-      })
+        })
+    }
   }
   // ----------------------------------------------- 解散樂團 ----------------------------------------------------
   const sendDisband = async () => {
@@ -1006,7 +1011,7 @@ export default function Info() {
                 />
               </div>
               <div className="d-flex">
-                <div className={`${styles.itemTitle} me-3`}>參加者</div>
+                <div className={`${styles.itemTitle} me-3 mt-1`}>參加者</div>
                 <div className="d-flex flex-column gap-2">
                   {jam.member[0] ? (
                     jam.member.map((v) => {
@@ -1022,7 +1027,7 @@ export default function Info() {
                       )
                     })
                   ) : (
-                    <span className="fw-medium">尚無人參加</span>
+                    <span className="fw-medium mt-1">尚無人參加</span>
                   )}
                 </div>
               </div>
@@ -1037,7 +1042,13 @@ export default function Info() {
                   >
                     解散樂團
                   </div>
-                  <div className="b-btn b-btn-primary px-3" role="presentation" onClick={() => {notifyFormRightNow()}}>
+                  <div
+                    className="b-btn b-btn-primary px-3"
+                    role="presentation"
+                    onClick={() => {
+                      notifyFormRightNow()
+                    }}
+                  >
                     立即成團
                   </div>
                 </div>
