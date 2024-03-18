@@ -171,31 +171,6 @@ header {
   font-weight: bold;
 }
 
-.carousel-section {
-  margin-top: 20px;
-  margin-inline: 0;
-  padding-inline: 30px;
-  @media screen and (max-width: 576px) {
-    padding-inline: 10px;
-  }
-}
-.carousel {
-
-}
-// .carousel-item img{
-//   height: 450px;
-//   object-fit: cover;
-//   object-position: center;
-//   overflow: hidden;
-// }
-.carousel-indicators [data-bs-target] {
-  background-color: $light-primary;
-  opacity: 0.3;
-}
-.carousel-indicators .active {
-  opacity: 1;
-}
-
 .page-control {
   padding-inline: 30px 0;
   position: relative;
@@ -442,13 +417,13 @@ header {
   background-color: transparent;
   color: $primary;
 }
-.page-item:first-child .page-link{
+.page-item:first-child .page-link {
   margin-right: 10px;
   border: 1px solid $body;
   border-radius: 3px;
   padding-bottom: 0;
 }
-.page-item:last-child .page-link{
+.page-item:last-child .page-link {
   margin-left: 10px;
   border: 1px solid $body;
   border-radius: 3px;
@@ -461,4 +436,153 @@ header {
 
 .no-result {
   font-size: 32px;
+}
+
+
+// ---------------------------------------- 首頁樣式 ------------------------------------------
+.carousel-section {
+  padding-block: 30px;
+  background-color: #fff;
+  overflow: hidden;
+}
+
+.carousel {
+  margin-inline: 300px;
+  min-width: 410px;
+  @media screen and (max-width: 576px) {
+    margin-inline: 10px;
+  }
+}
+.carousel-item {
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 1.61;
+  max-height: 600px;
+  min-height: 255px;
+}
+.carousel-item img {
+  object-fit: cover;
+  object-position: center;
+  overflow: hidden;
+}
+.carousel-indicators .active {
+  opacity: 1;
+}
+
+.lesson-section {
+  padding-block: 30px;
+  background-color: $light-primary;
+  height: 100svh;
+  position: relative;
+  color: #fff;
+  @media screen and (max-width: 576px) {
+    height: 70svh;
+  }
+  .lesson-position {
+    position: absolute;
+    right: 0;
+    top: 16%;
+  }
+  .lesson-section-img {
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 1.5;
+    // height: 560px;
+    width: 100%;
+    max-width: 914px;
+  }
+}
+.b-lesson-btn {
+  background-color: #fff;
+  color: $primary;
+  font-size: 18px;
+  font-weight: bold;
+  &:hover {
+    background-color: #e2e2e2;
+  }
+}
+.cloud-item {
+  position: absolute;
+  width: fit-content;
+  @media screen and (max-width: 576px) {
+    display: none;
+  }
+}
+.cloud1 {
+  top: 100px;
+  left: -30px;
+}
+.cloud2 {
+  top: 650px;
+  left: 700px;
+}
+.cloud3 {
+  top: 40px;
+  right: 0px;
+}
+
+.instrument-section {
+  padding-block: 30px;
+  background-color: #fff;
+  height: 100svh;
+  position: relative;
+  color: #18a1ff;
+  @media screen and (max-width: 576px) {
+    height: 70svh;
+  }
+  .instrument-position {
+    position: absolute;
+    right: 0;
+    top: 16%;
+  }
+  .instrument-section-img {
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 1.5;
+    // height: 560px;
+    width: 100%;
+    max-width: 914px;
+  }
+}
+.b-instrument-btn {
+  background-color: #18a1ff;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  &:hover {
+    background-color: #1581cc;
+  }
+}
+
+.jam-section {
+  padding-block: 30px;
+  background-color: #b9b9b9;
+  height: 100svh;
+  position: relative;
+  color: #124365;
+  @media screen and (max-width: 576px) {
+    height: 70svh;
+  }
+  .jam-position {
+    position: absolute;
+    right: 0;
+    top: 16%;
+  }
+  .jam-section-img {
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 1.5;
+    // height: 560px;
+    width: 100%;
+    max-width: 914px;
+  }
+}
+.b-jam-btn {
+  background-color: #124365;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  &:hover {
+    background-color: #0f3652;
+  }
 }

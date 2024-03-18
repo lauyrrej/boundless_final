@@ -29,8 +29,11 @@ function FileUploadSample() {
     const file = e.target.files[0]
 
     if (file) {
+      // 是否有選擇檔案
       setIsFilePicked(true)
+      // 設定選擇的檔案
       setSelectedFile(file)
+      // 後端圖片
       setImgServerUrl('')
     } else {
       setIsFilePicked(false)
