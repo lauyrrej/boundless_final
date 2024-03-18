@@ -79,6 +79,8 @@ router.get("/categories", async (req, res) => {
 
     if (lesson_category) {
       res.json(lesson_category);
+      console.log(lesson_category);
+      5
     } else {
       res.json("沒有找到相應的資訊");
     }

@@ -26,12 +26,9 @@ import { useParams } from 'react-router-dom'
 import Pagination from '@/components/lesson/pagination.js'
 
 
-export default function LessonList({ onSearch }) {
 
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
-export default function Test({ onSearch }) {
-
 
 
 export default function LessonList({ onSearch }) {
