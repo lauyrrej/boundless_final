@@ -71,7 +71,7 @@ export default function Test() {
   }
 
   // ---------------生日-------------
-  let birthday = '2000-01-01'
+  let birthday = '0000-00-00'
   if (LoginUserData.birthday) {
     // 原本處理方式 但和SQL資料庫有時區差異------------
     // birthday = userData.birthday.split('T')[0]

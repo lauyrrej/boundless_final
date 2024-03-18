@@ -86,7 +86,7 @@ router.get("/", async (req, res, next) => {
 router.get("/user-homepage/:uid",async (req, res)=>{
   const uid = req.params.uid;
   
-console.log(uid)
+// console.log(uid)
   // 獲得該會員資訊
   // const [result] = await db.execute(`UPDATE user SET img = ? WHERE id = ?;`, [newName, id]);
   try {
@@ -116,13 +116,7 @@ console.log(uid)
     console.error("發生錯誤：", error);
     res.json("發生錯誤");
   }
-
-
-
-
   // res.json({ status: 'success', data: { result } })
-  
-
 });
 
 //登入 目前設定 email 就是帳號 不可更改
