@@ -8,9 +8,9 @@ import 'dotenv/config.js'
 
 // 電子郵件文字訊息樣版
 const mailText = (otpToken) => `親愛的boundless會員 您好，
-通知重設密碼所需要的OTP(一次性驗證密碼)，
-請在重設密碼頁面的"電子郵件驗證碼"欄位中輸入以下的6位數字。
-請注意該驗證碼將於寄送後30分鐘後到期，如您未提出申請，請忽略本信件，有任何問題歡迎洽尋boundless團隊:
+在此通知重新設定密碼所需要的OTP(一次性驗證密碼)，
+請在忘記密碼頁面的"6位數驗證碼"欄位中輸入以下的6位數字。
+請注意該驗證碼將於寄送後30分鐘後到期，如您未提出申請，請忽略本信件，有任何問題歡迎洽詢boundless團隊:
     
 ${otpToken}
     
@@ -36,7 +36,7 @@ router.post('/otp', async (req, res, next) => {
     // 這裡要改寄送人名稱，email在.env檔中代入
     from: `"boundless"<${process.env.SMTP_TO_EMAIL}>`,
     to: email,
-    subject: '重設密碼之一次性密碼',
+    subject: '重新設定密碼',
     text: mailText(otp.token),
   }
 
@@ -59,6 +59,10 @@ router.post('/reset', async (req, res) => {
 
   if (!token || !email || !password) {
     return res.json({ status: 'error', message: '缺少必要資料' })
+  }
+
+  if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/.test(password)) {
+    return res.json({ status: 'error', message: '密碼請由英數8~20位組成' })
   }
 
   // updatePassword中驗証otp的存在與合法性(是否有到期)

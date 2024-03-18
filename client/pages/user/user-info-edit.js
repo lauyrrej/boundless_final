@@ -149,11 +149,13 @@ export default function Test() {
       console.error('There was a problem with the fetch operation:', error)
     }
   }
+
   //-------------------------------------------------------------
   //執行一次，如果有登入，獲得該使用者全部資料寫入userData 狀態
   useEffect(() => {
     if (LoginUserData) {
       getLoginUserProfile()
+      
       //   console.log(userData)
     }
   }, []) // 在 LoginUserData.name 改變時觸發 useEffect
@@ -539,7 +541,7 @@ export default function Test() {
                   <div className="sidebar-user-info-name">
                     {LoginUserData.nickname}
                   </div>
-                  <div className="sidebar-user-info-band">樂團名稱七個字</div>
+                  <div className="sidebar-user-info-band">{LoginUserData.my_jamname}</div>
                 </div>
                 {/* 更換大頭貼的功能暫定併回會員資訊 故不再sidebar顯示 */}
                 {/* <div className="sidebar-user-info-Camera-img">
@@ -749,7 +751,7 @@ export default function Test() {
                               type="text"
                               className={`${styles.itemInput} form-control`}
                               placeholder="真實姓名"
-                              maxLength={20}
+                              maxLength={14}
                               value={userData.name}
                               onChange={(e) => {
                                 setuserData({
@@ -770,7 +772,7 @@ export default function Test() {
                               type="text"
                               className={`${styles.itemInput} form-control`}
                               placeholder="暱稱 上限14字"
-                              maxLength={20}
+                              maxLength={14}
                               value={userData.nickname}
                               onChange={(e) => {
                                 setuserData({

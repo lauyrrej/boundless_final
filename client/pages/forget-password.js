@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Link from 'next/link'
 import Footer from '@/components/common/footer'
@@ -21,7 +22,11 @@ export default function ForgetPassword() {
   const [disableBtn, setDisableBtn] = useState(false)
 
 
-  
+  //顯示密碼
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
 
   // const requestOtpToken = async (email = '') => {
   //   return await axiosInstance.post('/reset-password/otp', { email })
@@ -111,7 +116,7 @@ const resetPassword = async (email = '', password = '', token = '') => {
   // 處理要求一次性驗証碼用
   const handleRequestOtpToken = async () => {
     if (delay !== null) {
-      toast.error('錯誤 - 60s內無法重新獲得驗証碼')
+      toast.error('60秒內無法重新獲得驗證碼，請稍後重試。')
       return
     }
 
@@ -121,12 +126,12 @@ const resetPassword = async (email = '', password = '', token = '') => {
     console.log(res.data)
 
     if (res.status === 'success') {
-      toast.success('資訊 - 驗証碼已寄送到電子郵件中')
+      toast.success('驗證碼已寄送到您輸入的電子郵件中。')
       setCount(60) // 倒數 60秒
       setDelay(1000) // 每 1000ms = 1s 減1
       setDisableBtn(true)
     } else {
-      toast.error(`錯誤 - ${res.message}`)
+      toast.error(`${res.message}`)
     }
   }
 
@@ -137,15 +142,36 @@ const resetPassword = async (email = '', password = '', token = '') => {
     console.log(res.data)
 
     if (res.status === 'success') {
-      toast.success('資訊 - 密碼已成功修改')
+      resetAlert()
+      // toast.success('密碼已成功修改。')
     } else {
-      toast.error(`錯誤 - ${res.message}`)
+      toast.error(`${res.message}`)
     }
   }
-
+  //取消表單預設submit跳頁
   const handleSubmit=async (e) =>{
-    //取消表單預設submit跳頁
     e.preventDefault()
+  }
+
+  //----------------------------sweetalert--------------------------------------
+  //登入 跳轉 還沒加入判定 應該要先判斷再跳轉
+  const router = useRouter()
+  const mySwal = withReactContent(Swal)
+  const resetAlert = () => {
+    mySwal
+      .fire({
+        position: 'center',
+        icon: 'success',
+        iconColor: '#1581cc',
+        title: '密碼重設成功，將為您跳轉到登入頁面。',
+        showConfirmButton: false,
+        timer: 2000,
+      })
+      .then(
+        setTimeout(() => {
+          router.push(`/login`)
+        }, 2000)
+      )
   }
 
 
@@ -242,61 +268,54 @@ const resetPassword = async (email = '', password = '', token = '') => {
               </button>
               </div>
               <label >
-                請輸入6位數驗證碼:
+                驗證碼:
               </label>
               <input
                   className='form-control'
                   type="text"
                   value={token}
+                  minLength="6"
+                  placeholder="請輸入E-mail接收到的6位數驗證碼"
                   onChange={(e) => setToken(e.target.value)}
                 />
-              
+                <div className="loginByEmail-form-box password-box">
                 <label >
                   設定新密碼:
                 </label>
                 <input
                     className='form-control'
-                    type="text"
+                    type={isPasswordVisible ? 'text' : 'password'}
                     value={password}
+                    // minlength="8"
+                    // maxlength="20"
+                    placeholder="8~20位英數字組合"
+                    // required
                     onChange={(e) => setPassword(e.target.value)}
                   />
-                
+                <span onClick={togglePasswordVisibility} className="svg-icon">
+                  {/* 是否顯示密碼 */}
+                  {!isPasswordVisible ?  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-eye" viewBox="0 0 16 16">
+                    <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+                    <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+                  </svg> : <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-eye-slash" viewBox="0 0 16 16">
+                    <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z"/>
+                    <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829"/>
+                    <path d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z"/>
+                  </svg>}
+                  
+                  </span>
+                  </div>  
                 
             </div>
-            <div className="loginByEmail-form-box password-box">
-              
-              {/* <span className="svg-icon">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={22}
-                  height={24}
-                  viewBox="0 0 22 24"
-                  fill="none"
-                >
-                  <path
-                    d="M14.8363 19.061L12.617 16.7394C11.7588 17.0602 10.8311 17.1196 9.94183 16.9107C9.05258 16.7019 8.23835 16.2333 7.59388 15.5595C6.94941 14.8857 6.50119 14.0345 6.30139 13.1048C6.10159 12.1752 6.15841 11.2053 6.46525 10.3081L3.63275 7.34681C1.28975 9.52462 0 12 0 12C0 12 4.125 19.9062 11 19.9062C12.3206 19.9015 13.6262 19.6138 14.8363 19.061ZM7.16375 4.939C8.37382 4.38617 9.67944 4.0985 11 4.09375C17.875 4.09375 22 12 22 12C22 12 20.7089 14.4739 18.3686 16.6546L15.5334 13.6905C15.8402 12.7933 15.897 11.8234 15.6972 10.8937C15.4974 9.96406 15.0492 9.11282 14.4047 8.43905C13.7603 7.76529 12.946 7.2967 12.0568 7.08782C11.1675 6.87893 10.2398 6.93834 9.38163 7.25913L7.16375 4.939Z"
-                    fill="#5A5A5A"
-                  />
-                  <path
-                    d="M7.59687 11.4912C7.52123 12.0437 7.56971 12.6069 7.73844 13.1364C7.90718 13.6658 8.19155 14.147 8.56901 14.5416C8.94647 14.9362 9.40666 15.2335 9.9131 15.4099C10.4195 15.5863 10.9583 15.637 11.4867 15.5579L7.59687 11.4912ZM14.4031 12.509L10.5132 8.44084C11.0417 8.36176 11.5805 8.41244 12.0869 8.58885C12.5933 8.76525 13.0535 9.06255 13.431 9.45716C13.8084 9.85178 14.0928 10.3329 14.2615 10.8623C14.4303 11.3918 14.4788 11.9551 14.4031 12.5075V12.509ZM18.7632 21.134L2.26324 3.88396L3.23674 2.86621L19.7367 20.1162L18.7632 21.134Z"
-                    fill="#5A5A5A"
-                  />
-                </svg>
-              </span> */}
-
-
-
-            </div>
-            {/* <div className="loginByEmail-forget">
-              <Link href="/register" className="forget">
-                還未註冊?
-              </Link>
-              <a className="forget">忘記密碼?</a>
-            </div> */}
+            
+            <div className="loginByEmail-forget">
+                  <Link href="/login" className="forget">
+                    返回登入
+                  </Link>
+                  
+                </div>
             <div className="loginByEmail-submit">
-              {/* <button type="submit" className="btn">
-                登入
-              </button> */}
+              
               <button className='btn btn-primary' onClick={handleResetPassword}>重設密碼</button>
             </div>
           </form>
@@ -304,39 +323,7 @@ const resetPassword = async (email = '', password = '', token = '') => {
       </div>
 
       
-      {/* <label>
-        電子郵件信箱:
-        <input
-          type="text"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </label>
-      <br />
-      <button onClick={handleRequestOtpToken} disabled={disableBtn}>
-        {delay ? count + '秒後可以再次取得驗証碼' : '取得驗証碼'}
-      </button>
-      <br />
-      <label>
-        一次性驗証碼:
-        <input
-          type="text"
-          value={token}
-          onChange={(e) => setToken(e.target.value)}
-        />
-      </label>
-      <br />
-      <label>
-        新密碼:
-        <input
-          type="text"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </label>
-      <br />
-      <button onClick={handleResetPassword}>重設密碼</button> */}
-      {/* End content */}
+  
       <svg
         className="bg-login-cloud1 moveeffect1"
         xmlns="http://www.w3.org/2000/svg"
@@ -851,7 +838,6 @@ footer {
         font-style: normal;
         font-weight: 400;
         line-height: normal;
-        text-decoration-line: underline;
       }
 
       .loginByEmail-submit {
