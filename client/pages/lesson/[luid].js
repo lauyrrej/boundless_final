@@ -105,7 +105,9 @@ export default function LessonDetailPage() {
 
   console.log(router.query, ' isReady=', router.isReady)
 
+
   const notify = () => toast('{LessonDetail.data[0].name}已加入購物車.')
+
 
   return (
     <>
@@ -165,9 +167,11 @@ export default function LessonDetailPage() {
               </Link>
               <FaChevronRight />
 
+
               {LessonDetail && LessonDetail.data.length > 0 && (
                 <li style={{ marginLeft: '10px' }}>
                   {LessonDetail.data[0].Lesson_category_name}
+
                 </li>
               )}
             </ul>
@@ -179,9 +183,11 @@ export default function LessonDetailPage() {
                 <div className="Left">
                   {/* prodBriefingArea */}
                   <div className="prodBriefingArea d-flex">
+
                     {LessonDetail && LessonDetail.data.length > 0 && (
                       <img
                         src={`/課程與師資/lesson_img/${LessonDetail.data[0].img}`}
+
                         className="prodImg"
                       />
                     )}
@@ -189,9 +195,11 @@ export default function LessonDetailPage() {
                   {/* 手機版productbrief-card放這 */}
                   <div className="Right-mobile">
                     <div className="prodBriefing sticky-top">
+
                       {LessonDetail && LessonDetail.data.length > 0 && (
                         <div className="prodMainName">
                           {LessonDetail.data[0].name}Logic Pro X 從零開始
+
                         </div>
                       )}
 
@@ -258,9 +266,11 @@ export default function LessonDetailPage() {
                       <div className="list">
                         {/* 斷行處理 */}
                         <ul>
+
                           {LessonDetail && LessonDetail.data.length > 0 && (
                             <ul>
                               {LessonDetail.data[0].outline
+
                                 .split('\n')
                                 .map((line, index) => (
                                   <li key={index}>{line}</li>
@@ -275,9 +285,11 @@ export default function LessonDetailPage() {
                       <div className="detail-title">適合對象</div>
                       <div className="list">
                         <ul>
+
                           {LessonDetail && LessonDetail.data.length > 0 && (
                             <ul>
                               {LessonDetail.data[0].suitable
+
                                 .split('\n')
                                 .map((line, index) => (
                                   <li key={index}>{line}</li>
@@ -291,9 +303,11 @@ export default function LessonDetailPage() {
                     <div className="achievement mt40">
                       <div className="detail-title">你將學到</div>
                       <div className="list">
+
                         {LessonDetail && LessonDetail.data.length > 0 && (
                           <ul>
                             {LessonDetail.data[0].achievement
+
                               .split('\n')
                               .map((line, index) => (
                                 <li key={index}>{line}</li>
@@ -391,9 +405,20 @@ export default function LessonDetailPage() {
                                     有幫助
                                   </div>
                                 </div>
+
                               </div>
+                            )}
+                            <div className="comment-Like-Icon">
+                              <img
+                                loading="lazy"
+                                src="https://cdn.builder.io/api/v1/image/assets/TEMP/b33573d1006caa2dd045129e591ff98dd975245bb9b1f9ad55c74a65c6a47d58?"
+                                className="comment-like-icon-img"
+                              />
+                              <div className="comment-Like-Word">有幫助</div>
                             </div>
+
                           ))}
+
                       </div>
                       {/* 更多按鈕 */}
                       <div className="more-review">
@@ -411,7 +436,9 @@ export default function LessonDetailPage() {
                     <div className="detail-title">講師資訊</div>
                     <div className="teacher-info-area">
                       <div className="teacher-img-con ">
+
                         {LessonDetail && LessonDetail.data.length > 0 && (
+
                           <img
                             loading="lazy"
                             src="/課程與師資/teacher_img/teacher_001.jpeg"
@@ -433,6 +460,7 @@ export default function LessonDetailPage() {
                 </div>
               </div>
             </main>
+
           </div>
 
           {/*   ----------------------頁面內容 右半部---------------------- */}
@@ -509,6 +537,7 @@ export default function LessonDetailPage() {
           />
           <div className="cart">加入購物車</div>
         </div>
+
         <div className="buyBtn">
           <div className="buy">立即購買</div>
         </div>

@@ -44,11 +44,11 @@ export default function Test() {
   //   讀取使用者資料後 定義大頭貼路徑
   let avatarImage
   if (LoginUserData.img) {
-    avatarImage = `/user/${LoginUserData.img}`
+    avatarImage = `http://localhost:3005/user/${LoginUserData.img}`
   } else if (LoginUserData.photo_url) {
     avatarImage = `${LoginUserData.photo_url}`
   } else {
-    avatarImage = `/user/avatar_userDefault.jpg`
+    avatarImage = `http://localhost:3005/user/avatar_userDefault.jpg`
   }
   // 舊版會警告 因為先渲染但沒路徑 bad
   // const avatarImage = `/user/${LoginUserData.img}`
@@ -71,7 +71,7 @@ export default function Test() {
   }
 
   // ---------------生日-------------
-  let birthday = '1970-01-01'
+  let birthday = '2000-01-01'
   if (LoginUserData.birthday) {
     // 原本處理方式 但和SQL資料庫有時區差異------------
     // birthday = userData.birthday.split('T')[0]
@@ -350,7 +350,7 @@ export default function Test() {
                   <div className="sidebar-user-info-name">
                     {LoginUserData.nickname}
                   </div>
-                  <div className="sidebar-user-info-band">樂團名稱七個字</div>
+                  <div className="sidebar-user-info-band">{LoginUserData.my_jam}</div>
                 </div>
                 {/* 更換大頭貼的功能暫定併回會員資訊 故不再sidebar顯示 */}
                 {/* <div className="sidebar-user-info-Camera-img">
@@ -478,13 +478,13 @@ export default function Test() {
                         <div className="user-btnGroup">
                           <div className="user-btnGroup-btn1">
                             <div>
-                              <Link href="/user/user-homepage">
+                              <Link href={`/user/user-homepage/${LoginUserData.uid}`}>
                                 預覽個人首頁
                               </Link>
                             </div>
                           </div>
                           <div className="user-btnGroup-btn2">
-                            <div>編輯資訊</div>
+                            <div><Link href="/user/user-info-edit">編輯資訊</Link></div>
                           </div>
                         </div>
                       </div>
@@ -537,9 +537,8 @@ export default function Test() {
                             <input
                               className="form-check-input"
                               type="checkbox"
-                              defaultValue=""
                               id="privacyBD"
-                              defaultChecked={privacyBD == '1'}
+                              defaultChecked={privacyBD == '1' ? true : false}
                               disabled={true}
                             />
                             <label
@@ -553,9 +552,9 @@ export default function Test() {
                             <input
                               className="form-check-input"
                               type="checkbox"
-                              defaultValue=""
+                              
                               id="privacyPhone"
-                              defaultChecked={privacyPhone == '1'}
+                              defaultChecked={privacyPhone == '1' ? true : false}
                               disabled={true}
                             />
                             <label
@@ -568,10 +567,9 @@ export default function Test() {
                           <div className="form-check">
                             <input
                               className="form-check-input"
-                              type="checkbox"
-                              defaultValue={privacyEmail == '1'}
+                              type="checkbox"                            
                               id="privacyEmail"
-                              defaultChecked=""
+                              defaultChecked={privacyEmail == '1' ? true : false}
                               disabled={true}
                             />
                             <label
