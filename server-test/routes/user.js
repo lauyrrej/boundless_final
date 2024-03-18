@@ -12,6 +12,12 @@ import formidable from "formidable";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 
+
+// const testdirname = `/`;
+// console.log(__dirname)
+// console.log(testdirname)
+
+
 //token相關
 import jwt from "jsonwebtoken";
 import "dotenv/config.js";
