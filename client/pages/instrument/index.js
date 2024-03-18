@@ -138,7 +138,7 @@ export default function Test({ onSearch }) {
   const [products, setProducts] = useState([])
 
   // 在 Test 函數中
-  const [dataPerpage, setDataPerpage] = useState(20)
+  // const [dataPerpage, setDataPerpage] = useState(20)
   // 點按分頁時，要送至伺服器的query string參數
   const handlePageClick = (event) => {
     router.push({
@@ -190,34 +190,41 @@ export default function Test({ onSearch }) {
     // const searchParams = new URLSearchParams(params)
     // console.log(searchParams)
 
-    try {
-      const res = await fetch(`http://localhost:3005/api/instrument?`)
+    const searchParams = new URLSearchParams(params)
+    const queryString = searchParams.toString()
 
-      // res.json()是解析res的body的json格式資料，得到JS的資料格式
-      const datas = await res.json()
+    console.log(queryString)
 
-      // 在這裡處理獲取的資料，例如更新狀態
-      setInstrument(datas)
-    } catch (error) {
-      console.error('Error fetching data:', error)
-    }
-  }
-
-  const getDatassearch = async (params) => {
     try {
       const res = await fetch(
-        `http://localhost:3005/api/instrument/getDatassearch`
+        `http://localhost:3005/api/instrument?${queryString}`
       )
 
       // res.json()是解析res的body的json格式資料，得到JS的資料格式
       const datas = await res.json()
-
+      console.log(datas)
       // 在這裡處理獲取的資料，例如更新狀態
       setInstrument(datas)
     } catch (error) {
       console.error('Error fetching data:', error)
     }
   }
+
+  // const getDatassearch = async (params) => {
+  //   try {
+  //     const res = await fetch(
+  //       `http://localhost:3005/api/instrument/getDatassearch`
+  //     )
+
+  //     // res.json()是解析res的body的json格式資料，得到JS的資料格式
+  //     const datas = await res.json()
+
+  //     // 在這裡處理獲取的資料，例如更新狀態
+  //     setInstrument(datas)
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error)
+  //   }
+  // }
 
   useEffect(() => {
     if (router.isReady) {
@@ -935,7 +942,7 @@ export default function Test({ onSearch }) {
                                 value={promotion}
                                 name="promotion"
                                 onChange={() => {
-                                  setPromotion(!promotion)
+                                  setPromotion(promotion ? true : false)
                                 }}
                               />{' '}
                               促銷商品
