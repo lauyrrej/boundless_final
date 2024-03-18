@@ -7,35 +7,25 @@ router.get('/', async (req, res) => {
   try {
     // Mandatory type filter
     //評價篩選
-    const baseQuery = `
+    let baseQuery = `
   SELECT product.*, COUNT(product_review.product_id) AS review_count, AVG(product_review.stars) AS average_rating, teacher_info.* 
   FROM product
   LEFT JOIN product_review ON product.id = product_review.product_id
   LEFT JOIN teacher_info ON product.teacher_id = teacher_info.id 
   WHERE product.type = 2
-  GROUP BY product.id
-  ORDER BY product.id
+ 
 `;
     //價格篩選
     let queryParams = [2];
     // Additional filters
-    const { priceLow, priceHigh, page } = req.query;
+    const { priceLow, priceHigh } = req.query;
 
     if (priceLow && priceHigh) {
-      baseQuery += ' AND price >= ? AND price <= ?';
+      baseQuery += ' AND product.price >= ? AND product.price <= ?';
       queryParams.push(priceLow, priceHigh);
-      console.log(baseQuery);
     }
 
-    // //Pagination
-    // if (page) {
-    //   const perPage = 12; // Number of items per page
-    //   const startIndex = ((parseInt(page) || 1) - 1) * perPage;
-    //   baseQuery += " LIMIT ?, ?";
-    //     queryParams.push(startIndex, perPage);
-    //      console.log(baseQuery);
-    // }
-
+    baseQuery += ' GROUP BY product.id ORDER BY product.id';
     // Execute the query
     const [results] = await db.execute(baseQuery, queryParams);
 
@@ -75,20 +65,25 @@ router.get('/categories', async (req, res) => {
 router.get('/category/:category', async (req, res) => {
   try {
     const category = req.params.category;
+    let query = 'SELECT * FROM `product` WHERE `type` = 2';
+    let queryParams = [];
 
-    let [lesson] = await db.execute(
-      'SELECT * FROM `product` WHERE `lesson_category_id` = ?',
-      [category]
-    );
+    // 如果 category 不是空字串或'0'，則增加類別過濾條件
+    if (category !== '' && category !== '0') {
+      query += ' AND `lesson_category_id` = ?';
+      queryParams = [category];
+    }
 
-    if (lesson.length > 0) {
-      res.json(lesson);
+    let [lessons] = await db.execute(query, queryParams);
+
+    if (lessons.length > 0) {
+      res.json(lessons);
     } else {
-      res.json('沒有找到相應的資訊');
+      res.json({ message: '沒有找到相應的資訊' });
     }
   } catch (error) {
     console.error('發生錯誤：', error);
-    res.json('發生錯誤');
+    res.status(500).json({ error: '發生錯誤' });
   }
 });
 
@@ -117,7 +112,7 @@ router.get('/:id', async (req, res, next) => {
     );
 
     if ({ data, youwilllike }) {
-      console.log({ data});
+      console.log({ data });
       res.status(200).json({ data, youwilllike });
     } else {
       res.status(404).send('Data not found');
