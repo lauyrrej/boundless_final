@@ -24,8 +24,6 @@ import InstrumentList from '@/components/cart/instrument-cart-list.js'
 import InstrumentCouponList from '@/components/cart/instrument-coupons.js'
 import LessonCouponList from '@/components/cart/lesson-coupons.js'
 
-//cart-data
-
 //hook
 import { useCart } from '@/hooks/use-cart'
 
@@ -37,8 +35,8 @@ export default function Test() {
     instrumentCoupons,
     lessonData,
     lessonCoupons,
-    increment,
-    decrement,
+    increment_cart,
+    decrement_cart,
     remove,
     calcInstrumentItems,
     calcInstrumentPrice,
@@ -202,8 +200,8 @@ export default function Test() {
                 <InstrumentList
                   items={items}
                   instrumentData={instrumentData}
-                  increment={increment}
-                  decrement={decrement}
+                  increment_cart={increment_cart}
+                  decrement_cart={decrement_cart}
                   remove={remove}
                 />
                 <div className="cart-subtotal h6">

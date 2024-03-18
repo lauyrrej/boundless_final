@@ -18,10 +18,18 @@ import { FaTrash } from 'react-icons/fa6'
 
 //hook
 import { useCart } from '@/hooks/use-cart'
+import { wrap } from 'lodash'
+
+//confirmlist
+import LessonConfirmList from '@/components/cart/confirm-lesson-items.js'
+import InstrumentConfirmList from '@/components/cart/confirm-instrument-items.js'
 
 export default function Test() {
+  let UserInfo = JSON.parse(localStorage.getItem('UserInfo'))
   //hook
   const {
+    instrumentData,
+    lessonData,
     calcInstrumentItems,
     calcInstrumentPrice,
     calcInstrumentDiscount,
@@ -58,6 +66,10 @@ export default function Test() {
     stopPropagation(e)
     setFilterVisible(!filterVisible)
   }
+
+  const country = localStorage.getItem('Country')
+  const township = localStorage.getItem('Township')
+  const postcode = localStorage.getItem('Postcode')
 
   return (
     <>
@@ -147,13 +159,9 @@ export default function Test() {
                   <div className="lesson-payment">實付金額</div>
                 </div>
                 <div className="cart-item-group">
-                  <div className="lesson-item">
-                    <div className="lesson-item-name h6">
-                      Logic Pro X 從零開始
-                    </div>
-                    <div className="lesson-item-price h6">$26000</div>
-                    <div className="lesson-item-payment h6">$26000</div>
-                  </div>
+                  <LessonConfirmList 
+                    lessonData={lessonData}
+                  />
                 </div>
                 <div className="cart-thead">
                   <div className="instrument-product">樂器</div>
@@ -163,15 +171,9 @@ export default function Test() {
                   <div className="instrument-payment">實付金額</div>
                 </div>
                 <div className="cart-item-group">
-                  <div className="instrument-item">
-                    <div className="instrument-item-name h6">
-                      Logic Pro X 從零開始
-                    </div>
-                    <div className="instrument-item-price h6">$26000</div>
-                    <div className="instrument-item-quantity h6">10</div>
-                    <div className="instrument-item-total h6">$26000</div>
-                    <div className="instrument-item-payment h6">$26000</div>
-                  </div>
+                  <InstrumentConfirmList 
+                    instrumentData={instrumentData}
+                  />
                 </div>
               </div>
               <div className="consumer-info">
@@ -184,7 +186,7 @@ export default function Test() {
                     >
                       購買者姓名
                     </label>
-                    <div className="col-sm-3 col-3">李宗盛</div>
+                    <div className="col-sm-3 col-3">{UserInfo[0].Name}</div>
                   </div>
                   <div className="row g-3 align-items-center">
                     <label
@@ -193,7 +195,7 @@ export default function Test() {
                     >
                       電話號碼
                     </label>
-                    <div className="col-sm-3 col-4">0922333444</div>
+                    <div className="col-sm-3 col-4">{UserInfo[0].Phone}</div>
                   </div>
                   <div className="row g-3">
                     <label
@@ -203,8 +205,8 @@ export default function Test() {
                       寄送地址
                     </label>
                     <div className="address-location col-sm-10 col-6">
-                      <div>320</div>
-                      <div>桃園市中壢區新生路二段421號</div>
+                      <div>{postcode}</div>
+                      <div className="col-10"> {country} {township} {UserInfo[0].Address}</div>
                     </div>
                   </div>
                 </div>
@@ -555,40 +557,6 @@ export default function Test() {
           gap: 12px;
           padding: 12px;
           color: black;
-          .lesson-item {
-            display: grid;
-            place-content: center;
-            grid-template-columns: repeat(8, 110px);
-            @media screen and (max-width: 576px) {
-              grid-template-columns: repeat(4, 1fr);
-            }
-            .lesson-item-name {
-              grid-row: 1/2;
-              grid-column: 1/3;
-              margin-block: auto;
-              padding-left: 10px;
-              @media screen and (max-width: 576px) {
-                grid-column: 1/3;
-                padding-left: 0;
-              }
-            }
-            .lesson-item-price {
-              grid-row: 1/2;
-              grid-column: 3/8;
-              margin: auto;
-              @media screen and (max-width: 576px) {
-                grid-column: 3/4;
-              }
-            }
-            .lesson-item-payment{
-              grid-row: 1/2;
-              grid-column: 8/9;
-              margin: auto;
-              @media screen and (max-width: 576px) {
-                grid-column: 4/5;
-              }
-            }
-          }
           .instrument-item {
             display: grid;
             place-content: center;

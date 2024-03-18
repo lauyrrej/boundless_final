@@ -1,15 +1,16 @@
 export default function InstrumentCouponDropdowns({
   instrumentCoupons,
-  instrumentDiscount,
   handleInstrumentSelector,
 }) {
   const coupons = instrumentCoupons.map((v) => {
     return (
-      <option key={v.id} value={v.discount}>
+      <option key={v.id} value={v.discount} name={v.name}>
         {v.name}
       </option>
     )
   })
+  
+  var select = localStorage.getItem('InstrumentCoupon')
 
   return (
     <>
@@ -17,7 +18,7 @@ export default function InstrumentCouponDropdowns({
         className="form-select"
         aria-label="Default select example"
         defaultValue={'Default'}
-        value={instrumentDiscount}
+        value={select}
         onChange={(e) => {
           handleInstrumentSelector(e.target.value)
         }}

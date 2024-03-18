@@ -27,12 +27,6 @@ export default function ArticleList() {
   const [article, setArticle] = useState([])
   const [search, setSearch] = useState('')
 
-  // --------------------------搜尋功能------------------------
-  // const filterArticle = useMemo(() => {
-  //   return article.filter((v) => {
-  //     return v.title.includes(search)
-  //   })
-  // }, [article, search])
   // // 資料排序
   const [dataSort, setDataSort] = useState('latest')
 

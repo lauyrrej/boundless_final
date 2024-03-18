@@ -132,13 +132,32 @@ export default function LessonList({}) {
     setSales(false)
   }
 
-  //-------------------連資料庫
-  const perPage = 12
-  const [currentPage, setCurrentPage] = useState(0)
-  const [totalPage, setTotalPage] = useState(0)
-    const [LessonArray, setLessonArray] = useState([])
     
-  function getLesson() {
+    const [lessons, setLessons] = useState([]); // 從服務器獲取的原始課程
+const [filteredLessons, setFilteredLessons] = useState([]); // 應用過濾、排序等後的課程
+const [filters, setFilters] = useState({
+  search: '',
+  category: '',
+  priceRange: [null, null],
+  score: 'all',
+  sortBy: null, // 'sales', 'rating', 'length'
+});
+
+// 一次性獲取課程並存儲
+useEffect(() => {
+  fetchLessons().then((result) => {
+    setLessons(result)
+    setFilteredLessons(result) // 初始時，未應用任何過濾
+  })
+}, []);
+
+// 每次 `filters` 狀態變化時，應用篩選
+useEffect(() => {
+  applyFilters();
+}, [filters, lessons]);
+
+const fetchLessons = async () => {
+    // 你的獲取數據邏輯
     return new Promise((resolve, reject) => {
       let url = 'http://localhost:3005/api/lesson'
       fetch(url, {
@@ -148,18 +167,8 @@ export default function LessonList({}) {
         .then((response) => {
           return response.json()
         })
-        .then((result) => {
-            // 将 result 每 perPage 条记录分成一页一页的数组
-          const pages = result.reduce((acc, current, index) => {
-            const tempPage = Math.floor(index / perPage) // 当前记录所在的页码
-            if (!acc[tempPage]) {
-              acc[tempPage] = [] // 如果该页不存在，则创建一个新的页数组
-            }
-            acc[tempPage].push(current) // 将当前记录添加到相应的页数组中
-            return acc
-          }, [])
-          setTotalPage(pages.length)
-          setLessonArray(pages[currentPage]) // 将分页后的结果传递给 resolve
+          .then((result) => {
+            console.log(result);
         })
         .catch((error) => {
           console.log(error)
@@ -167,181 +176,271 @@ export default function LessonList({}) {
         })
     })
   }
-  useEffect(() => {
-    getLesson()
-  }, [currentPage])
 
-  const handlePageClick = (event) => {
-    const newPage = event.selected
-    setCurrentPage(newPage)
+
+const applyFilters = () => {
+  let result = [...lessons];
+
+  // 應用搜索篩選
+  if (filters.search) {
+    result = result.filter(lesson => lesson.name.includes(filters.search));
   }
 
-  // 在组件中定义 isFiltered 状态，并提供一个函数来更新它的值
-  const [isFiltered, setIsFiltered] = useState(false)
-  //-----------所有過濾資料功能傳回來的地方
-
-  const [data, setData] = useState(LessonArray)
-
-  //-----------------篩選功能 //FIXME
-  // 價格篩選
-  //確保 priceLow 和 priceHigh 有被定義後再呼叫 priceRange 函式
-  const priceRange = (priceLow, priceHigh) => {
-    if (priceLow !== '' && priceHigh !== '') {
-      console.log('priceLow:', priceLow)
-      console.log('priceHigh:', priceHigh)
-      fetch(
-        `http://localhost:3005/api/lesson?priceLow=${priceLow}&priceHigh=${priceHigh}`
-      )
-        .then((response) => response.json()) //在網路請求成功時將回應物件轉換為 JSON 格式，並回傳一個新的 Promise 物件。這個新的 Promise 物件會在 JSON 解析成功後被解析，而且 data 參數會包含解析後的 JSON 資料。
-
-        .then((data) => setData(data))
-      setIsFiltered(true)
-      console.log(data)
-    }
+  // 應用類別篩選
+  if (filters.category) {
+    result = result.filter(lesson => lesson.categoryId === filters.category);
   }
+
+  // 應用價格範圍篩選
+  if (filters.priceRange[0] !== null && filters.priceRange[1] !== null) {
+    result = result.filter(lesson => lesson.price >= filters.priceRange[0] && lesson.price <= filters.priceRange[1]);
+  }
+
+  // 應用評分篩選
+  if (filters.score !== 'all') {
+    const scoreNum = parseInt(filters.score, 10);
+    result = result.filter(lesson => Math.round(lesson.average_rating) === scoreNum);
+  }
+
+  // 應用排序
+  switch (filters.sortBy) {
+    case 'sales':
+      result.sort((a, b) => b.sales - a.sales);
+      break;
+    case 'rating':
+      result.sort((a, b) => b.average_rating - a.average_rating);
+      break;
+    case 'length':
+      result.sort((a, b) => b.length - a.length);
+      break;
+    default:
+      // 無排序或默認排序邏輯
+      break;
+  }
+
+  // 最終，更新過濾和排序後的課程狀態
+  setFilteredLessons(result);
+};
+
+// 更新過濾器的處理函數
+const handleSearchChange = (search) => {
+  setFilters(prev => ({ ...prev, search, currentPage: 0 }));
+};
+
+const handleCategoryChange = (category) => {
+  setFilters(prev => ({ ...prev, category, currentPage: 0 }));
+};
+
+const handlePriceRangeChange = (priceLow, priceHigh) => {
+    setFilters(prev => ({ ...prev, priceRange: [priceLow, priceHigh], currentPage })
+
     
-  // 課程評價篩選
-  const scoreState = ['all', '5', '4', '3']
-  const [score, setScore] = useState('all')
+    
+//   //-------------------連資料庫
+//   const perPage = 12
+//   const [currentPage, setCurrentPage] = useState(0)
+//   const [totalPage, setTotalPage] = useState(0)
+//     const [LessonArray, setLessonArray] = useState([])
+    
+//   function getLesson() {
+//     return new Promise((resolve, reject) => {
+//       let url = 'http://localhost:3005/api/lesson'
+//       fetch(url, {
+//         method: 'GET',
+//         credentials: 'include',
+//       })
+//         .then((response) => {
+//           return response.json()
+//         })
+//         .then((result) => {
+//             // 将 result 每 perPage 条记录分成一页一页的数组
+//           const pages = result.reduce((acc, current, index) => {
+//             const tempPage = Math.floor(index / perPage) // 当前记录所在的页码
+//             if (!acc[tempPage]) {
+//               acc[tempPage] = [] // 如果该页不存在，则创建一个新的页数组
+//             }
+//             acc[tempPage].push(current) // 将当前记录添加到相应的页数组中
+//             return acc
+//           }, [])
+//           setTotalPage(pages.length)
+//           setLessonArray(pages[currentPage]) // 将分页后的结果传递给 resolve
+//         })
+//         .catch((error) => {
+//           console.log(error)
+//           reject()
+//         })
+//     })
+//   }
+//   useEffect(() => {
+//     getLesson()
+//   }, [currentPage])
 
-  // 当选中的星级变化时，筛选商品列表
-  useEffect(() => {
-    //   console.log('当前选择的评分:', score) // 调试日志，查看当前选择的评分
-    if (score === 'all') {
-      // console.log('显示所有课程')
-      setData(LessonArray)
-    } else {
-      const scoreNum = parseInt(score, 10)
-      // console.log('筛选评分为', scoreNum, '的课程')
-      const filtered = LessonArray.filter(
-        (lesson) => Math.round(lesson.average_rating) === scoreNum
-      )
-      // console.log('筛选结果:', filtered) // 调试日志，查看筛选结果
-      setData(filtered)
-      setIsFiltered(true)
-    }
-  }, [score, LessonArray])
+//   const handlePageClick = (event) => {
+//     const newPage = event.selected
+//     setCurrentPage(newPage)
+//   }
 
-  //-------------------搜尋功能
-  const [search, setSearch] = useState('')
-  const handleSearch = () => {
-    // console.log('按鈕被點擊了')
-    let newData
-    if (search.trim() === '') {
-      newData = LessonArray
-      //   console.log(newData)
-    } else {
-      newData = LessonArray.filter((v, i) => {
-        return v.name.includes(search)
-      })
-    }
+//   // 在组件中定义 isFiltered 状态，并提供一个函数来更新它的值
+//   const [isFiltered, setIsFiltered] = useState(false)
+//   //-----------所有過濾資料功能傳回來的地方
 
-    setData(newData)
-    setIsFiltered(true)
-  }
+//   const [data, setData] = useState(LessonArray)
 
-  //-------------------排序功能
-  //最熱門
-  const sortBySales = () => {
-    const sortedProducts = [...LessonArray].sort((a, b) => b.sales - a.sales)
-    setData(sortedProducts)
-    setIsFiltered(true)
-  }
+//   //-----------------篩選功能 //FIXME
+//   // 價格篩選
+//   //確保 priceLow 和 priceHigh 有被定義後再呼叫 priceRange 函式
+//   const priceRange = (priceLow, priceHigh) => {
+//     if (priceLow !== '' && priceHigh !== '') {
+//       console.log('priceLow:', priceLow)
+//       console.log('priceHigh:', priceHigh)
+//       fetch(
+//         `http://localhost:3005/api/lesson?priceLow=${priceLow}&priceHigh=${priceHigh}`
+//       )
+//         .then((response) => response.json()) //在網路請求成功時將回應物件轉換為 JSON 格式，並回傳一個新的 Promise 物件。這個新的 Promise 物件會在 JSON 解析成功後被解析，而且 data 參數會包含解析後的 JSON 資料。
 
-  //依評價
-  const sortByRating = () => {
-    const sortedProducts = [...LessonArray].sort(
-      (a, b) => b.average_rating - a.average_rating
-    )
-    setData(sortedProducts)
-    setIsFiltered(true)
-  }
-  //依時數
-  const sortBylength = () => {
-    const sortedProducts = [...LessonArray].sort((a, b) => b.length - a.length)
-    setData(sortedProducts)
-    setIsFiltered(true)
-  }
+//         .then((data) => setData(data))
+//       setIsFiltered(true)
+//       console.log(data)
+//     }
+//   }
+    
+//   // 課程評價篩選
+//   const scoreState = ['all', '5', '4', '3']
+//   const [score, setScore] = useState('all')
 
-  //-------------------渲染分類功能li
-  const [LessonCategory, setLessonCategory] = useState([])
+//   // 当选中的星级变化时，筛选商品列表
+//   useEffect(() => {
+//     //   console.log('当前选择的评分:', score) // 调试日志，查看当前选择的评分
+//     if (score === 'all') {
+//       // console.log('显示所有课程')
+//       setData(LessonArray)
+//     } else {
+//       const scoreNum = parseInt(score, 10)
+//       // console.log('筛选评分为', scoreNum, '的课程')
+//       const filtered = LessonArray.filter(
+//         (lesson) => Math.round(lesson.average_rating) === scoreNum
+//       )
+//       // console.log('筛选结果:', filtered) // 调试日志，查看筛选结果
+//       setData(filtered)
+//       setIsFiltered(true)
+//     }
+//   }, [score, LessonArray])
 
-  function getLessonCategory() {
-    return new Promise((resolve, reject) => {
-      let url = 'http://localhost:3005/api/lesson/categories'
-      fetch(url, {
-        method: 'GET',
-        credentials: 'include',
-      })
-        .then((response) => {
-          return response.json()
-        })
-        .then((result) => {
-          resolve(result)
-          console.log(result)
-          setLessonCategory(result)
-        })
-        .catch((error) => {
-          console.log(error)
-          reject()
-        })
-    })
-  }
+//   //-------------------搜尋功能
+//   const [search, setSearch] = useState('')
+//   const handleSearch = () => {
+//     // console.log('按鈕被點擊了')
+//     let newData
+//     if (search.trim() === '') {
+//       newData = LessonArray
+//       //   console.log(newData)
+//     } else {
+//       newData = LessonArray.filter((v, i) => {
+//         return v.name.includes(search)
+//       })
+//     }
 
-  useEffect(() => {
-    getLessonCategory()
-  }, [])
+//     setData(newData)
+//     setIsFiltered(true)
+//   }
 
-  //-------------------選定特定分類
+//   //-------------------排序功能
+//   //最熱門
+//   const sortBySales = () => {
+//     const sortedProducts = [...LessonArray].sort((a, b) => b.sales - a.sales)
+//     setData(sortedProducts)
+//     setIsFiltered(true)
+//   }
 
-  const [selectedCategory, setSelectedCategory] = useState('') // 儲存所選分類
-  function handleCategoryChange(id) {
-    console.log('Clicked on category with ID:', id)
-    // 在這裡執行你的其他邏輯，比如更新狀態
-    // 特別處理「全部」選項
-    if (id === 0) {
-      setSelectedCategory(0) // 使用空字串表示「全部」
-    } else {
-      setSelectedCategory(id)
-    }
-  }
+//   //依評價
+//   const sortByRating = () => {
+//     const sortedProducts = [...LessonArray].sort(
+//       (a, b) => b.average_rating - a.average_rating
+//     )
+//     setData(sortedProducts)
+//     setIsFiltered(true)
+//   }
+//   //依時數
+//   const sortBylength = () => {
+//     const sortedProducts = [...LessonArray].sort((a, b) => b.length - a.length)
+//     setData(sortedProducts)
+//     setIsFiltered(true)
+//   }
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:3005/api/lesson/category/${selectedCategory}`
-        )
-        const data = await response.json()
-        console.log(data)
+//   //-------------------渲染分類功能li
+//   const [LessonCategory, setLessonCategory] = useState([])
 
-        setData(data) //連回渲染特定分類課程
-      } catch (error) {
-        console.error('Error fetching products:', error)
-      }
-      setIsFiltered(true)
-    }
-    //当selectedCategory变化时重新获取商品数据
-    if (selectedCategory !== '') {
-      fetchProducts()
-    }
-  }, [selectedCategory])
+//   function getLessonCategory() {
+//     return new Promise((resolve, reject) => {
+//       let url = 'http://localhost:3005/api/lesson/categories'
+//       fetch(url, {
+//         method: 'GET',
+//         credentials: 'include',
+//       })
+//         .then((response) => {
+//           return response.json()
+//         })
+//         .then((result) => {
+//           resolve(result)
+//           console.log(result)
+//           setLessonCategory(result)
+//         })
+//         .catch((error) => {
+//           console.log(error)
+//           reject()
+//         })
+//     })
+//   }
 
-  //-------------------選定特定分類後 熱門課程消失 //FIXME回到原始url熱門課程出不來
-  const { category } = useParams() // 从URL参数中获取category值
-  const [showHotCourses, setShowHotCourses] = useState(true) // 控制是否显示热门课程部分
+//   useEffect(() => {
+//     getLessonCategory()
+//   }, [])
 
-  useEffect(() => {
-    //   如果URL中存在category参数，则隱藏热门课程部分
-    if ('category') {
-      setShowHotCourses(false)
-    } else {
-      // 否则顯示热门课程部分
-      setShowHotCourses(true)
-    }
-  }, [category])
+//   //-------------------選定特定分類
 
+//   const [selectedCategory, setSelectedCategory] = useState('') // 儲存所選分類
+//   function handleCategoryChange(id) {
+//     console.log('Clicked on category with ID:', id)
+//     // 在這裡執行你的其他邏輯，比如更新狀態
+//     setSelectedCategory(id)
+//   }
 
+//   useEffect(() => {
+//     const fetchProducts = async () => {
+//       try {
+//         const response = await fetch(
+//           `http://localhost:3005/api/lesson/category/${selectedCategory}`
+//         )
+//         const data = await response.json()
+//         console.log(data)
+
+//         setData(data) //連回渲染特定分類課程
+//       } catch (error) {
+//         console.error('Error fetching products:', error)
+//       }
+//       setIsFiltered(true)
+//     }
+//     //当selectedCategory变化时重新获取商品数据
+//     if (selectedCategory !== '') {
+//       fetchProducts()
+//     }
+//   }, [selectedCategory])
+
+//   //-------------------選定特定分類後 熱門課程消失 //FIXME回到原始url熱門課程出不來
+//   const { category } = useParams() // 从URL参数中获取category值
+//   const [showHotCourses, setShowHotCourses] = useState(true) // 控制是否显示热门课程部分
+
+//   useEffect(() => {
+//     //   如果URL中存在category参数，则隱藏热门课程部分
+//     if ('category') {
+//       setShowHotCourses(false)
+//     } else {
+//       // 否则顯示热门课程部分
+//       setShowHotCourses(true)
+//     }
+//   }, [category])
+
+  )
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
@@ -400,9 +499,9 @@ export default function LessonList({}) {
           <div className="sidebar-wrapper d-none d-sm-block  col-sm-2">
             <div className="sidebar">
               <ul className="d-flex flex-column">
-                <Link href={"/lesson/?category === 0"}>
-                  <li onClick={() => handleCategoryChange(0)}>全部</li>
-                </Link>
+                <li>
+                  <Link href={'/lesson'}>全部</Link>
+                </li>
                 {/* 分類功能 */}
                 {LessonCategory.map((v, index) => {
                   return (
@@ -681,7 +780,7 @@ export default function LessonList({}) {
 
                 {isFiltered &&
                   // 如果已经进行了筛选或搜索，渲染筛选后的 Lesson 数据
-                  data.map((v, i) => {
+                  filteredLessons.map((v, i) => {
                     const {
                       id,
                       puid,
@@ -731,7 +830,7 @@ export default function LessonList({}) {
 
                 {!isFiltered &&
                   // 如果没有进行筛选或搜索，渲染原始的 Lesson 数据
-                  LessonArray.map((v, i) => {
+                  lessons.map((v, i) => {
                     const {
                       id,
                       puid,
@@ -819,3 +918,4 @@ export default function LessonList({}) {
     </>
   )
 }
+};
