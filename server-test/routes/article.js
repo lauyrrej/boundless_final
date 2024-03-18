@@ -2,13 +2,15 @@ import express, { json } from 'express';
 import db from '../db.js';
 import cors from 'cors';
 // import formidable from "formidable";
-import { dirname, resolve, extname } from 'path';
-import { fileURLToPath } from 'url';
-import { renameSync } from 'fs';
+//上傳檔案
+import { renameSync } from "fs";
+import { dirname, resolve, extname } from "path";
+import { fileURLToPath } from "url";
+//方法2
+import formidable from "formidable";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 import multer from 'multer';
-const upload = multer({ dest: resolve(__dirname, 'public/Images') });
-// 上傳內容放public
+const upload = multer();
 
 const router = express.Router();
 router.use(cors());
@@ -65,19 +67,20 @@ router.get('/categories', async (req, res) => {
   }
 });
 
+// 照片上傳(抓不到image)
 router.post('/api/upload', upload.single('myFile'), (req, res) => {
   // 處理上傳邏輯與命名myFile=前端input:name
   let timestamp = Date.now();
   let newFileName = timestamp + extname(req.file.originalname);
   // 根據時間點給予新的名稱
-  renameSync(req.file.path, resolve(__dirname, 'public/upload', newFileName));
+  renameSync(req.file.path, resolve(__dirname, 'public/article', newFileName));
   res.json({ body: req.body, file: req.file });
 });
 
-// publish
+// 文章發布(fetch error)
 router.post(
   '/article-list/article-publish',
-  upload.none(),
+  upload.none(''),
   async (req, res) => {
     console.log(req.body);
     // POST /api/user/status 409
@@ -85,7 +88,7 @@ router.post(
     const auid = generateUid();
     await db
       .execute(
-        'INSERT INTO `article` (`id`,`auid`, `title`, `content`, `category_id`) VALUES (NULL, ?, ?, ?, ?)',
+        'INSERT INTO `article` (`id`,`auid`, `title`, `content`, `category_id` ) VALUES (NULL, ?, ?, ?, ?)',
         [auid, title, content, category_id]
       )
       .then(() => {
@@ -96,26 +99,6 @@ router.post(
       });
   }
 );
-
-//特定分類的資料
-// router.get("/category/:category", async (req, res) => {
-//   try {
-//     const category = req.params.category;
-
-//     let [article] = await db.execute(
-//       "SELECT * FROM `product` WHERE `article_category_id` = ?",
-//       [category]
-//     );
-//     if (article.length > 0) {
-//       res.json(article);
-//     } else {
-//       res.json("沒有找到相應的資訊");
-//     }
-//   } catch (error) {
-//     console.error("發生錯誤：", error);
-//     res.json("發生錯誤");
-//   }
-// });
 
 function generateUid() {
   let characters =
