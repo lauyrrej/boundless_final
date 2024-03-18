@@ -10,6 +10,7 @@ import jamHero from '@/assets/jam-hero.png'
 
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
+import { jwtDecode } from 'jwt-decode'
 
 //選項資料 data
 // import CityCountyData from '@/data/CityCountyData.json'
@@ -57,6 +58,7 @@ export default function Test() {
 
   // ----------------------會員登入狀態  ----------------------
 
+  
   // ----------------------會員資料處理  ----------------------
   // ---------------性別-------------
   let gender = '讀取中'
@@ -71,7 +73,7 @@ export default function Test() {
   }
 
   // ---------------生日-------------
-  let birthday = '2000-01-01'
+  let birthday = '0000-00-00'
   if (LoginUserData.birthday) {
     // 原本處理方式 但和SQL資料庫有時區差異------------
     // birthday = userData.birthday.split('T')[0]
@@ -350,7 +352,7 @@ export default function Test() {
                   <div className="sidebar-user-info-name">
                     {LoginUserData.nickname}
                   </div>
-                  <div className="sidebar-user-info-band">{LoginUserData.my_jam}</div>
+                  <div className="sidebar-user-info-band">{LoginUserData.my_jamname}</div>
                 </div>
                 {/* 更換大頭貼的功能暫定併回會員資訊 故不再sidebar顯示 */}
                 {/* <div className="sidebar-user-info-Camera-img">
@@ -593,7 +595,7 @@ export default function Test() {
                         <div className="user-info-item-titleText">手機</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            {LoginUserData.phone}
+                            {LoginUserData.phone ?   LoginUserData.phone : "尚未填寫"}
                           </div>
                         </div>
                       </div>
@@ -609,10 +611,10 @@ export default function Test() {
                         <div className="user-info-item-titleText">地址</div>
                         <div className="user-info-item-Content">
                           <div className="user-info-item-contentText">
-                            {LoginUserData.postcode}&nbsp;
+                            {LoginUserData.postcode}
                             {LoginUserData.country}
                             {LoginUserData.township}
-                            {LoginUserData.address}
+                            {LoginUserData.address ? LoginUserData.address : "尚未填寫"}
                           </div>
                         </div>
                       </div>
@@ -622,7 +624,7 @@ export default function Test() {
                         </div>
                         <div className="user-info-item-info2">
                           <div className="user-info-item-info-contentText">
-                            {LoginUserData.info}
+                            {LoginUserData.info ? LoginUserData.info : "尚未填寫"}
                           </div>
                         </div>
                       </div>

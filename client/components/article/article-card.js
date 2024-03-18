@@ -31,7 +31,7 @@ export default function Articlecard({
         >
           <img
             className="article-author"
-            src={`/user/${article_author_img}`}
+            src={`http://localhost:3005/user/${article_author_img}`}
             alt="空的圖"
           />
           <span className="info-p text-secondary">{article_author_name}</span>
