@@ -18,7 +18,7 @@ export default function CourseCard({
   sales,
   discount,
 }) {
-  const [isDiscount, setIsDiscount] = useState(!!discount)
+//   const [isDiscount, setIsDiscount] = useState(!!discount)
   return (
     <>
       <Link href={`/lesson/${luid}`}>

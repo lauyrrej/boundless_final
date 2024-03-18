@@ -159,7 +159,9 @@ export default function LessonList({}) {
             return acc
           }, [])
           setTotalPage(pages.length)
-          setLessonArray(pages[currentPage]) // 将分页后的结果传递给 resolve
+            setLessonArray(pages[currentPage]) // 将分页后的结果传递给 resolve
+            console.log(LessonArray)
+            
         })
         .catch((error) => {
           console.log(error)
@@ -173,7 +175,9 @@ export default function LessonList({}) {
 
   const handlePageClick = (event) => {
     const newPage = event.selected
-    setCurrentPage(newPage)
+      setCurrentPage(newPage)
+    //   console.log(currentPage)
+      
   }
 
   // 在组件中定义 isFiltered 状态，并提供一个函数来更新它的值
