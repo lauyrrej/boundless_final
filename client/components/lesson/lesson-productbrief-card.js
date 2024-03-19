@@ -1,18 +1,30 @@
 import { useState } from 'react'
 import { FaHeart } from 'react-icons/fa'
-import Lesson from '@/data/Lesson.json'
+//toast
 import toast, { Toaster } from 'react-hot-toast'
 //收藏的功能
 
 //跳轉頁面
 import Link from 'next/link'
 
-
-
-export default function ProductBriefCard(
-  { img,name, homework, sales, price, length, info },
-  { addLessonItem = () => {} }
-) {
+export default function ProductBriefCard({
+  id,
+  img,
+  img_small,
+  type,
+  lesson_category_id,
+  name,
+  homework,
+  sales,
+  price,
+  discount,
+  discount_state,
+  length,
+  info,
+  onshelf_time,
+  addLessonItem = () => {},
+  calcTotalItems = () => {},
+}) {
   //收藏按鍵的功能
   const [colorChange, setcolorChange] = useState(false)
   const colorToggle = () => {
@@ -21,22 +33,10 @@ export default function ProductBriefCard(
   }
 
   // ----------------------加入右上角購物車的功能  ----------------------
-  const [cartItems, setCartItems] = useState([])
-  const [cartCount, setCartCount] = useState(0)
 
-  const addToCart = (product) => {
-    const existingItem = cartItems.find((item) => item.id === product.id)
-    if (existingItem) {
-      existingItem.quantity += 1
-    } else {
-      const newItem = { ...product, quantity: 1 }
-      setCartItems([...cartItems, newItem])
-    }
-    setCartCount(cartCount + 1)
-    toast(`${Lesson[0].name}已加入購物車中`)
-  }
-
-  //跳轉頁面
+  //toast
+    const notify = () =>
+      toast('{LessonDetail.data[0].name}已加入購物車.')
 
   return (
     <>
@@ -98,20 +98,56 @@ export default function ProductBriefCard(
           <div className="shoppingBtn">
             <div
               className="cartBtn"
-              onClick={() => addLessonItem({ img, name, price })}
+              onClick={() => {
+                  addLessonItem({
+                      id,
+                      img,
+                      img_small,
+                      type,
+                      lesson_category_id,
+                      name,
+                      homework,
+                      sales,
+                      price,
+                      discount,
+                      discount_state,
+                      length,
+                      info,
+                      onshelf_time,
+                  });
+                  calcTotalItems();// Moved inside the onClick function
+                  notify();
+              }}
             >
               <img
                 loading="lazy"
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
                 className=""
               />
-              <div
-                className="cart"
-              >
-                加入購物車
-              </div>
+              <div className="cart">加入購物車</div>
+              <Toaster /> //FIXME吐司跑不出來
             </div>
-            <div className="buyBtn">
+            <div
+              className="buyBtn"
+              onClick={() =>
+                addLessonItem({
+                  id,
+                  img,
+                  img_small,
+                  type,
+                  lesson_category_id,
+                  name,
+                  homework,
+                  sales,
+                  price,
+                  discount,
+                  discount_state,
+                  length,
+                  info,
+                  onshelf_time,
+                })
+              }
+            >
               <Link className="buy" href="/cart/check">
                 立即購買
               </Link>

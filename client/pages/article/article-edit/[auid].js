@@ -14,8 +14,8 @@ import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 import Datetime from '@/components/article/datetime'
-import Editor from '@/components/article/editor'
-import EditorH1 from '@/components/article/editorh1'
+import { Tiptap } from '@/components/article/tiptap'
+// import Details from '@/components/article/Details'
 
 export default function Auid() {
   // ----------------------手機版本  ----------------------
@@ -62,26 +62,11 @@ export default function Auid() {
     }
   }, [router.isReady])
 
-  //---------------------------CKEditor------------------
-  const [editorLoaded, setEditorLoaded] = useState(false)
-  // 顯示編輯表
-  const [showEditor, setShowEditor] = useState(true)
-  const handleMainClick = () => {
-    setShowEditor(false)
-  }
-  const [data, setData] = useState('')
+  // initialContent
+  // useEffect(() => {
+  //   setDescription(initialContent)
+  // }, [initialContent, setDescription])
 
-  useEffect(() => {
-    setEditorLoaded(true)
-  }, [])
-
-  // 預設CKEditor格式
-  const editorConfig = {
-    // 其他配置...
-    format_tags: 'p;h1;h2;h3;h4;h5;h6',
-    format_h1: { element: 'h1', name: 'Heading 1' },
-    // 如果您想要設置其他標題樣式，可以繼續添加 format_h2, format_h3 等等
-  }
   // ----------------------假資料  ----------------------
 
   const [filterVisible, setFilterVisible] = useState(false)
@@ -99,6 +84,8 @@ export default function Auid() {
     stopPropagation(e)
     setFilterVisible(!filterVisible)
   }
+  // ----------------------Tiptap  ----------------------
+  const [description, setDescription] = useState('')
 
   return (
     <>
@@ -164,24 +151,9 @@ export default function Auid() {
           <div className="">
             {/* 主內容 */}
             <main className="content">
-              <EditorH1
-                name="description"
-                config={editorConfig}
-                onChange={(data) => {
-                  setData(data)
-                }}
-                editorLoaded={editorLoaded}
-                value={articleDetail.title}
-              />
-              <Editor
-                name="description"
-                config={editorConfig}
-                onChange={(data) => {
-                  setData(data)
-                }}
-                editorLoaded={editorLoaded}
-                value={articleDetail.content}
-              />
+              <div className="">
+                <Tiptap setDescription={setDescription} initialContent={articleDetail.content}/>
+              </div>
               <div className="main-img">
                 <Image
                   src={`/article/${articleDetail.img}`}
@@ -253,6 +225,7 @@ export default function Auid() {
           position: relative;
           weight: 1000px;
           height: 500px;
+          margin-top: 10px;
         }
         .big-pic {
           position: absolute;

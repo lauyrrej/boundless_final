@@ -128,10 +128,7 @@ export function CartProvider({ children }) {
   //計算個數
   const calcTotalItems = () => {
     let total = 0
-
-    for (let i = 0; i < items.length; i++) {
-      total += items[i].qty
-    }
+    total=items.length
     return total
   }
 

@@ -27,12 +27,6 @@ export default function ArticleList() {
   const [article, setArticle] = useState([])
   const [search, setSearch] = useState('')
 
-  // --------------------------搜尋功能------------------------
-  // const filterArticle = useMemo(() => {
-  //   return article.filter((v) => {
-  //     return v.title.includes(search)
-  //   })
-  // }, [article, search])
   // // 資料排序
   const [dataSort, setDataSort] = useState('latest')
 
@@ -75,7 +69,7 @@ export default function ArticleList() {
   //   讀取使用者資料後 定義大頭貼路徑
   let avatarImage
   if (LoginUserData.img) {
-    avatarImage = `/user/${LoginUserData.img}`
+    avatarImage = `http://localhost:3005/user/${LoginUserData.img}`
   } else if (LoginUserData.photo_url) {
     avatarImage = `${LoginUserData.photo_url}`
   } else {

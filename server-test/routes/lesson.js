@@ -1,140 +1,151 @@
-import express from "express";
-import db from "../db.js";
+import express from 'express';
+import db from '../db.js';
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     // Mandatory type filter
-    let baseQuery = "SELECT * FROM `product` WHERE `type` = ? ";
+    //評價篩選
+    let baseQuery = `
+      SELECT 
+          product.*, 
+          COUNT(product_review.product_id) AS review_count, 
+          AVG(product_review.stars) AS average_rating, 
+          teacher_info.name AS teacher_name,  
+          teacher_info.img AS teacher_img,     
+          teacher_info.info AS teacher_info  
+      FROM 
+          product
+      LEFT JOIN 
+          product_review ON product.id = product_review.product_id
+      LEFT JOIN 
+          teacher_info ON product.teacher_id = teacher_info.id 
+      WHERE 
+          product.type = ?`;
+
+    //價格篩選
     let queryParams = [2];
     // Additional filters
-    const { priceLow, priceHigh, page } = req.query;
+    const { priceLow, priceHigh } = req.query;
 
     if (priceLow && priceHigh) {
-      baseQuery += " AND price >= ? AND price <= ?";
+      baseQuery += ' AND product.price >= ? AND product.price <= ?';
       queryParams.push(priceLow, priceHigh);
-    //   console.log(baseQuery);
     }
 
-    //Pagination
-    if (page) {
-      const perPage = 12; // Number of items per page
-      const startIndex = ((parseInt(page) || 1) - 1) * perPage;
-      baseQuery += " LIMIT ?, ?";
-        queryParams.push(startIndex, perPage);
-         console.log(baseQuery);
-    }
-
+    baseQuery += ' GROUP BY product.id ORDER BY product.id;';
     // Execute the query
     const [results] = await db.execute(baseQuery, queryParams);
 
     // Response
     if (results.length > 0) {
       res.json(results);
+      console.log(results);
     } else {
-      res.json({ message: "沒有找到相應的資訊" });
+      res.json({ message: '沒有找到相應的資訊' });
     }
   } catch (error) {
-    console.error("發生錯誤：", error);
-    res.status(500).json({ error: "發生錯誤" });
+    console.error('發生錯誤：', error);
+    res.status(500).json({ error: '發生錯誤' });
   }
 });
 
-//整包product
-// router.get("/", async (req, res) => {
-//   try {
-//     let [lesson] = await db.execute("SELECT * FROM `product` WHERE `type` = 2");
-
-//     if (lesson) {
-//       res.json(lesson);
-//     } else {
-//       res.json("沒有找到相應的資訊");
-//     }
-//   } catch (error) {
-//     console.error("發生錯誤：", error);
-//     res.json("發生錯誤");
-//   }
-
-//      const { priceLow, priceHigh } = req.query;
-//      const query = `
-//         SELECT * FROM product
-//         WHERE price >= ? AND price <= ?
-//         ORDER BY price ASC;
-//     `;
-
-//      db.query(query, [priceLow, priceHigh], (err, results) => {
-//        if (err) throw err;
-//        res.json(results);
-//      });
-
-// });
 
 //lesson_category
-router.get("/categories", async (req, res) => {
+router.get('/categories', async (req, res) => {
   try {
     let [lesson_category] = await db.execute(
-      "SELECT * FROM `lesson_category` "
+      'SELECT * FROM `lesson_category` '
     );
 
     if (lesson_category) {
       res.json(lesson_category);
+      console.log(lesson_category);
     } else {
-      res.json("沒有找到相應的資訊");
+      res.json('沒有找到相應的資訊');
     }
   } catch (error) {
-    console.error("發生錯誤：", error);
-    res.json("發生錯誤");
+    console.error('發生錯誤：', error);
+    res.json('發生錯誤');
   }
 });
+
 //特定分類的資料
-router.get("/category/:category", async (req, res) => {
+router.get('/category/:category', async (req, res) => {
   try {
     const category = req.params.category;
+    let query = 'SELECT * FROM `product` WHERE `type` = 2';
+    let queryParams = [];
 
-    let [lesson] = await db.execute(
-      "SELECT * FROM `product` WHERE `lesson_category_id` = ?",
-      [category]
-    );
+    // 如果 category 不是空字串或'0'，則增加類別過濾條件
+    if (category !== '' && category !== '0') {
+      query += ' AND `lesson_category_id` = ?';
+      queryParams = [category];
+    }
 
-    if (lesson.length > 0) {
-      res.json(lesson);
+    let [lessons] = await db.execute(query, queryParams);
+
+    if (lessons.length > 0) {
+      res.json(lessons);
     } else {
-      res.json("沒有找到相應的資訊");
+      res.json({ message: '沒有找到相應的資訊' });
     }
   } catch (error) {
-    console.error("發生錯誤：", error);
-    res.json("發生錯誤");
+    console.error('發生錯誤：', error);
+    res.status(500).json({ error: '發生錯誤' });
   }
 });
 
 // 獲得單筆課程資料＋review
-router.get("/:id", async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
   let luid = req.params.id;
   console.log(luid);
-  let [data] = await db
-    .execute(
-      //       ”SELECT p.*, pr.*, lc.*
-      // FROM `product` AS p
-      // LEFT JOIN `product_review` AS pr ON p.id = pr.product_id
-      // LEFT JOIN `lesson_category` AS lc ON p.lesson_category_id = lc.id
-      // WHERE p.`puid` = ?“,
-      //       [luid] //FIXME評論多連一張資料表
+  try {
+    let [data] = await db.execute(
+      'SELECT p.*, pr.*,lc.name as lesson_category_name' +
+        ' FROM `product` AS p ' +
+        ' LEFT JOIN `product_review` AS pr ON p.id = pr.product_id ' +
+        ' LEFT JOIN `lesson_category` AS lc ON p.lesson_category_id = lc.id ' +
+        ' WHERE p.`puid` = ? AND p.`lesson_category_id` IN (' +
+        '   SELECT `lesson_category_id` FROM `product` WHERE `puid` = ?' +
+        ')',
+      [luid, luid]
+    );
+    //FIXME sql可以改一下
 
-      "SELECT p.*, pr.* FROM `product` AS p LEFT JOIN `product_review` AS pr ON p.id = pr.product_id WHERE p.`puid` = ?",
+    let [product_review] = await db.execute(
+      `
+      SELECT pr.*, u.*
+      FROM product p
+      JOIN product_review pr ON p.id = pr.product_id
+      JOIN user AS u ON pr.user_id = u.id
+      WHERE p.puid = ?
+    `,
       [luid]
-    )
-    .catch(() => {
-      return undefined;
-    });
+    );
 
-  if (data) {
-    console.log(data);
-    res.status(200).json(data);
-  } else {
-    res.status(400).send("發生錯誤");
+    let [youwilllike] = await db.execute(
+      'SELECT p.* FROM `product` AS p ' +
+        'JOIN (SELECT `lesson_category_id` FROM `product` WHERE `puid` = ?) AS sub ' +
+        'ON p.`lesson_category_id` = sub.`lesson_category_id`',
+      [luid]
+    );
+
+
+    if ({ data, product_review, youwilllike }) {
+
+      console.log({ data });
+      res.status(200).json({ data, product_review, youwilllike });
+    } else {
+      res.status(404).send('Data not found');
+    }
+  } catch (error) {
+    console.error('Database error:', error);
+    res.status(500).send('Internal server error');
   }
 });
+<<<<<<< HEAD
 
 
 // 獲得單筆課程資料＋review
@@ -174,7 +185,7 @@ router.get("/:priceLow&;priceHigh", async (req, res, next) => {
 //   // 排序用
 //   let orderDirection = req.query.order || "ASC";
 
-
-});
-
-export default router
+})
+=======
+>>>>>>> e7fabdc015716f42eae1d40634fe062ac0fef228
+export default router;
