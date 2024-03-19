@@ -35,7 +35,8 @@ export default function ProductBriefCard({
   // ----------------------加入右上角購物車的功能  ----------------------
 
   //toast
-  const notify = () => toast('{LessonDetail.data[0].name}已加入購物車.')
+    const notify = () =>
+      toast('{LessonDetail.data[0].name}已加入購物車.')
 
   return (
     <>
@@ -98,24 +99,24 @@ export default function ProductBriefCard({
             <div
               className="cartBtn"
               onClick={() => {
-                addLessonItem({
-                  id,
-                  img,
-                  img_small,
-                  type,
-                  lesson_category_id,
-                  name,
-                  homework,
-                  sales,
-                  price,
-                  discount,
-                  discount_state,
-                  length,
-                  info,
-                  onshelf_time,
-                })
-                calcTotalItems() // Moved inside the onClick function
-                notify()
+                  addLessonItem({
+                      id,
+                      img,
+                      img_small,
+                      type,
+                      lesson_category_id,
+                      name,
+                      homework,
+                      sales,
+                      price,
+                      discount,
+                      discount_state,
+                      length,
+                      info,
+                      onshelf_time,
+                  });
+                  calcTotalItems();// Moved inside the onClick function
+                  notify();
               }}
             >
               <img

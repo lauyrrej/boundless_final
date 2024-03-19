@@ -305,15 +305,20 @@ export default function Form() {
 
               {/* -------------------------- 主旨 -------------------------- */}
               <div className={`${styles.formItem} row`}>
-                <div className={`${styles.itemTitle} col-12 col-sm-2`}>
+                <label
+                  className={`${styles.itemTitle} col-12 col-sm-2`}
+                  htmlFor="title"
+                >
                   主旨
-                </div>
+                </label>
                 <div
                   className={`${styles.itemInputWrapper} col-12 col-sm-10 d-flex align-items-center`}
                 >
                   <input
                     type="text"
                     className={`${styles.itemInput} form-control`}
+                    name="title"
+                    id="title"
                     placeholder="發起動機或目的，上限20字"
                     maxLength={20}
                     onChange={(e) => {
@@ -342,9 +347,12 @@ export default function Form() {
               </div>
               {/* -------------------------- 技術程度 -------------------------- */}
               <div className={`${styles.formItem} row`}>
-                <div className={`${styles.itemTitle} col-12 col-sm-2`}>
+                <label
+                  className={`${styles.itemTitle} col-12 col-sm-2`}
+                  htmlFor="degree"
+                >
                   技術程度
-                </div>
+                </label>
                 <div className={`${styles.itemInputWrapper} col-12 col-sm-10`}>
                   <select
                     defaultValue={''}
@@ -352,6 +360,7 @@ export default function Form() {
                     style={{ width: 'auto' }}
                     value={degree}
                     name="degree"
+                    id="degree"
                     onChange={(e) => {
                       setDegree(e.target.value)
                     }}
@@ -366,9 +375,12 @@ export default function Form() {
               </div>
               {/* -------------------------- 音樂風格 -------------------------- */}
               <div className={`${styles.formItem} row`}>
-                <div className={`${styles.itemTitle} col-12 col-sm-2`}>
+                <label
+                  className={`${styles.itemTitle} col-12 col-sm-2`}
+                  htmlFor="genre"
+                >
                   音樂風格
-                </div>
+                </label>
                 <div className={`${styles.itemInputWrapper} col-12 col-sm-10`}>
                   <div className={`${styles.selectGroup}`}>
                     {genreSelect.map((v, i) => {
@@ -380,6 +392,7 @@ export default function Form() {
                           style={{ width: 'auto' }}
                           value={genre[i]}
                           name="genre"
+                          id="genre"
                           onChange={(e) => {
                             let newgenre = [...genre]
                             newgenre[i] = e.target.value
@@ -440,9 +453,9 @@ export default function Form() {
               </div>
               {/* -------------------------- 擔任職位 -------------------------- */}
               <div className={`${styles.formItem} row`}>
-                <div className={`${styles.itemTitle} col-12 col-sm-2`}>
+                <label className={`${styles.itemTitle} col-12 col-sm-2`} htmlFor='myPlayer'>
                   擔任職位
-                </div>
+                </label>
                 <div className={`${styles.itemInputWrapper} col-12 col-sm-10`}>
                   <select
                     defaultValue={''}
@@ -450,6 +463,7 @@ export default function Form() {
                     style={{ width: 'auto' }}
                     value={myPlayer}
                     name="myPlayer"
+                    id='myPlayer'
                     onChange={(e) => {
                       setMyPlayer(e.target.value)
                       setFinalMyPlayer(
@@ -472,9 +486,9 @@ export default function Form() {
               </div>
               {/* -------------------------- 徵求樂手 -------------------------- */}
               <div className={`${styles.formItem} row`}>
-                <div className={`${styles.itemTitle} col-12 col-sm-2`}>
+                <label className={`${styles.itemTitle} col-12 col-sm-2`} htmlFor='players'>
                   徵求樂手
-                </div>
+                </label>
                 <div className={`${styles.itemInputWrapper} col-12 col-sm-10`}>
                   <div className={`${styles.selectGroup}`}>
                     {playersSelect.map((v, i) => {
@@ -486,6 +500,7 @@ export default function Form() {
                           style={{ width: 'auto' }}
                           value={players[i]}
                           name="players"
+                          id='players'
                           onChange={(e) => {
                             let newplayer = [...players]
                             newplayer[i] = e.target.value
@@ -527,9 +542,9 @@ export default function Form() {
               </div>
               {/* -------------------------- 地區 -------------------------- */}
               <div className={`${styles.formItem} row`}>
-                <div className={`${styles.itemTitle} col-12 col-sm-2`}>
+                <label className={`${styles.itemTitle} col-12 col-sm-2`} htmlFor='region'>
                   地區
-                </div>
+                </label>
                 <div className={`${styles.itemInputWrapper} col-12 col-sm-10`}>
                   <select
                     defaultValue={''}
@@ -537,6 +552,7 @@ export default function Form() {
                     style={{ width: 'auto' }}
                     value={region}
                     name="region"
+                    id='region'
                     onChange={(e) => {
                       setRegion(e.target.value)
                     }}
@@ -556,13 +572,15 @@ export default function Form() {
               </div>
               {/* -------------------------- 其他條件 -------------------------- */}
               <div className={`${styles.formItem} row`}>
-                <div className={`${styles.itemTitle} col-12 col-sm-2`}>
+                <label className={`${styles.itemTitle} col-12 col-sm-2`} htmlFor='condition'>
                   其他條件(選填)
-                </div>
+                </label>
                 <div className={`${styles.itemInputWrapper} col-12 col-sm-10`}>
                   <input
                     type="text"
                     className={`form-control`}
+                    name='condition'
+                    id='condition'
                     placeholder="事先說好要求，有助於玩團和樂哦～上限30字"
                     maxLength={30}
                     onChange={(e) => {
@@ -591,14 +609,15 @@ export default function Form() {
               </div>
               {/* -------------------------- 描述 -------------------------- */}
               <div className={`${styles.formItem} row`}>
-                <div className={`${styles.itemTitle} col-12 col-sm-2`}>
+                <label className={`${styles.itemTitle} col-12 col-sm-2`} htmlFor='description'>
                   描述
-                </div>
+                </label>
                 <div className={`${styles.itemInputWrapper} col-12 col-sm-10`}>
                   <textarea
                     className={`${styles.textArea} form-control`}
                     placeholder="輸入清楚、吸引人的描述，讓大家瞭解你的成團動機吧！上限150字"
                     name="description"
+                    id='description'
                     maxLength={150}
                     onChange={(e) => {
                       setDescription(e.target.value)

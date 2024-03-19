@@ -4,7 +4,6 @@ import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
 import jamHero from '@/assets/jam-hero.png'
-import Editor from '@/components/article/editor'
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
 import { IoIosSearch } from 'react-icons/io'
@@ -15,12 +14,6 @@ import { IoClose } from 'react-icons/io5'
 
 export default function Test() {
   const [editorLoaded, setEditorLoaded] = useState(false)
-
-  // 顯示編輯表
-  const [showEditor, setShowEditor] = useState(true)
-  const handleMainClick = () => {
-    setShowEditor(false)
-  }
 
   const [data, setData] = useState('')
   const initContent = 'JSON text 段落與標題需要分開編輯'
@@ -116,28 +109,7 @@ export default function Test() {
           </div>
           <div className="">
             {/* 主內容 */}
-            <main className="content">
-              <Editor
-                name="description"
-                onChange={(data) => {
-                  setData(data)
-                }}
-                editorLoaded={editorLoaded}
-                value={initContent}
-              />
-              {/* 這裡嘗試新的 */}
-              <div onClick={handleMainClick}>
-                <Editor
-                  name="description"
-                  onChange={(data) => {
-                    setData(data)
-                  }}
-                  disabled={!showEditor}
-                  editorLoaded={editorLoaded}
-                  value={initContent}
-                />
-              </div>
-            </main>
+            <main className="content"></main>
           </div>
         </div>
       </div>

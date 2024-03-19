@@ -17,6 +17,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 // console.log(__dirname)
 // console.log(testdirname)
 
+
 //token相關
 import jwt from "jsonwebtoken";
 import "dotenv/config.js";
@@ -32,57 +33,42 @@ const upload = multer();
 // console.log(userData)
 
 
+
+//在外部設定時間戳記 當作上傳檔案時的中介 以免檔名跟資料庫的名稱不同
+const setTimestamp = (req, res, next) => {
+  req.timestamp = Date.now();
+  next(); // 调用 next() 将控制传递给下一个中间件或路由处理程序
+};
+
 //上傳檔案-----------------------
 const storage = multer.diskStorage({
+  
   destination: function (req, file, cb) {
-    cb(null, resolve(__dirname, "public"));
+    cb(null, resolve(__dirname, "../public/user"));
   },
   filename: function (req, file, cb) {
-    if(!req.timestamp){
-      req.timestamp = Date.now();
-      req.index = 0;
-    }else{
-      req.index++;
-    }
-    let newName = (req.timestamp + req.index) + extname(file.originalname);
+  
+    // let newName = (req.timestamp + req.index) + extname(file.originalname);
+    let newName = "avatar_user00" + req.timestamp + extname(file.originalname);
     cb(null, newName)
   }
 })
 const uploadTest = multer({ storage: storage })
-// const uploadTest = multer({ dest: resolve(__dirname, "public")})
+//此路由為在使用者編輯頁時 上傳頭像使用
+router.post("/upload1",setTimestamp, uploadTest.single('myFile'),async (req, res)=>{
+  const id = req.body.name;
+  const newName = "avatar_user00" + req.timestamp + ".jpg";
+
+  // 更新資料庫
+  const [result] = await db.execute(`UPDATE user SET img = ? WHERE id = ?;`, [newName, id]);
 
 
+  // res.json({ status: 'success', data: { result } })
+  //導回編輯頁
+  res.redirect('http://localhost:3000/user/user-info-edit');
 
-router.post("/upload1", uploadTest.single('myFile'), (req, res)=>{
-  // res.json({body: req.body, file: req.file});
-  // render("你好")
-  // res.send("處理檔案上傳");
-
-  // let timestamp = Date.now();
-  // // let newName = timestamp + extname(req.file.originalname);
-  // let newName = timestamp ;
-
-  // // renameSync(req.file.path, resolve(__dirname, "public/"));
-  // req.body.myFile = newName;
-  res.json({body: req.body, file: req.file});
 });
 
-router.post("/upload2", (req, res)=>{
-  const form = formidable({
-    uploadDir: resolve(__dirname, "public/"),
-    keepExtensions: true,
-    multiples: true})
-
-  form.parse(req, (err, fields, files) => {
-    if (err) {
-      next(err);
-      return;
-    }
-    res.json({ fields, files });
-  });
-
-  res.json({body: req.body, file: req.file});
-});
 //上傳檔案-----------------------
 
 //GET 測試 - 得到所有會員資料
@@ -100,6 +86,43 @@ router.get("/", async (req, res, next) => {
     console.error("發生錯誤：", error);
     res.json("發生錯誤");
   }
+});
+
+// 動態路由來到個人首頁
+router.get("/user-homepage/:uid",async (req, res)=>{
+  const uid = req.params.uid;
+  
+// console.log(uid)
+  // 獲得該會員資訊
+  // const [result] = await db.execute(`UPDATE user SET img = ? WHERE id = ?;`, [newName, id]);
+  try {
+    
+    
+
+    // let [userHomePageData] = await db.execute("SELECT * FROM `user` WHERE `uid` = ? AND `valid` = 1", [uid]);
+
+    //正確版 未join
+    // let [userHomePageData] = await db.execute("SELECT email, nickname, phone, birthday , genre_like , play_instrument , info, gender , privacy , my_jam , photo_url , img FROM `user`  WHERE `uid` = ? AND `valid` = 1", [uid]);
+
+    //正確版 join
+    let [userHomePageData] = await db.execute("SELECT email, nickname, phone, birthday , genre_like , play_instrument , info, gender , privacy , j.name AS my_jam , photo_url , img FROM `user` u LEFT JOIN `jam` j ON CONVERT(j.juid USING utf8mb4) = CONVERT(u.my_jam USING utf8mb4) WHERE u.uid = ? AND u.valid = 1", [uid])
+
+    //單獨
+    // let [jamNameData] = await db.execute("SELECT  j.name AS my_jam FROM `user` u LEFT JOIN `jam` j ON CONVERT(j.juid USING utf8mb4) = CONVERT(u.my_jam USING utf8mb4) WHERE u.uid = ?", [uid])
+
+    let result = userHomePageData[0]
+    // console.log(result)
+    if (userHomePageData) {
+      res.json(result);
+      // console.log(userHomePageData);
+    } else {
+      res.json("沒有找到相應的資訊");
+    }
+  } catch (error) {
+    console.error("發生錯誤：", error);
+    res.json("發生錯誤");
+  }
+  // res.json({ status: 'success', data: { result } })
 });
 
 //登入 目前設定 email 就是帳號 不可更改
@@ -206,11 +229,14 @@ router.get("/:id", checkToken, async function (req, res) {
   //所有資料
   // const [singerUser] =  await db.execute(`SELECT * FROM \`user\` WHERE \`id\` = ? AND \`valid\` = 1`, [id]);
 
-  // 不回傳密碼跟創建時間的版本
-  const [singerUser] = await db.execute(
-    `SELECT \`id\` , \`uid\` ,\`name\` ,\`email\`,\`phone\`,\`postcode\`,\`country\`,\`township\`,\`address\`,\`birthday\`,\`genre_like\`,\`play_instrument\`,\`info\`,\`img\`,\`gender\`,\`nickname\`,\`google_uid\`,\`photo_url\`,\`privacy\`,\`my_lesson\` ,\`my_jam\` FROM \`user\` WHERE \`id\` = ? AND \`valid\` = 1`,
-    [id]
-  );
+  // 不回傳密碼跟創建時間的版本  3/18 原版
+  // const [singerUser] = await db.execute(
+  //   `SELECT \`id\` , \`uid\` ,\`name\` ,\`email\`,\`phone\`,\`postcode\`,\`country\`,\`township\`,\`address\`,\`birthday\`,\`genre_like\`,\`play_instrument\`,\`info\`,\`img\`,\`gender\`,\`nickname\`,\`google_uid\`,\`photo_url\`,\`privacy\`,\`my_lesson\` ,\`my_jam\` FROM \`user\` WHERE \`id\` = ? AND \`valid\` = 1`,
+  //   [id]
+  // );
+
+  // 不回傳密碼跟創建時間的版本  3/18 原版 join jam.name 來當my_jamname 名稱版本 
+  let [singerUser] = await db.execute("SELECT u.id, uid, u.name , email, nickname, phone, birthday, postcode, country, township, address, genre_like, play_instrument , info, gender , privacy, google_uid, j.name AS my_jamname, my_jam , photo_url, my_lesson, img FROM `user` u LEFT JOIN `jam` j ON CONVERT(j.juid USING utf8mb4) = CONVERT(u.my_jam USING utf8mb4) WHERE u.id = ? AND u.valid = 1", [id])
 
   const resUser = singerUser[0];
 
@@ -219,14 +245,12 @@ router.get("/:id", checkToken, async function (req, res) {
   // return res.json({ status: 'success', data: { resUser } })
 });
 
+
 // GET - 得到單筆會員資料資料 全部資料版本含密碼
 router.get("/profile/:id", checkToken, async function (req, res) {
   const id = req.params.id;
-
-  
   //所有資料
   const [singerUser] =  await db.execute(`SELECT * FROM \`user\` WHERE \`id\` = ? AND \`valid\` = 1`, [id]);
- 
   const resUser = singerUser[0];
   return res.json(resUser);
   //改檔老師寫法
@@ -238,9 +262,9 @@ router.post("/editProfile/:id", checkToken, async function (req, res) {
   const id = req.params.id;
   let { email, name , password, phone, postcode, country, township, address, birthday, genre_like , play_instrument , info, gender , nickname , privacy } = req.body;
   // console.log(req.body)
-  console.log(email)
-  console.log(name)
-  console.log(birthday)
+  // console.log(email)
+  // console.log(name)
+  // console.log(birthday)
   // birthday = new Date(birthday)
   // if(birthday.length > 10){
   //   birthday = birthday.split('T')[0]
@@ -284,9 +308,9 @@ router.post('/', async (req, res) => {
   }
 
   // 密碼請由英數8~20位組成  --先註解方便測試
-  // if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/.test(newUser.password)) {
-  //   return res.json({ status: 'error', message: '密碼請由英數8~20位組成' });
-  // }
+  if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/.test(newUser.password)) {
+    return res.json({ status: 'error 3', message: '密碼請由英數8~20位組成' });
+  }
 
   // return res.json({ status: 'success 2', message: '成功' })
 

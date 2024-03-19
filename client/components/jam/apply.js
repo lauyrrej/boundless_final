@@ -2,7 +2,7 @@ import styles from '@/pages/jam/jam.module.scss'
 import Link from 'next/link'
 import Image from 'next/image'
 import { FaUser } from 'react-icons/fa'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 export default function Apply({
   id = 0,
@@ -13,8 +13,9 @@ export default function Apply({
   state = 0,
   sendResult,
 }) {
-  const switchState = (state) => {
-    switch (state) {
+  const [resultState, setResultState] = useState(state)
+  const switchState = (resultState) => {
+    switch (resultState) {
       case 0:
         return (
           <>
@@ -22,6 +23,7 @@ export default function Apply({
               className="b-btn b-btn-body px-3"
               role="presentation"
               onClick={() => {
+                setResultState(2)
                 sendResult(id, 2)
               }}
             >
@@ -31,6 +33,7 @@ export default function Apply({
               className="b-btn b-btn-primary px-3"
               role="presentation"
               onClick={() => {
+                setResultState(1)
                 sendResult(id, 1)
               }}
             >
@@ -46,7 +49,7 @@ export default function Apply({
               style={{ backgroundColor: '#1581cc' }}
               role="presentation"
             >
-              已接受
+              等待回覆
             </div>
           </>
         )
@@ -114,7 +117,7 @@ export default function Apply({
           <div className="fw-medium">{created_time}</div>
           {message}
           <div className="d-flex justify-content-end gap-2">
-            {switchState(state)}
+            {switchState(resultState)}
           </div>
         </div>
       </div>
