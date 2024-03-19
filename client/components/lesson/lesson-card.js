@@ -71,7 +71,7 @@ export default function CourseCard({
             </div>
             <div className="students">
               <MdOutlinePeopleAlt size={16} color="#5a5a5a" />
-              <span>{sales}50</span>
+              <span>{sales}</span>
             </div>
           </section>
         </article>

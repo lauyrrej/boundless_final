@@ -4,7 +4,7 @@ import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 //試抓資料區
 import Card from '@/components/lesson/lesson-card'
-import Cardrwd from '@/components/lesson/lesson-card-rwd-data'
+import Cardrwd from '@/components/lesson/lesson-card-rwd'
 // import Lesson from '@/data/Lesson.json'
 
 import Link from 'next/link'
@@ -446,7 +446,12 @@ export default function LessonList({}) {
                     key={index}
                     href={`/lesson?${v.id}`}
                     className="sm-item"
-                    onClick={() => handleCategoryChange(v.id)}
+                    onClick={
+                      (() => handleCategoryChange(v.id),
+                      () => {
+                        setShowSidebar(false)
+                      })
+                    }
                   >
                     {v.name}
                   </Link>
@@ -695,7 +700,8 @@ export default function LessonList({}) {
                       price,
                       teacher_name,
                       teacher_id,
-                      img,
+                        img,
+                        img_small,
                       sales,
                       length,
                     } = v
@@ -710,7 +716,7 @@ export default function LessonList({}) {
                             review_count={review_count}
                             price={price}
                             teacher_name={teacher_name}
-                            img={img}
+                            img_small={img_small}
                             sales={sales}
                             length={length}
                           />
@@ -745,7 +751,8 @@ export default function LessonList({}) {
                       price,
                       teacher_name,
                       teacher_id,
-                      img,
+                        img,
+                        img_small,
                       sales,
                       length,
                     } = v
@@ -760,7 +767,7 @@ export default function LessonList({}) {
                             review_count={review_count}
                             price={price}
                             teacher_name={teacher_name}
-                            img={img}
+                            img_small={img_small}
                             sales={sales}
                             length={length}
                           />
