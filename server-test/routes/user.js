@@ -92,7 +92,7 @@ router.get("/", async (req, res, next) => {
 router.get("/user-homepage/:uid",async (req, res)=>{
   const uid = req.params.uid;
   
-console.log(uid)
+// console.log(uid)
   // 獲得該會員資訊
   // const [result] = await db.execute(`UPDATE user SET img = ? WHERE id = ?;`, [newName, id]);
   try {
@@ -122,13 +122,7 @@ console.log(uid)
     console.error("發生錯誤：", error);
     res.json("發生錯誤");
   }
-
-
-
-
   // res.json({ status: 'success', data: { result } })
-  
-
 });
 
 //登入 目前設定 email 就是帳號 不可更改
@@ -235,11 +229,14 @@ router.get("/:id", checkToken, async function (req, res) {
   //所有資料
   // const [singerUser] =  await db.execute(`SELECT * FROM \`user\` WHERE \`id\` = ? AND \`valid\` = 1`, [id]);
 
-  // 不回傳密碼跟創建時間的版本
-  const [singerUser] = await db.execute(
-    `SELECT \`id\` , \`uid\` ,\`name\` ,\`email\`,\`phone\`,\`postcode\`,\`country\`,\`township\`,\`address\`,\`birthday\`,\`genre_like\`,\`play_instrument\`,\`info\`,\`img\`,\`gender\`,\`nickname\`,\`google_uid\`,\`photo_url\`,\`privacy\`,\`my_lesson\` ,\`my_jam\` FROM \`user\` WHERE \`id\` = ? AND \`valid\` = 1`,
-    [id]
-  );
+  // 不回傳密碼跟創建時間的版本  3/18 原版
+  // const [singerUser] = await db.execute(
+  //   `SELECT \`id\` , \`uid\` ,\`name\` ,\`email\`,\`phone\`,\`postcode\`,\`country\`,\`township\`,\`address\`,\`birthday\`,\`genre_like\`,\`play_instrument\`,\`info\`,\`img\`,\`gender\`,\`nickname\`,\`google_uid\`,\`photo_url\`,\`privacy\`,\`my_lesson\` ,\`my_jam\` FROM \`user\` WHERE \`id\` = ? AND \`valid\` = 1`,
+  //   [id]
+  // );
+
+  // 不回傳密碼跟創建時間的版本  3/18 原版 join jam.name 來當my_jamname 名稱版本 
+  let [singerUser] = await db.execute("SELECT u.id, uid, u.name , email, nickname, phone, birthday, postcode, country, township, address, genre_like, play_instrument , info, gender , privacy, google_uid, j.name AS my_jamname, my_jam , photo_url, my_lesson, img FROM `user` u LEFT JOIN `jam` j ON CONVERT(j.juid USING utf8mb4) = CONVERT(u.my_jam USING utf8mb4) WHERE u.id = ? AND u.valid = 1", [id])
 
   const resUser = singerUser[0];
 
@@ -248,14 +245,12 @@ router.get("/:id", checkToken, async function (req, res) {
   // return res.json({ status: 'success', data: { resUser } })
 });
 
+
 // GET - 得到單筆會員資料資料 全部資料版本含密碼
 router.get("/profile/:id", checkToken, async function (req, res) {
   const id = req.params.id;
-
-  
   //所有資料
   const [singerUser] =  await db.execute(`SELECT * FROM \`user\` WHERE \`id\` = ? AND \`valid\` = 1`, [id]);
- 
   const resUser = singerUser[0];
   return res.json(resUser);
   //改檔老師寫法
@@ -313,9 +308,9 @@ router.post('/', async (req, res) => {
   }
 
   // 密碼請由英數8~20位組成  --先註解方便測試
-  // if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/.test(newUser.password)) {
-  //   return res.json({ status: 'error', message: '密碼請由英數8~20位組成' });
-  // }
+  if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/.test(newUser.password)) {
+    return res.json({ status: 'error 3', message: '密碼請由英數8~20位組成' });
+  }
 
   // return res.json({ status: 'success 2', message: '成功' })
 

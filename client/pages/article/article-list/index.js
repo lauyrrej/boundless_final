@@ -69,7 +69,7 @@ export default function ArticleList() {
   //   讀取使用者資料後 定義大頭貼路徑
   let avatarImage
   if (LoginUserData.img) {
-    avatarImage = `/user/${LoginUserData.img}`
+    avatarImage = `http://localhost:3005/user/${LoginUserData.img}`
   } else if (LoginUserData.photo_url) {
     avatarImage = `${LoginUserData.photo_url}`
   } else {
