@@ -457,7 +457,7 @@ header {
   overflow: hidden;
   position: relative;
   aspect-ratio: 1.61;
-  max-height: 600px;
+  max-height: 500px;
   min-height: 255px;
 }
 .carousel-item img {
@@ -477,11 +477,6 @@ header {
   color: #fff;
   @media screen and (max-width: 576px) {
     height: 70svh;
-  }
-  .lesson-position {
-    position: absolute;
-    right: 0;
-    top: 16%;
   }
   .lesson-section-img {
     overflow: hidden;
@@ -521,6 +516,13 @@ header {
   right: 0px;
 }
 
+.slogan {
+  font-size: 40px;
+  @media screen and (max-width: 576px) {
+    font-size: calc(1.325rem + 0.9vw);
+  }
+}
+
 .instrument-section {
   padding-block: 30px;
   background-color: #fff;
@@ -539,7 +541,6 @@ header {
     overflow: hidden;
     position: relative;
     aspect-ratio: 1.5;
-    // height: 560px;
     width: 100%;
     max-width: 914px;
   }
@@ -555,26 +556,30 @@ header {
 }
 
 .jam-section {
-  padding-block: 30px;
   background-color: #b9b9b9;
-  height: 100svh;
   position: relative;
   color: #124365;
-  @media screen and (max-width: 576px) {
-    height: 70svh;
-  }
   .jam-position {
     position: absolute;
     right: 0;
     top: 16%;
   }
   .jam-section-img {
-    overflow: hidden;
     position: relative;
-    aspect-ratio: 1.5;
-    // height: 560px;
-    width: 100%;
-    max-width: 914px;
+    overflow: hidden;
+    height: 50svh;
+    @media screen and (max-width: 576px) {
+      height: 35svh;
+    }
+  }
+  .jam-section-img img {
+    object-fit: cover;
+  }
+  .jam-text {
+    height: 50svh;
+    @media screen and (max-width: 576px) {
+      height: 35svh;
+    }
   }
 }
 .b-jam-btn {
@@ -584,5 +589,34 @@ header {
   font-weight: bold;
   &:hover {
     background-color: #0f3652;
+  }
+}
+
+.article-section {
+  padding-block: 30px;
+  background-color: #fff;
+  height: 100svh;
+  position: relative;
+  color: $secondary;
+  @media screen and (max-width: 576px) {
+    height: 70svh;
+  }
+  .article-section-img {
+    margin-left: -5px;
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 1.89;
+    // height: 560px;
+    width: 100%;
+    max-width: 914px;
+  }
+}
+.b-article-btn {
+  background-color: $body;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  &:hover {
+    background-color: $secondary;
   }
 }

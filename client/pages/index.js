@@ -295,37 +295,60 @@ export default function Index() {
           </section>
           {/* 樂團區塊 */}
           <section className="jam-section row align-items-center mx-0">
-            <div className="col-12 d-none d-sm-flex justify-content-end px-0">
+            <div className="col-12 px-0">
               <div className="jam-section-img">
                 <Image src="/asset/jam.png" fill />
               </div>
             </div>
-            <div className="col-12 d-none d-sm-flex flex-column justify-content-center align-items-center px-5">
-              <h2 className="mb-5 text-center" style={{ fontSize: '40px' }}>
-                線上組團媒合助你尋覓知音&nbsp;&nbsp;Let’s JAM!
-              </h2>
-              <Link
-                className="b-btn b-jam-btn px-5 py-3"
-                href="/jam/recruit-list"
-              >
-                查看樂團
-              </Link>
-            </div>
-            {/* 樂團區塊-手機版 */}
-            <div className="d-flex d-sm-none flex-column align-items-center">
-              <h2 className="text-center">
-                線上組團媒合助你尋覓知音
+            <div className="jam-text col-12 d-flex flex-column justify-content-center align-items-center px-5">
+              <h2 className="slogan mb-4 mb-sm-5 text-center">
+                線上組團媒合幫你尋覓知音
                 <br />
                 Let’s JAM!
               </h2>
-              <div className="jam-section-img my-3">
-                <Image src="/asset/lesson_round.png" fill />
-              </div>
               <Link
-                className="b-btn b-jam-btn px-4 py-2"
+                className="b-btn b-jam-btn px-4 px-sm-5 py-2 py-sm-3"
                 href="/jam/recruit-list"
               >
-                查看樂團
+                立即應徵
+              </Link>
+            </div>
+          </section>
+          {/* 文章區塊 */}
+          <section className="article-section row align-items-center mx-0">
+            <div className="col-6 d-none d-sm-flex px-0">
+              <div className="article-section-img">
+                <Image src="/asset/article.png" fill />
+              </div>
+            </div>
+            <div className="col-6 d-none d-sm-flex flex-column justify-content-center align-items-center px-5">
+              <h2 className="mb-5 text-center" style={{ fontSize: '40px' }}>
+                滿腹想法無處傾瀉？
+                <br />
+                樂友論壇歡迎你的獨到見解
+              </h2>
+              <Link
+                className="b-btn b-article-btn px-5 py-3"
+                href="/article-list"
+              >
+                查看文章
+              </Link>
+            </div>
+            {/* 文章區塊-手機版 */}
+            <div className="d-flex d-sm-none flex-column align-items-center">
+              <h2 className="text-center">
+                滿腹想法無處傾瀉？
+                <br />
+                樂友論壇歡迎你的獨到見解
+              </h2>
+              <div className="article-section-img my-3">
+                <Image src="/asset/article_round.png" fill />
+              </div>
+              <Link
+                className="b-btn b-article-btn px-4 py-2"
+                href="/article-list"
+              >
+                查看文章
               </Link>
             </div>
           </section>

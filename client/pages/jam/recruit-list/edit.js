@@ -34,7 +34,7 @@ export default function Info() {
     //獲得資料
     getLoginUserData()
     // 阻擋非法訪問
-    if (!LoginUserData) {
+    if (!LoginUserData.my_jam) {
       setInvalidEdit(false)
       router.push('/jam/recruit-list')
       return
@@ -354,15 +354,17 @@ export default function Info() {
                 </div>
                 {/* -------------------------- 主旨 -------------------------- */}
                 <div className={`${styles.formItem} row`}>
-                  <div className={`${styles.itemTitle} col-12 col-sm-2`}>
+                  <label className={`${styles.itemTitle} col-12 col-sm-2`} htmlFor='title'>
                     主旨
-                  </div>
+                  </label>
                   <div
                     className={`${styles.itemInputWrapper} col-12 col-sm-10 d-flex align-items-center`}
                   >
                     <input
                       type="text"
                       className={`${styles.itemInput} form-control`}
+                      name='title'
+                      id='title'
                       placeholder="發起動機或目的，上限20字"
                       maxLength={20}
                       value={title}
@@ -470,15 +472,17 @@ export default function Info() {
                 </div>
                 {/* -------------------------- 其他條件 -------------------------- */}
                 <div className={`${styles.formItem} row`}>
-                  <div className={`${styles.itemTitle} col-12 col-sm-2`}>
+                  <label className={`${styles.itemTitle} col-12 col-sm-2`} htmlFor='condition'>
                     其他條件(選填)
-                  </div>
+                  </label>
                   <div
                     className={`${styles.itemInputWrapper} col-12 col-sm-10`}
                   >
                     <input
                       type="text"
                       className={`form-control`}
+                      name='condition'
+                      id='condition'
                       placeholder="事先說好要求，有助於玩團和樂哦～上限30字"
                       maxLength={30}
                       value={condition}
@@ -508,9 +512,9 @@ export default function Info() {
                 </div>
                 {/* -------------------------- 描述 -------------------------- */}
                 <div className={`${styles.formItem} row`}>
-                  <div className={`${styles.itemTitle} col-12 col-sm-2`}>
+                  <label className={`${styles.itemTitle} col-12 col-sm-2`} htmlFor='description'>
                     描述
-                  </div>
+                  </label>
                   <div
                     className={`${styles.itemInputWrapper} col-12 col-sm-10`}
                   >
@@ -518,6 +522,7 @@ export default function Info() {
                       className={`${styles.textArea} form-control`}
                       placeholder="輸入清楚、吸引人的描述，讓大家瞭解你的成團動機吧！上限150字"
                       name="description"
+                      id='description'
                       maxLength={150}
                       value={description}
                       onChange={(e) => {

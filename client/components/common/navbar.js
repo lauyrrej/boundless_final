@@ -81,10 +81,10 @@ export default function Navbar({ menuMbToggle }) {
   return (
     <>
       <header className="w-100 d-flex justify-content-between align-items-center">
-        <Link href="#" className="d-none d-lg-block ">
+        <Link href="/" className="d-none d-lg-block ">
           <Image src={logo} alt="logo" className="logo" />
         </Link>
-        <Link href="" className="d-lg-none">
+        <Link href="/" className="d-lg-none">
           <Image src={logoMb} alt="logo-mobile" className=" logo-mb" />
         </Link>
 

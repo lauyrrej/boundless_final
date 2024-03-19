@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { debounce } from 'lodash'
 import { useAuth } from '@/hooks/user/use-auth'
 import { useJam } from '@/hooks/use-jam'
-import toast, { Toaster } from 'react-hot-toast'
+import { Toaster } from 'react-hot-toast'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import MemberInfo from '@/components/jam/member-info'
@@ -18,12 +18,13 @@ import 'animate.css'
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
 import { ImExit } from 'react-icons/im'
+import { FaCamera } from 'react-icons/fa6'
 // scss
 import styles from '@/pages/jam/jam.module.scss'
 
 export default function Edit() {
   const router = useRouter()
-  const { setInvalidJam } = useJam()
+  const { setInvalidEdit } = useJam()
   // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
   const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
@@ -34,6 +35,11 @@ export default function Edit() {
     handleLoginStatus()
     //獲得資料
     getLoginUserData()
+    if (!LoginUserData.my_jam) {
+      setInvalidEdit(false)
+      router.push('/jam/jam-list')
+      return
+    }
   }, [])
   //登出功能
   const mySwal = withReactContent(Swal)
@@ -69,7 +75,7 @@ export default function Edit() {
     .toLocaleString()
     .split(' ')[0]
     .replace(/\//g, '-')
-  // ----------------------------- 入團申請表單 -----------------------------
+  // ----------------------------- 修改資訊表單 -----------------------------
   const [complete, setComplete] = useState(2)
   // ---------------------- 團名 ----------------------
   const [bandName, setBandName] = useState('')
@@ -79,75 +85,33 @@ export default function Edit() {
   const [introduceCheck, setIntroduceCheck] = useState(true)
   // ---------------------- 展示牆網址 ----------------------
   const [yturl, setYturl] = useState('')
-
-  // ----------------------------------------------- 退出樂團 ----------------------------------------------------
-  const sendQuit = async () => {
-    // 獲得該使用者在樂團的職位，用於復原招募樂手
-    const quitMemberPlay = jam.member.find((v) => {
-      return (v.id = LoginUserData.id)
-    }).play
-
-    let formData = new FormData()
-    formData.append('id', LoginUserData.id)
-    formData.append('juid', jam.juid)
-    formData.append('playname', quitMemberPlay)
-    const res = await fetch('http://localhost:3005/api/jam/quit', {
-      method: 'PUT',
-      body: formData,
-      credentials: 'include',
-    })
-    const result = await res.json()
-    if (result.status === 'success') {
-      return true
+  // ---------------------- 上傳封面圖&預覽 ----------------------
+  // 選擇的檔案
+  const [selectedFile, setSelectedFile] = useState(null)
+  // 預覽URL
+  const [preview, setPreview] = useState('')
+  const handleFileChange = (e) => {
+    // 檔案存在於FileList
+    const file = e.target.files[0]
+    if (file) {
+      setSelectedFile(file)
     } else {
-      return false
+      setSelectedFile(null)
     }
   }
+  // 當選擇檔案更動時建立預覽圖
+  useEffect(() => {
+    if (!selectedFile) {
+      setPreview('')
+      return
+    }
+    const url = URL.createObjectURL(selectedFile)
+    // console.log(url)
+    setPreview(url)
 
-  // 退出警示&成功訊息
-  const warningQuit = () => {
-    mySwal
-      .fire({
-        title: '確定退出樂團？',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#ec3f3f',
-        cancelButtonColor: '#666666',
-        confirmButtonText: '確定',
-        cancelButtonText: '取消',
-        showClass: {
-          popup: `
-            animate__animated
-            animate__fadeInUp
-            animate__faster
-          `,
-        },
-        hideClass: {
-          popup: `
-            animate__animated
-            animate__fadeOutDown
-            animate__faster
-          `,
-        },
-      })
-      .then(async (result) => {
-        if (result.isConfirmed) {
-          const res = await sendQuit()
-          if (res) {
-            mySwal.fire({
-              title: '已退出，即將回到招募列表',
-              icon: 'success',
-              iconColor: '#1581cc',
-              showConfirmButton: false,
-              timer: 2500,
-            })
-            setTimeout(() => {
-              router.push('/jam/recruit-list')
-            }, 2500)
-          }
-        }
-      })
-  }
+    // 掛載時清除記憶體
+    return () => URL.revokeObjectURL(url)
+  }, [selectedFile])
 
   // 檢查不雅字詞
   const checkBadWords = debounce(() => {
@@ -167,16 +131,17 @@ export default function Edit() {
   }
 
   // 送出更改
-  const sendForm = async (juid, bandName, introduce) => {
+  const sendForm = async (juid, bandName, introduce, selectedFile, yturl) => {
     if (!checkComplete()) {
       return false
     }
     let formData = new FormData()
     formData.append('juid', juid)
-    formData.append('title', title)
-    formData.append('condition', condition)
-    formData.append('description', description)
-    const res = await fetch('http://localhost:3005/api/jam/updateForm', {
+    formData.append('bandName', bandName)
+    formData.append('introduce', introduce)
+    formData.append('cover_img', selectedFile)
+    formData.append('works_link', yturl)
+    const res = await fetch('http://localhost:3005/api/jam/editInfo', {
       method: 'PUT',
       body: formData,
       credentials: 'include',
@@ -201,7 +166,7 @@ export default function Edit() {
       })
       .then(
         setTimeout(() => {
-          router.push(`/jam/recruit-list/${juid}`)
+          router.push(`/jam/jam-list/${juid}`)
         }, 3000)
       )
   }
@@ -236,19 +201,19 @@ export default function Edit() {
 
   useEffect(() => {
     setBandName(jam.name)
-    if(jam.introduce === null) {
+    if (jam.introduce === null) {
       setIntroduce('')
     } else {
       setIntroduce(jam.introduce)
     }
-    if(jam.works_link === null) {
+    if (jam.works_link === null) {
       setYturl('')
     } else {
       setYturl(jam.works_link)
     }
   }, [jam.name, jam.introduce, jam.works_link])
 
-  // 申請表單填寫
+  // 表單檢查
   useEffect(() => {
     // 跳出未填寫完畢警告後再次輸入，消除警告
     setComplete(2)
@@ -260,7 +225,7 @@ export default function Edit() {
   return (
     <>
       <Head>
-        <title>JAM資訊</title>
+        <title>編輯資訊</title>
       </Head>
       <Toaster
         containerStyle={{
@@ -333,39 +298,69 @@ export default function Edit() {
           <div className={`${styles.jamMain} col-12 col-sm-8`}>
             <div className={`${styles.jamLeft}`}>
               {/*   ---------------------- 樂團資訊  ---------------------- */}
-              <section className={`${styles.jamLeftSection}`}>
+              <section className={`${styles.jamLeftSection} position-relative`}>
                 <div
                   className={`${styles.jamTitle} d-flex justify-content-start align-items-center`}
                 >
                   <div>編輯資訊</div>
                 </div>
                 {/* -------------------------- 封面圖 -------------------------- */}
-                <div className={`${styles.coverWrapper}`}>
-                {}
-                  {jam.cover_img ? (
+                <label
+                  className={`${styles.coverWrapper}`}
+                  style={{ cursor: 'pointer' }}
+                  htmlFor="cover_img"
+                >
+                  <input
+                    type="file"
+                    name="cover_img"
+                    id="cover_img"
+                    accept="image/*"
+                    hidden
+                    onChange={handleFileChange}
+                  />
+                  {preview ? (
                     <Image
-                      src={`http://localhost:3005/jam/${jam.cover_img}`}
+                      src={preview}
                       fill
                       style={{ objectFit: 'cover' }}
                       alt={jam.cover_img}
                     />
                   ) : (
-                    <div className={`${styles.noCoverBackground}`}>
-                      <Image src={logoMb} alt="logo-mobile" />
-                    </div>
+                    <>
+                      {jam.cover_img ? (
+                        <Image
+                          src={`http://localhost:3005/jam/${jam.cover_img}`}
+                          fill
+                          style={{ objectFit: 'cover' }}
+                          alt={jam.cover_img}
+                        />
+                      ) : (
+                        <div className={`${styles.noCoverBackground}`}>
+                          <Image src={logoMb} alt="logo-mobile" />
+                        </div>
+                      )}
+                    </>
                   )}
+                </label>
+                <div className={`${styles.cameraIcon}`}>
+                  <FaCamera />
                 </div>
                 {/* -------------------------- 團名 -------------------------- */}
                 <div className={`${styles.formItem} row`}>
-                  <div className={`${styles.itemTitle} col-12 col-sm-2`}>
-                    團名
-                  </div>
+                  <label
+                    className={`${styles.itemTitle} col-12 col-sm-2`}
+                    htmlFor="bandName"
+                  >
+                    團名*
+                  </label>
                   <div
                     className={`${styles.itemInputWrapper} col-12 col-sm-10 d-flex align-items-center`}
                   >
                     <input
                       type="text"
                       className={`${styles.itemInput} form-control`}
+                      name="bandName"
+                      id="bandName"
                       placeholder="可中英文混合，上限30字"
                       maxLength={30}
                       value={bandName}
@@ -438,16 +433,20 @@ export default function Edit() {
                 </div>
                 {/* -------------------------- 樂團介紹 -------------------------- */}
                 <div className={`${styles.formItem} row`}>
-                  <div className={`${styles.itemTitle} col-12 col-sm-2`}>
+                  <label
+                    className={`${styles.itemTitle} col-12 col-sm-2`}
+                    htmlFor="introduce"
+                  >
                     樂團介紹
-                  </div>
+                  </label>
                   <div
                     className={`${styles.itemInputWrapper} col-12 col-sm-10`}
                   >
                     <textarea
                       className={`${styles.textArea} form-control`}
-                      placeholder="讓大家瞭解你們的魅力吧！上限150字"
-                      name="description"
+                      placeholder="讓大家認識你們的魅力吧！上限150字"
+                      name="introduce"
+                      id="introduce"
                       maxLength={150}
                       value={introduce}
                       onChange={(e) => {
@@ -480,19 +479,24 @@ export default function Edit() {
                 <div className={`${styles.jamTitle}`}>展示牆</div>
                 {/* -------------------------- 團名 -------------------------- */}
                 <div className={`${styles.formItem} row`}>
-                  <div className={`${styles.itemTitle} col-12 col-sm-2`}>
+                  <label
+                    className={`${styles.itemTitle} col-12 col-sm-2`}
+                    htmlFor="yturl"
+                  >
                     嵌入影片
-                  </div>
+                  </label>
                   <div
                     className={`${styles.itemInputWrapper} col-12 col-sm-10 d-flex align-items-center`}
                   >
                     <input
                       type="text"
                       className={`${styles.itemInput} form-control`}
+                      name="yturl"
+                      id="yturl"
                       placeholder="YouTube網址中 v= 後的字串 例: 3efDUE4ZJYg"
                       value={yturl}
                       onChange={(e) => {
-                        setBandName(e.target.value)
+                        setYturl(e.target.value)
                       }}
                     />
                   </div>
@@ -511,11 +515,7 @@ export default function Edit() {
                     style={{ paddingInline: '38px' }}
                     role="presentation"
                     onClick={() => {
-                      sendForm(
-                        LoginUserData.my_jam,
-                        bandName,
-                        introduce,
-                      )
+                      sendForm(LoginUserData.my_jam, bandName, introduce, selectedFile, yturl)
                     }}
                   >
                     送出

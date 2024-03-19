@@ -876,9 +876,9 @@ export default function Info() {
                     </div>
                     {/* -------------------------- 擔任職位 -------------------------- */}
                     <div className={`${styles.formItem} row`}>
-                      <div className={`${styles.itemTitle} col-12 col-sm-2`}>
+                      <label className={`${styles.itemTitle} col-12 col-sm-2`} htmlFor='myPlayer'>
                         擔任職位
-                      </div>
+                      </label>
                       <div
                         className={`${styles.itemInputWrapper} col-12 col-sm-10`}
                       >
@@ -887,6 +887,7 @@ export default function Info() {
                           style={{ width: 'auto' }}
                           value={myPlayer}
                           name="myPlayer"
+                          id='myPlayer'
                           disabled={myApplyState ? true : false}
                           onChange={(e) => {
                             setMyPlayer(e.target.value)
@@ -907,9 +908,9 @@ export default function Info() {
                     </div>
                     {/* -------------------------- 想說的話 -------------------------- */}
                     <div className={`${styles.formItem} row`}>
-                      <div className={`${styles.itemTitle} col-12 col-sm-2`}>
+                      <label className={`${styles.itemTitle} col-12 col-sm-2`} htmlFor='message'>
                         想說的話
-                      </div>
+                      </label>
                       <div
                         className={`${styles.itemInputWrapper} col-12 col-sm-10`}
                       >
@@ -917,6 +918,7 @@ export default function Info() {
                           className={`${styles.textArea} form-control`}
                           placeholder="建議可以提到自己喜歡的音樂、入團動機等，上限150字"
                           name="message"
+                          id='message'
                           maxLength={150}
                           disabled={myApplyState ? true : false}
                           onChange={(e) => {

@@ -1,10 +1,14 @@
 import express from 'express';
 import db from '../db.js';
 import multer from 'multer';
+import { dirname, resolve, extname } from 'path';
+import { fileURLToPath } from 'url';
+import { rename } from 'fs';
 
 const router = express.Router();
-const upload = multer();
-
+const __dirname = dirname(dirname(fileURLToPath(import.meta.url)));
+const upload = multer({ dest: resolve(__dirname, 'public') });
+// console.log(__dirname);
 // 取得所有組團資料
 router.get('/allJam', async (req, res) => {
   // 取得組團資訊中所需的曲風、樂手資料
@@ -1046,13 +1050,26 @@ router.put('/formRightNow', upload.none(), async (req, res) => {
 });
 
 // 編輯資訊
-router.put('/editInfo', upload.none(), async (req, res) => {
+router.put('/editInfo', upload.single('cover_img'), async (req, res) => {
+  // 檔案上傳流程
+  // console.log(req.file);
   const now = new Date().toISOString();
-  const { juid, title, condition, description } = req.body;
+  // 取新檔名
+  let newCover = Date.now() + extname(req.file.originalname);
+  rename(req.file.path, resolve(__dirname, 'public/jam', newCover), (error) => {
+    if (error) {
+      console.log('更名失敗' + error);
+      return;
+    }
+    console.log('更名成功');
+  });
+
+  // 更新資料庫
+  const { juid, bandName, introduce, works_link } = req.body;
   await db
     .execute(
-      'UPDATE `jam` SET `title` = ?, `band_condition` = ?, `description` = ?, `updated_time` = ?  WHERE `juid` = ?',
-      [title, condition, description, now, juid]
+      'UPDATE `jam` SET `name` = ?, `introduce` = ?, cover_img = ?, works_link = ?, `updated_time` = ?  WHERE `juid` = ?',
+      [bandName, introduce, newCover, works_link, now, juid]
     )
     .then(() => {
       res.status(200).json({ status: 'success' });
