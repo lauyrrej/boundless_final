@@ -25,28 +25,31 @@ import { useParams } from 'react-router-dom'
 
 import Pagination from '@/components/lesson/pagination.js'
 
-
-
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
 
-
-export default function LessonList({ onSearch }) {
+export default function LessonList({}) {
+  const router = useRouter()
   // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
   const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
     useAuth()
   const [userData, setUserData] = useState()
   //檢查token
-//   useEffect(() => {
-//     handleLoginStatus()
-//     //獲得資料
-//     getLoginUserData()
-//   }, [])
+  //   useEffect(() => {
+  //     handleLoginStatus()
+  //     //獲得資料
+  //     getLoginUserData()
+  //   }, [])
+  //   useEffect(() => {
+  //     handleLoginStatus()
+  //     //獲得資料
+  //     getLoginUserData()
+  //   }, [])
   //登出功能
 
   //檢查是否獲取資料
-//   console.log(LoginUserData)
+  //   console.log(LoginUserData)
   //   讀取使用者資料後 定義大頭貼路徑
   let avatarImage
   if (LoginUserData.img) {
@@ -62,7 +65,6 @@ export default function LessonList({ onSearch }) {
   // const avatarDefault = `/user/avatar_userDefault.jpg`
 
   // ----------------------會員登入狀態  ----------------------
-
 
   // 在電腦版或手機版時
   const [isSmallScreen, setIsSmallScreen] = useState(false)
@@ -116,8 +118,10 @@ export default function LessonList({ onSearch }) {
   const [priceLow, setPriceLow] = useState('')
   const [priceHigh, setPriceHigh] = useState('')
   // 課程評價
-  const scoreState = ['all', '5', '4', '3']
-  const [score, setScore] = useState('all')
+  //   const scoreState = ['all', '5', '4', '3']
+  //   const [score, setScore] = useState('all')
+  //   const scoreState = ['all', '5', '4', '3']
+  //   const [score, setScore] = useState('all')
 
   // 促銷課程
   const [sales, setSales] = useState(false)
@@ -130,75 +134,25 @@ export default function LessonList({ onSearch }) {
     setSales(false)
   }
 
-
-//FIXME分頁功能
-  // ------------------------------------- 製作分頁 not done
-
-    
-  // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
-  //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
-  const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
-    useAuth()
-  const [userData, setUserData] = useState()
-  //檢查token
-  useEffect(() => {
-    handleLoginStatus()
-    //獲得資料
-    getLoginUserData()
-  }, [])
-  //登出功能
-
-  //檢查是否獲取資料
-  console.log(LoginUserData)
-  //   讀取使用者資料後 定義大頭貼路徑
-  let avatarImage
-  if (LoginUserData.img) {
-    avatarImage = `/user/${LoginUserData.img}`
-  } else if (LoginUserData.photo_url) {
-    avatarImage = `${LoginUserData.photo_url}`
-  } else {
-    avatarImage = `/user/avatar_userDefault.jpg`
-  }
-  // 舊版會警告 因為先渲染但沒路徑 bad
-  // const avatarImage = `/user/${LoginUserData.img}`
-  // const avatargoogle = `${LoginUserData.photo_url}`
-  // const avatarDefault = `/user/avatar_userDefault.jpg`
-
-  // ----------------------會員登入狀態  ----------------------
-    const [products, setProducts] = useState([]);
-    const [CurrentPage, setCurrentPage] = useState(1)
-    const [totalPages, setTotalPages] = useState(1);
-
-    useEffect(() => {
-      handlePageClick()
-    }, [CurrentPage])
-
-    const handlePageClick = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:3005/api/lesson/page/${page}`
-        )
-        setProducts(response.data.products);
-        setTotalPages(response.data.totalPages);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-  //   const handlePrevPage = () => {
-  //     setCurrentPage(prevPage => prevPage - 1);
-  //   };
-
-  //   const handleNextPage = () => {
-  //     setCurrentPage(prevPage => prevPage + 1);
-  //   };
-
-
   //-------------------連資料庫
-  const initialUrl = 'http://localhost:3005/api/lesson'
-  const [Lesson, setLesson] = useState([])
+  const perPage = 12
+  const [currentPage, setCurrentPage] = useState(0)
+  const [totalPage, setTotalPage] = useState(0)
+    const [LessonArray, setLessonArray] = useState([])
+    
+  function getLesson() {
+  const perPage = 12
+  const [currentPage, setCurrentPage] = useState(0)
+  const [totalPage, setTotalPage] = useState(0)
+  const [LessonArray, setLessonArray] = useState([])
 
-  function getLesson(initialUrl) {
+  //   const perPage = 12; // Number of items per page
+  //   const startIndex = ((parseInt(page) || 1) - 1) * perPage;
+  //   baseQuery += " LIMIT ?, ?";
+  //     queryParams.push(startIndex, perPage);
+  //      console.log(baseQuery);
+
+  function getLesson() {
     return new Promise((resolve, reject) => {
       let url = 'http://localhost:3005/api/lesson'
       fetch(url, {
@@ -209,9 +163,28 @@ export default function LessonList({ onSearch }) {
           return response.json()
         })
         .then((result) => {
-          resolve(result)
-          //   console.log(result)
-          setLesson(result)
+            // 将 result 每 perPage 条记录分成一页一页的数组
+          const pages = result.reduce((acc, current, index) => {
+            const tempPage = Math.floor(index / perPage) // 当前记录所在的页码
+            if (!acc[tempPage]) {
+              acc[tempPage] = [] // 如果该页不存在，则创建一个新的页数组
+            }
+            acc[tempPage].push(current) // 将当前记录添加到相应的页数组中
+            return acc
+          }, [])
+          setTotalPage(pages.length)
+          setLessonArray(pages[currentPage]) // 将分页后的结果传递给 resolve
+          // 将 result 每 perPage 条记录分成一页一页的数组
+          const pages = result.reduce((acc, current, index) => {
+            const tempPage = Math.floor(index / perPage) // 当前记录所在的页码
+            if (!acc[tempPage]) {
+              acc[tempPage] = [] // 如果该页不存在，则创建一个新的页数组
+            }
+            acc[tempPage].push(current) // 将当前记录添加到相应的页数组中
+            return acc
+          }, [])
+          setTotalPage(pages.length)
+          setLessonArray(pages[currentPage]) // 将分页后的结果传递给 resolve
         })
         .catch((error) => {
           console.log(error)
@@ -220,51 +193,114 @@ export default function LessonList({ onSearch }) {
     })
   }
   useEffect(() => {
-    getLesson(initialUrl)
-  }, [initialUrl])
+    getLesson()
+  }, [currentPage])
 
-    //-----------------篩選功能 //FIXME
-    
-  const priceRange = (priceLow, priceHigh) => {
-    if (priceLow !== '' && priceHigh !== '') {
-      fetch(
-        `http://localhost:3005/api/lesson?priceLow=${priceLow}&priceHigh=${priceHigh}`
-      )
-        .then((response) => response.json())
-        .then((data) => setData(data))
-    }
+  const handlePageClick = (event) => {
+    const newPage = event.selected
+    setCurrentPage(newPage)
   }
-
-  // 確保 priceLow 和 priceHigh 有被定義後再呼叫 priceRange 函式
-//   priceRange(priceLow, priceHigh)
-
-
-//   useEffect(() => {
-//     if (priceLow !== '' && priceHigh !== '') {
-//       fetch(
-//         `http://localhost:3005/api/lesson?priceLow=${priceLow}&priceHigh=${priceHigh}`
-//       )
-//         .then((response) => response.json())
-//         .then((data) => setData(data))
-//     }
-    //   }, [priceLow, priceHigh])
-    
-  //-------------------搜尋功能
-  const [data, setData] = useState(Lesson)
-  //-----------所有過濾資料功能傳回來的地方
 
   // 在组件中定义 isFiltered 状态，并提供一个函数来更新它的值
   const [isFiltered, setIsFiltered] = useState(false)
+  //-----------所有過濾資料功能傳回來的地方
 
+  const [data, setData] = useState(LessonArray)
+    getLesson()
+  }, [currentPage])
+
+  const handlePageClick = (event) => {
+    const newPage = event.selected
+    setCurrentPage(newPage)
+  }
+
+  // 在组件中定义 isFiltered 状态，并提供一个函数来更新它的值
+  const [isFiltered, setIsFiltered] = useState(false)
+  //-----------所有過濾資料功能傳回來的地方
+
+  const [data, setData] = useState(LessonArray)
+
+  //-----------------篩選功能 //FIXME
+  // 價格篩選
+  //確保 priceLow 和 priceHigh 有被定義後再呼叫 priceRange 函式
+  //-----------------篩選功能 //FIXME
+  // 價格篩選
+  //確保 priceLow 和 priceHigh 有被定義後再呼叫 priceRange 函式
+  const priceRange = (priceLow, priceHigh) => {
+    if (priceLow !== '' && priceHigh !== '') {
+      console.log('priceLow:', priceLow)
+      console.log('priceHigh:', priceHigh)
+      console.log('priceLow:', priceLow)
+      console.log('priceHigh:', priceHigh)
+      fetch(
+        `http://localhost:3005/api/lesson?priceLow=${priceLow}&priceHigh=${priceHigh}`
+      )
+        .then((response) => response.json()) //在網路請求成功時將回應物件轉換為 JSON 格式，並回傳一個新的 Promise 物件。這個新的 Promise 物件會在 JSON 解析成功後被解析，而且 data 參數會包含解析後的 JSON 資料。
+
+        .then((response) => response.json()) //在網路請求成功時將回應物件轉換為 JSON 格式，並回傳一個新的 Promise 物件。這個新的 Promise 物件會在 JSON 解析成功後被解析，而且 data 參數會包含解析後的 JSON 資料。
+
+        .then((data) => setData(data))
+      setIsFiltered(true)
+      console.log(data)
+    }
+  }
+    
+  // 課程評價篩選
+  const scoreState = ['all', '5', '4', '3']
+  const [score, setScore] = useState('all')
+
+  // 当选中的星级变化时，筛选商品列表
+  useEffect(() => {
+    //   console.log('当前选择的评分:', score) // 调试日志，查看当前选择的评分
+    if (score === 'all') {
+      // console.log('显示所有课程')
+      setData(LessonArray)
+    } else {
+      const scoreNum = parseInt(score, 10)
+      // console.log('筛选评分为', scoreNum, '的课程')
+      const filtered = LessonArray.filter(
+        (lesson) => Math.round(lesson.average_rating) === scoreNum
+      )
+      // console.log('筛选结果:', filtered) // 调试日志，查看筛选结果
+      setData(filtered)
+      setIsFiltered(true)
+    }
+  }, [score, LessonArray])
+
+  // 課程評價篩選
+  const scoreState = ['all', '5', '4', '3']
+  const [score, setScore] = useState('all')
+
+  // 当选中的星级变化时，筛选商品列表
+  useEffect(() => {
+    //   console.log('当前选择的评分:', score) // 调试日志，查看当前选择的评分
+    if (score === 'all') {
+      // console.log('显示所有课程')
+      setData(LessonArray)
+    } else {
+      const scoreNum = parseInt(score, 10)
+      // console.log('筛选评分为', scoreNum, '的课程')
+      const filtered = LessonArray.filter(
+        (lesson) => Math.round(lesson.average_rating) === scoreNum
+      )
+      // console.log('筛选结果:', filtered) // 调试日志，查看筛选结果
+      setData(filtered)
+      setIsFiltered(true)
+    }
+  }, [score, LessonArray])
+
+  //-------------------搜尋功能
   const [search, setSearch] = useState('')
   const handleSearch = () => {
     // console.log('按鈕被點擊了')
     let newData
     if (search.trim() === '') {
-      newData = Lesson
+      newData = LessonArray
+      newData = LessonArray
       //   console.log(newData)
     } else {
-      newData = Lesson.filter((v, i) => {
+      newData = LessonArray.filter((v, i) => {
+      newData = LessonArray.filter((v, i) => {
         return v.name.includes(search)
       })
     }
@@ -272,29 +308,35 @@ export default function LessonList({ onSearch }) {
     setData(newData)
     setIsFiltered(true)
   }
-  //  useEffect(() => {
-  //    getLesson()
-  //  }, []) //FIXME不太懂這裡加這個的意思 少加了這個所以沒辦法在未搜尋狀態下顯示完整列表
 
   //-------------------排序功能
   //最熱門
   const sortBySales = () => {
-    const sortedProducts = [...Lesson].sort((a, b) => b.sales - a.sales)
+    const sortedProducts = [...LessonArray].sort((a, b) => b.sales - a.sales)
+    const sortedProducts = [...LessonArray].sort((a, b) => b.sales - a.sales)
     setData(sortedProducts)
     setIsFiltered(true)
   }
 
   //依評價
-  //FIXME沒有資料？
+  const sortByRating = () => {
+    const sortedProducts = [...LessonArray].sort(
+      (a, b) => b.average_rating - a.average_rating
+    )
+    setData(sortedProducts)
+    setIsFiltered(true)
+  }
   //依時數
   const sortBylength = () => {
-    const sortedProducts = [...Lesson].sort((a, b) => b.length - a.length)
+    const sortedProducts = [...LessonArrayArray].sort((a, b) => b.length - a.length)
     setData(sortedProducts)
     setIsFiltered(true)
   }
 
   //-------------------渲染分類功能li
   const [LessonCategory, setLessonCategory] = useState([])
+
+
   function getLessonCategory() {
     return new Promise((resolve, reject) => {
       let url = 'http://localhost:3005/api/lesson/categories'
@@ -307,7 +349,8 @@ export default function LessonList({ onSearch }) {
         })
         .then((result) => {
           resolve(result)
-          //   console.log(result)
+          console.log(result)
+          console.log(result)
           setLessonCategory(result)
         })
         .catch((error) => {
@@ -327,7 +370,12 @@ export default function LessonList({ onSearch }) {
   function handleCategoryChange(id) {
     console.log('Clicked on category with ID:', id)
     // 在這裡執行你的其他邏輯，比如更新狀態
-    setSelectedCategory(id)
+    // 特別處理「全部」選項
+    if (id === 0) {
+      setSelectedCategory(0) // 使用空字串表示「全部」
+    } else {
+      setSelectedCategory(id)
+    }
   }
 
   useEffect(() => {
@@ -364,6 +412,7 @@ export default function LessonList({ onSearch }) {
       setShowHotCourses(true)
     }
   }, [category])
+
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
@@ -422,15 +471,15 @@ export default function LessonList({ onSearch }) {
           <div className="sidebar-wrapper d-none d-sm-block  col-sm-2">
             <div className="sidebar">
               <ul className="d-flex flex-column">
-                <li>
-                  <Link href={'/lesson'}>全部</Link>
-                </li>
+                <Link href={"/lesson/?category === 0"}>
+                  <li onClick={() => handleCategoryChange(0)}>全部</li>
+                </Link>
                 {/* 分類功能 */}
                 {LessonCategory.map((v, index) => {
                   return (
                     <Link key={index} href={'/lesson/?category === `${v.id}'}>
                       <li onClick={() => handleCategoryChange(v.id)}>
-                        {v.name}
+                        {v.Lesson_category_name}
                       </li>
                     </Link>
                   )
@@ -533,7 +582,8 @@ export default function LessonList({ onSearch }) {
                     </select>
                   </div>
 
-                  {/* 條件篩選 */}
+                  {/* ----------------------條件篩選------------------ */}
+                  {/* ----------------------條件篩選------------------ */}
                   <form className="d-flex align-items-center  position-relative">
                     <div
                       className="filter-text d-flex align-items-center me-sm-4"
@@ -578,7 +628,7 @@ export default function LessonList({ onSearch }) {
                         </div>
                         {/* 商品評價 */}
                         <div className="filter-item m-0">
-                          <div className="filter-title">商品評價</div>
+                          <div className="filter-title">課程評價</div>
                           <div className="filter-radio-group d-flex flex-wrap justify-content-between">
                             {scoreState.map((v, i) => {
                               return (
@@ -593,8 +643,14 @@ export default function LessonList({ onSearch }) {
                                       name="score"
                                       value={v}
                                       checked={v === score}
+                                      //   onChange={(e) => {
+                                      //     setScore(e.target.value)
+                                      //   }}
                                       onChange={(e) => {
-                                        setScore(e.target.value)
+                                        const value = e.target.value
+                                        setScore(
+                                          value === 'all' ? 'all' : value
+                                        ) // 不需要转换为数字，如果你在比较时也转换了
                                       }}
                                     />
                                     &nbsp;{v === 'all' ? '全部' : v + '星'}
@@ -617,7 +673,7 @@ export default function LessonList({ onSearch }) {
                                   setSales(!sales)
                                 }}
                               />{' '}
-                              促銷商品
+                              促銷課程
                             </label>
                           </div>
                         </div>
@@ -632,7 +688,7 @@ export default function LessonList({ onSearch }) {
                           <div
                             className="filter-btn confirm-btn w-100 d-flex justify-content-center"
                             role="presentation"
-                            onClick={priceRange}
+                            onClick={() => priceRange(priceLow, priceHigh)}
                           >
                             確認
                           </div>
@@ -650,7 +706,9 @@ export default function LessonList({ onSearch }) {
                     <div className="sort-item " onClick={sortBySales}>
                       最熱門
                     </div>
-                    <div className="sort-item">依評價</div>
+                    <div className="sort-item" onClick={sortByRating}>
+                      依評價
+                    </div>
                     <div className="sort-item" onClick={sortBylength}>
                       依時數
                     </div>
@@ -664,7 +722,7 @@ export default function LessonList({ onSearch }) {
                 <div className="hot-lesson">
                   <h4 className="text-primary">熱門課程</h4>
                   <div className="hot-lesson-card-group">
-                    {Lesson.slice() // Create a copy of data array to avoid mutating original array
+                    {LessonArray.slice() // Create a copy of data array to avoid mutating original array
                       .sort((a, b) => b.sales - a.sales) // Sort courses based on sales volume
                       .slice(0, 4) // Get top 4 courses */
                       .map((v, i) => {
@@ -675,8 +733,9 @@ export default function LessonList({ onSearch }) {
                               id={v.id}
                               luid={v.puid}
                               name={v.name}
+                              average_rating={averageRating}
                               price={v.price}
-                              teacher_id={v.teacher_id}
+                              teacher_name={v.teacher_name}
                               img={v.img}
                               length={v.length}
                               sales={v.sales}
@@ -699,7 +758,10 @@ export default function LessonList({ onSearch }) {
                       id,
                       puid,
                       name,
+                      average_rating,
+                      review_count,
                       price,
+                      teacher_name,
                       teacher_id,
                       img,
                       sales,
@@ -712,12 +774,13 @@ export default function LessonList({ onSearch }) {
                             id={id}
                             luid={puid}
                             name={name}
+                            average_rating={Math.round(average_rating)}
+                            review_count={review_count}
                             price={price}
-                            teacher_id={teacher_id}
+                            teacher_name={teacher_name}
                             img={img}
                             sales={sales}
                             length={length}
-                            user_id={user_id}
                           />
                         ) : (
                           <Card
@@ -725,8 +788,10 @@ export default function LessonList({ onSearch }) {
                             id={id}
                             luid={puid}
                             name={name}
+                            average_rating={Math.round(average_rating)}
+                            review_count={review_count}
                             price={price}
-                            teacher_id={teacher_id}
+                            teacher_name={teacher_name}
                             img={img}
                             sales={sales}
                             length={length}
@@ -738,12 +803,15 @@ export default function LessonList({ onSearch }) {
 
                 {!isFiltered &&
                   // 如果没有进行筛选或搜索，渲染原始的 Lesson 数据
-                  Lesson.map((v, i) => {
+                  LessonArray.map((v, i) => {
                     const {
                       id,
                       puid,
                       name,
+                      average_rating,
+                      review_count,
                       price,
+                      teacher_name,
                       teacher_id,
                       img,
                       sales,
@@ -756,19 +824,28 @@ export default function LessonList({ onSearch }) {
                             id={id}
                             luid={puid}
                             name={name}
+                            average_rating={Math.round(average_rating)}
+                            review_count={review_count}
                             price={price}
-                            teacher_id={teacher_id}
+                            teacher_name={teacher_name}
                             img={img}
                             sales={sales}
                             length={length}
+                            user_id={user_id}
                           />
                         ) : (
                           <Card
+                            course-card
+                            course-card
                             id={id}
                             luid={puid}
                             name={name}
+                            average_rating={Math.round(average_rating)}
+                            review_count={review_count}
+                            average_rating={Math.round(average_rating)}
+                            review_count={review_count}
                             price={price}
-                            teacher_id={teacher_id}
+                            teacher_name={teacher_name}
                             img={img}
                             sales={sales}
                             length={length}
@@ -784,15 +861,10 @@ export default function LessonList({ onSearch }) {
       </div>
       <div className="d-flex justify-content-center">
         <BS5Pagination
-          forcePage={CurrentPage - 1}
+          forcePage={currentPage}
           onPageChange={handlePageClick}
-          pageCount={totalPages}
+          pageCount={totalPage}
         />
-        {/* <Pagination
-          totalPages={Math.ceil(filteredProducts.length / perPage)}
-                  setFilterSettings={setFilterSettings}
-                  page={setFilterSettings.page}
-        /> */}
       </div>
       <Footer />
       <style jsx>{`

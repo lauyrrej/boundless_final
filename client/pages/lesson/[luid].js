@@ -4,7 +4,6 @@ import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
-import jamHero from '@/assets/jam-hero.png'
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
@@ -21,10 +20,7 @@ import HoriCard from '@/components/lesson/lesson-card-hori'
 import ProductCard from '@/components/lesson/lesson-productbrief-card'
 
 //toast
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { ToastProvider } from 'react-hot-toast'
-import App from '@/pages/_app'
+import toast, { Toaster } from 'react-hot-toast'
 
 // 購物車hook
 import { useCart } from '@/hooks/use-cart'
@@ -88,7 +84,7 @@ export default function LessonDetailPage() {
       // 進入狀態前檢查資料類型有值，以避免錯誤
       if (data) {
         setLessonDetail(data)
-        console.log(LessonDetail[0].name)
+        console.log(LessonDetail.data[0].user_name)
       }
     } catch (e) {
       console.error(e)
@@ -167,7 +163,8 @@ export default function LessonDetailPage() {
               </Link>
               <FaChevronRight />
 
-              {LessonDetail && LessonDetail.length > 0 && (
+
+              {LessonDetail && LessonDetail.data.length > 0 && (
                 <li style={{ marginLeft: '10px' }}>
                   {LessonDetail[0].lesson_category_id}
                 </li>
@@ -197,60 +194,60 @@ export default function LessonDetailPage() {
                         </div>
                       )}
 
-                      <div className="Rating">
-                        <div className="star">
-                          <img
-                            loading="lazy"
-                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/84522f0e347edba7963eb335fd5301feca031f8d880bba21dd9760a01286c3a5?"
-                            className="starImg"
-                          />
-                          <div className="ratingNumber">4.9</div>
-                          <div className="commentNumber">(10)</div>
-                        </div>
-                        <div className="sales">購買人數 50</div>
+                    <div className="Rating">
+                      <div className="star">
+                        <img
+                          loading="lazy"
+                          src="https://cdn.builder.io/api/v1/image/assets/TEMP/84522f0e347edba7963eb335fd5301feca031f8d880bba21dd9760a01286c3a5?"
+                          className="starImg"
+                        />
+                        <div className="ratingNumber">4.9</div>
+                        <div className="commentNumber">(10)</div>
                       </div>
-                      <div className="productPrice">
-                        <div className="price">NT$ 1,800</div>
-                        <div className="likesIcon icon-container ">
-                          <FaHeart
-                            className="likesIcon"
-                            size="32px"
-                            style={{ color: `${colorChange ? 'red' : ''}` }}
-                            onClick={colorToggle}
-                          />
-                        </div>
-                        {/* <img
+                      <div className="sales">購買人數 50</div>
+                    </div>
+                    <div className="productPrice">
+                      <div className="price">NT$ 1,800</div>
+                      <div className="likesIcon icon-container ">
+                        <FaHeart
+                          className="likesIcon"
+                          size="32px"
+                          style={{ color: `${colorChange ? 'red' : ''}` }}
+                          onClick={colorToggle}
+                        />
+                      </div>
+                      {/* <img
                         loading="lazy"
                         src="https://cdn.builder.io/api/v1/image/assets/TEMP/5ed2e715f1421a33de89ac321d6dcc6d56fbac40a7d43dfe2cf0ecb15054bd3f?"
                         className="likesIcon"
                         style={{ color: `${colorChange ? 'red' : ''}` }}
                         onClick={colorToggle}
                       /> */}
+                    </div>
+                    <div className="lengthHomeworkArea">
+                      <div className="lengthhomework">
+                        <img
+                          loading="lazy"
+                          src="https://cdn.builder.io/api/v1/image/assets/TEMP/81a1d10e78e821775737fe4938ae726e8de4a80804b01bdda9876d9f86f9b1bb?"
+                          className="lengthIcon"
+                        />
+                        <div className="lengthHomeworkWord">5小時</div>
                       </div>
-                      <div className="lengthHomeworkArea">
-                        <div className="lengthhomework">
-                          <img
-                            loading="lazy"
-                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/81a1d10e78e821775737fe4938ae726e8de4a80804b01bdda9876d9f86f9b1bb?"
-                            className="lengthIcon"
-                          />
-                          <div className="lengthHomeworkWord">5小時</div>
-                        </div>
-                        <div className="lengthhomework">
-                          <img
-                            loading="lazy"
-                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/4552b4fc37047176a87577807414005cf8e8466b4ef23329066c1c39e5dad447?"
-                            className="img-10"
-                          />
-                          <div className="lengthHomeworkWord">1份作業</div>
-                        </div>
-                      </div>
-                      <div className="lessonIntro">
-                        Logic Pro
-                        為數位音樂編曲入門的必學軟體，從錄音、編曲到混音一次包辦，帶你認識錄音介面、多重效果器，以及豐富的內建素材庫，是對音樂創作有興趣的你不可錯過的專業音樂編曲課程。
+                      <div className="lengthhomework">
+                        <img
+                          loading="lazy"
+                          src="https://cdn.builder.io/api/v1/image/assets/TEMP/4552b4fc37047176a87577807414005cf8e8466b4ef23329066c1c39e5dad447?"
+                          className="img-10"
+                        />
+                        <div className="lengthHomeworkWord">1份作業</div>
                       </div>
                     </div>
+                    <div className="lessonIntro">
+                      Logic Pro
+                      為數位音樂編曲入門的必學軟體，從錄音、編曲到混音一次包辦，帶你認識錄音介面、多重效果器，以及豐富的內建素材庫，是對音樂創作有興趣的你不可錯過的專業音樂編曲課程。
+                    </div>
                   </div>
+                </div>
 
                   {/*商品細節 */}
                   <div className="detail">
