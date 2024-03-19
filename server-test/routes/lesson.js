@@ -23,7 +23,6 @@ router.get('/', async (req, res) => {
     if (priceLow && priceHigh) {
       baseQuery += ' AND product.price >= ? AND product.price <= ?';
       queryParams.push(priceLow, priceHigh);
-
     }
 
     baseQuery += ' GROUP BY product.id ORDER BY product.id';
@@ -109,8 +108,8 @@ router.get('/:id', async (req, res, next) => {
       'SELECT p.* FROM `product` AS p ' +
         'JOIN (SELECT `lesson_category_id` FROM `product` WHERE `puid` = ?) AS sub ' +
         'ON p.`lesson_category_id` = sub.`lesson_category_id`',
-      [luid])
-
+      [luid]
+    );
 
     if ({ data, youwilllike }) {
       console.log({ data });
@@ -122,6 +121,5 @@ router.get('/:id', async (req, res, next) => {
     console.error('Database error:', error);
     res.status(500).send('Internal server error');
   }
-
 });
-export default router
+export default router;
