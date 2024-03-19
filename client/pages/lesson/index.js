@@ -4,7 +4,7 @@ import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 //試抓資料區
 import Card from '@/components/lesson/lesson-card'
-import Cardrwd from '@/components/lesson/lesson-card-rwd-data'
+import Cardrwd from '@/components/lesson/lesson-card-rwd'
 // import Lesson from '@/data/Lesson.json'
 
 import Link from 'next/link'
@@ -120,8 +120,6 @@ export default function LessonList({}) {
   // 課程評價
   //   const scoreState = ['all', '5', '4', '3']
   //   const [score, setScore] = useState('all')
-  //   const scoreState = ['all', '5', '4', '3']
-  //   const [score, setScore] = useState('all')
 
   // 促銷課程
   const [sales, setSales] = useState(false)
@@ -140,18 +138,6 @@ export default function LessonList({}) {
   const [totalPage, setTotalPage] = useState(0)
     const [LessonArray, setLessonArray] = useState([])
     
-  function getLesson() {
-  const perPage = 12
-  const [currentPage, setCurrentPage] = useState(0)
-  const [totalPage, setTotalPage] = useState(0)
-  const [LessonArray, setLessonArray] = useState([])
-
-  //   const perPage = 12; // Number of items per page
-  //   const startIndex = ((parseInt(page) || 1) - 1) * perPage;
-  //   baseQuery += " LIMIT ?, ?";
-  //     queryParams.push(startIndex, perPage);
-  //      console.log(baseQuery);
-
   function getLesson() {
     return new Promise((resolve, reject) => {
       let url = 'http://localhost:3005/api/lesson'
@@ -173,18 +159,9 @@ export default function LessonList({}) {
             return acc
           }, [])
           setTotalPage(pages.length)
-          setLessonArray(pages[currentPage]) // 将分页后的结果传递给 resolve
-          // 将 result 每 perPage 条记录分成一页一页的数组
-          const pages = result.reduce((acc, current, index) => {
-            const tempPage = Math.floor(index / perPage) // 当前记录所在的页码
-            if (!acc[tempPage]) {
-              acc[tempPage] = [] // 如果该页不存在，则创建一个新的页数组
-            }
-            acc[tempPage].push(current) // 将当前记录添加到相应的页数组中
-            return acc
-          }, [])
-          setTotalPage(pages.length)
-          setLessonArray(pages[currentPage]) // 将分页后的结果传递给 resolve
+            setLessonArray(pages[currentPage]) // 将分页后的结果传递给 resolve
+            console.log(LessonArray)
+            
         })
         .catch((error) => {
           console.log(error)
@@ -198,20 +175,9 @@ export default function LessonList({}) {
 
   const handlePageClick = (event) => {
     const newPage = event.selected
-    setCurrentPage(newPage)
-  }
-
-  // 在组件中定义 isFiltered 状态，并提供一个函数来更新它的值
-  const [isFiltered, setIsFiltered] = useState(false)
-  //-----------所有過濾資料功能傳回來的地方
-
-  const [data, setData] = useState(LessonArray)
-    getLesson()
-  }, [currentPage])
-
-  const handlePageClick = (event) => {
-    const newPage = event.selected
-    setCurrentPage(newPage)
+      setCurrentPage(newPage)
+    //   console.log(currentPage)
+      
   }
 
   // 在组件中定义 isFiltered 状态，并提供一个函数来更新它的值
@@ -220,9 +186,6 @@ export default function LessonList({}) {
 
   const [data, setData] = useState(LessonArray)
 
-  //-----------------篩選功能 //FIXME
-  // 價格篩選
-  //確保 priceLow 和 priceHigh 有被定義後再呼叫 priceRange 函式
   //-----------------篩選功能 //FIXME
   // 價格篩選
   //確保 priceLow 和 priceHigh 有被定義後再呼叫 priceRange 函式
@@ -230,13 +193,9 @@ export default function LessonList({}) {
     if (priceLow !== '' && priceHigh !== '') {
       console.log('priceLow:', priceLow)
       console.log('priceHigh:', priceHigh)
-      console.log('priceLow:', priceLow)
-      console.log('priceHigh:', priceHigh)
       fetch(
         `http://localhost:3005/api/lesson?priceLow=${priceLow}&priceHigh=${priceHigh}`
       )
-        .then((response) => response.json()) //在網路請求成功時將回應物件轉換為 JSON 格式，並回傳一個新的 Promise 物件。這個新的 Promise 物件會在 JSON 解析成功後被解析，而且 data 參數會包含解析後的 JSON 資料。
-
         .then((response) => response.json()) //在網路請求成功時將回應物件轉換為 JSON 格式，並回傳一個新的 Promise 物件。這個新的 Promise 物件會在 JSON 解析成功後被解析，而且 data 參數會包含解析後的 JSON 資料。
 
         .then((data) => setData(data))
@@ -267,28 +226,6 @@ export default function LessonList({}) {
     }
   }, [score, LessonArray])
 
-  // 課程評價篩選
-  const scoreState = ['all', '5', '4', '3']
-  const [score, setScore] = useState('all')
-
-  // 当选中的星级变化时，筛选商品列表
-  useEffect(() => {
-    //   console.log('当前选择的评分:', score) // 调试日志，查看当前选择的评分
-    if (score === 'all') {
-      // console.log('显示所有课程')
-      setData(LessonArray)
-    } else {
-      const scoreNum = parseInt(score, 10)
-      // console.log('筛选评分为', scoreNum, '的课程')
-      const filtered = LessonArray.filter(
-        (lesson) => Math.round(lesson.average_rating) === scoreNum
-      )
-      // console.log('筛选结果:', filtered) // 调试日志，查看筛选结果
-      setData(filtered)
-      setIsFiltered(true)
-    }
-  }, [score, LessonArray])
-
   //-------------------搜尋功能
   const [search, setSearch] = useState('')
   const handleSearch = () => {
@@ -296,10 +233,8 @@ export default function LessonList({}) {
     let newData
     if (search.trim() === '') {
       newData = LessonArray
-      newData = LessonArray
       //   console.log(newData)
     } else {
-      newData = LessonArray.filter((v, i) => {
       newData = LessonArray.filter((v, i) => {
         return v.name.includes(search)
       })
@@ -312,7 +247,6 @@ export default function LessonList({}) {
   //-------------------排序功能
   //最熱門
   const sortBySales = () => {
-    const sortedProducts = [...LessonArray].sort((a, b) => b.sales - a.sales)
     const sortedProducts = [...LessonArray].sort((a, b) => b.sales - a.sales)
     setData(sortedProducts)
     setIsFiltered(true)
@@ -328,14 +262,13 @@ export default function LessonList({}) {
   }
   //依時數
   const sortBylength = () => {
-    const sortedProducts = [...LessonArrayArray].sort((a, b) => b.length - a.length)
+    const sortedProducts = [...LessonArray].sort((a, b) => b.length - a.length)
     setData(sortedProducts)
     setIsFiltered(true)
   }
 
   //-------------------渲染分類功能li
   const [LessonCategory, setLessonCategory] = useState([])
-
 
   function getLessonCategory() {
     return new Promise((resolve, reject) => {
@@ -349,7 +282,6 @@ export default function LessonList({}) {
         })
         .then((result) => {
           resolve(result)
-          console.log(result)
           console.log(result)
           setLessonCategory(result)
         })
@@ -412,6 +344,7 @@ export default function LessonList({}) {
       setShowHotCourses(true)
     }
   }, [category])
+
 
   return (
     <>
@@ -479,7 +412,7 @@ export default function LessonList({}) {
                   return (
                     <Link key={index} href={'/lesson/?category === `${v.id}'}>
                       <li onClick={() => handleCategoryChange(v.id)}>
-                        {v.Lesson_category_name}
+                        {v.name}
                       </li>
                     </Link>
                   )
@@ -513,7 +446,12 @@ export default function LessonList({}) {
                     key={index}
                     href={`/lesson?${v.id}`}
                     className="sm-item"
-                    onClick={() => handleCategoryChange(v.id)}
+                    onClick={
+                      (() => handleCategoryChange(v.id),
+                      () => {
+                        setShowSidebar(false)
+                      })
+                    }
                   >
                     {v.name}
                   </Link>
@@ -582,7 +520,6 @@ export default function LessonList({}) {
                     </select>
                   </div>
 
-                  {/* ----------------------條件篩選------------------ */}
                   {/* ----------------------條件篩選------------------ */}
                   <form className="d-flex align-items-center  position-relative">
                     <div
@@ -763,7 +700,8 @@ export default function LessonList({}) {
                       price,
                       teacher_name,
                       teacher_id,
-                      img,
+                        img,
+                        img_small,
                       sales,
                       length,
                     } = v
@@ -778,7 +716,7 @@ export default function LessonList({}) {
                             review_count={review_count}
                             price={price}
                             teacher_name={teacher_name}
-                            img={img}
+                            img_small={img_small}
                             sales={sales}
                             length={length}
                           />
@@ -813,7 +751,8 @@ export default function LessonList({}) {
                       price,
                       teacher_name,
                       teacher_id,
-                      img,
+                        img,
+                        img_small,
                       sales,
                       length,
                     } = v
@@ -828,20 +767,16 @@ export default function LessonList({}) {
                             review_count={review_count}
                             price={price}
                             teacher_name={teacher_name}
-                            img={img}
+                            img_small={img_small}
                             sales={sales}
                             length={length}
-                            user_id={user_id}
                           />
                         ) : (
                           <Card
                             course-card
-                            course-card
                             id={id}
                             luid={puid}
                             name={name}
-                            average_rating={Math.round(average_rating)}
-                            review_count={review_count}
                             average_rating={Math.round(average_rating)}
                             review_count={review_count}
                             price={price}

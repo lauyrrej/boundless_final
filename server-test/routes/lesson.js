@@ -8,13 +8,22 @@ router.get('/', async (req, res) => {
     // Mandatory type filter
     //評價篩選
     let baseQuery = `
-  SELECT product.*, COUNT(product_review.product_id) AS review_count, AVG(product_review.stars) AS average_rating, teacher_info.* 
-  FROM product
-  LEFT JOIN product_review ON product.id = product_review.product_id
-  LEFT JOIN teacher_info ON product.teacher_id = teacher_info.id 
-  WHERE product.type = 2
- 
-`;
+      SELECT 
+          product.*, 
+          COUNT(product_review.product_id) AS review_count, 
+          AVG(product_review.stars) AS average_rating, 
+          teacher_info.name AS teacher_name,  
+          teacher_info.img AS teacher_img,     
+          teacher_info.info AS teacher_info  
+      FROM 
+          product
+      LEFT JOIN 
+          product_review ON product.id = product_review.product_id
+      LEFT JOIN 
+          teacher_info ON product.teacher_id = teacher_info.id 
+      WHERE 
+          product.type = ?`;
+
     //價格篩選
     let queryParams = [2];
     // Additional filters
@@ -25,7 +34,7 @@ router.get('/', async (req, res) => {
       queryParams.push(priceLow, priceHigh);
     }
 
-    baseQuery += ' GROUP BY product.id ORDER BY product.id';
+    baseQuery += ' GROUP BY product.id ORDER BY product.id;';
     // Execute the query
     const [results] = await db.execute(baseQuery, queryParams);
 
@@ -41,6 +50,7 @@ router.get('/', async (req, res) => {
     res.status(500).json({ error: '發生錯誤' });
   }
 });
+
 
 //lesson_category
 router.get('/categories', async (req, res) => {
@@ -93,16 +103,27 @@ router.get('/:id', async (req, res, next) => {
   console.log(luid);
   try {
     let [data] = await db.execute(
-      'SELECT p.*, pr.*, lc.* ,u.*' +
-        'FROM `product` AS p ' +
-        'LEFT JOIN `product_review` AS pr ON p.id = pr.product_id ' +
-        'LEFT JOIN `lesson_category` AS lc ON p.lesson_category_id = lc.id ' +
-        'LEFT JOIN `user` AS u ON pr.user_id = u.id ' +
-        'WHERE p.`puid` = ? AND p.`lesson_category_id` IN (' +
-        'SELECT `lesson_category_id` FROM `product` WHERE `puid` = ?' +
+      'SELECT p.*, pr.*,lc.name as lesson_category_name' +
+        ' FROM `product` AS p ' +
+        ' LEFT JOIN `product_review` AS pr ON p.id = pr.product_id ' +
+        ' LEFT JOIN `lesson_category` AS lc ON p.lesson_category_id = lc.id ' +
+        ' WHERE p.`puid` = ? AND p.`lesson_category_id` IN (' +
+        '   SELECT `lesson_category_id` FROM `product` WHERE `puid` = ?' +
         ')',
       [luid, luid]
-    ); //FIXME sql可以改一下
+    );
+    //FIXME sql可以改一下
+
+    let [product_review] = await db.execute(
+      `
+      SELECT pr.*, u.*
+      FROM product p
+      JOIN product_review pr ON p.id = pr.product_id
+      JOIN user AS u ON pr.user_id = u.id
+      WHERE p.puid = ?
+    `,
+      [luid]
+    );
 
     let [youwilllike] = await db.execute(
       'SELECT p.* FROM `product` AS p ' +
@@ -111,9 +132,9 @@ router.get('/:id', async (req, res, next) => {
       [luid]
     );
 
-    if ({ data, youwilllike }) {
+    if ({ data, product_review, youwilllike }) {
       console.log({ data });
-      res.status(200).json({ data, youwilllike });
+      res.status(200).json({ data, product_review, youwilllike });
     } else {
       res.status(404).send('Data not found');
     }

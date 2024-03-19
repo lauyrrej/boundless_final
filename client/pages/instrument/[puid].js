@@ -40,8 +40,7 @@ export default function InstrumentDetailPage() {
     setShowMenu(!showMenu)
   }
 
-  // ----------------------加入右上角購物車的功能  ----------------------
-  const { addInstrumentItem, increment, decrement, remove } = useCart()
+
 
   // ----------------------假資料  ----------------------
 
@@ -69,6 +68,8 @@ export default function InstrumentDetailPage() {
     setcolorChange(!colorChange)
   }
 
+    // ----------------------加入右上角購物車的功能  ----------------------
+    const { addInstrumentItem } = useCart()
   //-----------------------動態路由
   //  由router中獲得動態路由(屬性名稱pid，即檔案[pid].js)的值，router.query中會包含pid屬性
   // 1. 執行(呼叫)useRouter，會回傳一個路由器
@@ -76,7 +77,7 @@ export default function InstrumentDetailPage() {
   const router = useRouter()
 
   const [InstrumentDetail, setInstrumentDetail] = useState()
-  const [quantity, setQuantity] = useState(1)
+  // const [quantity, setQuantity] = useState(1)
   // const prevPuidRef = useRef(null)
   // 向伺服器要求資料，設定到狀態中用的函式
   const getInstrumentDetail = async (puid) => {
@@ -182,14 +183,11 @@ export default function InstrumentDetailPage() {
               <FaChevronRight />
               <li style={{ marginLeft: '10px' }}>音箱頭</li> */}
 
-              {InstrumentDetail && InstrumentDetail.length > 0 && (
-                <ul>
-                  {InstrumentDetail[0].outline
-                    .split('\n')
-                    .map((line, index) => (
-                      <li key={index}>{line}</li>
-                    ))}
-                </ul>
+               {InstrumentDetail && InstrumentDetail.length > 0 && (
+                <li style={{ marginLeft: '10px' }}>
+                  {InstrumentDetail[0].Instrument_category_name}
+                </li>
+               
               )}
             </ul>
           </div>
@@ -634,13 +632,16 @@ export default function InstrumentDetailPage() {
             {InstrumentDetail && InstrumentDetail.length > 0 && (
               <ProductCardIns
                 className="Right-card"
-                data={InstrumentDetail[0]}
-                quantity={quantity}
-                setQuantity={setQuantity}
-                addInstrumentItem={addInstrumentItem}
-                increment={increment}
-                decrement={decrement}
-                remove={remove}
+                id={InstrumentDetail[0].id}
+                img={InstrumentDetail[0].img}
+                img_small={InstrumentDetail[0].img}
+                data={InstrumentDetail[0].data}
+                quantity={InstrumentDetail[0].quantity}
+                setQuantity={InstrumentDetail[0].setQuantity}
+                addInstrumentItem={InstrumentDetail[0].addInstrumentItem}
+                increment={InstrumentDetail[0].increment}
+                decrement={InstrumentDetail[0].decrement}
+               
               />
             )}
           </div>

@@ -20,7 +20,7 @@ router.get("/", async (req, res, next) => {
 
 let [instrument] = await db
 .execute(
-  `SELECT product.*, instrument_category.name AS      category_name 
+  `SELECT product.*, instrument_category.name AS category_name 
   FROM product 
   JOIN instrument_category 
   ON product.instrument_category_id = instrument_category.id 
@@ -44,11 +44,11 @@ let [instrument] = await db
   res.json("發生錯誤");
 }
 
-// let page = Number(req.query.page) || 1;  // 目前頁碼
-// let dataPerpage = 10; // 每頁 10 筆
-// let offset = (page - 1) * dataPerpage; // 取得下一批資料
-// let pageTotal = Math.ceil(dataCount.length / dataPerpage); // 計算總頁數
-// let pageString = ' LIMIT ' + offset + ',' + dataPerpage;
+let page = Number(req.query.page) || 1;  // 目前頁碼
+let dataPerpage = 10; // 每頁 10 筆
+let offset = (page - 1) * dataPerpage; // 取得下一批資料
+let pageTotal = Math.ceil(instrument.length / dataPerpage); // 計算總頁數
+let pageString = ' LIMIT ' + offset + ',' + dataPerpage;
 
   // 排序用
   let orderDirection = req.query.order || 'ASC';
@@ -64,35 +64,22 @@ let [instrument] = await db
      ? ' AND `brandSelect` = ' + parseInt(req.query.brandSelect) : '';
    
      const priceLow = 
-     req.query.priceLow !== 'all' 
+     req.query.priceLow && !isNaN(req.query.priceLow)
+     ? ' AND `price` >= ' + parseInt(req.query.priceLow)
+     : '';
 
-
-
-
-
-
-
-
+     const priceHigh = 
+     req.query.priceHigh && !isNaN(req.query.priceHigh)
+     ? ' AND `price` <= ' + parseInt(req.query.priceHigh)
+     : '';
 
      sqlString +=
       brandSelect +
       priceLow +
       priceHigh +
-
-      region +
-      ' ORDER BY `created_time` ' +
-      orderDirection;
-    [dataCount] = await db.execute(sqlString).catch(() => {
-      return undefined;
-    });
-
+      ' ORDER BY `ASC`' 
+   
   }
-
-
-
-
-
-
 
 // const instrument_category_id = req.query.instrument_category_id
 // const brand = req.query.brandSelect;
@@ -186,12 +173,6 @@ let [instrument] = await db
 
 // // 評價，score 使用 `score IN (3, 4, 5)`
 //  conditions[2] = score ? `cat_id IN (${score})` : ''
-
- 
-
-
-
-
 
 // 排序用，預設使用id, asc
   // const order = getOrder(orderby)
