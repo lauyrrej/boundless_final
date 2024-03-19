@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { FaUser } from 'react-icons/fa'
 
 export default function RecruitCard({
-  id,
   juid,
   former,
   title,
@@ -69,6 +68,7 @@ export default function RecruitCard({
       <Link
         href={`/jam/recruit-list/${juid}`}
         className={`${styles.recruitCard}`}
+        target='_blank'
       >
         {/* card-header */}
         <div

@@ -177,10 +177,10 @@ export default function InstrumentDetailPage() {
               </Link>
               <FaChevronRight />
 
-              <li style={{ marginLeft: '10px' }}>音響設備</li>
+              {/* <li style={{ marginLeft: '10px' }}>音響設備</li>
 
               <FaChevronRight />
-              <li style={{ marginLeft: '10px' }}>音箱頭</li>
+              <li style={{ marginLeft: '10px' }}>音箱頭</li> */}
 
               {InstrumentDetail && InstrumentDetail.length > 0 && (
                 <ul>
@@ -646,17 +646,28 @@ export default function InstrumentDetailPage() {
           </div>
         </div>
         {/* 猜你喜歡 */}
-        <div className="you-will-like">
+        <div className="you-may-like">
           <div className="detail-title ">猜你喜歡...</div>
           <div className="card-con">
-            <CardIns />
-            <CardIns />
-            <CardIns />
-            <CardIns />
-            <CardIns />
+            {InstrumentDetail &&
+              InstrumentDetail.youmaylike &&
+              InstrumentDetail.youmaylike
+                .sort((a, b) => b.sales - a.sales)
+                .slice(0, 5)
+                .map((v, i) => (
+                  <CardIns
+                    key={i}
+                    id={v.id}
+                    puid={v.puid}
+                    name={v.name}
+                    price={v.price}
+                    img={v.img}
+                    sales={v.sales}
+                  />
+                ))}
           </div>
         </div>
-        <div className="you-will-like-mobile">
+        <div className="you-may-like-mobile">
           <div className="detail-title ">猜你喜歡...</div>
           {/* 手機版card-con */}
           <div className="card-con-mobile row d-flex gy-4">
@@ -917,7 +928,7 @@ list-style-type: disc;
 
         /* ------------- */
 
-        .you-will-like {
+        .you-may-like {
           {/* height: 508px; */}
           width: 100%;
           margin-top: 30px;
@@ -935,7 +946,7 @@ list-style-type: disc;
         .Right-mobile{
             display:none;
         }
-        .you-will-like-mobile{
+        .you-may-like-mobile{
             display:none;
         }
         /* --------------- footer --------------- */
@@ -1120,14 +1131,14 @@ max-width:100%;
                        display:none;
 }
 //FIXME
-.you-will-like-mobile{
+.you-may-like-mobile{
     display:block;
 }
 .card-con-mobile{
     display:block;
      {/* flex: 0 0 90%;  */}
 }
-.you-will-like-mobile-card{
+.you-may-like-mobile-card{
  flex: 0 0 30%; 
 }
                    

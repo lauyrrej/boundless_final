@@ -1,35 +1,51 @@
 import styles from '@/components/jam/recruit-card.module.scss'
 import Image from 'next/image'
 import Link from 'next/link'
-
-import genereData from '@/data/genre.json'
+import logoMb from '@/assets/logo_mb.svg'
 
 export default function JamCard({
-  name,
-  cover_img,
-  genere,
-  region,
-  formed_time,
+  juid = '',
+  name = '',
+  cover_img = '',
+  genre = [],
+  region = '',
+  formed_time = '',
+  genreData = [],
 }) {
-  // genere對應
-  const genereName = genere.map((g) => {
-    const matchedGenere = genereData.find((gd) => gd.id === g)
-    return matchedGenere.name
+  // genre對應
+  const genreName = genre.map((g) => {
+    const matchedgenre = genreData.find((gd) => gd.id === g)
+    return matchedgenre.name
   })
 
   // 組合日期
-  const formedYear = new Date(formed_time).getFullYear()
-  const formedMonth = new Date(formed_time).getMonth()
-  const formedDate = new Date(formed_time).getDate()
-  const combineDate = `${formedYear}-${formedMonth}-${formedDate}`
+  const createdYear = new Date(formed_time).getFullYear()
+  const createdMonth = new Date(formed_time).getMonth() + 1
+  const createdDate = new Date(formed_time).getDate()
+  const combineDate = `${createdYear}-${createdMonth}-${createdDate}`
   return (
     <>
-      <Link href="#" className={`${styles.recruitCard}`}>
-        {/* 樂團名稱 */}
+      <Link href={`/jam/jam-list/${juid}`} className={`${styles.recruitCard}`} target='_blank'>
+        <div className={`${styles.coverWrapper}`}>
+          {cover_img ? (
+            <Image
+              src={`http://localhost:3005/jam/${cover_img}`}
+              fill
+              style={{ objectFit: 'cover' }}
+              alt={cover_img}
+            />
+          ) : (
+            <div className={`${styles.noCoverBackground}`}>
+              <Image src={logoMb} alt="logo-mobile" />
+            </div>
+          )}
+        </div>
+        {/* card-title */}
         <div style={{ fontSize: '18px', color: '#1d1d1d', fontWeight: '500' }}>
           {name}
         </div>
-        {/* genere */}
+        {/* player */}
+        {/* genre */}
         <div className="d-flex align-items-start" style={{ gap: '8px' }}>
           <span style={{ color: '#124365', fontWeight: 'bold' }}>
             音樂風格：
@@ -38,7 +54,7 @@ export default function JamCard({
             className="d-flex flex-wrap"
             style={{ gap: '8px', flex: '1 0 0' }}
           >
-            {genereName.map((v, i) => {
+            {genreName.map((v, i) => {
               return (
                 <div key={i} className={`${styles.cardBadge} ${styles.genere}`}>
                   {v}
@@ -55,7 +71,7 @@ export default function JamCard({
           </div>
           <div>
             <span style={{ color: '#124365', fontWeight: 'bold' }}>
-              成立日期：
+              成立時間：
             </span>
             <span style={{ color: '#1d1d1d' }}>{combineDate}</span>
           </div>

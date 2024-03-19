@@ -69,6 +69,8 @@ export default function Publish() {
     setComplete(1)
     return true
   }
+  
+  // 表單送出
   const sendForm = async (title, category_id, content, img) => {
     if (!checkComplete()) {
       return false
@@ -77,7 +79,7 @@ export default function Publish() {
     formData.append('title', title)
     formData.append('category_id', category_id)
     formData.append('content', content)
-    formData.append('img', img)
+    // formData.append('img', img)
 
     // 確認formData內容
     for (let [key, value] of formData.entries()) {
@@ -319,10 +321,13 @@ export default function Publish() {
                     className="form-control"
                     type="file"
                     name="myFile"
-                    src={img}
                     id="myFile"
                     onChange={(e) => {
-                      setImg(e.target.value)
+                      const file = e.target.files[0];
+                      if(file){
+                        const fileUrl = URL.createObjectURL(file);
+                      setImg(fileUrl)
+                      }
                     }}
                   />
                 </div>
