@@ -463,7 +463,8 @@ export default function LessonDetailPage() {
           <div className="card-con-mobile">
             <HoriCard />
             <HoriCard />
-            <HoriCard />
+                      <HoriCard />
+                      //FIXME 標題字體小一點
           </div>
         </div>
       </div>
