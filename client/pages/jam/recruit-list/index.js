@@ -24,7 +24,12 @@ import { useJam } from '@/hooks/use-jam'
 
 export default function RecruitList() {
   const router = useRouter()
-  const { invalidJam, notifyInvalidToast } = useJam()
+  const {
+    invalidJam,
+    invalidEdit,
+    notifyInvalidToast,
+    notifyInvalidEditToast,
+  } = useJam()
   // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
   const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
@@ -37,6 +42,9 @@ export default function RecruitList() {
     // 若使用者嘗試進入以解散或不存在的jam，跳出警告訊息
     if (invalidJam === false) {
       notifyInvalidToast()
+    }
+    if (invalidEdit === false) {
+      notifyInvalidEditToast()
     }
     document.addEventListener('click', () => {
       setFilterVisible(false)
@@ -66,8 +74,7 @@ export default function RecruitList() {
     stopPropagation(e)
     setFilterVisible(!filterVisible)
   }
-  // ---------------------- filter 假資料  ----------------------
-  // filter假資料
+  // ---------------------- filter 資料  ----------------------
   const [player, setPlayer] = useState('')
 
   const [genre, setgenre] = useState('')
@@ -110,6 +117,7 @@ export default function RecruitList() {
     })
   }
 
+  // 點擊篩選表確認
   const handleLoadData = () => {
     // 要送至伺服器的query string參數
 
@@ -188,10 +196,6 @@ export default function RecruitList() {
       // 進入狀態前檢查資料類型為陣列，以避免錯誤
       // console.log(datas)
       if (datas) {
-        // const genreName = jam.genre.map((g) => {
-        //   const matchedgenre = genre.find((gd) => gd.id === g)
-        //   return matchedgenre.name
-        // })
         const combineData = datas.jamData.map((v) => {
           const matchFormer = datas.formerData.find(
             (fv) => fv.id === v.former.id
@@ -370,7 +374,7 @@ export default function RecruitList() {
                 </ul>
               </div>
 
-              <div className="top-function-flex">
+              <div className="top-function-flex" style={{paddingBlock: '2px'}}>
                 {/*  ---------------------- 搜尋欄  ---------------------- */}
                 <div className="search-sidebarBtn">
                   <div
@@ -562,7 +566,7 @@ export default function RecruitList() {
                     <div
                       className={`sort-item ${order === 'ASC' ? 'active' : ''}`}
                       role="presentation"
-                      onClick={(e) => {
+                      onClick={() => {
                         handleOrder('ASC')
                       }}
                     >
@@ -573,7 +577,7 @@ export default function RecruitList() {
                         order === 'DESC' ? 'active' : ''
                       }`}
                       role="presentation"
-                      onClick={(e) => {
+                      onClick={() => {
                         handleOrder('DESC')
                       }}
                     >
@@ -586,12 +590,10 @@ export default function RecruitList() {
             {/* 主內容 */}
             <main className="content">
               {jams.length > 0 ? (
-                jams.map((v, i) => {
+                jams.map((v) => {
                   const {
-                    id,
                     juid,
                     former,
-                    member,
                     title,
                     degree,
                     genre,
@@ -601,11 +603,9 @@ export default function RecruitList() {
                   } = v
                   return (
                     <RecruitCard
-                      key={id}
-                      id={id}
+                      key={juid}
                       juid={juid}
                       former={former}
-                      member={member}
                       title={title}
                       degree={degree}
                       genre={genre}

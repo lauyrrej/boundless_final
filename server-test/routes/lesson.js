@@ -132,7 +132,9 @@ router.get('/:id', async (req, res, next) => {
       [luid]
     );
 
+
     if ({ data, product_review, youwilllike }) {
+
       console.log({ data });
       res.status(200).json({ data, product_review, youwilllike });
     } else {

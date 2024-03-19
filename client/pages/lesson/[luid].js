@@ -105,10 +105,6 @@ export default function LessonDetailPage() {
 
   console.log(router.query, ' isReady=', router.isReady)
 
-
-  const notify = () => toast('{LessonDetail.data[0].name}已加入購物車.')
-
-
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
@@ -169,7 +165,9 @@ export default function LessonDetailPage() {
 
               {LessonDetail && LessonDetail.data.length > 0 && (
                 <li style={{ marginLeft: '10px' }}>
+
                   {LessonDetail.data[0].lesson_category_name}
+
                 </li>
               )}
             </ul>
@@ -181,10 +179,11 @@ export default function LessonDetailPage() {
                 <div className="Left">
                   {/* Product Briefing Area */}
                   <div className="prodBriefingArea d-flex">
+
                     {LessonDetail && LessonDetail.data.length > 0 && (
                       <img
                         src={`/課程與師資/lesson_img/${LessonDetail.data[0].img}`}
-                        className="prodImg"
+                       className="prodImg"
                         alt="Lesson Preview"
                       />
                     )}
@@ -193,6 +192,7 @@ export default function LessonDetailPage() {
                   {/* Mobile version product brief card */}
                   <div className="Right-mobile">
                     <div className="prodBriefing sticky-top">
+
                       {LessonDetail && LessonDetail.data.length > 0 && (
                         <div className="prodMainName">
                           {LessonDetail.data[0].name} Logic Pro X 從零開始
@@ -249,9 +249,12 @@ export default function LessonDetailPage() {
                       <div className="lessonIntro">
                         Logic Pro
                         為數位音樂編曲入門的必學軟體，從錄音、編曲到混音一次包辦，帶你認識錄音介面、多重效果器，以及豐富的內建素材庫，是對音樂創作有興趣的你不可錯過的專業音樂編曲課程。
+
                       </div>
                     </div>
+                   
                   </div>
+                </div>
 
                   {/* Product Details */}
                   <div className="detail">
@@ -260,6 +263,7 @@ export default function LessonDetailPage() {
                       <div className="detail-title">單元一覽</div>
                       <div className="list">
                         <ul>
+
                           {LessonDetail &&
                             LessonDetail.data.length > 0 &&
                             LessonDetail.data[0].outline
@@ -267,6 +271,7 @@ export default function LessonDetailPage() {
                               .map((line, index) => (
                                 <li key={index}>{line}</li>
                               ))}
+
                         </ul>
                       </div>
                     </div>
@@ -276,6 +281,7 @@ export default function LessonDetailPage() {
                       <div className="detail-title">適合對象</div>
                       <div className="list">
                         <ul>
+
                           {LessonDetail &&
                             LessonDetail.data.length > 0 &&
                             LessonDetail.data[0].suitable
@@ -283,6 +289,7 @@ export default function LessonDetailPage() {
                               .map((line, index) => (
                                 <li key={index}>{line}</li>
                               ))}
+
                         </ul>
                       </div>
                     </div>
@@ -291,10 +298,12 @@ export default function LessonDetailPage() {
                     <div className="achievement mt40">
                       <div className="detail-title">你將學到</div>
                       <div className="list">
+
                         <ul>
                           {LessonDetail &&
                             LessonDetail.data.length > 0 &&
                             LessonDetail.data[0].achievement
+
                               .split('\n')
                               .map((line, index) => (
                                 <li key={index}>{line}</li>
@@ -303,11 +312,12 @@ export default function LessonDetailPage() {
                       </div>
                     </div>
 
-                    {/* Student Feedback */}
+                    {/* 學員回饋 */}
                     <div className="reviews mt40">
                       <div className="detail-title">學員回饋</div>
                       <div className="list">
-                        {/* Comments */}
+
+                        {/* 評論 */}
                         {LessonDetail &&
                           LessonDetail.product_review.length > 0 &&
                           LessonDetail.product_review.map((review, index) => (
@@ -371,9 +381,12 @@ export default function LessonDetailPage() {
                                   人覺得有幫助
                                 </div>
                                 {/* Like Icon */}
+
                               </div>
                             </div>
+
                           ))}
+
                       </div>
                       {/* More Button */}
                       <div className="more-review">
@@ -386,8 +399,10 @@ export default function LessonDetailPage() {
                   <div className="teacher-info mt40">
                     <div className="detail-title">講師資訊</div>
                     <div className="teacher-info-area">
+
                       <div className="teacher-img-con">
                         {LessonDetail && LessonDetail.data.length > 0 && (
+
                           <img
                             loading="lazy"
                             src="/課程與師資/teacher_img/teacher_001.jpeg"
@@ -411,23 +426,16 @@ export default function LessonDetailPage() {
 
           {/*   ----------------------頁面內容 右半部---------------------- */}
           <div className="d-none d-sm-block col-sm-6 page-control">
-            {LessonDetail && LessonDetail.data.length > 0 && (
+            {LessonDetail && LessonDetail.length > 0 && (
               <ProductCard
                 className="Right-card"
-                id={LessonDetail.data[0].id}
-                img={LessonDetail.data[0].img}
-                img_small={LessonDetail.data[0].img}
-                type={LessonDetail.data[0].type}
-                lesson_category_id={LessonDetail.data[0].lesson_category_id}
-                name={LessonDetail.data[0].name}
-                homework={LessonDetail.data[0].homework}
-                sales={LessonDetail.data[0].sales}
-                price={LessonDetail.data[0].price}
-                discount={LessonDetail.data[0].discount}
-                discount_state={LessonDetail.data[0].discount_state}
-                length={LessonDetail.data[0].length}
-                info={LessonDetail.data[0].info}
-                onshelf_time={LessonDetail.data[0].onshelf_time}
+                img={LessonDetail[0].img}
+                name={LessonDetail[0].name}
+                homework={LessonDetail[0].homework}
+                sales={LessonDetail[0].sales}
+                price={LessonDetail[0].price}
+                length={LessonDetail[0].length}
+                info={LessonDetail[0].info}
                 addLessonItem={addLessonItem}
               />
             )}
@@ -436,25 +444,12 @@ export default function LessonDetailPage() {
         {/* 猜你喜歡 */}
         <div className="you-will-like">
           <div className="detail-title ">猜你喜歡...</div>
-          <div className="card-con">
-            {LessonDetail &&
-              LessonDetail.youwilllike &&
-              LessonDetail.youwilllike
-                .sort((a, b) => b.sales - a.sales) // Sort courses based on sales volume
-                .slice(0, 5) // Get top 5 courses
-                .map((v, i) => (
-                  <Card
-                    key={i}
-                    id={v.id}
-                    luid={v.puid}
-                    name={v.name}
-                    price={v.price}
-                    teacher_id={v.teacher_id}
-                    img={v.img}
-                    length={v.length}
-                    sales={v.sales}
-                  />
-                ))}
+          <div className="card-con" style={{ overflowX: 'scroll' }}>
+            <Card />
+            <Card />
+            <Card />
+            <Card />
+            <Card />
           </div>
         </div>
         <div className="you-will-like-mobile">
@@ -469,22 +464,21 @@ export default function LessonDetailPage() {
         </div>
       </div>
       <div className="shoppingBtn sticky-top" id="shoppingBtn">
-        <div
-          className="cartBtn"
-          onClick={() => {
-            addLessonItem(v)
-            notify()
-          }}
-        >
-          <Toaster />
+        <div className="cartBtn">
           <img
             loading="lazy"
             src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
             className="cartIcon"
           />
-          <div className="cart">加入購物車</div>
+          <div
+            className="cart"
+            onClick={() => {
+              addLessonItem(v)
+            }}
+          >
+            加入購物車
+          </div>
         </div>
-
         <div className="buyBtn">
           <div className="buy">立即購買</div>
         </div>
