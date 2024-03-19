@@ -6,11 +6,12 @@ export const CartContext = createContext()
 
 export function CartProvider({ children }) {
   let cartData = CartData.map((v) => {
-    if (v.type == 1) {
-      return { ...v, qty: 1 }
-    } else {
-      return v
-    }
+    // if (v.type == 1) {
+    //   return { ...v, qty: 1 }
+    // } else {
+    //   return v
+    // }
+    return { ...v, qty: 1 }
   })
   //加入到購物車的項目
   let [items, setItems] = useState(cartData)
@@ -42,9 +43,12 @@ export function CartProvider({ children }) {
     })
 
     if(index > -1){
+      //結束程式
       return
     }
-    const newItems = [...items, item]
+
+    const newItem = {...item, qty: 1}
+    const newItems = [...items, newItem]
     setItems(newItems)
     localStorage.setItem('CartData', JSON.stringify(newItems))
   }
