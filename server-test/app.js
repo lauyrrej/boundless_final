@@ -16,10 +16,7 @@ import articleRouter from './routes/article.js';
 import googleLoginRouter from './routes/google-login.js';
 import cartRouter from './routes/cart.js'
 import forgetpasswordRouter from './routes/reset-password.js';
-=========
-import cartRouter from './routes/cart.js'
 
->>>>>>>>> Temporary merge branch 2
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -62,11 +59,9 @@ app.use('/api/coupon', couponRouter);
 app.use('/api/user', userRouter);
 app.use('/api/article', articleRouter);
 app.use('/api/google-login', googleLoginRouter);
-<<<<<<<<< Temporary merge branch 1
-app.use('/api/reset-password', forgetpasswordRouter);
-=========
 app.use('/api/cart', cartRouter)
->>>>>>>>> Temporary merge branch 2
+app.use('/api/reset-password', forgetpasswordRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
