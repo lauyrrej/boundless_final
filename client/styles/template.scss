@@ -6,7 +6,7 @@ header {
   padding: 10px 35px;
   position: sticky;
   top: 0;
-  z-index: 1200;
+  z-index: 1000;
   box-shadow: 0px 2px 4px 0px rgba($color: #000000, $alpha: 0.25);
   user-select: none;
   .logo {
@@ -69,10 +69,10 @@ header {
 // 手機版主選單
 .menu-mb {
   position: fixed;
-  transform: translateY(-100%);
+  transform: translateY(-105%);
   left: 0;
   z-index: 120;
-  padding-top: 85px;
+  padding-top: 50px;
   background-color: #fff;
   color: $secondary;
   font-size: $h5;
@@ -417,13 +417,13 @@ header {
   background-color: transparent;
   color: $primary;
 }
-.page-item:first-child .page-link{
+.page-item:first-child .page-link {
   margin-right: 10px;
   border: 1px solid $body;
   border-radius: 3px;
   padding-bottom: 0;
 }
-.page-item:last-child .page-link{
+.page-item:last-child .page-link {
   margin-left: 10px;
   border: 1px solid $body;
   border-radius: 3px;
@@ -436,4 +436,187 @@ header {
 
 .no-result {
   font-size: 32px;
+}
+
+
+// ---------------------------------------- 首頁樣式 ------------------------------------------
+.carousel-section {
+  padding-block: 30px;
+  background-color: #fff;
+  overflow: hidden;
+}
+
+.carousel {
+  margin-inline: 300px;
+  min-width: 410px;
+  @media screen and (max-width: 576px) {
+    margin-inline: 10px;
+  }
+}
+.carousel-item {
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 1.61;
+  max-height: 500px;
+  min-height: 255px;
+}
+.carousel-item img {
+  object-fit: cover;
+  object-position: center;
+  overflow: hidden;
+}
+.carousel-indicators .active {
+  opacity: 1;
+}
+
+.lesson-section {
+  padding-block: 30px;
+  background-color: $light-primary;
+  height: 100svh;
+  position: relative;
+  color: #fff;
+  @media screen and (max-width: 576px) {
+    height: 70svh;
+  }
+  .lesson-section-img {
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 1.5;
+    // height: 560px;
+    width: 100%;
+    max-width: 914px;
+  }
+}
+.b-lesson-btn {
+  background-color: #fff;
+  color: $primary;
+  font-size: 18px;
+  font-weight: bold;
+  &:hover {
+    background-color: #e2e2e2;
+  }
+}
+.cloud-item {
+  position: absolute;
+  width: fit-content;
+  @media screen and (max-width: 576px) {
+    display: none;
+  }
+}
+.cloud1 {
+  top: 100px;
+  left: -30px;
+}
+.cloud2 {
+  top: 650px;
+  left: 700px;
+}
+.cloud3 {
+  top: 40px;
+  right: 0px;
+}
+
+.slogan {
+  font-size: 40px;
+  @media screen and (max-width: 576px) {
+    font-size: calc(1.325rem + 0.9vw);
+  }
+}
+
+.instrument-section {
+  padding-block: 30px;
+  background-color: #fff;
+  height: 100svh;
+  position: relative;
+  color: #18a1ff;
+  @media screen and (max-width: 576px) {
+    height: 70svh;
+  }
+  .instrument-position {
+    position: absolute;
+    right: 0;
+    top: 16%;
+  }
+  .instrument-section-img {
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 1.5;
+    width: 100%;
+    max-width: 914px;
+  }
+}
+.b-instrument-btn {
+  background-color: #18a1ff;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  &:hover {
+    background-color: #1581cc;
+  }
+}
+
+.jam-section {
+  background-color: #b9b9b9;
+  position: relative;
+  color: #124365;
+  .jam-position {
+    position: absolute;
+    right: 0;
+    top: 16%;
+  }
+  .jam-section-img {
+    position: relative;
+    overflow: hidden;
+    height: 50svh;
+    @media screen and (max-width: 576px) {
+      height: 35svh;
+    }
+  }
+  .jam-section-img img {
+    object-fit: cover;
+  }
+  .jam-text {
+    height: 50svh;
+    @media screen and (max-width: 576px) {
+      height: 35svh;
+    }
+  }
+}
+.b-jam-btn {
+  background-color: #124365;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  &:hover {
+    background-color: #0f3652;
+  }
+}
+
+.article-section {
+  padding-block: 30px;
+  background-color: #fff;
+  height: 100svh;
+  position: relative;
+  color: $secondary;
+  @media screen and (max-width: 576px) {
+    height: 70svh;
+  }
+  .article-section-img {
+    margin-left: -5px;
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 1.89;
+    // height: 560px;
+    width: 100%;
+    max-width: 914px;
+  }
+}
+.b-article-btn {
+  background-color: $body;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  &:hover {
+    background-color: $secondary;
+  }
 }
