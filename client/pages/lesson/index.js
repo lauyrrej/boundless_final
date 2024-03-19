@@ -4,7 +4,7 @@ import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 //試抓資料區
 import Card from '@/components/lesson/lesson-card'
-import Cardrwd from '@/components/lesson/lesson-card-rwd-data'
+import Cardrwd from '@/components/lesson/lesson-card-rwd'
 // import Lesson from '@/data/Lesson.json'
 
 import Link from 'next/link'
@@ -173,18 +173,11 @@ export default function LessonList({}) {
             return acc
           }, [])
           setTotalPage(pages.length)
-          setLessonArray(pages[currentPage]) // 将分页后的结果传递给 resolve
-          // 将 result 每 perPage 条记录分成一页一页的数组
-          const pages = result.reduce((acc, current, index) => {
-            const tempPage = Math.floor(index / perPage) // 当前记录所在的页码
-            if (!acc[tempPage]) {
-              acc[tempPage] = [] // 如果该页不存在，则创建一个新的页数组
-            }
-            acc[tempPage].push(current) // 将当前记录添加到相应的页数组中
-            return acc
-          }, [])
-          setTotalPage(pages.length)
-          setLessonArray(pages[currentPage]) // 将分页后的结果传递给 resolve
+
+            setLessonArray(pages[currentPage]) // 将分页后的结果传递给 resolve
+            console.log(LessonArray)
+            
+
         })
         .catch((error) => {
           console.log(error)
@@ -198,7 +191,9 @@ export default function LessonList({}) {
 
   const handlePageClick = (event) => {
     const newPage = event.selected
-    setCurrentPage(newPage)
+      setCurrentPage(newPage)
+    //   console.log(currentPage)
+      
   }
 
   // 在组件中定义 isFiltered 状态，并提供一个函数来更新它的值
@@ -479,7 +474,7 @@ export default function LessonList({}) {
                   return (
                     <Link key={index} href={'/lesson/?category === `${v.id}'}>
                       <li onClick={() => handleCategoryChange(v.id)}>
-                        {v.Lesson_category_name}
+                        {v.name}
                       </li>
                     </Link>
                   )
@@ -513,7 +508,12 @@ export default function LessonList({}) {
                     key={index}
                     href={`/lesson?${v.id}`}
                     className="sm-item"
-                    onClick={() => handleCategoryChange(v.id)}
+                    onClick={
+                      (() => handleCategoryChange(v.id),
+                      () => {
+                        setShowSidebar(false)
+                      })
+                    }
                   >
                     {v.name}
                   </Link>
@@ -763,7 +763,8 @@ export default function LessonList({}) {
                       price,
                       teacher_name,
                       teacher_id,
-                      img,
+                        img,
+                        img_small,
                       sales,
                       length,
                     } = v
@@ -778,7 +779,7 @@ export default function LessonList({}) {
                             review_count={review_count}
                             price={price}
                             teacher_name={teacher_name}
-                            img={img}
+                            img_small={img_small}
                             sales={sales}
                             length={length}
                           />
@@ -813,7 +814,8 @@ export default function LessonList({}) {
                       price,
                       teacher_name,
                       teacher_id,
-                      img,
+                        img,
+                        img_small,
                       sales,
                       length,
                     } = v
@@ -828,7 +830,7 @@ export default function LessonList({}) {
                             review_count={review_count}
                             price={price}
                             teacher_name={teacher_name}
-                            img={img}
+                            img_small={img_small}
                             sales={sales}
                             length={length}
                             user_id={user_id}
