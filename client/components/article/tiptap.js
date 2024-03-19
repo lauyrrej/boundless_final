@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
@@ -97,10 +98,10 @@ const MenuBar = ({ editor }) => {
   )
 }
 
-export const Tiptap = ({ setDescription }) => {
+export const Tiptap = ({ setDescription, initialContent }) => {
   const editor = useEditor({
     extensions: [StarterKit, Underline],
-    content: ``,
+    content: initialContent,
 
     onUpdate: ({ editor }) => {
       const html = editor.getHTML()

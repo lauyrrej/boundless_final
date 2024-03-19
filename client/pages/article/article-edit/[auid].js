@@ -61,6 +61,12 @@ export default function Auid() {
       getSingleDetail(auid)
     }
   }, [router.isReady])
+
+  // initialContent
+  // useEffect(() => {
+  //   setDescription(initialContent)
+  // }, [initialContent, setDescription])
+
   // ----------------------假資料  ----------------------
 
   const [filterVisible, setFilterVisible] = useState(false)
@@ -146,8 +152,7 @@ export default function Auid() {
             {/* 主內容 */}
             <main className="content">
               <div className="">
-                <Tiptap setDescription={setDescription} />
-                {/* <Details description={description} /> */}
+                <Tiptap setDescription={setDescription} initialContent={articleDetail.content}/>
               </div>
               <div className="main-img">
                 <Image
