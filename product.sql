@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2024-03-11 10:26:52
--- 伺服器版本： 10.4.28-MariaDB
--- PHP 版本： 8.0.28
+-- 產生時間： 2024-03-19 19:16:40
+-- 伺服器版本： 10.4.32-MariaDB
+-- PHP 版本： 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- 資料庫： `boundless_fianl`
+-- 資料庫： `boundless_final`
 --
 
 -- --------------------------------------------------------
@@ -35,7 +35,7 @@ CREATE TABLE `product` (
   `price` int(7) NOT NULL,
   `discount` float DEFAULT NULL,
   `discount_state` tinyint(1) NOT NULL DEFAULT 0,
-  `instrument_category_id` int(2) DEFAULT NULL,
+  `instrument_category_id` int(2) DEFAULT NULL COMMENT '樂器種類 9關聯電吉他',
   `lesson_category_id` int(2) DEFAULT NULL,
   `brand_id` int(2) DEFAULT NULL,
   `teacher_id` int(3) DEFAULT NULL,
@@ -74,7 +74,7 @@ INSERT INTO `product` (`id`, `puid`, `type`, `name`, `price`, `discount`, `disco
 (11, 'X6sy8bIsa8ix', 1, 'YAMAHA RSP20 Sunset Burst', 20900, 0.9, 1, 9, 0, 1, 0, 'RSP20-Sunset Burst-1.jpg,RSP20-Sunset Burst-2.jpg,RSP20-Sunset Burst-3.jpg', 'RSP20-Sunset Burst-2.jpg', '700系列吉他功能的造型和規格源於1000系列吉他，但多了獨特的 ART拾音器系統，用來捕捉吉他琴身的共振力，忠實地再現自然音調。另提供了12弦、左手版本可選擇。', '', '', '', 0, 0, 'Body Style : ES\nBody Shape : Venetian Cutaway Hollowbody\nBody Material : 3-ply Maple/Poplar/Maple\nBinding : Nitrocellulose VOS (Vintage Patina)', 0, 2, '2023-12-06 22:29:09', '2023-12-09 15:25:31', NULL, 1),
 (12, 'Muu2uNGBFSSZ', 1, 'YAMAHA RSP20 Swift Blue', 20900, 0.9, 1, 9, 0, 1, 0, 'RSP20-Swift Blue-1.jpg,RSP20-Swift Blue-2.jpg,RSP20-Swift Blue-3.jpg,RSP20-Swift Blue-4.jpg', 'RSP20-Swift Blue-1.jpg', '700系列吉他功能的造型和規格源於1000系列吉他，但多了獨特的 ART拾音器系統，用來捕捉吉他琴身的共振力，忠實地再現自然音調。另提供了12弦、左手版本可選擇。', '', '', '', 0, 0, 'Body Style : ES\nBody Shape : Venetian Cutaway Hollowbody\nBody Material : 3-ply Maple/Poplar/Maple\nBinding : Nitrocellulose VOS (Vintage Patina)', 6, 0, '2023-12-02 23:25:01', '2023-12-05 11:47:51', NULL, 1),
 (13, 'HTM3L8TK7iZ8', 1, 'YAMAHA RSP20X', 20900, 0.9, 1, 9, 0, 1, 0, 'RSP20X-1.jpg,RSP20X-2.jpg,RSP20X-3.jpg', 'RSP20X-1.jpg', '700系列吉他功能的造型和規格源於1000系列吉他，但多了獨特的 ART拾音器系統，用來捕捉吉他琴身的共振力，忠實地再現自然音調。另提供了12弦、左手版本可選擇。', '', '', '', 0, 0, 'Body Style : ES\nBody Shape : Venetian Cutaway Hollowbody\nBody Material : 3-ply Maple/Poplar/Maple\nBinding : Nitrocellulose VOS (Vintage Patina)', 2, 3, '2023-12-05 23:13:11', '2023-12-12 14:53:00', NULL, 1),
-(14, 'qv13yejy3CVN', 1, 'YAMAHA  RSS02T Hot Merlot', 4600, 0.9, 1, 9, 0, 1, 0, 'RSS02T_Hot_Merlot-1.jpg,RSS02T_Hot_Merlot-2.jpg,RSS02T_Hot_Merlot-3.jpg', 'RSS02T_Hot_Merlot-1.jpg', 'F310木吉他價格實惠，在市場同級品中更是擁有超乎水準的品質、設計與音色 。\n\n傳統大桶身：容易彈奏的較短弦長與較薄桶身設計\n雲杉面板：精選木材與絕佳音色\n霧面琴頸：比亮面琴頸更滑順不卡手\n世界唯一取得國際無毒環保認證的工廠製程\n實惠的價格就能擁有日本堅持的製造品質\n可以陪伴您一輩子的木吉他', '', '', '', 0, 0, 'Body Style : ES\nBody Shape : Venetian Cutaway Hollowbody\nBody Material : 3-ply Maple/Poplar/Maple\nBinding : Nitrocellulose VOS (Vintage Patina)', 6, 3, '2023-12-07 21:17:14', '2023-12-15 10:47:10', NULL, 1),
+(14, 'qv13yejy3CVN', 1, 'YAMAHA RSS02T Hot Merlot', 4600, 0.9, 1, 9, 0, 1, 0, 'RSS02T_Hot_Merlot-1.jpg,RSS02T_Hot_Merlot-2.jpg,RSS02T_Hot_Merlot-3.jpg', 'RSS02T_Hot_Merlot-1.jpg', 'F310木吉他價格實惠，在市場同級品中更是擁有超乎水準的品質、設計與音色 。\n\n傳統大桶身：容易彈奏的較短弦長與較薄桶身設計\n雲杉面板：精選木材與絕佳音色\n霧面琴頸：比亮面琴頸更滑順不卡手\n世界唯一取得國際無毒環保認證的工廠製程\n實惠的價格就能擁有日本堅持的製造品質\n可以陪伴您一輩子的木吉他', '', '', '', 0, 0, 'Body Style : ES\nBody Shape : Venetian Cutaway Hollowbody\nBody Material : 3-ply Maple/Poplar/Maple\nBinding : Nitrocellulose VOS (Vintage Patina)', 6, 3, '2023-12-07 21:17:14', '2023-12-15 10:47:10', NULL, 1),
 (15, 'MdFFnhHdQmTt', 1, 'YAMAHA RSS20 Flash Green', 9800, 0.9, 1, 9, 0, 1, 0, 'RSS20_Flash_Green-1.jpg,RSS20_Flash_Green-2.jpg,RSS20_Flash_Green-3.jpg', 'RSS20_Flash_Green-1.jpg', 'Yamaha的標準木吉他型號，實惠的價格擁有單純傳統的外觀與卓越的品質、單板面板的規格、最真實的美妙音色了，歸功於新開發的扇形音梁支撐設計。推薦給所有初學者吉他手、小而薄的琴身非常適合女性/年輕玩家，也非常適合進階的指彈玩家\n\n小桶身\n單板雲杉木面板\n膠木/奧古曼木背板&側板\n全新扇形音樑支撐設計\n傳統外觀與絕佳的品質', '', '', '', 0, 0, 'Body Style : ES\nBody Shape : Venetian Cutaway Hollowbody\nBody Material : 3-ply Maple/Poplar/Maple\nBinding : Nitrocellulose VOS (Vintage Patina)', 1, 5, '2023-11-30 08:05:31', '2023-12-02 20:50:37', NULL, 1),
 (16, 'xsRKxDcsKE2A', 1, 'Gibson Kirk Hammett', 39600, 0, 0, 9, 0, 5, 0, 'Kirk_Hammett-1.png,Kirk_Hammett-2.png,Kirk_Hammett-3.png,Kirk_Hammett-4.png', 'Kirk_Hammett-1.jpg', '1960 年代美學、現代工藝，與更為精進的Yamaha吉他研發50年經驗\n標準的 Yamaha FG 的琴身擁有飽滿且有力的低頻，非常適合彈撥和刷奏\n新的扇形 FG 琴身木條排列方式展現溫暖厚實的音調、深沉的低音和豐富的共鳴\n原音共鳴強化技術 (A.R.E.) 處理展現熟成木材的音質和延音\n搭配西特卡雲杉木面板和桃花心木側背板的全單板結構\n黑檀木指板、琴橋、弦釘和尾釘\n骨質上弦枕和下弦枕\n日本製\n隨附專用硬琴盒', '', '', '', 0, 0, 'Body Style : ES\nBody Shape : Venetian Cutaway Hollowbody\nBody Material : 3-ply Maple/Poplar/Maple\nBinding : Nitrocellulose VOS (Vintage Patina)', 5, 8, '2023-12-08 01:20:25', '2023-12-15 16:09:10', NULL, 1),
 (17, 'GW6Vf3AGTawT', 1, 'Gibson LesPaulStandard', 32800, 0, 0, 9, 0, 5, 0, 'LesPaulStandard-1.png,LesPaulStandard-2.png,LesPaulStandard-3.png,LesPaulStandard-4.png', 'LesPaulStandard-1.jpg', '1960 年代美學、現代工藝，與更為精進的Yamaha吉他研發50年經驗\nAtmosfeel™ 拾音器和前級放大系統展現獨有的自然插電音質\n標準的 Yamaha FG 的琴身擁有飽滿且有力的低頻，非常適合彈撥和刷奏\n新的扇形 FG 琴身木條排列方式展現溫暖厚實的音調、深沉的低音和豐富的共鳴\n原音共鳴強化技術 (A.R.E.) 處理展現熟成木材的音質和延音\n搭配西特卡雲杉木面板和桃花心木側背板的全單板結構\n黑檀木指板和琴橋\n隨附專用厚琴袋', '', '', '', 0, 0, 'Body Style : ES\nBody Shape : Venetian Cutaway Hollowbody\nBody Material : 3-ply Maple/Poplar/Maple\nBinding : Nitrocellulose VOS (Vintage Patina)', 0, 1, '2023-12-07 11:36:22', '2023-12-11 18:12:54', '2023-12-11 18:12:54', 1),
