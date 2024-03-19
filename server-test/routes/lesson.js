@@ -8,13 +8,22 @@ router.get('/', async (req, res) => {
     // Mandatory type filter
     //評價篩選
     let baseQuery = `
-  SELECT product.*, COUNT(product_review.product_id) AS review_count, AVG(product_review.stars) AS average_rating, teacher_info.* 
-  FROM product
-  LEFT JOIN product_review ON product.id = product_review.product_id
-  LEFT JOIN teacher_info ON product.teacher_id = teacher_info.id 
-  WHERE product.type = 2
- 
-`;
+      SELECT 
+          product.*, 
+          COUNT(product_review.product_id) AS review_count, 
+          AVG(product_review.stars) AS average_rating, 
+          teacher_info.name AS teacher_name,  
+          teacher_info.img AS teacher_img,     
+          teacher_info.info AS teacher_info  
+      FROM 
+          product
+      LEFT JOIN 
+          product_review ON product.id = product_review.product_id
+      LEFT JOIN 
+          teacher_info ON product.teacher_id = teacher_info.id 
+      WHERE 
+          product.type = ?`;
+
     //價格篩選
     let queryParams = [2];
     // Additional filters
@@ -23,10 +32,9 @@ router.get('/', async (req, res) => {
     if (priceLow && priceHigh) {
       baseQuery += ' AND product.price >= ? AND product.price <= ?';
       queryParams.push(priceLow, priceHigh);
-
     }
 
-    baseQuery += ' GROUP BY product.id ORDER BY product.id';
+    baseQuery += ' GROUP BY product.id ORDER BY product.id;';
     // Execute the query
     const [results] = await db.execute(baseQuery, queryParams);
 
@@ -42,6 +50,7 @@ router.get('/', async (req, res) => {
     res.status(500).json({ error: '發生錯誤' });
   }
 });
+
 
 //lesson_category
 router.get('/categories', async (req, res) => {
@@ -103,7 +112,7 @@ router.get('/:id', async (req, res, next) => {
         ')',
       [luid, luid]
     );
- //FIXME sql可以改一下
+    //FIXME sql可以改一下
 
     let [product_review] = await db.execute(
       `
@@ -123,9 +132,9 @@ router.get('/:id', async (req, res, next) => {
       [luid]
     );
 
-    if ({ data, product_review,youwilllike }) {
+    if ({ data, product_review, youwilllike }) {
       console.log({ data });
-      res.status(200).json({ data,product_review, youwilllike });
+      res.status(200).json({ data, product_review, youwilllike });
     } else {
       res.status(404).send('Data not found');
     }
@@ -133,6 +142,5 @@ router.get('/:id', async (req, res, next) => {
     console.error('Database error:', error);
     res.status(500).send('Internal server error');
   }
-
 });
-export default router
+export default router;

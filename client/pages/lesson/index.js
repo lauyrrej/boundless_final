@@ -412,7 +412,7 @@ export default function LessonList({}) {
                   return (
                     <Link key={index} href={'/lesson/?category === `${v.id}'}>
                       <li onClick={() => handleCategoryChange(v.id)}>
-                        {v.Lesson_category_name}
+                        {v.name}
                       </li>
                     </Link>
                   )
