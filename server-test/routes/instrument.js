@@ -7,53 +7,194 @@ const router = express.Router();
 const upload = multer();
 
 // 取得所有樂器資料
+// instrument?page=1&order=ASC&brandSelect=1&priceLow=&priceHigh=&score=all&sales=false&keyword=
 router.get("/", async (req, res, next) => {
-    try {
-     // 执行SQL查询，获取产品及其对应的乐器类别名称
-let [instrument] = await db.execute(`
-SELECT 
-    product.*, 
-    instrument_category.name AS category_name 
-FROM 
-    product 
-JOIN 
-    instrument_category 
-ON 
-    product.instrument_category_id = instrument_category.id 
-WHERE 
-    type = 1
-`);
+  let priceLow = req.query.priceLow
+  let priceHigh = req.query.priceHigh
+  console.log(priceLow);
+  console.log(priceHigh);
 
-// 变量instrument现在包含了查询结果
-        if (instrument) {
-          res.json(instrument);
-        //  console.log(instrument);
-        } else {
-          res.json("沒有找到相應的資訊");
-        }
-      } catch (error) {
-        console.error("發生錯誤：", error);
-        res.json("發生錯誤");
-      }
+  if(priceLow){
 
-        // 取得資料總筆數，用於製作分頁
-      //  let [dataCount] = await db
-      //  .execute("SELECT * FROM `product` WHERE `type` = 1")
-      //  .catch(() => {
-      //   return undefined;
-      // });
+  }
+
+let [instrument] = await db
+.execute(
+  `SELECT product.*, instrument_category.name AS      category_name 
+  FROM product 
+  JOIN instrument_category 
+  ON product.instrument_category_id = instrument_category.id 
+  WHERE type = 1`
+)
+.catch((error) => {
+  console.log(error);
+  return undefined;
+});
+
+  try{
+  if (instrument.length > 0) {
+
+    res.json(instrument);
+    // console.log(instrument);
+  } else {
+    res.json("沒有找到相應的資訊");
+  }}
+  catch (error) {
+  console.error("發生錯誤：", error);
+  res.json("發生錯誤");
+}
+
+// let page = Number(req.query.page) || 1;  // 目前頁碼
+// let dataPerpage = 10; // 每頁 10 筆
+// let offset = (page - 1) * dataPerpage; // 取得下一批資料
+// let pageTotal = Math.ceil(dataCount.length / dataPerpage); // 計算總頁數
+// let pageString = ' LIMIT ' + offset + ',' + dataPerpage;
+
+  // 排序用
+  let orderDirection = req.query.order || 'ASC';
+  
+  
+  let data;
+  if (Object.keys(req.query).length !== 0) {
+     // 所有篩選條件，預設條件: type=1(樂器)
+  let sqlString = 
+     "SELECT * FROM `product` WHERE `type` = 1";
+     const brandSelect =
+     req.query.brandSelect !== 'all'
+     ? ' AND `brandSelect` = ' + parseInt(req.query.brandSelect) : '';
    
-   
-
-    
-  // let page = Number(req.query.page) || 1; // 目前頁碼
-  // let dataPerpage = 20; // 每頁20筆
-  // let offset = (page - 1) * dataPerpage; // 取得下一批資料
-  // let pageTotal = Math.ceil(dataCount.length / dataPerpage); // 計算總頁數
-  // let pageString = " LIMIT " + offset + "," + dataPerpage;
-  });
+     const priceLow = 
+     req.query.priceLow !== 'all' 
 
 
+
+
+
+
+
+
+
+     sqlString +=
+      brandSelect +
+      priceLow +
+      priceHigh +
+
+      region +
+      ' ORDER BY `created_time` ' +
+      orderDirection;
+    [dataCount] = await db.execute(sqlString).catch(() => {
+      return undefined;
+    });
+
+  }
+
+
+
+
+
+
+
+// const instrument_category_id = req.query.instrument_category_id
+// const brand = req.query.brandSelect;
+// console.log(brand)
+//     try {
+//      // 执行SQL查询，获取产品及其对应的乐器类别名称
+
+//      let [instrument] = await db.execute(`
+//      SELECT product.*, instrument_category.name AS category_name 
+//      FROM product 
+//      JOIN instrument_category 
+//      ON product.instrument_category_id = instrument_category.id 
+//      WHERE type = 1
+//      `)
+
+// if(brand !== 'all'){
+//      [instrument] = await db.execute(`
+//      SELECT product.*, instrument_category.name AS category_name 
+//      FROM product 
+//      JOIN instrument_category 
+//      ON product.instrument_category_id = instrument_category.id 
+//      WHERE product.type = 1 AND product.instrument_category_id = ? AND product.brand_id = ?;
+//      `, [instrument_category_id, brand])}
+//      else{
+//        [instrument] = await db.execute(`
+//      SELECT product.*, instrument_category.name AS category_name 
+//      FROM product 
+//      JOIN instrument_category 
+//      ON product.instrument_category_id = instrument_category.id 
+//      WHERE type = 1
+//      `)};
+// // 变量instrument现在包含了查询结果
+//         if (instrument.length > 0) {
+//           res.json(instrument);
+//         //  console.log(instrument);
+//         } else {
+//           res.json("沒有找到相應的資訊");
+//         }
+//       } catch (error) {
+//         console.error("發生錯誤：", error);
+//         res.json("發生錯誤");
+//       }
+    });
+
+    // router.get("/getDatassearch", async (req, res, next) => {
+    //   console.log(req.query)
+    //   const {type, instrument_category_id, brand}=req.query
+     
+    //      try {
+    //       // 执行SQL查询，获取产品及其对应的乐器类别名称
+    //  let [instrument] = await db.execute(`
+    //  SELECT product.*, instrument_category.name AS category_name 
+    //  FROM product 
+    //  JOIN instrument_category 
+    //  ON product.instrument_category_id = instrument_category.id 
+    //  WHERE type = ? AND instrument_category_id = ? AND brand_id = ?;
+    //  `, [type, instrument_category_id, brand]);
+     
+    //  // 变量instrument现在包含了查询结果
+    //          if (instrument) {
+    //            res.json(instrument);
+    //          //  console.log(instrument);
+    //          } else {
+    //            res.json("沒有找到相應的資訊");
+    //          }
+    //        } catch (error) {
+    //          console.error("發生錯誤：", error);
+    //          res.json("發生錯誤");
+    //        }
+    //      });
+//    const {
+//     page,
+//     orderby,
+//     brandSelect,
+//     priceLow,
+//     priceHigh,
+//     score,
+//     promotion,
+//     keyword,
+//    } = req.query
+
+//    // TODO: 這裡可以檢查各query string正確性或給預設值，檢查不足可能會產生查詢錯誤
+//    // 建立資料庫搜尋條件
+//    const conditions = []
+
+//  // 關鍵字，keyword 使用 `name LIKE '%keyword%'`
+//  conditions[0] = keyword ? `name LIKE '%${keyword}%'` : ''
+
+//  // 品牌，brandSelect 使用 `brandSelect IN (4,5,6,7)`
+//  conditions[1] = brandSelect ? `brandSelect IN (${brandSelect})` : ''
+
+// // 評價，score 使用 `score IN (3, 4, 5)`
+//  conditions[2] = score ? `cat_id IN (${score})` : ''
+
+ 
+
+
+
+
+
+// 排序用，預設使用id, asc
+  // const order = getOrder(orderby)
 
 //instrument_category
 router.get("/categories", async (req, res) => {
@@ -95,42 +236,22 @@ router.get("/categories", async (req, res) => {
     }
   });
 
- // 獲得單筆樂器資料＋review
+
  // 檢索屬於特定 puid 的產品，並且通過左連接獲取與之相關聯的產品評論
- router.get("/:id", async (req, res, next) => {
-  let puid = req.params.id;
-  console.log(puid);
-  let [data] = await db.execute(
-    "SELECT p.*, pr.*, ic.name AS category_name " +
-    "FROM `product` AS p " +
-    "LEFT JOIN `product_review` AS pr ON p.id = pr.product_id " +
-    "LEFT JOIN `instrument_category` AS ic ON p.instrument_category_id = ic.id " +
-    "WHERE p.`puid` = ?",
-    [puid]
-  )  
-   .catch(() => {
-    return undefined;
-  });
-
-  if (data) {
-    console.log(data);
-    res.status(200).json(data);
-  } else {
-    res.status(400).send("發生錯誤");
-  }
-});
-    
-
-
-// 獲得單筆樂器資料
-// router.get("/:id", async (req, res, next) => {
+//  router.get("/:id", async (req, res, next) => {
 //   let puid = req.params.id;
 //   console.log(puid);
-//   let [data] = await db
-//     .execute("SELECT * FROM `product` WHERE `puid` = ? ", [puid])
-//     .catch(() => {
-//       return undefined;
-//     });
+//   let [data] = await db.execute(
+//     "SELECT p.*, pr.*, ic.name AS category_name " +
+//     "FROM `product` AS p " +
+//     "LEFT JOIN `product_review` AS pr ON p.id = pr.product_id " +
+//     "LEFT JOIN `instrument_category` AS ic ON p.instrument_category_id = ic.id " +
+//     "WHERE p.`puid` = ?",
+//     [puid]
+//   )  
+//    .catch(() => {
+//     return undefined;
+//   });
 
 //   if (data) {
 //     console.log(data);
@@ -139,14 +260,55 @@ router.get("/categories", async (req, res) => {
 //     res.status(400).send("發生錯誤");
 //   }
 // });
-function App() {
-  const [selectedBrand, setSelectedBrand] = useState(null)
+    
 
-  // Input Filter
-  const [query, setQuery] = useState("")
-  const handleInputChange = event => {
-    setQuery(event.target.value)
+
+//獲得單筆樂器資料跟評論
+router.get("/:id", async (req, res, next) => {
+  let puid = req.params.id;
+  console.log(puid);
+  try {
+    let [data] = await db.execute(
+      'SELECT p.*, pr.*, ic.* ,u.*' +
+      'FROM `product` AS p ' +
+      'LEFT JOIN `product_review` AS pr ON p.id = pr.product_id ' +
+      'LEFT JOIN `instrument_category` AS ic ON p.instrument_category_id = ic.id ' +
+      'LEFT JOIN `user` AS u ON pr.user_id = u.id ' +
+      'WHERE p.`puid` = ? AND p.`instrument_category_id` IN (' +
+      'SELECT `instrument_category_id` FROM `product` WHERE `puid` = ?' +
+      ')',
+    [puid, puid]
+  ); 
+
+  let [youmaylike] = await db.execute(
+    'SELECT p.* FROM `product` AS p ' +
+      'JOIN (SELECT `instrument_category_id` FROM `product` WHERE `puid` = ?) AS icn ' +
+      'ON p.`instrument_category_id` = icn.`instrument_category_id`',
+    [puid]
+  );
+
+
+  if ({ data, youmaylike }) {
+    console.log({data});
+    res.status(200).json({ data, youmaylike });
+  } else {
+    res.status(400).send("發生錯誤");
   }
-} 
+  }catch (error) {
+    console.error('Database error:', error);
+    res.status(500).send('Internal server error');
+  }
+});
+
+
+// function App() {
+//   const [selectedBrand, setSelectedBrand] = useState(null)
+
+//   // Input Filter
+//   const [query, setQuery] = useState("")
+//   const handleInputChange = event => {
+//     setQuery(event.target.value)
+//   }
+// } 
 
 export default router;

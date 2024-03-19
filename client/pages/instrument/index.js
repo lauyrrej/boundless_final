@@ -114,7 +114,7 @@ export default function Test({ onSearch }) {
   const [score, setScore] = useState('all')
 
   // 促銷商品
-  const [sales, setSales] = useState(false)
+  const [promotion, setPromotion] = useState(false)
 
   // 清除表單內容
   const cleanFilter = () => {
@@ -122,14 +122,14 @@ export default function Test({ onSearch }) {
     setPriceLow('')
     setPriceHigh('')
     setScore('all')
-    setSales(false)
+    setPromotion(false)
   }
 
   // ------------------------------------------------------- 製作分頁
   const [page, setPage] = useState(1)
   const [pageTotal, setPageTotal] = useState(0)
   // 資料排序
-  const [order, setOrder] = useState('ASC')
+  const [orderby, setOrderby] = useState('ASC')
   // 條件品牌
   const [brand, setBrand] = useState('all')
   // 條件關鍵字
@@ -138,7 +138,7 @@ export default function Test({ onSearch }) {
   const [products, setProducts] = useState([])
 
   // 在 Test 函數中
-  const [dataPerpage, setDataPerpage] = useState(20)
+  // const [dataPerpage, setDataPerpage] = useState(20)
   // 點按分頁時，要送至伺服器的query string參數
   const handlePageClick = (event) => {
     router.push({
@@ -146,12 +146,13 @@ export default function Test({ onSearch }) {
 
       query: {
         page: event.selected + 1,
-        order: order,
+        orderby: orderby,
         brandSelect: brandSelect,
         priceLow: priceLow,
         priceHigh: priceHigh,
         score: score,
-        sales: sales,
+        promotion: promotion,
+        keyword: keyword,
       },
     })
   }
@@ -162,12 +163,12 @@ export default function Test({ onSearch }) {
     // 註: 重新載入資料需要跳至第一頁
     const params = {
       page: 1, // 跳至第一頁
-      order: order,
+      orderby: orderby,
       brandSelect: brandSelect,
       priceLow: priceLow,
       priceHigh: priceHigh,
       score: score,
-      sales: sales,
+      promotion: promotion,
       keyword: keyword,
     }
 
@@ -186,16 +187,22 @@ export default function Test({ onSearch }) {
   // const [brandData, setBrandData] = useState('')
   const getDatas = async (params) => {
     // 用URLSearchParams產生查詢字串
+    // const searchParams = new URLSearchParams(params)
+    // console.log(searchParams)
+
     const searchParams = new URLSearchParams(params)
+    const queryString = searchParams.toString()
+
+    console.log(queryString)
 
     try {
       const res = await fetch(
-        `http://localhost:3005/api/instrument?${searchParams.toString()}`
+        `http://localhost:3005/api/instrument?${queryString}`
       )
 
       // res.json()是解析res的body的json格式資料，得到JS的資料格式
       const datas = await res.json()
-
+      console.log(datas)
       // 在這裡處理獲取的資料，例如更新狀態
       setInstrument(datas)
     } catch (error) {
@@ -203,17 +210,33 @@ export default function Test({ onSearch }) {
     }
   }
 
+  // const getDatassearch = async (params) => {
+  //   try {
+  //     const res = await fetch(
+  //       `http://localhost:3005/api/instrument/getDatassearch`
+  //     )
+
+  //     // res.json()是解析res的body的json格式資料，得到JS的資料格式
+  //     const datas = await res.json()
+
+  //     // 在這裡處理獲取的資料，例如更新狀態
+  //     setInstrument(datas)
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error)
+  //   }
+  // }
+
   useEffect(() => {
     if (router.isReady) {
       // 從router.query得到所有查詢字串參數
       const {
-        order,
+        orderby,
         page,
         brandSelect,
         priceLow,
         priceHigh,
         score,
-        sales,
+        promotion,
         keyword,
       } = router.query
       // 要送至伺服器的query string參數
@@ -222,13 +245,13 @@ export default function Test({ onSearch }) {
 
       // 設定回所有狀態(注意所有從查詢字串來都是字串類型)，都要給預設值
       setPage(Number(page) || 1)
-      setOrder(order || 'ASC')
+      setOrderby(orderby || 'ASC')
       setBrandSelect(brandSelect || 'all')
       setPriceLow(priceLow || '')
       setPriceHigh(priceHigh || '')
       setScore(score || 'all')
       setKeyword(keyword || '')
-      setSales(sales || 'false')
+      setPromotion(promotion || 'false')
       // 載入資料
       getDatas(router.query)
     }
@@ -239,7 +262,7 @@ export default function Test({ onSearch }) {
   // useEffect(() => {
   //   if (router.isReady) {
   //     // 從router.query得到所有查詢字串參數
-  //     const { order, page, brandSelect, priceLow, priceHigh, score, sales } =
+  //     const { orderby, page, brandSelect, priceLow, priceHigh, score, promotion } =
   //       router.query
   //     // 要送至伺服器的query string參數
 
@@ -247,7 +270,7 @@ export default function Test({ onSearch }) {
 
   //     // 設定回所有狀態(注意所有從查詢字串來都是字串類型)，都要給預設值
   //     setPage(Number(page) || 1)
-  //     setOrder(order || 'ASC')
+  //     setOrderby(orderby || 'ASC')
   //     setBrandSelect(brandSelect || 'all')
   //     setPriceLow(priceLow || 'all')
   //     setPriceHigh(priceHigh || 'all')
@@ -425,7 +448,7 @@ export default function Test({ onSearch }) {
                       </h2>
                       <div
                         id="collapseGuitar"
-                        className="accordion-collapse collapse show"
+                        className="accordion-collapse collapse"
                         aria-labelledby="headingGuitar"
                         data-bs-parent="#accordionExample"
                       >
@@ -463,7 +486,7 @@ export default function Test({ onSearch }) {
                       </h2>
                       <div
                         id="collapseBase"
-                        className="accordion-collapse collapse show"
+                        className="accordion-collapse collapse"
                         aria-labelledby="headingBase"
                         data-bs-parent="#accordionExample"
                       >
@@ -501,7 +524,7 @@ export default function Test({ onSearch }) {
                       </h2>
                       <div
                         id="collapseKeyboard"
-                        className="accordion-collapse collapse show"
+                        className="accordion-collapse collapse"
                         aria-labelledby="headingKeyboard"
                         data-bs-parent="#accordionExample"
                       >
@@ -546,7 +569,7 @@ export default function Test({ onSearch }) {
                       </h2>
                       <div
                         id="collapsePercussion"
-                        className="accordion-collapse collapse show"
+                        className="accordion-collapse collapse"
                         aria-labelledby="headingPercussion"
                         data-bs-parent="#accordionExample"
                       >
@@ -591,7 +614,7 @@ export default function Test({ onSearch }) {
                       </h2>
                       <div
                         id="collapseWind"
-                        className="accordion-collapse collapse show"
+                        className="accordion-collapse collapse"
                         aria-labelledby="headingWind"
                         data-bs-parent="#accordionExample"
                       >
@@ -650,7 +673,7 @@ export default function Test({ onSearch }) {
                       </h2>
                       <div
                         id="collapseBowstring"
-                        className="accordion-collapse collapse show"
+                        className="accordion-collapse collapse"
                         aria-labelledby="headingBowstring"
                         data-bs-parent="#accordionExample"
                       >
@@ -916,10 +939,10 @@ export default function Test({ onSearch }) {
                               <input
                                 className="form-check-input"
                                 type="checkbox"
-                                value={sales}
-                                name="sales"
+                                value={promotion}
+                                name="promotion"
                                 onChange={() => {
-                                  setSales(!sales)
+                                  setPromotion(promotion ? true : false)
                                 }}
                               />{' '}
                               促銷商品
@@ -1032,7 +1055,8 @@ export default function Test({ onSearch }) {
                     )
                   })}
 
-                {!isFiltered &&
+                {Array.isArray(instrument) &&
+                  !isFiltered &&
                   // 如果没有進行篩選或搜索，渲染原始的instrument數據
                   instrument.map((v, i) => {
                     const {
