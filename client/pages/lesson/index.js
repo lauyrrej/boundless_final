@@ -818,9 +818,14 @@ export default function LessonList({}) {
         @media screen and (max-width: 576px) {
           .content {
             padding-inline: 0;
+            display: flex;
           }
           .hot-lesson {
             display: none;
+          }
+          .lesson-card-group {
+            justify-content: center;
+            gap: 16px;
           }
         }
       `}</style>
