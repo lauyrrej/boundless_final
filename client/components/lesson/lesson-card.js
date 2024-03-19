@@ -9,14 +9,16 @@ import { MdOutlinePeopleAlt } from 'react-icons/md'
 export default function CourseCard({
   luid,
   name,
+  average_rating,
+  review_count,
   price,
-  teacher_id,
+  teacher_name,
   img,
   length,
   sales,
   discount,
 }) {
-  const [isDiscount, setIsDiscount] = useState(!!discount)
+//   const [isDiscount, setIsDiscount] = useState(!!discount)
   return (
     <>
       <Link href={`/lesson/${luid}`}>
@@ -35,16 +37,17 @@ export default function CourseCard({
               alt=""
               className="icon-image"
             />
+            //FIXME在列表頁上收藏應該可以拿掉？
           </div>
 
           <section className="course-details">
             <h3 className="course-title mb-1">{name}</h3>
-            <p className="course-instructor">by {teacher_id}老師</p>
+            <p className="course-instructor">by {teacher_name} 老師</p>
             <div className="course-info">
               <div className="rating">
                 <FaStar size={18} color="#faad14" />
-                <span className="rating-value">4.9</span>
-                <span className="review-count">(3)</span>
+                <span className="rating-value">{average_rating}</span>
+                <span className="review-count">({review_count})</span>
               </div>
               <div>
                 <span className="duration-time">
@@ -68,7 +71,7 @@ export default function CourseCard({
             </div>
             <div className="students">
               <MdOutlinePeopleAlt size={16} color="#5a5a5a" />
-              <span>{sales}50</span>
+              <span>{sales}</span>
             </div>
           </section>
         </article>

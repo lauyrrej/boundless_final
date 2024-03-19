@@ -17,7 +17,7 @@ class API {
 
   Post(param = parameter) {
     axios
-      .post(this.url + param.url)
+      .post(this.url + param.url, param.param)
       .then((res) => param.success(res.data))
       .catch((err) => param.fail(err))
   }

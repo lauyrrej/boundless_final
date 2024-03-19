@@ -1,7 +1,15 @@
 import React from 'react'
 import styles from '@/components/coupon/coupon.module.scss'
 
-export default function Coupon({ id, name, type, kind, discount, limit_time }) {
+export default function Coupon({
+  id,
+  name,
+  type,
+  kind,
+  discount,
+  valid,
+  limit_time,
+}) {
   return (
     <>
       <div className={`${styles.couponCard} card mb-3 mx-1`}>
@@ -21,11 +29,11 @@ export default function Coupon({ id, name, type, kind, discount, limit_time }) {
                   className="h5 p-1
                   card-title fw-bold"
                 >
-                  {name}
+                  {(valid = `${name}`)}
                   {/* 註冊禮即時領取 */}
                 </div>
                 <div className="h4 px-3 py-2">
-                  {kind === 1 ? '課程' : '樂器'}
+                  {kind === 2 ? '課程' : '樂器'}
                   {/* 課程 */}
                 </div>
               </div>

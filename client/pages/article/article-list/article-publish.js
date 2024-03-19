@@ -32,12 +32,12 @@ export default function Publish() {
   const router = useRouter()
   const [title, setTitle] = useState('')
   const [titleCheck, setTitleCheck] = useState(true)
-
+  const [img, setImg] = useState('')
   // 文章分類
-  const [category, setCategory] = useState(true)
+  const [category_id, setCategory] = useState(true)
 
   // ---------------------- 文章摘要 ----------------------
-  const [description, setDescription] = useState('')
+  const [content, setContent] = useState('')
   const [descriptionCheck, setDescriptionCheck] = useState(true)
   // 表單完成狀態 0: 有欄位尚未填寫或不符規定, 1: 填寫完成, 2: 填寫中
   const [complete, setComplete] = useState(2)
@@ -45,7 +45,7 @@ export default function Publish() {
   const checkBadWords = debounce(() => {
     const badWords = /幹|屎|尿|屁|糞|靠北|靠腰|雞掰|王八|你媽|妳媽|淫/g
     setTitleCheck(title.search(badWords) < 0 ? true : false)
-    setDescriptionCheck(description.search(badWords) < 0 ? true : false)
+    setDescriptionCheck(content.search(badWords) < 0 ? true : false)
     // 檢查 主旨/條件/描述
   }, 250)
   // 檢查表單是否填妥
@@ -54,31 +54,39 @@ export default function Publish() {
       setComplete(0)
       return false
     }
-    if (category === '') {
+    if (category_id === '') {
       setComplete(0)
       return false
     }
-    if (descriptionCheck === false || description === '') {
+    if (img === '') {
+      setComplete(0)
+      return false
+    }
+    if (descriptionCheck === false || content === '') {
       setComplete(0)
       return false
     }
     setComplete(1)
     return true
   }
-  const sendForm = async (title, category, description) => {
+  
+  // 表單送出
+  const sendForm = async (title, category_id, content, img) => {
     if (!checkComplete()) {
       return false
     }
     let formData = new FormData()
     formData.append('title', title)
-    formData.append('category', category)
-    formData.append('description', description)
+    formData.append('category_id', category_id)
+    formData.append('content', content)
+    // formData.append('img', img)
+
     // 確認formData內容
     for (let [key, value] of formData.entries()) {
-      console.log(`${key}: ${value}`)
+      // console.log(`${key}: ${value}`)
     }
     const res = await fetch(
-      'http://localhost:3005/api/article/article-publish',
+      'http://localhost:3005/api/article/article-list/article-publish',
       {
         method: 'POST',
         body: formData,
@@ -87,13 +95,13 @@ export default function Publish() {
     )
     const result = await res.json()
     if (result.status === 'success') {
-      notifySuccess(result.juid)
+      notifySuccess(result.auid)
     } else {
       console.log(result.error)
     }
   }
   // 發起成功後，彈出訊息框，並跳轉到資訊頁面
-  const notifySuccess = (juid) => {
+  const notifySuccess = (auid) => {
     mySwal
       .fire({
         position: 'center',
@@ -105,7 +113,7 @@ export default function Publish() {
       })
       .then(
         setTimeout(() => {
-          router.push(`/jam/recruit-list/${juid}`)
+          router.push(`/article/article-list/${auid}`)
         }, 3000)
       )
   }
@@ -116,7 +124,7 @@ export default function Publish() {
     // 檢查不雅字詞
     checkBadWords.cancel() // 取消上一次的延遲
     checkBadWords()
-  }, [title, category, description])
+  }, [title, category_id, content, img])
 
   // ----------------------手機版本  ----------------------
   // 主選單
@@ -254,10 +262,13 @@ export default function Publish() {
                 <select
                   className="form-select"
                   aria-label="Default select example"
+                  onChange={(e) => {
+                    setCategory(e.target.value)
+                  }}
+                  value={category_id}
                 >
-                  <option value={1}>技術</option>
-                  <option value={2}>樂評</option>
-                  <option value={3}>公告</option>
+                  <option value={1}>樂評</option>
+                  <option value={2}>技術</option>
                 </select>
               </div>
             </div>
@@ -269,8 +280,7 @@ export default function Publish() {
               </div>
               <div className="rwd-content">
                 <h5 className="text-secondary">
-                  上限150個字，系統已經先擷取，你也可以自行修改摘要說明。(
-                  {description.length}/150)
+                  系統已經先擷取，你也可以自行修改摘要說明。
                 </h5>
                 <div>
                   <label
@@ -279,14 +289,13 @@ export default function Publish() {
                   ></label>
                   <textarea
                     className="form-control"
-                    id="description"
-                    name="description"
+                    id="content"
+                    name="content"
                     rows={3}
                     onChange={(e) => {
-                      setDescription(e.target.value)
+                      setContent(e.target.value)
                     }}
                     placeholder="輸入內容..."
-                    maxLength={150}
                     defaultValue={''}
                   />
                 </div>
@@ -308,13 +317,19 @@ export default function Publish() {
                   選擇或上傳照片作為文章縮圖(同時也是社群分享文章連結時的縮圖)。
                 </h5>
                 <div className="upload-img d-flex align-items-center mt-4">
-                  <Image
-                    src="/article/singer.png"
-                    alt=""
-                    width={150}
-                    height={150}
+                  <input
+                    className="form-control"
+                    type="file"
+                    name="myFile"
+                    id="myFile"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if(file){
+                        const fileUrl = URL.createObjectURL(file);
+                      setImg(fileUrl)
+                      }
+                    }}
                   />
-                  {/* <h5 className="text-secondary ms-5">上傳圖片</h5> */}
                 </div>
                 <h5 className="text-secondary mt-4">
                   建議尺寸: 寬1200 x 高630 像素的等比例圖片 <br />
@@ -325,45 +340,6 @@ export default function Publish() {
               </div>
             </div>
             <hr />
-            {/* setting tag */}
-            {/* <div className="set-rwd">
-              <div className="rwd-title">
-                <h3>自訂文章摘要</h3>
-              </div>
-              <div className="rwd-content">
-                <h5 className="text-secondary">
-                  設定關鍵字，讓文章更容易被讀者搜尋跟瀏覽
-                  <br />
-                  <br />
-                  請按 Enter鍵進行分隔 最多4個
-                </h5>
-                <br />
-                <br />
-                <div className="tag-btns">
-                  <button type="button" className="btn btn-outline-secondary">
-                    標籤1
-                    <i className="fa-solid fa-circle-xmark ms-2" />
-                  </button>
-                  <button type="button" className="btn btn-outline-secondary">
-                    標籤1
-                    <i className="fa-solid fa-circle-xmark ms-2" />
-                  </button>
-                  <button type="button" className="btn btn-outline-secondary">
-                    標籤1
-                    <i className="fa-solid fa-circle-xmark ms-2" />
-                  </button>
-                  <button type="button" className="btn btn-outline-secondary">
-                    標籤1
-                    <i className="fa-solid fa-circle-xmark ms-2" />
-                  </button>
-                  <button type="button" className="btn btn-outline-secondary">
-                    標籤1
-                    <i className="fa-solid fa-circle-xmark ms-2" />
-                  </button>
-                </div>
-              </div>
-            </div>
-            <hr /> */}
             {/* setting publish */}
             <div className="set-rwd">
               <div className="rwd-title">
@@ -382,7 +358,7 @@ export default function Publish() {
                 立刻發佈
               </label>
             </div>
-            <div className="form-check">
+            <div className="form-check123">
               <input
                 className="form-check-input"
                 type="radio"
@@ -393,7 +369,7 @@ export default function Publish() {
                 私密發佈(僅取得連結的使用者可以看到文章)
               </label>
             </div>
-            <div className="form-check">
+            <div className="form-check123">
               <input
                 className="form-check-input"
                 type="radio"
@@ -404,7 +380,7 @@ export default function Publish() {
                 排程發佈
               </label>
             </div>
-            <div className="form-check">
+            <div className="form-check123">
               <input
                 className="form-check-input"
                 type="radio"
@@ -422,7 +398,7 @@ export default function Publish() {
               </button>
               <button
                 onClick={() => {
-                  sendForm(title, category, description)
+                  sendForm(title, category_id, content, img)
                 }}
                 type="button"
                 className="btn btn-primary"
