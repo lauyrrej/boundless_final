@@ -1,5 +1,8 @@
 import { React, useState } from 'react'
 import { FaHeart } from 'react-icons/fa'
+import { FaPlus } from 'react-icons/fa'
+import { FaMinus } from 'react-icons/fa6'
+import { FaStar } from 'react-icons/fa'
 import Instrument from '@/data/instrument/instrument.json'
 import toast, { Toaster } from 'react-hot-toast'
 //收藏的功能
@@ -9,6 +12,7 @@ import Link from 'next/link'
 
 export default function ProductBriefCard({
   data = {},
+  reviews = [],
   quantity = 1,
   setQuantity = {},
   addInstrumentItem = () => {},
@@ -33,7 +37,6 @@ export default function ProductBriefCard({
   // ----------------------加入右上角購物車的功能
   const [cartItems, setCartItems] = useState([])
   const [cartCount, setCartCount] = useState(0)
-
   return (
     <>
       <div className="Right sticky-top">
@@ -41,13 +44,14 @@ export default function ProductBriefCard({
           <div className="prodMainName">{data.name}</div>
           <div className="Rating">
             <div className="star">
-              <img
-                loading="lazy"
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/84522f0e347edba7963eb335fd5301feca031f8d880bba21dd9760a01286c3a5?"
-                className="starImg"
-              />
-              <div className="ratingNumber">4.9</div>
-              <div className="commentNumber">(3)</div>
+              <FaStar size={20} color="#faad14"/>
+              <div className="ratingNumber" style={{color: reviews.length> 0 ? '' : '#666666'}}>
+              {reviews.length > 0 ? (<>{reviews.map((v) => {
+                  let score = 0
+                  return (score = v.stars / reviews.length)
+                })}</>) : '尚無評分'}
+              </div>
+              <div className="commentNumber">({reviews.length})</div>
             </div>
             <div className="sales">已售出 {data.sales}</div>
           </div>
@@ -74,21 +78,27 @@ export default function ProductBriefCard({
             ) : (
               <div className="quantitySelector">
                 <div
-                  className="btn decrease-btn"
+                  className="btn decrease-btn d-flex align-items-center"
                   role="presentation"
-                  onClick={() => {}}
+                  onClick={() => {
+                    if (quantity > 1) {
+                      setQuantity(quantity - 1)
+                    }
+                  }}
                 >
-                  -
+                  <FaMinus color="#1d1d1d" />
                 </div>
                 <div className="quantity">{quantity}</div>
                 <div
-                  className="btn increase-btn"
+                  className={`btn increase-btn d-flex align-items-center ${
+                    data.stock === 0 ? 'noStock' : 'hasStock'
+                  }`}
                   role="presentation"
                   onClick={() => {
                     setQuantity(quantity + 1)
                   }}
                 >
-                  +
+                  <FaPlus color="#fff" />
                 </div>
               </div>
             )}
@@ -201,6 +211,11 @@ export default function ProductBriefCard({
             height: 34px;
             margin: auto 0;
             padding: 0 7px;
+            transition: 0.2s;
+            color: #b9b9b9;
+            &:hover {
+              color: #ec3f3f;
+            }
           }
           .quantitySelector {
             display: flex;
@@ -222,11 +237,18 @@ export default function ProductBriefCard({
             border: 1px solid var(--body, #b9b9b9);
           }
           .increase-btn {
-            color: white;
             height: 40px;
             width: 40px;
             border-radius: 0px 5px 5px 0px;
-            background: var(--body, #b9b9b9);
+          }
+          .hasStock {
+            background-color: #18a1ff;
+          }
+          .hasStock:hover {
+            background-color: #1581cc;
+          }
+          .noStock {
+            background-color: #b9b9b9;
           }
           .shoppingBtn {
             display: flex;
@@ -248,7 +270,7 @@ export default function ProductBriefCard({
             cursor: pointer;
             transition: 0.3s;
             &:hover {
-              background-color: #000000;
+              background-color: #666666;
             }
           }
           .buyBtn {
@@ -262,7 +284,7 @@ export default function ProductBriefCard({
             cursor: pointer;
             transition: 0.3s;
             &:hover {
-              background-color: #000000;
+              background-color: #1581cc;
             }
           }
         `}
