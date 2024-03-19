@@ -36,7 +36,6 @@ export default function Auid() {
 
   // ----------------------全部資料----------------------
   const [articleDetail, setArticleDetail] = useState({})
-  const [content, setContent] = useState('')
   const getSingleDetail = async (auid) => {
     try {
       const res = await fetch(`http://localhost:3005/api/article/${auid}`)
@@ -62,10 +61,12 @@ export default function Auid() {
       getSingleDetail(auid)
     }
   }, [router.isReady])
-  useEffect(() => {
-    // 如果isReady是true，確保能得到query的值
-    setContent(articleDetail.content)
-  }, [articleDetail.content])
+
+  // initialContent
+  // useEffect(() => {
+  //   setDescription(initialContent)
+  // }, [initialContent, setDescription])
+
   // ----------------------假資料  ----------------------
 
   const [filterVisible, setFilterVisible] = useState(false)
@@ -151,7 +152,7 @@ export default function Auid() {
             {/* 主內容 */}
             <main className="content">
               <div className="">
-                <Tiptap setDescription={setDescription} initialContent={content}/>
+                <Tiptap setDescription={setDescription} initialContent={articleDetail.content}/>
               </div>
               <div className="main-img">
                 <Image

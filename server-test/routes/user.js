@@ -4,9 +4,9 @@ import multer from "multer";
 import moment from "moment";
 
 //上傳檔案
-import {renameSync} from "fs";
-import {dirname, resolve, extname} from "path";
-import {fileURLToPath} from "url";
+import { renameSync } from "fs";
+import { dirname, resolve, extname } from "path";
+import { fileURLToPath } from "url";
 //方法2
 import formidable from "formidable";
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -36,12 +36,12 @@ const setTimestamp = (req, res, next) => {
 
 //上傳檔案-----------------------
 const storage = multer.diskStorage({
-  
+
   destination: function (req, file, cb) {
     cb(null, resolve(__dirname, "../public/user"));
   },
   filename: function (req, file, cb) {
-  
+
     // let newName = (req.timestamp + req.index) + extname(file.originalname);
     let newName = "avatar_user00" + req.timestamp + extname(file.originalname);
     cb(null, newName)
@@ -49,7 +49,7 @@ const storage = multer.diskStorage({
 })
 const uploadTest = multer({ storage: storage })
 //此路由為在使用者編輯頁時 上傳頭像使用
-router.post("/upload1",setTimestamp, uploadTest.single('myFile'),async (req, res)=>{
+router.post("/upload1", setTimestamp, uploadTest.single('myFile'), async (req, res) => {
   const id = req.body.name;
   const newName = "avatar_user00" + req.timestamp + ".jpg";
 
@@ -72,7 +72,7 @@ router.get("/", async (req, res, next) => {
 
     if (userData) {
       res.json(userData);
-      console.log(userData);
+      // console.log(userData);
     } else {
       res.json("沒有找到相應的資訊");
     }
@@ -83,15 +83,15 @@ router.get("/", async (req, res, next) => {
 });
 
 // 動態路由來到個人首頁
-router.get("/user-homepage/:uid",async (req, res)=>{
+router.get("/user-homepage/:uid", async (req, res) => {
   const uid = req.params.uid;
-  
-console.log(uid)
+
+  console.log(uid)
   // 獲得該會員資訊
   // const [result] = await db.execute(`UPDATE user SET img = ? WHERE id = ?;`, [newName, id]);
   try {
-    
-    
+
+
 
     // let [userHomePageData] = await db.execute("SELECT * FROM `user` WHERE `uid` = ? AND `valid` = 1", [uid]);
 
@@ -121,12 +121,12 @@ console.log(uid)
 
 
   // res.json({ status: 'success', data: { result } })
-  
+
 
 });
 
 //登入 目前設定 email 就是帳號 不可更改
-router.post("/login", upload.none(), async(req, res) => {
+router.post("/login", upload.none(), async (req, res) => {
   let [userData] = await db.execute("SELECT * FROM `user` WHERE `valid` = 1");
   const { email, password } = req.body;
   const user = userData.find(
@@ -158,7 +158,7 @@ router.post("/login", upload.none(), async(req, res) => {
   }
 });
 
-router.post("/logout", checkToken, async(req, res) => {
+router.post("/logout", checkToken, async (req, res) => {
   // console.log(req.decoded)
   let [userData] = await db.execute("SELECT * FROM `user` WHERE `valid` = 1");
   const user = userData.find((u) => u.email === req.decoded.email);
@@ -186,7 +186,7 @@ router.post("/logout", checkToken, async(req, res) => {
   }
 });
 
-router.post("/status", checkToken, async(req, res) => {
+router.post("/status", checkToken, async (req, res) => {
   let [userData] = await db.execute("SELECT * FROM `user` WHERE `valid` = 1");
   const user = userData.find((u) => u.email === req.decoded.email);
   if (user) {
@@ -246,10 +246,10 @@ router.get("/:id", checkToken, async function (req, res) {
 router.get("/profile/:id", checkToken, async function (req, res) {
   const id = req.params.id;
 
-  
+
   //所有資料
-  const [singerUser] =  await db.execute(`SELECT * FROM \`user\` WHERE \`id\` = ? AND \`valid\` = 1`, [id]);
- 
+  const [singerUser] = await db.execute(`SELECT * FROM \`user\` WHERE \`id\` = ? AND \`valid\` = 1`, [id]);
+
   const resUser = singerUser[0];
   return res.json(resUser);
   //改檔老師寫法
@@ -259,7 +259,7 @@ router.get("/profile/:id", checkToken, async function (req, res) {
 //會員更新資訊
 router.post("/editProfile/:id", checkToken, async function (req, res) {
   const id = req.params.id;
-  let { email, name , password, phone, postcode, country, township, address, birthday, genre_like , play_instrument , info, gender , nickname , privacy } = req.body;
+  let { email, name, password, phone, postcode, country, township, address, birthday, genre_like, play_instrument, info, gender, nickname, privacy } = req.body;
   // console.log(req.body)
   // console.log(email)
   // console.log(name)
@@ -273,9 +273,9 @@ router.post("/editProfile/:id", checkToken, async function (req, res) {
 
 
   // 更新資料庫
-  const [result] = await db.execute(`UPDATE user SET email = ?, name =? , phone = ?, postcode = ? , country = ? , township = ?, address = ? , birthday = STR_TO_DATE(?, '%Y-%m-%d') , genre_like = ? , play_instrument = ?, info = ?, gender = ?, nickname = ?, privacy = ? WHERE id = ?;`, [email, name , phone, postcode, country, township, address, birthday, genre_like , play_instrument , info, gender , nickname , privacy, id]);
+  const [result] = await db.execute(`UPDATE user SET email = ?, name =? , phone = ?, postcode = ? , country = ? , township = ?, address = ? , birthday = STR_TO_DATE(?, '%Y-%m-%d') , genre_like = ? , play_instrument = ?, info = ?, gender = ?, nickname = ?, privacy = ? WHERE id = ?;`, [email, name, phone, postcode, country, township, address, birthday, genre_like, play_instrument, info, gender, nickname, privacy, id]);
 
-  
+
   // const resUser = singerUser[0];
   // return res.json(resUser);
   //改檔老師寫法
@@ -322,7 +322,7 @@ router.post('/', async (req, res) => {
     return res.json({ status: "error 2", message: "該帳號已存在" });
   } else {
     // 用戶不存在，插入新用戶
-    const [result] = await db.execute('INSERT INTO user (email, uid, password, created_time , valid) VALUES (?, ?, ?, ?, 1);', [newUser.email, uuid,newUser.password, YYYYMMDDTime]);
+    const [result] = await db.execute('INSERT INTO user (email, uid, password, created_time , valid) VALUES (?, ?, ?, ?, 1);', [newUser.email, uuid, newUser.password, YYYYMMDDTime]);
     // console.log('User inserted:', result);
   }
 

@@ -82,9 +82,8 @@ router.post(
   '/article-list/article-publish',
   upload.none(''),
   async (req, res) => {
-    console.log(req.body);
-    // POST /api/user/status 409
     const { title, content, category_id } = req.body;
+    console.log(req.body)
     const auid = generateUid();
     await db
       .execute(
