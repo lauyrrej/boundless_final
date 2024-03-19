@@ -53,7 +53,7 @@ class Coupon_template extends Basic {
     }
   }
 
-  // 將coupon從未使用更新為已使用的方法(1->0)
+  // --- 將coupon從未使用更新為已使用的方法(1->0) ---是否還需要????
   async Update() {
     try {
       const queryString = 'Update coupon Set valid = 0 Where id = ?';

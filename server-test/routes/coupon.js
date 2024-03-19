@@ -67,27 +67,28 @@ router.post('/Update', async (req, res) => {
   }
 });
 
-// 計算折價結果
-router.post('/CalcDiscount', async (req, res) => {
-  try {
-    const param = req.body;
-    // {
-    //  template_id: 1, (我要折哪個模板),
-    //  data:
-    //   [
-    //     {
-    //       id: product_id,
-    //       qty: 1,
-    //     },
-    //   ]
-    // }
-    const obj = new Coupon();
+// --- 計算折價結果 --- 購物車已套用coupon.json????
 
-    res.status(200).json(discount);
-  } catch (err) {
-    res.status(500).json(err.message);
-  }
-});
+// router.post('/CalcDiscount', async (req, res) => {
+//   try {
+//     const param = req.body;
+//     // {
+//     //  template_id: 1, (我要折哪個模板),
+//     //  data:
+//     //   [
+//     //     {
+//     //       id: product_id,
+//     //       qty: 1,
+//     //     },
+//     //   ]
+//     // }
+//     const obj = new Coupon();
+
+//     res.status(200).json(discount);
+//   } catch (err) {
+//     res.status(500).json(err.message);
+//   }
+// });
 
 // router.post('/CalcProduct')
 // router.post('/CalcLesson');
