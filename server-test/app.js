@@ -14,6 +14,7 @@ import couponRouter from './routes/coupon.js';
 import userRouter from './routes/user.js';
 import articleRouter from './routes/article.js';
 import googleLoginRouter from './routes/google-login.js';
+import cartRouter from './routes/cart.js'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -57,6 +58,7 @@ app.use('/api/coupon', couponRouter);
 app.use('/api/user', userRouter);
 app.use('/api/article', articleRouter);
 app.use('/api/google-login', googleLoginRouter);
+app.use('/api/cart', cartRouter)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
