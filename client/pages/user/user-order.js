@@ -37,14 +37,47 @@ export default function Test() {
   //   讀取使用者資料後 定義大頭貼路徑
   let avatarImage
   if (LoginUserData.img) {
-    avatarImage = `/user/${LoginUserData.img}`
+    avatarImage = `http://localhost:3005/user/${LoginUserData.img}`
   } else if (LoginUserData.photo_url) {
     avatarImage = `${LoginUserData.photo_url}`
   } else {
-    avatarImage = `/user/avatar_userDefault.jpg`
+    avatarImage = `http://localhost:3005/user/avatar_userDefault.jpg`
   }
 
   // ----------------------會員登入狀態  ----------------------
+  //------獲取使用者jam 名稱 
+  const [UserJAMName , setUserJAMName] = useState({id:'',my_jam:''})
+  const getLoginUserJAMName = async (e) => {
+    // 拿取Token回傳後端驗證狀態
+    const Loginusertoken = localStorage.getItem(appKey)
+
+    if (!Loginusertoken) {
+      console.error('沒有登入的token 故無法取得使用者樂團名稱。')
+      return null
+    }
+    const userID = jwtDecode(Loginusertoken)
+    const id = userID.id
+
+    try {
+      const response = await fetch(
+        `http://localhost:3005/api/user/jamname/${id}`,
+        {
+          method: 'get',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${Loginusertoken}`,
+          },
+          body: JSON.stringify(),
+        }
+      )
+      const LoginUserJAMName = await response.json()
+      setUserJAMName(LoginUserJAMName)
+      // console.log(UserJAMName)
+      // 在這裡處理後端返回的資料
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error)
+    }
+  }
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -196,7 +229,7 @@ export default function Test() {
                   <div className="sidebar-user-info-name">
                     {LoginUserData.nickname}
                   </div>
-                  <div className="sidebar-user-info-band">樂團名稱</div>
+                  <div className="sidebar-user-info-band">{LoginUserData.my_jamname}</div>
                 </div>
                 {/* 更換大頭貼的功能暫定併回會員資訊 故不再sidebar顯示 */}
                 {/* <div className="sidebar-user-info-Camera-img">

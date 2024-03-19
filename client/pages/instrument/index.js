@@ -90,18 +90,19 @@ export default function Test({ onSearch }) {
   // ----------------------假資料  ----------------------
   // 資料排序
   const [dataSort, setDataSort] = useState('upToDate')
-  // sidebar假資料
-  const sidebarData = [
-    { id: 1, parent_id: null, name: '吉他' },
-    { id: 2, parent_id: null, name: '貝斯' },
-    { id: 3, parent_id: null, name: '鍵盤樂器' },
-    { id: 4, parent_id: null, name: '打擊樂器' },
-    { id: 5, parent_id: null, name: '弓弦樂器' },
-    { id: 6, parent_id: null, name: '管樂器' },
-    { id: 7, parent_id: null, name: '音響設備' },
-    { id: 8, parent_id: 1, name: '電吉他' },
-    { id: 9, parent_id: 1, name: '木吉他' },
-  ]
+
+  // // sidebar假資料
+  // const sidebarData = [
+  //   { id: 1, parent_id: null, name: '吉他' },
+  //   { id: 2, parent_id: null, name: '貝斯' },
+  //   { id: 3, parent_id: null, name: '鍵盤樂器' },
+  //   { id: 4, parent_id: null, name: '打擊樂器' },
+  //   { id: 5, parent_id: null, name: '弓弦樂器' },
+  //   { id: 6, parent_id: null, name: '管樂器' },
+  //   { id: 7, parent_id: null, name: '音響設備' },
+  //   { id: 8, parent_id: 1, name: '電吉他' },
+  //   { id: 9, parent_id: 1, name: '木吉他' },
+  // ]
   // filter假資料
 
   const [brandSelect, setBrandSelect] = useState('')
@@ -113,7 +114,7 @@ export default function Test({ onSearch }) {
   const [score, setScore] = useState('all')
 
   // 促銷商品
-  const [sales, setSales] = useState(false)
+  const [promotion, setPromotion] = useState(false)
 
   // 清除表單內容
   const cleanFilter = () => {
@@ -121,14 +122,14 @@ export default function Test({ onSearch }) {
     setPriceLow('')
     setPriceHigh('')
     setScore('all')
-    setSales(false)
+    setPromotion(false)
   }
 
   // ------------------------------------------------------- 製作分頁
   const [page, setPage] = useState(1)
   const [pageTotal, setPageTotal] = useState(0)
   // 資料排序
-  const [order, setOrder] = useState('ASC')
+  const [orderby, setOrderby] = useState('ASC')
   // 條件品牌
   const [brand, setBrand] = useState('all')
   // 條件關鍵字
@@ -137,7 +138,7 @@ export default function Test({ onSearch }) {
   const [products, setProducts] = useState([])
 
   // 在 Test 函數中
-  const [dataPerpage, setDataPerpage] = useState(20)
+  // const [dataPerpage, setDataPerpage] = useState(20)
   // 點按分頁時，要送至伺服器的query string參數
   const handlePageClick = (event) => {
     router.push({
@@ -145,72 +146,16 @@ export default function Test({ onSearch }) {
 
       query: {
         page: event.selected + 1,
-        order: order,
+        orderby: orderby,
         brandSelect: brandSelect,
         priceLow: priceLow,
         priceHigh: priceHigh,
         score: score,
-        sales: sales,
+        promotion: promotion,
+        keyword: keyword,
       },
     })
   }
-
-  // const hotSales = Data.sort
-  //-------------------連資料庫
-
-  const [instrument, setInstrument] = useState([])
-  const [brandData, setBrandData] = useState('')
-  const getDatas = async (params) => {
-    // 用URLSearchParams產生查詢字串
-    const searchParams = new URLSearchParams(params)
-
-    try {
-      const res = await fetch(
-        `http://localhost:3005/api/instrument?${searchParams.toString()}`
-      )
-
-      // res.json()是解析res的body的json格式資料，得到JS的資料格式
-      const datas = await res.json()
-
-      // 在這裡處理獲取的資料，例如更新狀態
-      setInstrument(datas)
-    } catch (error) {
-      console.error('Error fetching data:', error)
-    }
-  }
-
-  useEffect(() => {
-    if (router.isReady) {
-      // 從router.query得到所有查詢字串參數
-      const {
-        order,
-        page,
-        brandSelect,
-        priceLow,
-        priceHigh,
-        score,
-        sales,
-        keyword,
-      } = router.query
-      // 要送至伺服器的query string參數
-
-      // console.log(router.query)
-
-      // 設定回所有狀態(注意所有從查詢字串來都是字串類型)，都要給預設值
-      setPage(Number(page) || 1)
-      setOrder(order || 'ASC')
-      setBrandSelect(brandSelect || 'all')
-      setPriceLow(priceLow || '')
-      setPriceHigh(priceHigh || '')
-      setScore(score || 'all')
-      setKeyword(keyword || '')
-      setSales(sales || 'false')
-      // 載入資料
-      getDatas(router.query)
-    }
-
-    // eslint-disable-next-line
-  }, [router.query, router.isReady])
 
   const handleLoadData = () => {
     // 要送至伺服器的query string參數
@@ -218,12 +163,12 @@ export default function Test({ onSearch }) {
     // 註: 重新載入資料需要跳至第一頁
     const params = {
       page: 1, // 跳至第一頁
-      order: order,
+      orderby: orderby,
       brandSelect: brandSelect,
       priceLow: priceLow,
       priceHigh: priceHigh,
       score: score,
-      sales: sales,
+      promotion: promotion,
       keyword: keyword,
     }
 
@@ -235,10 +180,89 @@ export default function Test({ onSearch }) {
     })
   }
 
+  // const hotSales = Data.sort
+  //-------------------連資料庫
+
+  const [instrument, setInstrument] = useState([])
+  // const [brandData, setBrandData] = useState('')
+  const getDatas = async (params) => {
+    // 用URLSearchParams產生查詢字串
+    // const searchParams = new URLSearchParams(params)
+    // console.log(searchParams)
+
+    const searchParams = new URLSearchParams(params)
+    const queryString = searchParams.toString()
+
+    console.log(queryString)
+
+    try {
+      const res = await fetch(
+        `http://localhost:3005/api/instrument?${queryString}`
+      )
+
+      // res.json()是解析res的body的json格式資料，得到JS的資料格式
+      const datas = await res.json()
+      console.log(datas)
+      // 在這裡處理獲取的資料，例如更新狀態
+      setInstrument(datas)
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
+  }
+
+  // const getDatassearch = async (params) => {
+  //   try {
+  //     const res = await fetch(
+  //       `http://localhost:3005/api/instrument/getDatassearch`
+  //     )
+
+  //     // res.json()是解析res的body的json格式資料，得到JS的資料格式
+  //     const datas = await res.json()
+
+  //     // 在這裡處理獲取的資料，例如更新狀態
+  //     setInstrument(datas)
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error)
+  //   }
+  // }
+
+  useEffect(() => {
+    if (router.isReady) {
+      // 從router.query得到所有查詢字串參數
+      const {
+        orderby,
+        page,
+        brandSelect,
+        priceLow,
+        priceHigh,
+        score,
+        promotion,
+        keyword,
+      } = router.query
+      // 要送至伺服器的query string參數
+
+      // console.log(router.query)
+
+      // 設定回所有狀態(注意所有從查詢字串來都是字串類型)，都要給預設值
+      setPage(Number(page) || 1)
+      setOrderby(orderby || 'ASC')
+      setBrandSelect(brandSelect || 'all')
+      setPriceLow(priceLow || '')
+      setPriceHigh(priceHigh || '')
+      setScore(score || 'all')
+      setKeyword(keyword || '')
+      setPromotion(promotion || 'false')
+      // 載入資料
+      getDatas(router.query)
+    }
+
+    // eslint-disable-next-line
+  }, [router.query, router.isReady])
+
   // useEffect(() => {
   //   if (router.isReady) {
   //     // 從router.query得到所有查詢字串參數
-  //     const { order, page, brandSelect, priceLow, priceHigh, score, sales } =
+  //     const { orderby, page, brandSelect, priceLow, priceHigh, score, promotion } =
   //       router.query
   //     // 要送至伺服器的query string參數
 
@@ -246,7 +270,7 @@ export default function Test({ onSearch }) {
 
   //     // 設定回所有狀態(注意所有從查詢字串來都是字串類型)，都要給預設值
   //     setPage(Number(page) || 1)
-  //     setOrder(order || 'ASC')
+  //     setOrderby(orderby || 'ASC')
   //     setBrandSelect(brandSelect || 'all')
   //     setPriceLow(priceLow || 'all')
   //     setPriceHigh(priceHigh || 'all')
@@ -405,76 +429,290 @@ export default function Test({ onSearch }) {
             <div className="sidebar">
               <ul className="d-flex flex-column">
                 <li>
-                  <Link href={'/instrument'} className="active">
-                    全部
-                  </Link>
+                  <Link href={`/instrument`}>全部</Link>
                 </li>
-                {sidebarData.map((item, index) => {
-                  if (!item.parent_id) {
-                    return (
+                <li>
+                  <div className="accordion" id="accordionExample">
+                    <div className="accordion-item">
+                      <h2 className="accordion-header" id="headingGuitar">
+                        <button
+                          className="accordion-button"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#collapseGuitar"
+                          aria-expanded="true"
+                          aria-controls="collapseGuitar"
+                        >
+                          <span className="me-2">吉他</span>
+                        </button>
+                      </h2>
                       <div
-                        key={index}
-                        className="accordion accordion-flush"
-                        id={`accordion-${index}`}
+                        id="collapseGuitar"
+                        className="accordion-collapse collapse"
+                        aria-labelledby="headingGuitar"
+                        data-bs-parent="#accordionExample"
                       >
-                        <div className="accordion-item">
-                          <h2 className="accordion-header">
-                            <button
-                              className={`accordion-button collapsed ${
-                                openAccordion === index ? 'active' : ''
-                              }`}
-                              type="button"
-                              onClick={() => handleAccordionToggle(index)}
-                            >
-                              {item.name}
-                            </button>
-                          </h2>
-                          <div
-                            id={`collapse-${index}`}
-                            className={`accordion-collapse collapse ${
-                              openAccordion === index ? 'show' : ''
-                            }`}
+                        <div>
+                          <Link
+                            href={`/instrument/wooden`}
+                            className="accordion-body"
+                            style={{ display: 'block' }}
                           >
-                            <div className="accordion-body px-1">
-                              {/* 這裡放入你的 checkbox 內容 */}
-                              <div className="form-check">
-                                <input
-                                  className="form-check-input"
-                                  type="checkbox"
-                                  value=""
-                                  id={`checkbox-${index}`}
-                                />
-                                <label
-                                  className="form-check-label"
-                                  htmlFor={`checkbox-${index}`}
-                                >
-                                  木吉他
-                                </label>
-                              </div>
-                              {/* 重複以上的結構，加入其他 checkbox */}
-                              <div className="form-check">
-                                <input
-                                  className="form-check-input"
-                                  type="checkbox"
-                                  value=""
-                                  id={`checkbox-${index}`}
-                                />
-                                <label
-                                  className="form-check-label"
-                                  htmlFor={`checkbox-${index}`}
-                                >
-                                  電吉他
-                                </label>
-                              </div>
-                            </div>
-                          </div>
+                            木吉他
+                          </Link>
+                          <Link
+                            href={`/instrument/electric`}
+                            className="accordion-body"
+                            style={{ display: 'block' }}
+                          >
+                            電吉他
+                          </Link>
                         </div>
                       </div>
-                    )
-                  }
-                })}
+                    </div>
 
-                {/* <div>
+                    <div className="accordion-item">
+                      <h2 className="accordion-header" id="headingBase">
+                        <button
+                          className="accordion-button"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#collapseBase"
+                          aria-expanded="true"
+                          aria-controls="collapseBase"
+                        >
+                          <span className="me-2">貝斯</span>
+                        </button>
+                      </h2>
+                      <div
+                        id="collapseBase"
+                        className="accordion-collapse collapse"
+                        aria-labelledby="headingBase"
+                        data-bs-parent="#accordionExample"
+                      >
+                        <div>
+                          <Link
+                            href={`/instrument/wooden`}
+                            className="accordion-body"
+                            style={{ display: 'block' }}
+                          >
+                            木貝斯
+                          </Link>
+                          <Link
+                            href={`/instrument/electric`}
+                            className="accordion-body"
+                            style={{ display: 'block' }}
+                          >
+                            電貝斯
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="accordion-item">
+                      <h2 className="accordion-header" id="headingKeyboard">
+                        <button
+                          className="accordion-button"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#collapseKeyboard"
+                          aria-expanded="true"
+                          aria-controls="collapseKeyboard"
+                        >
+                          <span className="me-2">鍵盤樂器</span>
+                        </button>
+                      </h2>
+                      <div
+                        id="collapseKeyboard"
+                        className="accordion-collapse collapse"
+                        aria-labelledby="headingKeyboard"
+                        data-bs-parent="#accordionExample"
+                      >
+                        <div>
+                          <Link
+                            href={`/instrument/upright`}
+                            className="accordion-body"
+                            style={{ display: 'block' }}
+                          >
+                            直立式鋼琴
+                          </Link>
+                          <Link
+                            href={`/instrument/grand`}
+                            className="accordion-body"
+                            style={{ display: 'block' }}
+                          >
+                            平台式鋼琴
+                          </Link>
+                          <Link
+                            href={`/instrument/digital`}
+                            className="accordion-body"
+                            style={{ display: 'block' }}
+                          >
+                            數位鋼琴
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="accordion-item">
+                      <h2 className="accordion-header" id="headingPercussion">
+                        <button
+                          className="accordion-button"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#collapsePercussion"
+                          aria-expanded="true"
+                          aria-controls="collapsePercussion"
+                        >
+                          <span className="me-2">打擊樂器</span>
+                        </button>
+                      </h2>
+                      <div
+                        id="collapsePercussion"
+                        className="accordion-collapse collapse"
+                        aria-labelledby="headingPercussion"
+                        data-bs-parent="#accordionExample"
+                      >
+                        <div>
+                          <Link
+                            href={`/instrument/traditional`}
+                            className="accordion-body"
+                            style={{ display: 'block' }}
+                          >
+                            傳統鼓
+                          </Link>
+                          <Link
+                            href={`/instrument/electric`}
+                            className="accordion-body"
+                            style={{ display: 'block' }}
+                          >
+                            電子鼓
+                          </Link>
+                          <Link
+                            href={`/instrument/cymbals`}
+                            className="accordion-body"
+                            style={{ display: 'block' }}
+                          >
+                            銅鈸
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="accordion-item">
+                      <h2 className="accordion-header" id="headingWind">
+                        <button
+                          className="accordion-button"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#collapseWind"
+                          aria-expanded="true"
+                          aria-controls="collapseWind"
+                        >
+                          <span className="me-2">管樂器</span>
+                        </button>
+                      </h2>
+                      <div
+                        id="collapseWind"
+                        className="accordion-collapse collapse"
+                        aria-labelledby="headingWind"
+                        data-bs-parent="#accordionExample"
+                      >
+                        <div>
+                          <Link
+                            href={`/instrument/flute`}
+                            className="accordion-body"
+                            style={{ display: 'block' }}
+                          >
+                            長笛
+                          </Link>
+                          <Link
+                            href={`/instrument/saxophone`}
+                            className="accordion-body"
+                            style={{ display: 'block' }}
+                          >
+                            薩克斯風
+                          </Link>
+                          <Link
+                            href={`/instrument/trumpet`}
+                            className="accordion-body"
+                            style={{ display: 'block' }}
+                          >
+                            小號
+                          </Link>
+                          <Link
+                            href={`/instrument/trombone`}
+                            className="accordion-body"
+                            style={{ display: 'block' }}
+                          >
+                            長號
+                          </Link>
+                          <Link
+                            href={`/instrument/euphonium`}
+                            className="accordion-body"
+                            style={{ display: 'block' }}
+                          >
+                            上低音號
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="accordion-item">
+                      <h2 className="accordion-header" id="headingBowstring">
+                        <button
+                          className="accordion-button"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#collapseBowstring"
+                          aria-expanded="true"
+                          aria-controls="collapseBowstring"
+                        >
+                          <span className="me-2">弓弦樂器</span>
+                        </button>
+                      </h2>
+                      <div
+                        id="collapseBowstring"
+                        className="accordion-collapse collapse"
+                        aria-labelledby="headingBowstring"
+                        data-bs-parent="#accordionExample"
+                      >
+                        <div>
+                          <Link
+                            href={`/instrument/cello`}
+                            className="accordion-body"
+                            style={{ display: 'block' }}
+                          >
+                            大提琴
+                          </Link>
+                          <Link
+                            href={`/instrument/viola`}
+                            className="accordion-body"
+                            style={{ display: 'block' }}
+                          >
+                            中提琴
+                          </Link>
+                          <Link
+                            href={`/instrument/violin`}
+                            className="accordion-body"
+                            style={{ display: 'block' }}
+                          >
+                            小提琴
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+
+                <li>
+                  <Link href={`/instrument/audio-equipment`}>音響設備</Link>
+                </li>
+                <li>
+                  <Link href={`/instrument/activity`}>活動專區</Link>
+                </li>
+              </ul>
+              {/* <div>
             {recipes.map((recipe) => {
                 return <div key={recipe.id}>
                     <h1>{recipe.title}</h1>
@@ -485,11 +723,6 @@ export default function Test({ onSearch }) {
                 </div>
             })}
         </div> */}
-
-                <li>
-                  <Link href={'/instrument/event'}>活動專區</Link>
-                </li>
-              </ul>
             </div>
           </div>
 
@@ -623,13 +856,25 @@ export default function Test({ onSearch }) {
                             <option selected value="all">
                               全部
                             </option>
-                            {brandData &&
+                            <option value="1">YAMAHA</option>
+                            <option value="2">Roland</option>
+                            <option value="3">Ibanez</option>
+                            <option value="4">Fender</option>
+                            <option value="5">Zildjian</option>
+                            <option value="6">Paiste</option>
+                            <option value="7">Jupiter</option>
+                            <option value="8">LienViolins</option>
+                            <option value="9">David Lien</option>
+                            <option value="10">Orange</option>
+                            <option value="11">其他</option>
+
+                            {/* {brandData &&
                               Array.isArray(brandData) &&
                               brandData.map((v) => (
                                 <option key={v.id} value={v.id}>
                                   {v.name}
                                 </option>
-                              ))}
+                              ))} */}
                           </select>
                         </div>
                         {/* 價格區間 */}
@@ -694,10 +939,10 @@ export default function Test({ onSearch }) {
                               <input
                                 className="form-check-input"
                                 type="checkbox"
-                                value={sales}
-                                name="sales"
+                                value={promotion}
+                                name="promotion"
                                 onChange={() => {
-                                  setSales(!sales)
+                                  setPromotion(promotion ? true : false)
                                 }}
                               />{' '}
                               促銷商品
@@ -712,7 +957,11 @@ export default function Test({ onSearch }) {
                           >
                             清除
                           </div>
-                          <div className="filter-btn confirm-btn w-100 d-flex justify-content-center">
+                          <div
+                            role="presentation"
+                            className="filter-btn confirm-btn w-100 d-flex justify-content-center"
+                            onClick={handleLoadData}
+                          >
                             確認
                           </div>
                         </div>
@@ -806,7 +1055,8 @@ export default function Test({ onSearch }) {
                     )
                   })}
 
-                {!isFiltered &&
+                {Array.isArray(instrument) &&
+                  !isFiltered &&
                   // 如果没有進行篩選或搜索，渲染原始的instrument數據
                   instrument.map((v, i) => {
                     const {

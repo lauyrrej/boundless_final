@@ -6,11 +6,11 @@ import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
-
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
 import { useJam } from '@/hooks/use-jam'
-
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
@@ -33,6 +33,8 @@ export default function UserJam() {
     getLoginUserData()
   }, [])
   //登出功能
+
+  const mySwal = withReactContent(Swal)
 
   //檢查是否獲取資料
   // console.log(LoginUserData)
@@ -70,6 +72,85 @@ export default function UserJam() {
   //   '我的課程',
   //   '我的訊息',
   // ]
+
+  // 正式加入
+  const joinJam = async (id, user_id, juid, applier_play) => {
+    let formData = new FormData()
+    formData.append('id', id)
+    formData.append('user_id', user_id)
+    formData.append('juid', juid)
+    formData.append('applier_play', applier_play)
+    try {
+      const res = await fetch(`http://localhost:3005/api/jam/joinJam`, {
+        method: 'PUT',
+        body: formData,
+        credentials: 'include',
+      })
+      const result = await res.json()
+      return result
+    } catch {
+      alert('加入失敗')
+    }
+  }
+
+  // 加入提醒&成功訊息
+  const notifyJoin = (id, user_id, juid, applier_play) => {
+    mySwal
+      .fire({
+        title: '確定加入此樂團？',
+        icon: 'question',
+        iconColor: '#1581cc',
+        showCancelButton: true,
+        confirmButtonColor: '#1581cc',
+        cancelButtonColor: '#666666',
+        confirmButtonText: '確定',
+        cancelButtonText: '取消',
+        showClass: {
+          popup: `
+            animate__animated
+            animate__fadeInUp
+            animate__faster
+          `,
+        },
+        hideClass: {
+          popup: `
+            animate__animated
+            animate__fadeOutDown
+            animate__faster
+          `,
+        },
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          const res = await joinJam(id, user_id, juid, applier_play)
+          if (res.status === 'success') {
+            mySwal.fire({
+              title: '加入成功，導向樂團資訊頁',
+              icon: 'success',
+              iconColor: '#1581cc',
+              showConfirmButton: false,
+              timer: 2500,
+            })
+            setTimeout(() => {
+              router.push(`/jam/recruit-list/${juid}`)
+            }, 2500)
+          } else if (res.status === 'form_success') {
+            mySwal.fire({
+              title: '樂團成立！即將導向新資訊頁',
+              text: '謝謝你，關鍵人物！',
+              icon: 'success',
+              iconColor: '#1581cc',
+              showConfirmButton: false,
+              timer: 2500,
+            })
+            setTimeout(() => {
+              router.push(`/jam/jam-list/${juid}`)
+            }, 2500)
+          }
+        }
+      })
+  }
+
   // 取消申請
   const cancelApply = async (id) => {
     let formData = new FormData()
@@ -127,17 +208,21 @@ export default function UserJam() {
   const switchSentence = (state) => {
     switch (state) {
       case 0:
-        return '審核中'
+        return <span>審核中</span>
       case 1:
-        return '通過'
+        return (
+          <span className="fw-semibold" style={{ color: '#1581cc' }}>
+            通過
+          </span>
+        )
       case 2:
-        return '拒絕'
+        return <span>拒絕</span>
       default:
         return null
     }
   }
 
-  const switchOption = (state, id) => {
+  const switchOption = (state, id, juid, applier_play) => {
     switch (state) {
       case 0:
         return (
@@ -159,7 +244,7 @@ export default function UserJam() {
             className="b-btn b-btn-primary"
             style={{ width: '50px', height: '32px' }}
             onClick={() => {
-              cancelApply(id)
+              notifyJoin(id, LoginUserData.id, juid, applier_play)
             }}
           >
             加入
@@ -445,9 +530,10 @@ export default function UserJam() {
                       </div>
                       <hr style={{ color: '#124365', marginInline: '0' }} />
                       {myApply.map((v) => {
+                        console.log(v)
                         return (
                           <div
-                            className="user-notifyList-item row flex-nowrap mb-2"
+                            className="user-notifyList-item row flex-nowrap my-3"
                             key={v.id}
                           >
                             <div
@@ -466,7 +552,7 @@ export default function UserJam() {
                               className="text-center col-3"
                               style={{ paddingInline: '0' }}
                             >
-                              {v.applier_play}
+                              {v.applier_playname}
                             </div>
                             <div
                               className="text-center col-3"
@@ -478,7 +564,12 @@ export default function UserJam() {
                               className="d-flex justify-content-center col-3"
                               style={{ color: '#124365', paddingInline: '0' }}
                             >
-                              {switchOption(v.state, v.id)}
+                              {switchOption(
+                                v.state,
+                                v.id,
+                                v.juid,
+                                v.applier_play
+                              )}
                             </div>
                           </div>
                         )

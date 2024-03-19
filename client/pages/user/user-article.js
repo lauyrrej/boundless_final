@@ -37,14 +37,15 @@ export default function Test() {
   //   讀取使用者資料後 定義大頭貼路徑
   let avatarImage
   if (LoginUserData.img) {
-    avatarImage = `/user/${LoginUserData.img}`
+    avatarImage = `http://localhost:3005/user/${LoginUserData.img}`
   } else if (LoginUserData.photo_url) {
     avatarImage = `${LoginUserData.photo_url}`
   } else {
-    avatarImage = `/user/avatar_userDefault.jpg`
+    avatarImage = `http://localhost:3005/user/avatar_userDefault.jpg`
   }
 
   // ----------------------會員登入狀態  ----------------------
+
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -196,7 +197,7 @@ export default function Test() {
                   <div className="sidebar-user-info-name">
                     {LoginUserData.nickname}
                   </div>
-                  <div className="sidebar-user-info-band">樂團名稱</div>
+                  <div className="sidebar-user-info-band">{LoginUserData.my_jamname}</div>
                 </div>
                 {/* 更換大頭貼的功能暫定併回會員資訊 故不再sidebar顯示 */}
                 {/* <div className="sidebar-user-info-Camera-img">

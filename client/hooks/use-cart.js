@@ -19,22 +19,35 @@ export function CartProvider({ children }) {
     localStorage.setItem('CartData', JSON.stringify(items))
   }, [items])
 
-  const addInstrumentItem = (item) => {
+  // 新增商品至購物車
+  const addInstrumentItem = (item, qty) => {
+    // 檢查購物車是否已存在該商品
+    const index = items.findIndex((v) => {
+      return (v.id = item.id)
+    })
+    if (index > -1) {
+      increment(item, qty)
+    }
+    // 不存在購物車中，擴充該商品的"數量"屬性
     //擴充item的屬性多一個qty
-    const newItem = { ...item, qty: 1 }
+    const newItem = { ...item, qty: qty }
     const newItems = [...items, newItem]
-
     setItems(newItems)
     localStorage.setItem('CartData', JSON.stringify(newItems))
   }
 
   const addLessonItem = (item) => {
-    const newItems = [...items, item]
+    const index = items.findIndex((v) =>{
+      return (v.id =  item.id)
+    })
 
+    if(index > -1){
+      return
+    }
+    const newItems = [...items, item]
     setItems(newItems)
     localStorage.setItem('CartData', JSON.stringify(newItems))
   }
-
   //在購物車中，移除某商品的id
   const remove = (items, id) => {
     const newItems = items.filter((v, i) => {
@@ -47,8 +60,19 @@ export function CartProvider({ children }) {
   }
 
   //遞增某商品id數量
-  const increment = (items, id) => {
-    const newItems = items.map((v, i) => {
+  const increment = (item, qty) => {
+    const newItems = items.map((v) => {
+      if (v.id === item.id) return { ...v, qty: v.qty + qty }
+      else return v
+    })
+
+    setItems(newItems)
+
+    localStorage.setItem('CartData', JSON.stringify(newItems))
+  }
+
+  const increment_cart = (items, id) => {
+    const newItems = items.map((v) => {
       if (v.id === id) return { ...v, qty: v.qty + 1 }
       else return v
     })
@@ -59,7 +83,17 @@ export function CartProvider({ children }) {
   }
 
   //遞減某商品id數量
-  const decrement = (items, id) => {
+  const decrement = (item) => {
+    const newItems = items.map((v, i) => {
+      if (v.id === item.id) return { ...v, qty: v.qty - 1 }
+      else return v
+    })
+    setItems(newItems)
+
+    localStorage.setItem('CartData', JSON.stringify(newItems))
+  }
+
+  const decrement_cart = (items, id) => {
     const newItems = items.map((v, i) => {
       if (v.id === id) return { ...v, qty: v.qty - 1 }
       else return v
@@ -90,10 +124,7 @@ export function CartProvider({ children }) {
   //計算個數
   const calcTotalItems = () => {
     let total = 0
-
-    for (let i = 0; i < items.length; i++) {
-      total += items[i].qty
-    }
+    total=items.length
     return total
   }
 
@@ -145,20 +176,42 @@ export function CartProvider({ children }) {
   const [lessonDiscount, setLessonDiscount] = useState(0)
 
   const handleLessonSelector = (e) => {
+    localStorage.setItem('LessonCoupon', e)
     setLessonDiscount(e)
   }
 
   const [instrumentDiscount, setinstrumentDiscount] = useState(0)
 
   const handleInstrumentSelector = (e) => {
-    localStorage.setItem('InstrumentCoupon', JSON.stringify(e))
+    localStorage.setItem('InstrumentCoupon', e)
     setinstrumentDiscount(e)
   }
 
-  useEffect(()=>{
-    const lastInstrumentCoupon = 0
-  })
-  
+  useEffect(() => {
+    const lastInstrumentCoupon = JSON.parse(
+      localStorage.getItem('InstrumentCoupon') ?? '[]'
+    )
+    setinstrumentDiscount(lastInstrumentCoupon)
+  }, [])
+
+  // const [name, setName] = useState('')
+  // const [phone, setPhone] = useState('')
+  // const [email, setEmail] = useState('')
+  // const [address, setAddress] = useState('')
+
+  // const UserInfo = (e) => {
+
+  //   let UserInfo = JSON.stringify([
+  //     { Name: name, Phone: phone, Email: email, Address: address },
+  //   ])
+  //   setName(e.target.value)
+  //   setPhone(e.target.value)
+  //   setEmail(e.target.value)
+  //   setAddress(e.target.value)
+  //   // useEffect(() => {
+  //   //   localStorage.setItem('UserInfo', UserInfo)
+  //   // }, [UserInfo])
+  // }
 
   const calcLessonDiscount = () => {
     let total = 0
@@ -185,20 +238,6 @@ export function CartProvider({ children }) {
     return total
   }
 
-  function MySelect() {
-    const [selected, setSelected] = useState([])
-    const handleChange = (v) => {
-      localStorage.setItem('SelectCoupons', JSON.stringify(v))
-      setSelected(v)
-    }
-    useEffect(() => {
-      const lastSelected = JSON.parse(
-        localStorage.getItem('SelectCoupons') ?? '[]'
-      )
-      setSelected(lastSelected)
-    }, [])
-  }
-
   return (
     <CartContext.Provider
       value={{
@@ -214,7 +253,9 @@ export function CartProvider({ children }) {
         addLessonItem,
         addInstrumentItem,
         increment,
+        increment_cart,
         decrement,
+        decrement_cart,
         remove,
         calcInstrumentItems,
         calcInstrumentPrice,
