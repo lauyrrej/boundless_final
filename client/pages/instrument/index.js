@@ -433,7 +433,7 @@ export default function Test({ onSearch }) {
                 <li>
                   <Link href={`/instrument`}>全部</Link>
                 </li>
-                {productCategory.map((v) => {
+                {productCategory && productCategory.map((v) => {
                   return v.parent_id === 0 ? (
                     <li
                       className="accordion"
@@ -521,7 +521,7 @@ export default function Test({ onSearch }) {
               <Link href={`/instrument`} className="sm-item active">
                 全部
               </Link>
-              {productCategory.map((v) => {
+              {productCategory && productCategory.map((v) => {
                 return v.parent_id === 0 ? (
                   <li
                     className="accordion sm-item"
@@ -845,7 +845,7 @@ export default function Test({ onSearch }) {
                       sales,
                     } = v
                     return (
-                      <div key={id}>
+                      <div className="mb-4" key={id}>
                         <Card
                           id={id}
                           puid={puid}
@@ -875,7 +875,7 @@ export default function Test({ onSearch }) {
                       sales,
                     } = v
                     return (
-                      <div key={id}>
+                      <div key={id} className="mb-4">
                         <Card
                           id={id}
                           puid={puid}
@@ -913,9 +913,6 @@ export default function Test({ onSearch }) {
           margin-block: 30px;
           gap: 35px;
           flex-wrap: wrap;
-          @media screen and (max-width: 576px) {
-            gap: 15px 10px;
-          }
         }
 
         .hot-instrument-card {

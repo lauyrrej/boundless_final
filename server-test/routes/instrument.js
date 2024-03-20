@@ -1,9 +1,6 @@
 import express, { json } from 'express';
 import db from '../db.js';
 import multer from 'multer';
-import express, { json } from 'express';
-import db from '../db.js';
-import multer from 'multer';
 
 const router = express.Router();
 const upload = multer();
@@ -13,18 +10,16 @@ const upload = multer();
 router.get('/', async (req, res, next) => {
   // console.log(req.query);
   // return
-  let priceLow = req.query.priceLow;
-  let priceHigh = req.query.priceHigh;
-router.get('/', async (req, res, next) => {
-  // console.log(req.query);
-  // return
-  let priceLow = req.query.priceLow;
-  let priceHigh = req.query.priceHigh;
+  // let priceLow = req.query.priceLow;
+  // let priceHigh = req.query.priceHigh;
+  let priceLow = req.query.priceLow !== undefined ? req.query.priceLow : ''; // 如果沒有提供查詢參數，則賦值為空字符串
+let priceHigh = req.query.priceHigh !== undefined ? req.query.priceHigh : '';
   console.log(priceLow);
   console.log(priceHigh);
 
+
   // 取得所有樂器分類資料
-  const [category] = await db.execute(
+  const [productCategory] = await db.execute(
     'SELECT `id`, `parent_id`, `name` FROM `instrument_category`'
   );
 
@@ -88,12 +83,14 @@ router.get('/', async (req, res, next) => {
     page = Number(req.query.page) || 1; // 目前頁碼
     dataPerpage = 20; // 每頁 20 筆
     offset = (page - 1) * dataPerpage; // 取得下一批資料
+    if (dataCount) {
     pageTotal = Math.ceil(dataCount.length / dataPerpage); // 計算總頁數
+    }
     pageString = ' LIMIT ' + offset + ',' + dataPerpage;
 
    sqlString += pageString;
    [data] = await db.execute(sqlString).catch(() => {
-    return undefined;
+    return [];
   });
   }else{
       // 沒有篩選條件
@@ -107,11 +104,23 @@ router.get('/', async (req, res, next) => {
   }
 if (data && data != undefined){
    // 整理資料，把字串轉成陣列或物件
-   const instrumentData = data.map((v) => {
-       
-   })
+  //  const instrumentData = data.map((v) => {
+  //  // priceLow可能為空值，先令其為空陣列
+  //  // priceHigh可能為空值，先令其為空陣列
+  //   //  const priceLow = v.priceLow || 0; // 使用預設值 0
+  //   // const priceHigh = v.priceHigh || 0; // 使用預設值 0
+  //   const productCategory = JSON.parse(v.productCategory|| '{}'); // 使用空物件作為預設值
+
+  //   // return {
+  //   //   ...v,
+  //   //   // priceLow,
+  //   //   // priceHigh,
+  //   //   productCategory: setProductCategory,
+  //   // };
+  // });
+
    res.status(200).json({
-    
+    productCategory,
     pageTotal,
     page,
   });
@@ -119,7 +128,6 @@ if (data && data != undefined){
 }else {
   res.status(400).send('發生錯誤');
 }
-
 });
   // const instrument_category_id = req.query.instrument_category_id
   // const brand = req.query.brandSelect;
@@ -253,10 +261,8 @@ if (data && data != undefined){
 
 //instrument_category
 router.get('/categories', async (req, res) => {
-router.get('/categories', async (req, res) => {
   try {
     let [instrument_category] = await db.execute(
-      'SELECT * FROM `instrument_category` '
       'SELECT * FROM `instrument_category` '
     );
 
@@ -342,7 +348,6 @@ router.get('/category/:category', async (req, res) => {
 
 //獲得單筆樂器資料跟評論
 router.get('/:id', async (req, res, next) => {
-router.get('/:id', async (req, res, next) => {
   let puid = req.params.id;
   console.log(puid);
   try {
@@ -370,12 +375,6 @@ router.get('/:id', async (req, res, next) => {
         'ON p.`instrument_category_id` = instrument_category.id WHERE instrument_category.id =  (SELECT `instrument_category_id` FROM `product` WHERE `puid` = ?) LIMIT 0,5',
       [puid]
     );
-    let [youmaylike] = await db.execute(
-      'SELECT p.*, instrument_category.name AS category_name FROM `product` AS p ' +
-        'JOIN `instrument_category` ' +
-        'ON p.`instrument_category_id` = instrument_category.id WHERE instrument_category.id =  (SELECT `instrument_category_id` FROM `product` WHERE `puid` = ?) LIMIT 0,5',
-      [puid]
-    );
 
     if ({ data, youmaylike }) {
       // console.log({ data });
@@ -390,10 +389,7 @@ router.get('/:id', async (req, res, next) => {
     } else {
       res.status(400).send('發生錯誤');
     }
-  } catch (error) {
-    console.error('Database error:', error);
-    res.status(500).send('Internal server error');
-  }
+  } 
 });
 
 // function App() {
