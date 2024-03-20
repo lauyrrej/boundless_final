@@ -74,10 +74,10 @@ export default function UserJam() {
   // ]
 
   // 正式加入
-  const joinJam = async (id, user_id, juid, applier_play) => {
+  const joinJam = async (user_id, user_uid, juid, applier_play) => {
     let formData = new FormData()
-    formData.append('id', id)
     formData.append('user_id', user_id)
+    formData.append('user_uid', user_uid)
     formData.append('juid', juid)
     formData.append('applier_play', applier_play)
     try {
@@ -94,7 +94,7 @@ export default function UserJam() {
   }
 
   // 加入提醒&成功訊息
-  const notifyJoin = (id, user_id, juid, applier_play) => {
+  const notifyJoin = (user_id, user_uid, juid, applier_play) => {
     mySwal
       .fire({
         title: '確定加入此樂團？',
@@ -122,7 +122,7 @@ export default function UserJam() {
       })
       .then(async (result) => {
         if (result.isConfirmed) {
-          const res = await joinJam(id, user_id, juid, applier_play)
+          const res = await joinJam(user_id, user_uid, juid, applier_play)
           if (res.status === 'success') {
             mySwal.fire({
               title: '加入成功，導向樂團資訊頁',
@@ -244,7 +244,7 @@ export default function UserJam() {
             className="b-btn b-btn-primary"
             style={{ width: '50px', height: '32px' }}
             onClick={() => {
-              notifyJoin(id, LoginUserData.id, juid, applier_play)
+              notifyJoin(LoginUserData.id, LoginUserData.uid, juid, applier_play)
             }}
           >
             加入

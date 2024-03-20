@@ -403,7 +403,7 @@ export default function LessonDetailPage() {
                     </div>
                   </div>
                 </div>
-              
+              </div>
             </main>
           </div>
 
