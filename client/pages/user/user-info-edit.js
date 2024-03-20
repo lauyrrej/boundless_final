@@ -19,6 +19,7 @@ import { jwtDecode } from 'jwt-decode'
 import CityCountyData from '@/data/CityCountyData.json'
 import playerData from '@/data/player.json'
 import genreData from '@/data/genre.json'
+import { countries, townships, postcodes } from '@/data/cart/twzipcode-data'
 
 // sweetalert
 import Swal from 'sweetalert2'
@@ -114,6 +115,16 @@ export default function Test() {
     updated_time: '',
     valid: '',
   })
+//---------------------------------------------------
+
+  
+  // 縣市連動
+  // 記錄陣列的索引值，預設值是-1，相當於"請選擇xxx"
+  const [countryIndex, setCountryIndex] = useState(-1)
+  const [townshipIndex, setTownshipIndex] = useState(-1)
+
+
+
   //------獲取單一使用者全部資料 包含密碼
   const getLoginUserProfile = async (e) => {
     // 拿取Token回傳後端驗證狀態
@@ -161,7 +172,7 @@ export default function Test() {
   }, []) // 在 LoginUserData.name 改變時觸發 useEffect
 
   // console.log(userData.id)
-  // console.log(userData)
+  console.log(userData)
 
   // ----------------------會員登入狀態  ----------------------
 
@@ -1171,20 +1182,28 @@ export default function Test() {
                                 value={userData.country}
                                 name="region"
                                 onChange={(e) => {
+                                  const selectedCountry = countries[e.target.value]
                                   setuserData({
                                     ...userData,
                                     country: e.target.value,
+                                    
                                   })
+                                  setCountryIndex(e.target.selectedIndex+1)
                                 }}
                               >
-                                <option value="">請選擇</option>
-                                {cityData.map((v, i) => {
+                                <option disabled value="">請選擇</option>
+                                {/* {cityData.map((v, i) => {
                                   return (
                                     <option key={i} value={v}>
                                       {v}
                                     </option>
                                   )
-                                })}
+                                })} */}
+                                {countries.map((value, index) => (
+                                <option key={index} value={value}>
+                                  {value}
+                                </option>
+                              ))}
                               </select>
                             </div>
 
@@ -1193,7 +1212,7 @@ export default function Test() {
                                 className="form-select col-4 col-sm1"
                                 style={{ width: 'auto' }}
                                 value={userData.township}
-                                name="region"
+                                name="township"
                                 onChange={(e) => {
                                   setuserData({
                                     ...userData,
@@ -1201,14 +1220,20 @@ export default function Test() {
                                   })
                                 }}
                               >
-                                <option value="">請選擇</option>
-                                {townData.map((v, i) => {
+                                <option  value="">請選擇</option>
+                                {countryIndex == -1 ? townData.map((v, i) => {
                                   return (
                                     <option key={i} value={v}>
                                       {v}
                                     </option>
                                   )
-                                })}
+                                }) : ''}
+                                {countryIndex > -1 &&
+                                townships[countryIndex - 2].map((value, index) => (
+                                  <option key={index} value={value}>
+                                    {value}
+                                  </option>
+                                ))}
                               </select>
                             </div>
 

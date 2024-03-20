@@ -124,6 +124,65 @@ router.get("/user-homepage/:uid", async (req, res) => {
   // res.json({ status: 'success', data: { result } })
 });
 
+// 個人首頁 獲得該使用者發布之文章 code來自article.js
+router.get('/homepageArticle/:uid', async (req, res) => {
+  const uid = req.params.uid;
+  // console.log(uid);
+  
+  // 再不更動article資料庫的情況下 透過uid 找到user id
+  const [userIDResult] = await db.execute(
+    "SELECT * FROM `user` WHERE `uid` = ? AND `valid` = 1",[uid]
+  );
+ let userID
+  if(userIDResult){
+   userID = userIDResult[0].id;
+  }
+  try {
+    
+
+    let [articleData] = await db.execute(
+      'SELECT article.*, article_category.name AS category_name,article_comment.likes AS comment_likes, user.name AS user_name, user.img AS user_img, article_user.nickname AS article_author_name, article_user.img AS article_author_img FROM article JOIN article_category ON article.category_id = article_category.id LEFT JOIN article_comment ON article.id = article_comment.article_id LEFT JOIN user ON article_comment.user_id = user.id LEFT JOIN user AS article_user ON article.user_id = article_user.id  WHERE article.user_id = ? ORDER BY article.id',[userID]
+    );
+    if (articleData) {
+      res.json(articleData);
+    } else {
+      res.json('沒有找到相應的資訊');
+    }
+  } catch (error) {
+    console.error('發生錯誤：', error);
+    res.json('發生錯誤' + error);
+  }
+});
+
+// 我的文章頁 獲得該使用者發布之文章 code來自article.js
+router.get('/MyArticle/:id', async (req, res) => {
+  const id = req.params.id;
+  // console.log(id);
+  
+  // 再不更動article資料庫的情況下 透過uid 找到user id
+  const [userIDResult] = await db.execute(
+    "SELECT * FROM `user` WHERE `id` = ? AND `valid` = 1",[id]
+  );
+ let userID
+  if(userIDResult){
+   userID = userIDResult[0].id;
+  }
+  // console.log(userIDResult[0]);
+  try {
+    let [articleData] = await db.execute(
+      'SELECT article.*, article_category.name AS category_name,article_comment.likes AS comment_likes, user.name AS user_name, user.img AS user_img, article_user.nickname AS article_author_name, article_user.img AS article_author_img FROM article JOIN article_category ON article.category_id = article_category.id LEFT JOIN article_comment ON article.id = article_comment.article_id LEFT JOIN user ON article_comment.user_id = user.id LEFT JOIN user AS article_user ON article.user_id = article_user.id  WHERE article.user_id = ? ORDER BY article.id',[userID]
+    );
+    if (articleData) {
+      res.json(articleData);
+    } else {
+      res.json('沒有找到相應的資訊');
+    }
+  } catch (error) {
+    console.error('發生錯誤：', error);
+    res.json('發生錯誤' + error);
+  }
+});
+
 //登入 目前設定 email 就是帳號 不可更改
 router.post("/login", upload.none(), async (req, res) => {
   let [userData] = await db.execute("SELECT * FROM `user` WHERE `valid` = 1");
