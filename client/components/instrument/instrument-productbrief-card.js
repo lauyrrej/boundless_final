@@ -1,6 +1,6 @@
 import { React, useState } from 'react'
 import { FaHeart } from 'react-icons/fa'
-
+import Instrument from '@/data/instrument/instrument.json'
 import toast, { Toaster } from 'react-hot-toast'
 //收藏的功能
 
@@ -8,16 +8,13 @@ import toast, { Toaster } from 'react-hot-toast'
 import Link from 'next/link'
 
 export default function ProductBriefCard({
-  id,
-  img,
-  img_small,
-  data,
-  quantity,
-  setQuantity,
-  increment,
-  decrement,
+  data = {},
+  quantity = 1,
+  setQuantity = {},
   addInstrumentItem = () => {},
-  calcTotalItems = () => {},
+  increment = () => {},
+  decrement = () => {},
+  remove = () => {},
 }) {
   //收藏按鍵的功能
   const [colorChange, setcolorChange] = useState(false)
@@ -34,13 +31,14 @@ export default function ProductBriefCard({
   // info={InstrumentDetail[0].info}
 
   // ----------------------加入右上角購物車的功能
-  const notify = () =>
-  toast('{InstrumentDetail[0].name}已加入購物車.')
+  const [cartItems, setCartItems] = useState([])
+  const [cartCount, setCartCount] = useState(0)
+
   return (
     <>
       <div className="Right sticky-top">
         <div className="prodBriefing sticky-top ">
-          <div className="prodMainName">{name}</div>
+          <div className="prodMainName">{data.name}</div>
           <div className="Rating">
             <div className="star">
               <img
@@ -51,10 +49,10 @@ export default function ProductBriefCard({
               <div className="ratingNumber">4.9</div>
               <div className="commentNumber">(3)</div>
             </div>
-            <div className="sales">已售出 {sales}</div>
+            <div className="sales">已售出 {data.sales}</div>
           </div>
           <div className="productPrice">
-            <div className="price">NT$ {price}</div>
+            <div className="price">NT$ {data.price}</div>
             {/* 收藏功能 */}
             {/* 做好的 onClick*/}
             <div className="likesIcon icon-container ">
@@ -66,7 +64,7 @@ export default function ProductBriefCard({
               />
             </div>
           </div>
-          <div className="Intro">{info}</div>
+          <div className="Intro">{data.info}</div>
           {/* 數量選擇器 */}
           {/* 庫存等於0時應該顯示 暫無庫存*/}
 
