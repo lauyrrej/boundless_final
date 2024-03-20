@@ -2,6 +2,15 @@ import express, { json } from 'express';
 import db from '../db.js';
 import cors from 'cors';
 // import formidable from "formidable";
+<<<<<<< HEAD
+import { dirname, resolve, extname } from 'path';
+import { fileURLToPath } from 'url';
+import { renameSync } from 'fs';
+const __dirname = dirname(fileURLToPath(import.meta.url));
+import multer from 'multer';
+const upload = multer({ dest: resolve(__dirname, 'public/Images') });
+// 上傳內容放public
+=======
 //上傳檔案
 import { renameSync } from "fs";
 import { dirname, resolve, extname } from "path";
@@ -11,6 +20,7 @@ import formidable from "formidable";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 import multer from 'multer';
 const upload = multer();
+>>>>>>> e7fabdc015716f42eae1d40634fe062ac0fef228
 
 const router = express.Router();
 router.use(cors());
@@ -67,6 +77,51 @@ router.get('/categories', async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
+// router.post("/api/upload", upload.single("myFile"), (req, res) => {
+//   // 處理上傳邏輯與命名myFile=前端input:name
+//   let timestamp = Date.now();
+//   let newFileName = timestamp + extname(req.file.originalname);
+//   // 根據時間點給予新的名稱
+//   renameSync(req.file.path, resolve(__dirname, "public/upload", newFileName));
+//   res.json({ body: req.body, file: req.file });
+// });
+
+// publish
+router.post('/article-publish', upload.none(), async (req, res) => {
+  console.log(req.body);
+  // POST /api/user/status 401 7.812 ms - 70
+  const { uid, title, content, img, category_id } = req.body;
+  const trueCategory = parseInt(category_id);
+  const auid = generateUid();
+  // 更新會員所屬的JAM
+  // let returnNum = await db
+  //   .execute(
+  //     "UPDATE `user` SET `my_jam` = ? WHERE `uid` = ?;",
+  //     [auid, uid]
+  //   )
+  //   .then(() => {
+  //     return 1;
+  //   })
+  //   .catch(() => {
+  //     return 0;
+  //   });
+  // if (returnNum === 0) {
+  //   console.log("新增失敗");
+  //   return
+  // }
+  await db
+    .execute(
+      'INSERT INTO `article` (`id`, `auid`, `title`, `content`, `img`, `category_id`) VALUES (NULL, ?, ?, ?, ?, ?)',
+      [auid, title, content, img, category_id]
+    )
+    .then(() => {
+      res.status(200).json({ status: 'success', auid });
+    })
+    .catch((error) => {
+      res.status(409).json({ status: 'error', error });
+    });
+=======
 // 照片上傳(抓不到image)
 router.post('/api/upload', upload.single('myFile'), (req, res) => {
   // 處理上傳邏輯與命名myFile=前端input:name
@@ -75,6 +130,7 @@ router.post('/api/upload', upload.single('myFile'), (req, res) => {
   // 根據時間點給予新的名稱
   renameSync(req.file.path, resolve(__dirname, 'public/article', newFileName));
   res.json({ body: req.body, file: req.file });
+>>>>>>> e7fabdc015716f42eae1d40634fe062ac0fef228
 });
 
 // 文章發布(fetch error)
@@ -106,6 +162,8 @@ function generateUid() {
   let createdCodes = [];
   let createCodes = '';
 
+<<<<<<< HEAD
+=======
   let Code = '';
   do {
     Code = '';
@@ -121,4 +179,5 @@ function generateUid() {
   return createCodes;
 }
 
+>>>>>>> e7fabdc015716f42eae1d40634fe062ac0fef228
 export default router;

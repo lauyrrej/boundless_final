@@ -6,7 +6,7 @@ export default function Twzipcode({
   initPostcode = '',
   onPostcodeChange = (country, township, postcode) => {},
 }) {
-  const [countryIndex, setCountryIndex] = useState(1)
+  const [countryIndex, setCountryIndex] = useState(-1)
   const [townshipIndex, setTownshipIndex] = useState(-1)
 
   const [postcode, setPostcode] = useState('')
@@ -48,6 +48,10 @@ export default function Twzipcode({
         postcode
       )
       localStorage.setItem('Postcode', postcode)
+      let newCountry = countries[countryIndex]
+      localStorage.setItem('Country', newCountry)
+      let newTownship = townships[countryIndex][townshipIndex]
+      localStorage.setItem('Township', newTownship)
     }
   }, [postcode])
 
@@ -63,8 +67,7 @@ export default function Twzipcode({
           id="country"
           value={countryIndex}
           onChange={(e) => {setCountryIndex(Number(e.target.value))
-            let newCountry = countries[countryIndex]
-          localStorage.setItem('Country', newCountry)
+
           }}
         >
           <option value={-1}>請選擇縣市</option>
@@ -87,8 +90,6 @@ export default function Twzipcode({
           id="district"
           value={townshipIndex}
           onChange={(e) => {setTownshipIndex(Number(e.target.value))
-            let newTownship = townships[countryIndex][townshipIndex]
-            localStorage.setItem('Township', newTownship)
           }}
         >
           <option value={-1}>請選擇鄉鎮區</option>
