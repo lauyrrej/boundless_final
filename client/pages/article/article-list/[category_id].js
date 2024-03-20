@@ -83,48 +83,59 @@ export default function ArticleList() {
   // ----------------------會員登入狀態  ----------------------
 
   // 全部article資料
-  useEffect(() => {
-    const getDatas = async () => {
-      try {
-        const res = await fetch(`http://localhost:3005/api/comment`)
-        const datas = await res.json()
-        if (datas) {
-          setArticle(datas) // 設定獲取的文章數據到狀態中
-          console.log(datas)
-        }
-      } catch (e) {
-        console.error(e)
+  const getSingleDetail = async (category_id) => {
+    try {
+      const res = await fetch(`http://localhost:3005/api/article/${category_id}`)
+      // res.json()是解析res的body的json格式資料，得到JS的資料格式
+      const data = await res.json()
+
+      // 設定到state中，觸發重新渲染(re-render)，會進入到update階段
+      // 進入狀態前檢查資料類型有值，以避免錯誤
+      if (data) {
+        setArticleDetail(data[0])
+        // 只拿第一筆資料
+        // console.log(articleDetail.title)
+        console.log(data)
       }
+    } catch (e) {
+      console.error(e)
     }
-    getDatas() // 在元件渲染後立即獲取文章數據
-  }, []) // 空的依賴陣列表示只在元件第一次渲染時執行一次
+  }
+  // 初次渲染"之後(After)"+router.isReady改變時，執行其中程式碼
+  useEffect(() => {
+    // 如果isReady是true，確保能得到query的值
+    if (router.isReady) {
+      const { category_id } = router.query
+      getSingleDetail(category_id)
+    }
+  }, [router.isReady])
 
   // article-category資料
-  const [articleCategory, setArticleCategory] = useState([])
-  function getArticleCategory() {
-    return new Promise((resolve, reject) => {
-      let url = 'http://localhost:3005/api/article/categories'
-      fetch(url, {
-        method: 'GET',
-        credentials: 'include',
-      })
-        .then((response) => {
-          return response.json()
-        })
-        .then((result) => {
-          resolve(result)
-          //   console.log(result)
-          setArticleCategory(result)
-        })
-        .catch((error) => {
-          console.log(error)
-          reject()
-        })
-    })
-  }
-  useEffect(() => {
-    getArticleCategory()
-  }, [])
+  // const [articleCategory, setArticleCategory] = useState([])
+  // function getArticleCategory() {
+  //   return new Promise((resolve, reject) => {
+  //     let url = 'http://localhost:3005/api/article/categories'
+  //     fetch(url, {
+  //       method: 'GET',
+  //       credentials: 'include',
+  //     })
+  //       .then((response) => {
+  //         return response.json()
+  //       })
+  //       .then((result) => {
+  //         resolve(result)
+  //         //   console.log(result)
+  //         setArticleCategory(result)
+  //       })
+  //       .catch((error) => {
+  //         console.log(error)
+  //         reject()
+  //       })
+  //   })
+  // }
+  // useEffect(() => {
+  //   getArticleCategory()
+  // }, [])
 
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
