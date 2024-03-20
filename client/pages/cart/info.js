@@ -21,6 +21,7 @@ import { FiMinus } from 'react-icons/fi'
 import { useCart } from '@/hooks/use-cart'
 
 import Twzipcode from '@/components/cart/twzipcode'
+import { userAgent } from 'next/server'
 
 export default function Test() {
   //hook
@@ -50,33 +51,46 @@ export default function Test() {
 
   //User-Info Data
 
-  const [name, setName] = useState('')
-  const [phone, setPhone] = useState('')
-  const [email, setEmail] = useState('')
-  const [address, setAddress] = useState('')
+  const [name, setName] = useState(  ()=>{
+    const saveItem = localStorage.getItem('UserInfo')
+    const parseItem = JSON.parse(saveItem)[0].Name
+    return parseItem || ''
+  })
+
+  const [phone, setPhone] = useState(  ()=>{
+    const saveItem = localStorage.getItem('UserInfo')
+    const parseItem = JSON.parse(saveItem)[0].Phone
+    return parseItem || ''})
+  const [email, setEmail] = useState(()=>{
+    const saveItem = localStorage.getItem('UserInfo')
+    const parseItem = JSON.parse(saveItem)[0].Email
+    return parseItem || ''})
+  const [address, setAddress] = useState(()=>{
+    const saveItem = localStorage.getItem('UserInfo')
+    const parseItem = JSON.parse(saveItem)[0].Address
+    return parseItem || ''})
 
   let UserInfo = JSON.stringify([
     { Name: name, Phone: phone, Email: email, Address: address },
   ])
 
+  let UserInfoData = JSON.parse(UserInfo)
 
   useEffect(() => {
     localStorage.setItem('UserInfo', UserInfo)
   }, [UserInfo])
 
 
-let UserInfoData = JSON.parse(UserInfo)
 
-if(typeof window !== 'undefined'){
-    const country = localStorage.getItem('Country')
-    const township = localStorage.getItem('Township')
-    const postcode = localStorage.getItem('Postcode')
-}
+  const country = localStorage.getItem('Country') || ''
+  const township = localStorage.getItem('Township') || ''
+  const postcode = localStorage.getItem('Postcode') || ''
+
 
 const [data, setData] = useState({
-  country: '',
-  township: '',
-  postcode: '',
+  country: country,
+  township: township,
+  postcode: postcode,
 })
 
 
@@ -222,7 +236,7 @@ console.log(UserInfoData[0].Name);
                         type="text"
                         className="form-control"
                         id="phone"
-                        value={UserInfo.Phone}
+                        value={UserInfoData[0].Phone}
                         onChange={(e) => setPhone(e.target.value)}
                       />
                     </div>
@@ -239,7 +253,7 @@ console.log(UserInfoData[0].Name);
                         type="text"
                         className="form-control"
                         id="email"
-                        value={UserInfo.Email}
+                        value={UserInfoData[0].Email}
                         onChange={(e) => setEmail(e.target.value)}
                       />
                     </div>
@@ -269,7 +283,7 @@ console.log(UserInfoData[0].Name);
                           type="text"
                           className="form-control"
                           id="addressinfo"
-                          value={UserInfo.Address}
+                          value={UserInfoData[0].Address}
                           onChange={(e) => setAddress(e.target.value)}
                         />
                       </div>
