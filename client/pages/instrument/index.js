@@ -845,7 +845,7 @@ export default function Test({ onSearch }) {
                       sales,
                     } = v
                     return (
-                      <div className="mb-4" key={id}>
+                      <div key={id}>
                         <Card
                           id={id}
                           puid={puid}
@@ -875,7 +875,7 @@ export default function Test({ onSearch }) {
                       sales,
                     } = v
                     return (
-                      <div key={id} className="mb-4">
+                      <div key={id}>
                         <Card
                           id={id}
                           puid={puid}
@@ -913,6 +913,9 @@ export default function Test({ onSearch }) {
           margin-block: 30px;
           gap: 35px;
           flex-wrap: wrap;
+          @media screen and (max-width: 576px) {
+            gap: 15px 10px;
+          }
         }
 
         .hot-instrument-card {

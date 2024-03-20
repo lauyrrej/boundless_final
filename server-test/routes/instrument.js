@@ -245,9 +245,10 @@ router.get('/:id', async (req, res, next) => {
   try {
     // 商品詳細資料
     let [data] = await db.execute(
-      'SELECT p.*, ic.name AS category_name ' +
+      'SELECT p.*, ic.name AS subcategory_name, ic2.name AS category_name ' +
         'FROM `product` AS p ' +
-        'LEFT JOIN `instrument_category` AS ic ON p.instrument_category_id = ic.id ' +
+        'JOIN `instrument_category` AS ic ON p.instrument_category_id = ic.id ' +
+        'JOIN `instrument_category` AS ic2 ON ic.parent_id = ic2.id ' +
         'WHERE p.`puid` = ?',
       [puid]
     );

@@ -3,8 +3,6 @@ import { FaHeart } from 'react-icons/fa'
 import { FaPlus } from 'react-icons/fa'
 import { FaMinus } from 'react-icons/fa6'
 import { FaStar } from 'react-icons/fa'
-import Instrument from '@/data/instrument/instrument.json'
-import toast, { Toaster } from 'react-hot-toast'
 //收藏的功能
 
 //跳轉頁面
@@ -49,7 +47,7 @@ export default function ProductBriefCard({
               {reviews.length > 0 ? (<>{reviews.map((v) => {
                   let score = 0
                   return (score = v.stars / reviews.length)
-                })}</>) : '尚無評分'}
+                })}</>) : '尚無評價'}
               </div>
               <div className="commentNumber">({reviews.length})</div>
             </div>
@@ -63,12 +61,12 @@ export default function ProductBriefCard({
               <FaHeart
                 className="likesIcon"
                 size="32px"
-                style={{ color: `${colorChange ? 'red' : ''}` }}
+                style={{ color: `${colorChange ? '#ec3f3f' : ''}` }}
                 onClick={colorToggle}
               />
             </div>
           </div>
-          <div className="Intro">{data.info}</div>
+          <div className="Intro" style={{textAlign: 'justify'}}>{data.info}</div>
           {/* 數量選擇器 */}
           {/* 庫存等於0時應該顯示 暫無庫存*/}
 
@@ -86,7 +84,7 @@ export default function ProductBriefCard({
                     }
                   }}
                 >
-                  <FaMinus color="#1d1d1d" />
+                  <FaMinus color="#666666" />
                 </div>
                 <div className="quantity">{quantity}</div>
                 <div
@@ -134,6 +132,7 @@ export default function ProductBriefCard({
         {`
           .Right {
             top: 80px;
+            z-index: 30;
           }
 
           .prodBriefing {

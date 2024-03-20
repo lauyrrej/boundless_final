@@ -76,7 +76,7 @@ export default function InstrumentCard({
             overflow: hidden;
             position: relative;
             height: 160px;
-            width: 200px;
+            width: 100%;
              {
               /* width: 100%; */
             }
