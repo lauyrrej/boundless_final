@@ -108,7 +108,6 @@ export default function Navbar({ menuMbToggle }) {
                 <IoCart size={30} className="cart-icon" />
 
                 <span className="button__badge">{calcTotalItems()}</span>
-
               </Link>
             </li>
             <li className="login-state d-flex justify-content-center">
@@ -144,7 +143,7 @@ export default function Navbar({ menuMbToggle }) {
           </ul>
           {/* 手機版 navbar */}
           <div className="navbar-mb d-lg-none d-flex justify-content-end align-items-center">
-            <Link href="/cart" className="p-0 me-3">
+            <Link href="/cart/check" className="p-0 me-3">
               <IoCart size={30} />
             </Link>
             <IoMenu size={30} className="ms-3" onClick={menuMbToggle} />
