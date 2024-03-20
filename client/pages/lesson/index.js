@@ -136,8 +136,8 @@ export default function LessonList({}) {
   const perPage = 12
   const [currentPage, setCurrentPage] = useState(0)
   const [totalPage, setTotalPage] = useState(0)
-    const [LessonArray, setLessonArray] = useState([])
-    
+  const [LessonArray, setLessonArray] = useState([])
+
   function getLesson() {
     return new Promise((resolve, reject) => {
       let url = 'http://localhost:3005/api/lesson'
@@ -149,7 +149,7 @@ export default function LessonList({}) {
           return response.json()
         })
         .then((result) => {
-            // 将 result 每 perPage 条记录分成一页一页的数组
+          // 将 result 每 perPage 条记录分成一页一页的数组
           const pages = result.reduce((acc, current, index) => {
             const tempPage = Math.floor(index / perPage) // 当前记录所在的页码
             if (!acc[tempPage]) {
@@ -162,6 +162,8 @@ export default function LessonList({}) {
             setLessonArray(pages[currentPage]) // 将分页后的结果传递给 resolve
             console.log(LessonArray)
             
+          setLessonArray(pages[currentPage]) // 将分页后的结果传递给 resolve
+          console.log(LessonArray)
         })
         .catch((error) => {
           console.log(error)
@@ -175,9 +177,8 @@ export default function LessonList({}) {
 
   const handlePageClick = (event) => {
     const newPage = event.selected
-      setCurrentPage(newPage)
+    setCurrentPage(newPage)
     //   console.log(currentPage)
-      
   }
 
   // 在组件中定义 isFiltered 状态，并提供一个函数来更新它的值
@@ -203,7 +204,7 @@ export default function LessonList({}) {
       console.log(data)
     }
   }
-    
+
   // 課程評價篩選
   const scoreState = ['all', '5', '4', '3']
   const [score, setScore] = useState('all')
@@ -404,7 +405,7 @@ export default function LessonList({}) {
           <div className="sidebar-wrapper d-none d-sm-block  col-sm-2">
             <div className="sidebar">
               <ul className="d-flex flex-column">
-                <Link href={"/lesson/?category === 0"}>
+                <Link href={'/lesson/?category === 0'}>
                   <li onClick={() => handleCategoryChange(0)}>全部</li>
                 </Link>
                 {/* 分類功能 */}
