@@ -758,7 +758,7 @@ router.put('/updateForm', upload.none(), async (req, res) => {
 
 // 確認入團
 router.put('/joinJam', upload.none(), async (req, res) => {
-  const { id, user_id, juid, applier_play } = req.body;
+  const { user_id, user_uid, juid, applier_play } = req.body;
 
   // 準備更新樂團member、play欄位的資料
   const newMember = { id: parseInt(user_id), play: parseInt(applier_play) };
@@ -812,10 +812,10 @@ router.put('/joinJam', upload.none(), async (req, res) => {
       });
   }
 
-  // 更新申請: 刪除狀態(valid=0, state=4)
+  // 更新所有申請: 刪除狀態(valid=0, state=4)
   const applyResult = await db
-    .execute('UPDATE `jam_apply` SET `state` = 4, `valid` = 0 WHERE `id` = ?', [
-      id,
+    .execute('UPDATE `jam_apply` SET `state` = 4, `valid` = 0 WHERE `applier_uid` = ?', [
+      user_uid,
     ])
     .then(() => {
       return 1;
