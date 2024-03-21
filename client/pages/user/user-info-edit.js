@@ -572,7 +572,7 @@ export default function Test() {
                   <Link href="/user/user-info">會員資訊</Link>
                 </li>
                 <li key={2}>
-                  <Link href="/user/user-jam">我的樂團</Link>
+                  <Link href={LoginUserData.jamstate ?  `/jam/recruit-list/${LoginUserData.my_jam}`: `user/user-jam`}>我的樂團</Link>
                 </li>
                 <li key={3}>
                   <Link href="/user/user-order">我的訂單</Link>

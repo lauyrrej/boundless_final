@@ -104,7 +104,7 @@ router.get("/user-homepage/:uid", async (req, res) => {
     // let [userHomePageData] = await db.execute("SELECT email, nickname, phone, birthday , genre_like , play_instrument , info, gender , privacy , my_jam , photo_url , img FROM `user`  WHERE `uid` = ? AND `valid` = 1", [uid]);
 
     //正確版 join
-    let [userHomePageData] = await db.execute("SELECT email, nickname, phone, birthday , genre_like , play_instrument , info, gender , privacy , j.name AS my_jam , photo_url , img FROM `user` u LEFT JOIN `jam` j ON CONVERT(j.juid USING utf8mb4) = CONVERT(u.my_jam USING utf8mb4) WHERE u.uid = ? AND u.valid = 1", [uid])
+    let [userHomePageData] = await db.execute("SELECT email, nickname, phone, birthday , genre_like , play_instrument , info, gender , privacy , j.state AS my_jamState, j.name AS my_jam , photo_url , img FROM `user` u LEFT JOIN `jam` j ON CONVERT(j.juid USING utf8mb4) = CONVERT(u.my_jam USING utf8mb4) WHERE u.uid = ? AND u.valid = 1", [uid])
 
     //單獨
     // let [jamNameData] = await db.execute("SELECT  j.name AS my_jam FROM `user` u LEFT JOIN `jam` j ON CONVERT(j.juid USING utf8mb4) = CONVERT(u.my_jam USING utf8mb4) WHERE u.uid = ?", [uid])
@@ -294,7 +294,7 @@ router.get("/:id", checkToken, async function (req, res) {
   // );
 
   // 不回傳密碼跟創建時間的版本  3/18 原版 join jam.name 來當my_jamname 名稱版本 
-  let [singerUser] = await db.execute("SELECT u.id, uid, u.name , email, nickname, phone, birthday, postcode, country, township, address, genre_like, play_instrument , info, gender , privacy, google_uid, j.name AS my_jamname, my_jam , photo_url, my_lesson, img FROM `user` u LEFT JOIN `jam` j ON CONVERT(j.juid USING utf8mb4) = CONVERT(u.my_jam USING utf8mb4) WHERE u.id = ? AND u.valid = 1", [id])
+  let [singerUser] = await db.execute("SELECT u.id, uid, u.name , email, nickname, phone, birthday, postcode, country, township, address, genre_like, play_instrument , info, gender , privacy, google_uid, j.state AS my_jamState, j.name AS my_jamname, my_jam , photo_url, my_lesson, img FROM `user` u LEFT JOIN `jam` j ON CONVERT(j.juid USING utf8mb4) = CONVERT(u.my_jam USING utf8mb4) WHERE u.id = ? AND u.valid = 1", [id])
 
   const resUser = singerUser[0];
 
