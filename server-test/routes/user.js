@@ -385,7 +385,7 @@ router.post('/', async (req, res) => {
   }
 
   // return res.json({ status: 'success 2', message: '成功' })
-
+const uNickname = "USER-" + uuid 
   // 先查詢是否已存在該用戶
   const [users] = await db.execute("SELECT * FROM user WHERE email = ?;", [
     newUser.email,
@@ -395,7 +395,7 @@ router.post('/', async (req, res) => {
     return res.json({ status: "error 2", message: "該帳號已存在" });
   } else {
     // 用戶不存在，插入新用戶
-    const [result] = await db.execute('INSERT INTO user (email, uid, password, created_time , valid) VALUES (?, ?, ?, ?, 1);', [newUser.email, uuid, newUser.password, YYYYMMDDTime]);
+    const [result] = await db.execute('INSERT INTO user (nickname , email, uid, password, created_time , valid) VALUES (?, ?, ?, ?, ?, 1);', [uNickname ,newUser.email, uuid, newUser.password, YYYYMMDDTime]);
     // console.log('User inserted:', result);
   }
 
