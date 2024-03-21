@@ -48,42 +48,11 @@ export default function Test() {
   let produceTestImage = `/instrument/上低音號/Jupiter_jbr700/jbr700_1.jpg`
 
   // ----------------------會員登入狀態  ----------------------
-  //------獲取使用者jam 名稱 
-  const [UserJAMName , setUserJAMName] = useState({id:'',my_jam:''})
-  const appKey = 'userToken'
-  const getLoginUserJAMName = async (e) => {
-    // 拿取Token回傳後端驗證狀態
-    const Loginusertoken = localStorage.getItem(appKey)
-
-    if (!Loginusertoken) {
-      console.error('沒有登入的token 故無法取得使用者樂團名稱。')
-      return null
-    }
-    const userID = jwtDecode(Loginusertoken)
-    const id = userID.id
-
-    try {
-      const response = await fetch(
-        `http://localhost:3005/api/user/jamname/${id}`,
-        {
-          method: 'get',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${Loginusertoken}`,
-          },
-          body: JSON.stringify(),
-        }
-      )
-      const LoginUserJAMName = await response.json()
-      setUserJAMName(LoginUserJAMName)
-      // console.log(UserJAMName)
-      // 在這裡處理後端返回的資料
-    } catch (error) {
-      console.error('There was a problem with the fetch operation:', error)
-    }
-  }
+  
 
   //------獲取單一使用者全部訂單 
+  const appKey = 'userToken'
+  const [userOrderData, setuserOrderData] = useState([])
   const getLoginUserOrder = async (e) => {
     // 拿取Token回傳後端驗證狀態
     const Loginusertoken = localStorage.getItem(appKey)
@@ -94,6 +63,7 @@ export default function Test() {
     }
     const userID = jwtDecode(Loginusertoken)
     const id = userID.id
+    // console.log(id)
 
     try {
       const response = await fetch(
@@ -107,12 +77,15 @@ export default function Test() {
           body: JSON.stringify(),
         }
       )
-      const LoginUserProfile = await response.json()
+      const orderDatas = await response.json()
       // console.log('Response from server:', LoginUserData)
       // setUserData(LoginUserData)
       // console.log(LoginUserProfile)
-      setuserData(LoginUserProfile)
-      // console.log(LoginUserData)
+      
+      // console.log(orderDatas.data)
+      setuserOrderData(orderDatas.data)
+      
+      
       // 在這裡處理後端返回的資料
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error)
@@ -126,7 +99,23 @@ export default function Test() {
       getLoginUserOrder()
     }
   }, []) 
+  let OrderData = []
+  let i = 0
+  let y = 0
+  
+  useEffect(() => {
+    // 檢查獲得訂單
+    // console.log(userOrderData.productResult[0][0])
+    if(userOrderData.productResult){
+      OrderData = userOrderData
+      console.log(OrderData.productResult[0][0])
+    }
+    
+  }, [userOrderData]) 
 
+
+  
+  
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -573,15 +562,15 @@ export default function Test() {
                       <div className="user-orderList">
 
 
-                        <div className="user-order-item-instrument ">
+                        {/* <div className="user-order-item-instrument ">
                           <div className="user-order-item-instrument-leftSide col-lg-3 col-12">
                             <div className="user-order-item-instrument-leftSide-img">
                               <Image src={produceTestImage} alt='' priority style={{ borderRadius: 10, padding:5 }} width={150} height={150}></Image>
-                            </div>
+                            </div> */}
                             {/* <div className="user-order-item-instrument-leftSide-btn btn btn-primary">
                               退貨
                             </div> */}
-                          </div>
+                          {/* </div>
                           <div className="user-order-item-instrument-detail col-lg-9 col-12">
                             <div className="user-order-item-instrument-detail-row ">
                               <div className="user-order-item-instrument-detail-row-col-productName">
@@ -619,9 +608,160 @@ export default function Test() {
                               </div>
                             </div>
                           </div>
-                        </div>
+                        </div> */}
 
-                        <div className="user-order-item-lesson">
+
+
+                        {/* {OrderData.productResult ? 
+                        <div className="user-order-item-instrument ">
+                          <div className="user-order-item-instrument-leftSide col-lg-3 col-12">
+                            <div className="user-order-item-instrument-leftSide-img">
+                              <Image src={produceTestImage} alt='' priority style={{ borderRadius: 10, padding:5 }} width={150} height={150}></Image>
+                            </div>
+                           
+                          </div>
+                          <div className="user-order-item-instrument-detail col-lg-9 col-12">
+                            <div className="user-order-item-instrument-detail-row ">
+                              <div className="user-order-item-instrument-detail-row-col-productName">
+                                <p>
+                                  <span>商品名稱：</span> { userOrderData.productResult[0][0].name} {OrderData.productResult[0][0].quantity != 1  ?   "  *  " + OrderData.productResult[0][0].quantity : ''}
+                                </p>
+                                
+                              </div>
+                            </div>
+                            <div className="user-order-item-instrument-detail-row row">
+                              <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
+                                <h5>訂單編號</h5>
+                                <p>{OrderData.productResult[0][0].order_id + 31700023464729}</p>
+                              </div>
+                              <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
+                                <h5>購買日期</h5>
+                                <p>{OrderData.productResult[0][0].onshelf_time}</p>
+                              </div>
+                              <div className="user-order-item-instrument-detail-row-col col-lg-3 col-12">
+                                <h5>付款金額</h5>
+                                <p>{OrderData.productResult[0][0].price * OrderData.productResult[0][0].quantity}</p>
+                              </div>
+                            </div>
+                            <div className="user-order-item-instrument-detail-row row">
+                              <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
+                                <h5>付款方式</h5>
+                                <p>信用卡</p>
+                              </div>
+                              <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
+                                <h5>商品狀態</h5>
+                                <p>{OrderData.productResult[0][0].transportation_state}</p>
+                              </div>
+                              <div className="user-order-item-instrument-detail-row-col-address col-lg-4 col-5">
+                                <h5>配送地址</h5>
+                                <p>{OrderData.productResult[0][0].postcode}{OrderData.productResult[0][0].country}{OrderData.productResult[0][0].township}{OrderData.productResult[0][0].address}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        : ''} */}
+
+                        {/* {userOrderData.productResult && userOrderData.productResult.map((product, index) => (
+                          <div className="user-order-item-instrument" key={index}>
+                            <div className="user-order-item-instrument-leftSide col-lg-3 col-12">
+                              <div className="user-order-item-instrument-leftSide-img">
+                                <Image src={product.image} alt={product.name} priority style={{ borderRadius: 10, padding:5 }} width={150} height={150}></Image>
+                              </div>
+                              
+                            </div>
+                            <div className="user-order-item-instrument-detail col-lg-9 col-12">
+                              <div className="user-order-item-instrument-detail-row">
+                                <div className="user-order-item-instrument-detail-row-col-productName">
+                                  <p>
+                                    <span>商品名稱：</span> {product[0].name} {product[0].quantity !== 1 ? ` * ${product[0].quantity}` : ''}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="user-order-item-instrument-detail-row row">
+                                <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
+                                  <h5>訂單編號</h5>
+                                  <p>{product.order_id + 31700023464729}</p>
+                                </div>
+                                <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
+                                  <h5>購買日期</h5>
+                                  <p>{product.onshelf_time}</p>
+                                </div>
+                                <div className="user-order-item-instrument-detail-row-col col-lg-3 col-12">
+                                  <h5>付款金額</h5>
+                                  <p>{product.price * product.quantity}</p>
+                                </div>
+                              </div>
+                              <div className="user-order-item-instrument-detail-row row">
+                                <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
+                                  <h5>付款方式</h5>
+                                  <p>信用卡</p>
+                                </div>
+                                <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
+                                  <h5>商品狀態</h5>
+                                  <p>{product.transportation_state}</p>
+                                </div>
+                                <div className="user-order-item-instrument-detail-row-col-address col-lg-4 col-5">
+                                  <h5>配送地址</h5>
+                                  <p>{product.postcode}{product.country}{product.township}{product.address}</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))} */}
+
+
+                        {userOrderData.productResult && userOrderData.productResult.map((productList, index) => (
+                          <div key={index}>
+                            {productList.map((product, innerIndex) => (
+                              <div className="user-order-item-instrument" key={innerIndex}>
+                                <div className="user-order-item-instrument-leftSide col-lg-3 col-12">
+                                  <div className="user-order-item-instrument-leftSide-img">
+                                    <Image src={`/smallForOrder/${product.img_small}`} alt={product.name} priority style={{ borderRadius: 10, padding:5 }} width={150} height={150}></Image>
+                                  </div>
+                                </div>
+                                <div className="user-order-item-instrument-detail col-lg-9 col-12">
+                                  <div className="user-order-item-instrument-detail-row">
+                                    <div className="user-order-item-instrument-detail-row-col-productName">
+                                      <p>
+                                        <span>商品名稱：</span> {product.name} {product.quantity !== 1 ? ` * ${product.quantity}` : ''}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <div className="user-order-item-instrument-detail-row row">
+                                    <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
+                                      <h5>訂單編號</h5>
+                                      <p>{product.order_id + 31700023464729}</p>
+                                    </div>
+                                    <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
+                                      <h5>購買日期</h5>
+                                      <p>{product.onshelf_time.split("T")[0]}</p>
+                                    </div>
+                                    <div className="user-order-item-instrument-detail-row-col col-lg-3 col-12">
+                                      <h5>付款金額</h5>
+                                      <p>${product.price * product.quantity}</p>
+                                    </div>
+                                  </div>
+                                  <div className="user-order-item-instrument-detail-row row">
+                                    <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
+                                      <h5>付款方式</h5>
+                                      <p>信用卡</p>
+                                    </div>
+                                    <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
+                                      <h5>商品狀態</h5>
+                                      <p>{product.transportation_state}</p>
+                                    </div>
+                                    <div className="user-order-item-instrument-detail-row-col-address col-lg-4 col-5">
+                                      <h5>配送地址</h5>
+                                      <p>{product.postcode}{product.country}{product.township}{product.address}</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ))}
+
+                        {/* <div className="user-order-item-lesson">
                           <div className="user-order-item-lesson-leftSide">
                             <div className="user-order-item-lesson-leftSide-img">
                               <img src="" alt="" />
@@ -659,11 +799,13 @@ export default function Test() {
                               </div>
                             </div>
                           </div>
-                        </div>
+                        </div> */}
+
                       </div>
-                      <div className="user-orderList-pagination">
+
+                      {/* <div className="user-orderList-pagination">
                         <p>待放分頁元件 注意class</p>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>
