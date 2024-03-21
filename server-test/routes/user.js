@@ -341,6 +341,20 @@ router.post("/editProfile/:id", checkToken, async function (req, res) {
   return res.json({ status: 'success', data: { result } })
 });
 
+//該使用者查詢訂單
+router.post("/order/:id", checkToken, async function (req, res) {
+  const id = req.params.id;
+  let { email, name, password, phone, postcode, country, township, address, birthday, genre_like, play_instrument, info, gender, nickname, privacy } = req.body;
+  // console.log(req.body)
+
+
+  // 更新資料庫
+  const [result] = await db.execute(`UPDATE user SET email = ?, name =? , phone = ?, postcode = ? , country = ? , township = ?, address = ? , birthday = STR_TO_DATE(?, '%Y-%m-%d') , genre_like = ? , play_instrument = ?, info = ?, gender = ?, nickname = ?, privacy = ? WHERE id = ?;`, [email, name, phone, postcode, country, township, address, birthday, genre_like, play_instrument, info, gender, nickname, privacy, id]);
+
+
+  return res.json({ status: 'success', data: { result } })
+});
+
 // 註冊 = 檢查資料庫是否有此email及密碼 ,如果沒有 就增加sql
 router.post('/', async (req, res) => {
   const uuid = generateUid()
