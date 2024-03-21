@@ -85,31 +85,19 @@ export default function Auid() {
   }, [router.isReady])
 
   // 表單送出
-  const sendForm = async (title, category_id, content, file) => {
-    if (!checkComplete()) {
-      return false
-    }
+  // 送出更改
+  const sendForm = async (auid, content) => {
     let formData = new FormData()
-    formData.append('title', title)
-    formData.append('category_id', category_id)
+    formData.append('auid', auid)
     formData.append('content', content)
-    formData.append('myFile', file)
-
-    // 確認formData內容
-    for (let [key, value] of formData.entries()) {
-      // console.log(`${key}: ${value}`)
-    }
-    const res = await fetch(
-      'http://localhost:3005/api/article/upload',
-      {
-        method: 'POST',
-        body: formData,
-        credentials: 'include',
-      }
-    )
+    const res = await fetch('http://localhost:3005/api/article/edit', {
+      method: 'PUT',
+      body: formData,
+      credentials: 'include',
+    })
     const result = await res.json()
     if (result.status === 'success') {
-      notifySuccess(result.auid)
+      notifySuccess(auid)
     } else {
       console.log(result.error)
     }
@@ -244,7 +232,9 @@ export default function Auid() {
             className="btn"
           >上一步
           </Link>
-          <button type="button" className="btn btn-primary">
+          <button onClick={() => {
+            sendForm(content)
+          }} type="button" className="btn btn-primary">
             確認更新
           </button>
         </div>

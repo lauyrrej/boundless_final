@@ -105,10 +105,11 @@ export const Tiptap = ({ setDescription, initialContent }) => {
     onUpdate: ({ editor }) => {
       const html = editor.getHTML()
       setDescription(html)
-      console.log(html)
+      // console.log(html)
     },
   })
 
+  // 處理上傳內文
   const handleChange = (e)=>{
     const newContent = e.target.value;
     setDescription(newContent);

@@ -109,6 +109,7 @@ export const Tiptap = ({ setDescription, initialContent }) => {
     },
   })
 
+  // 處理上傳內文
   const handleChange = (e)=>{
     const newContent = e.target.value;
     setDescription(newContent);

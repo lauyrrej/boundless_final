@@ -114,6 +114,24 @@ router.post('/upload', upload.single('myFile'), async (req, res) => {
 }
 );
 
+router.put('/edit', upload.none(''), async (req, res) => {
+  const { content } = req.body;
+  console.log(req.body)
+  await db
+    .execute(
+      'UPDATE `article` SET `content` = ? WHERE `juid` = ?',
+      [auid, content]
+    )
+    .then(() => {
+      console.log('更新成功');
+      res.status(200).json({ status: 'success', auid });
+    })
+    .catch((error) => {
+      res.status(500).json({ status: 'error', error });
+    });
+}
+);
+
 function generateUid() {
   let characters =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
