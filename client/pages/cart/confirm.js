@@ -23,6 +23,7 @@ import { wrap } from 'lodash'
 //confirmlist
 import LessonConfirmList from '@/components/cart/confirm-lesson-items.js'
 import InstrumentConfirmList from '@/components/cart/confirm-instrument-items.js'
+import { TRUE } from 'sass'
 
 export default function Test() {
   let UserInfo = JSON.parse(localStorage.getItem('UserInfo'))
@@ -68,12 +69,20 @@ export default function Test() {
   }
 
 
+  const [intial,setInitial] = useState('true');
+
+
+  const [orderID, setOrderID] = useState(1)
+
+  
   const  originOrderID = ()=>{
     const data = localStorage.getItem('orderID')
     const parseData = parseInt(data)
-    return parseData
+    return parseData 
   }
-  const [orderID, setOrderID] = useState(originOrderID)
+
+  
+  
 
 
   const username = UserInfo[0].Name
@@ -326,6 +335,8 @@ export default function Test() {
                     style={{ padding: '14px 0' }}
                     onClick={
                       () => {
+                        setOrderID(orderID+1)
+                        localStorage.setItem('orderID', orderID)
                         sendForm(
                           username,
                           phone,
