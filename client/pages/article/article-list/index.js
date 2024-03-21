@@ -353,7 +353,7 @@ export default function ArticleList() {
             <main className="content me-2">
               <div className="d-flex justify-content-between align-items-center">
                 <h4 className="text-primary pt-2">
-                  熱門文章{LoginUserData.name}
+                  熱門文章
                 </h4>
                 <Link
                   href={`/article/article-list/article-publish`}

@@ -55,6 +55,16 @@ export default function Auid() {
     }
   }
   // 初次渲染"之後(After)"+router.isReady改變時，執行其中程式碼
+
+  // 字串轉HTML格式
+  const [myContent, setMyContent] = useState('')
+  const getContent = (content) => {
+    document.querySelector('.newContent').innerHTML = content
+  }
+  useEffect(() => {
+    setMyContent(getContent(articleDetail.content))
+  }, [articleDetail.content])
+
   useEffect(() => {
     // 如果isReady是true，確保能得到query的值
     if (router.isReady) {
@@ -158,7 +168,9 @@ export default function Auid() {
                 </Link>
               </div>
               <h1 className="text-center">{articleDetail.title}</h1>
-              <p className="pt-2">{articleDetail.content}</p>
+              <div className='newContent'>
+                {myContent}
+              </div>
               <div className="main-img">
                 <Image
                   src={`http://localhost:3005/article/${articleDetail.img}`}

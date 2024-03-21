@@ -107,8 +107,13 @@ export const Tiptap = ({ setDescription, initialContent }) => {
       setDescription(html)
       console.log(html)
     },
-
   })
+
+  const handleChange = (e)=>{
+    const newContent = e.target.value;
+    setDescription(newContent);
+  }
+
 const [init, setInit] = useState('')
   useEffect(() => {
     if(editor)
@@ -118,7 +123,7 @@ const [init, setInit] = useState('')
   return (
     <div className="textEditor">
       <MenuBar editor={editor} />
-      <EditorContent editor={editor} />
+      <EditorContent editor={editor} onChange={handleChange} />
     </div>
   )
 }

@@ -25,9 +25,9 @@ import playerData from '@/data/player.json'
 // tiptap
 import { Tiptap } from '@/components/article/tiptapPublish'
 
-const mySwal = withReactContent(Swal)
-export default function Publish() {
 
+export default function Publish() {
+  const mySwal = withReactContent(Swal)
   // ----------------------表單  ----------------------
 
   // ---------------------- 標題 ----------------------
@@ -37,14 +37,19 @@ export default function Publish() {
   const [img, setImg] = useState('') // 照片預覽
   // ----------------------Tiptap  ----------------------
   const [description, setDescription] = useState('')
+  const [content, setContent] = useState('')
+  const handleDescriptionChange = (newContent) => {
+    setContent(newContent);
+    console.log(newContent)
+  };
 
   // ---------------------- 圖片上傳 ----------------------
   const [file, setFile] = useState(null)
-  const handleFileChange = (e)=>{
+  const handleFileChange = (e) => {
     const file = e.target.files[0]
-    if(file){
+    if (file) {
       setFile(file)
-    }else{
+    } else {
       setFile(null)
     }
   }
@@ -53,7 +58,6 @@ export default function Publish() {
   const [category_id, setCategory] = useState(true)
 
   // ---------------------- 文章摘要 ----------------------
-  const [content, setContent] = useState('')
   const [descriptionCheck, setDescriptionCheck] = useState(true)
   // 表單完成狀態 0: 有欄位尚未填寫或不符規定, 1: 填寫完成, 2: 填寫中
   const [complete, setComplete] = useState(2)
@@ -81,7 +85,7 @@ export default function Publish() {
     setComplete(1)
     return true
   }
-  
+
   // 表單送出
   const sendForm = async (title, category_id, content, file) => {
     if (!checkComplete()) {
@@ -119,7 +123,7 @@ export default function Publish() {
         position: 'center',
         icon: 'success',
         iconColor: '#1581cc',
-        title: '發起成功，將為您跳轉到資訊頁',
+        title: '發布成功，將為您跳轉到文章',
         showConfirmButton: false,
         timer: 3000,
       })
@@ -169,9 +173,8 @@ export default function Publish() {
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
         <div
-          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${
-            showMenu ? 'menu-mb-show' : ''
-          }`}
+          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${showMenu ? 'menu-mb-show' : ''
+            }`}
         >
           {/* 用戶資訊 */}
           <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
@@ -271,9 +274,10 @@ export default function Publish() {
                 <h3>自訂文章內文</h3>
               </div>
             </div>
-            <Tiptap setDescription={setDescription} onChange={(e) => {
-              setContent(e.target.value)
-            }} />
+            <div className='content'>
+              <Tiptap setDescription={handleDescriptionChange} />
+            </div>
+
             <hr />
             {/* setting content */}
             {/* <div className="set-rwd">
@@ -323,8 +327,8 @@ export default function Publish() {
                   }}
                   value={category_id}
                 >
-                  <option value={1}>樂評</option>
-                  <option value={2}>技術</option>
+                  <option selected value='1'>樂評</option>
+                  <option value='2'>技術</option>
                 </select>
               </div>
             </div>
