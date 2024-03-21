@@ -51,7 +51,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-
 //lesson_category
 router.get('/categories', async (req, res) => {
   try {
@@ -60,7 +59,7 @@ router.get('/categories', async (req, res) => {
     );
 
     if (lesson_category) {
-       res.status(200).json(lesson_category);
+      res.status(200).json(lesson_category);
       console.log(lesson_category);
     } else {
       res.status(404).json('沒有找到相應的資訊');
@@ -89,7 +88,7 @@ router.get('/category/:category', async (req, res) => {
     if (lessons.length > 0) {
       res.status(200).json(lessons);
     } else {
-       res.status(404).send({ message: '沒有找到相應的資訊' });
+      res.status(404).send({ message: '沒有找到相應的資訊' });
     }
   } catch (error) {
     console.error('發生錯誤：', error);
@@ -102,26 +101,26 @@ router.get('/:id', async (req, res, next) => {
   let luid = req.params.id;
   console.log(luid);
   try {
-   let [data] = await db.execute(
-     'SELECT ' +
-       '  p.*, ' +
-       '  pr.*, ' +
-       '  lc.name AS lesson_category_name, ' +
-       '  COUNT(pr.product_id) AS review_count, ' +
-       '  AVG(pr.stars) AS average_rating ' +
-       'FROM ' +
-       '  `product` AS p ' +
-       '  LEFT JOIN `product_review` AS pr ON p.id = pr.product_id ' +
-       '  LEFT JOIN `lesson_category` AS lc ON p.lesson_category_id = lc.id ' +
-       'WHERE ' +
-       '  p.`puid` = ? ' +
-       '  AND p.`lesson_category_id` IN ( ' +
-       '    SELECT `lesson_category_id` FROM `product` WHERE `puid` = ? ' +
-       '  ) ' +
-       'GROUP BY ' +
-       '  p.id;',
-     [luid, luid]
-   );
+    let [data] = await db.execute(
+      'SELECT ' +
+        '  p.*, ' +
+        '  pr.*, ' +
+        '  lc.name AS lesson_category_name, ' +
+        '  COUNT(pr.product_id) AS review_count, ' +
+        '  AVG(pr.stars) AS average_rating ' +
+        'FROM ' +
+        '  `product` AS p ' +
+        '  LEFT JOIN `product_review` AS pr ON p.id = pr.product_id ' +
+        '  LEFT JOIN `lesson_category` AS lc ON p.lesson_category_id = lc.id ' +
+        'WHERE ' +
+        '  p.`puid` = ? ' +
+        '  AND p.`lesson_category_id` IN ( ' +
+        '    SELECT `lesson_category_id` FROM `product` WHERE `puid` = ? ' +
+        '  ) ' +
+        'GROUP BY ' +
+        '  p.id;',
+      [luid, luid]
+    );
 
     //FIXME sql可以改一下
 
@@ -136,16 +135,23 @@ router.get('/:id', async (req, res, next) => {
       [luid]
     );
 
-    let [youwilllike] = await db.execute(
-      'SELECT p.* FROM `product` AS p ' +
-        'JOIN (SELECT `lesson_category_id` FROM `product` WHERE `puid` = ?) AS sub ' +
-        'ON p.`lesson_category_id` = sub.`lesson_category_id`',
-      [luid]
-    );
+let [youwilllike] = await db.execute(
+  'SELECT p.*, ' +
+    'COUNT(pr.product_id) AS review_count, ' +
+    'AVG(pr.stars) AS average_rating, ' +
+    'ti.name AS teacher_name ' +
+    'FROM `product` AS p ' +
+    'JOIN (SELECT `lesson_category_id` FROM `product` WHERE `puid` = ?) AS sub ' +
+    'ON p.`lesson_category_id` = sub.`lesson_category_id` ' +
+    'JOIN `product_review` AS pr ON p.`id` = pr.`product_id` ' +
+    'JOIN `teacher_info` AS ti ON p.`teacher_id` = ti.`id` ' +
+    'GROUP BY p.id',
+  [luid]
+);
+
 
 
     if ({ data, product_review, youwilllike }) {
-
       console.log({ data });
       res.status(200).json({ data, product_review, youwilllike });
     } else {

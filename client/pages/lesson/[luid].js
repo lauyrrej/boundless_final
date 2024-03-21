@@ -89,7 +89,7 @@ export default function LessonDetailPage() {
       if (data) {
           setLessonDetail(data)
  
-        console.log(LessonDetail.product_review[0].created_time)
+        console.log(LessonDetail.youwilllike)
       }
     } catch (e) {
       console.error(e)
@@ -328,12 +328,14 @@ export default function LessonDetailPage() {
                                     <div className="review-Name">
                                       {LessonDetail.product_review[index].name}
                                       <div className="review-Date">
-                                        {
-                                          format(
-    new Date(LessonDetail.product_review[index]
-                                            .created_time),
-    'yyyy-MM-dd HH:mm:ss')
-                                        }
+                                        {format(
+                                          new Date(
+                                            LessonDetail.product_review[
+                                              index
+                                            ].created_time
+                                          ),
+                                          'yyyy-MM-dd HH:mm:ss'
+                                        )}
                                       </div>
                                     </div>
                                     <div className="review-Star">
@@ -465,8 +467,10 @@ export default function LessonDetailPage() {
                     id={v.id}
                     luid={v.puid}
                     name={v.name}
+                    average_rating={Math.round(v.average_rating)}
+                    review_count={v.review_count}
                     price={v.price}
-                    teacher_id={v.teacher_id}
+                    teacher_name={v.teacher_name}
                     img={v.img}
                     length={v.length}
                     sales={v.sales}

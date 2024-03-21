@@ -242,7 +242,7 @@ export default function LessonList({}) {
 
   //-------------------排序功能
 
-  // g.3排序函数
+  // 手機版排序函数
   const handleSort = (sortType) => {
     setDataSort(sortType)
     // 根据传入的排序类型执行相应的排序操作
@@ -691,7 +691,7 @@ export default function LessonList({}) {
                               id={v.id}
                               luid={v.puid}
                               name={v.name}
-                              average_rating={averageRating}
+                              average_rating={average_rating}
                               price={v.price}
                               teacher_name={v.teacher_name}
                               img={v.img}
