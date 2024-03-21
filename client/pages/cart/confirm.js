@@ -68,6 +68,13 @@ export default function Test() {
   }
 
 
+  const  originOrderID = ()=>{
+    const data = localStorage.getItem('orderID')
+    const parseData = parseInt(data)
+    return parseData
+  }
+  const [orderID, setOrderID] = useState(originOrderID)
+
 
   const username = UserInfo[0].Name
   const phone = UserInfo[0].Phone
@@ -93,6 +100,7 @@ export default function Test() {
     payment,
     transportationstate,
     cartData,
+    orderID,
   )=>{
     let formData = new FormData()
     formData.append('username', username)
@@ -106,6 +114,7 @@ export default function Test() {
     formData.append('payment', payment)
     formData.append('transportationstate', transportationstate)
     formData.append('cartdata', cartData)
+    formData.append('orderID', orderID)
 
     const res = await fetch('http://localhost:3005/api/cart/form', {
       method: 'POST',
@@ -329,6 +338,7 @@ export default function Test() {
                           payment,
                           transportationstate,
                           cartData,
+                          orderID,
                       )
                       }
                     }
@@ -341,6 +351,8 @@ export default function Test() {
           </div>
         </>
       </div>
+
+      {/* 手機版 */}
       <div className="flow-cart-mb">
         <div
           className="d-flex flex-column position-sticky"
@@ -379,6 +391,8 @@ export default function Test() {
               style={{ padding: '14px 0' }}
               onClick={
                 () => {
+                  setOrderID(orderID+1)
+                  localStorage.setItem('orderID', orderID)
                   sendForm(
                     username,
                     phone,
@@ -391,6 +405,7 @@ export default function Test() {
                     payment,
                     transportationstate,
                     cartData,
+                    orderID,
                 )
                 }
               }

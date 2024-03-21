@@ -18,35 +18,52 @@ router.post('/form', upload.none(), async (req, res) => {
         payment,
         transportation_state,
         cartdata,
+        orderID
     } = req.body;
 
     const newCartData = JSON.parse(cartdata)
 
-    console.log(newCartData);
+    const now = new Date().toISOString();
+    console.log(username);
+ 
+    const orderTotal = 'INSERT INTO `order_total` (`id`, `user_id`, `payment`, `transportation_state`, `phone`, `discount`, `postcode`, `country`, `township`, `address`, `created_time`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
 
 
+    await db.execute(orderTotal,
+        [
+            JSON.stringify(username),
+            payment,
+            transportation_state,
+            phone,
+            totaldiscount,
+            postcode,
+            township,
+            country,
+            address,
+            now,
+        ]).then(() => {
+            res.status(200).json({ status: 'success' });
+        })
+        .catch((error) => {
+            res.status(500).json({ status: 'error', error });
+        });
 
-    // await db
-    // .execute(
-    //   'INSERT INTO `order_total` (`id`, `user_id`, `payment`, `transportation_state`, `phone`, `discount`, `postcode`, `country`, `township`, `address`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-    //   [
-    //     username,
-    //     payment,
-    //     transportation_state,
-    //     phone,
-    //     totaldiscount,
-    //     postcode,
-    //     township,
-    //     country,
-    //     address,
-    //   ]
-    // )
-    // .then(() => {
-    //   res.status(200).json({ status: 'success', juid });
-    // })
-    // .catch((error) => {
-    //   res.status(500).json({ status: 'error', error });
-    // });
+    newCartData.map(async (v,i)=>{
+        console.log(v);
+        await db.execute('INSERT INTO `order_item`  (`id`, `order_id`, `product_id`, `quantity`) VALUES (NULL, ?, ?, ?)',
+        [
+            orderID,
+            v.id,
+            v.qty,
+        ]
+        ).then(() => {
+            // res.status(200).json({ status: 'success' });
+        }).catch((error) => {
+            res.status(500).json({ status: 'error', error });
+        });
+    })
+    
+    
 
 //     const {
 //       uid,
@@ -111,7 +128,6 @@ router.post('/form', upload.none(), async (req, res) => {
 //       .catch((error) => {
 //         res.status(500).json({ status: 'error', error });
 //       });
-res.send('qq')
 });
 
 export default router;

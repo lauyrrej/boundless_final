@@ -145,7 +145,6 @@ router.get('/:id', async (req, res, next) => {
     res.status(500).send('Internal server error');
   }
 });
-<<<<<<< HEAD
 
 
 // 獲得單筆課程資料＋review
@@ -186,6 +185,5 @@ router.get("/:priceLow&;priceHigh", async (req, res, next) => {
 //   let orderDirection = req.query.order || "ASC";
 
 })
-=======
->>>>>>> e7fabdc015716f42eae1d40634fe062ac0fef228
+
 export default router;
