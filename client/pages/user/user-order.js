@@ -712,14 +712,16 @@ export default function Test() {
 
                         {userOrderData.productResult && userOrderData.productResult.map((productList, index) => (
                           <div key={index}>
+                          
                             {productList.map((product, innerIndex) => (
                               <div className="user-order-item-instrument" key={innerIndex}>
-                                <div className="user-order-item-instrument-leftSide col-lg-3 col-12">
-                                  <div className="user-order-item-instrument-leftSide-img">
-                                    <Image src={`/smallForOrder/${product.img_small}`} alt={product.name} priority style={{ borderRadius: 10, padding:5 }} width={150} height={150}></Image>
+                                <div className="user-order-item-instrument-leftSide col-lg-3 col-12" style={{paddingTop:25}}>
+                                  <div className="user-order-item-instrument-leftSide-img " >
+                                  
+                                    <Image src={`/smallForOrder/${product.img_small}`} alt={product.name} priority style={{ borderRadius: 10, padding:5 ,height: '100%' , width:"100%", objectFit:'contain'}} width={150} height={150}  ></Image>
                                   </div>
                                 </div>
-                                <div className="user-order-item-instrument-detail col-lg-9 col-12">
+                                <div className="user-order-item-instrument-detail col-lg-9 col-12" style={{paddingTop:15}}>
                                   <div className="user-order-item-instrument-detail-row">
                                     <div className="user-order-item-instrument-detail-row-col-productName">
                                       <p>
@@ -754,11 +756,16 @@ export default function Test() {
                                       <h5>配送地址</h5>
                                       <p>{product.postcode}{product.country}{product.township}{product.address}</p>
                                     </div>
+                                    
                                   </div>
+                                  
                                 </div>
+                                
                               </div>
+                              
                             ))}
                           </div>
+                          
                         ))}
 
                         {/* <div className="user-order-item-lesson">
