@@ -1,3 +1,5 @@
+import { Lekton } from "next/font/google"
+import { useState } from "react"
 export default function InstrumentCouponDropdowns({
   instrumentCoupons,
   handleInstrumentSelector,
@@ -10,7 +12,19 @@ export default function InstrumentCouponDropdowns({
     )
   })
   
-  var select = localStorage.getItem('InstrumentCoupon')
+
+
+
+let select = ()=>{
+  if(typeof localStorage !== 'undefined'){
+   return  localStorage.getItem('InstrumentCoupon')
+  }else{
+   return ''
+  }
+ }
+
+
+
 
   return (
     <>
@@ -18,7 +32,7 @@ export default function InstrumentCouponDropdowns({
         className="form-select"
         aria-label="Default select example"
         defaultValue={'Default'}
-        value={select}
+        value={select()}
         onChange={(e) => {
           handleInstrumentSelector(e.target.value)
         }}

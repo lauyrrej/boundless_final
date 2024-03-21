@@ -8,12 +8,12 @@ import jamHero from '@/assets/jam-hero.png'
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
-import { IoIosSearch } from 'react-icons/io'
-import { FaFilter } from 'react-icons/fa6'
-import { FaSortAmountDown } from 'react-icons/fa'
+import { FaPlus } from 'react-icons/fa'
+import { FaMinus } from 'react-icons/fa6'
 import { ImExit } from 'react-icons/im'
-import { IoClose } from 'react-icons/io5'
+import { FaUser } from 'react-icons/fa'
 import { FaHeart } from 'react-icons/fa'
+import { FaStar } from 'react-icons/fa'
 //連購物車
 import { useCart } from '@/hooks/use-cart'
 
@@ -25,6 +25,7 @@ import Instrument from '@/data/instrument/instrument.json'
 //toast
 import toast, { Toaster } from 'react-hot-toast'
 import React from 'react'
+import Head from 'next/head'
 // import ReactDOM from 'react-dom'
 
 // import App from '@/pages/_app'
@@ -75,29 +76,64 @@ export default function InstrumentDetailPage() {
   // 2. router.isReady(布林值)，true代表本元件已完成水合作用(hydration)，可以取得router.query的值
   const router = useRouter()
 
-  const [InstrumentDetail, setInstrumentDetail] = useState()
+  // 商品詳細
+  const [InstrumentDetail, setInstrumentDetail] = useState({})
+  const [specs, setSpecs] = useState([])
+  const [nameUnderline, setNameUnderline] = useState('')
+  const [images, setImages] = useState([])
+  const [selectedImg, setSelectedImg] = useState('')
+  // 商品評論
+  const [reviews, setReviews] = useState([])
+  const [youmaylike, setYoumaylike] = useState([])
   const [quantity, setQuantity] = useState(1)
-  // const prevPuidRef = useRef(null)
+
+  // 產生評價星星
+  const createStars = (num) => {
+    let stars = []
+    {
+      for (let i = 0; i < num; i++) {
+        stars.push(<FaStar color="#faad14" />)
+      }
+    }
+    return stars
+  }
+  const statsDOM = (num) => {
+    let stars = createStars(num)
+    return stars.map((v) => {
+      return v
+    })
+  }
+
   // 向伺服器要求資料，設定到狀態中用的函式
   const getInstrumentDetail = async (puid) => {
     try {
       const res = await fetch(`http://localhost:3005/api/instrument/${puid}`)
 
       // res.json()是解析res的body的json格式資料，得到JS的資料格式
-      const data = await res.json()
-
-      console.log(data)
-
+      const datas = await res.json()
       // 設定到state中，觸發重新渲染(re-render)，會進入到update階段
       // 進入狀態前檢查資料類型有值，以避免錯誤
-      if (data) {
-        setInstrumentDetail(data)
-        console.log(InstrumentDetail[0].name)
+      if (datas) {
+        setInstrumentDetail(datas.data)
+        const reviewData = datas.reviewData.map((v) => {
+          return { ...v, created_time: v.created_time.split('T')[0] }
+        })
+        setReviews(reviewData)
+        setYoumaylike(datas.youmaylike)
+        const specs = datas.data.specs.split('\n')
+        setSpecs(specs)
       }
     } catch (e) {
       console.error(e)
     }
   }
+  useEffect(() => {
+    if (InstrumentDetail.name && InstrumentDetail.img) {
+      setNameUnderline(InstrumentDetail.name.replaceAll(' ', '_'))
+      setImages(InstrumentDetail.img.split(','))
+      setSelectedImg(InstrumentDetail.img.split(',')[0])
+    }
+  }, [InstrumentDetail.name])
 
   // 初次渲染"之後(After)"+router.isReady改變時，執行其中程式碼
   useEffect(() => {
@@ -111,8 +147,8 @@ export default function InstrumentDetailPage() {
     }
   }, [router.isReady])
 
-  console.log('render')
-  console.log(router.query, ' isReady=', router.isReady)
+  // console.log('render')
+  // console.log(router.query, ' isReady=', router.isReady)
 
   const notify = () => toast('{InstrumentDetail[0].name)}已加入購物車.')
 
@@ -122,6 +158,9 @@ export default function InstrumentDetailPage() {
   return (
     <>
       <Navbar menuMbToggle={menuMbToggle} />
+      <Head>
+        <title>{InstrumentDetail.name}</title>
+      </Head>
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
         <div
@@ -167,7 +206,7 @@ export default function InstrumentDetailPage() {
         <div className="row">
           {/* 麵包屑 */}
           <div
-            className="breadcrumb-wrapper-ms"
+            className="breadcrumb-wrapper-ns"
             style={{ paddingBlock: '20px' }}
           >
             <ul className="d-flex align-items-center p-0 m-0">
@@ -177,10 +216,14 @@ export default function InstrumentDetailPage() {
               </Link>
               <FaChevronRight />
 
-              {/* <li style={{ marginLeft: '10px' }}>音響設備</li>
+              <li style={{ marginLeft: '10px' }}>
+                {InstrumentDetail.category_name}
+              </li>
 
               <FaChevronRight />
-              <li style={{ marginLeft: '10px' }}>音箱頭</li> */}
+              <li style={{ marginLeft: '10px' }}>
+                {InstrumentDetail.subcategory_name}
+              </li>
 
               {InstrumentDetail && InstrumentDetail.length > 0 && (
                 <ul>
@@ -196,110 +239,60 @@ export default function InstrumentDetailPage() {
 
           <div className="col-12 col-sm-6">
             {/* 主內容 */}
-            <main className="content">
+            <main className="content" style={{ paddingInline: '0' }}>
               <div>
                 <div className="Left">
                   {/* prodBriefingArea */}
                   {/* 因為我的資料庫img存的是字串，所以我要把逗號去掉才能存成陣列，然後傳回來 */}
-                  <div className="prodBriefingArea d-flex ">
-                    {InstrumentDetail &&
-                      InstrumentDetail.length > 0 &&
-                      InstrumentDetail.map((item, index) => (
-                        <img
-                          key={index}
-                          src={`/instrument/${
-                            item.category_name
-                          }/${item.name.replaceAll(' ', '_')}/${
-                            item.img.split(',')[0]
-                          }`}
-                          className="prodImg"
-                        />
-                      ))}
-                    <div className="pic-Con ">
-                      <div className="main-Pic border border-secondary">
-                        {InstrumentDetail &&
-                          InstrumentDetail.length > 0 &&
-                          InstrumentDetail.map((item, index) => (
-                            <img
-                              key={index}
-                              src={`/instrument/${
-                                item.category_name
-                              }/${item.name.replaceAll(' ', '_')}/${
-                                item.img.split(',')[0]
-                              }`}
-                              className="prodImg"
-                            />
-                          ))}
-                      </div>
-                    </div>
-                    {/* {InstrumentDetail &&
-                      InstrumentDetail.length > 0 &&
-                      InstrumentDetail.map((item, index) => {
-                        console.log(
-                          `/instrument/${item.category_name}/${item.name}/${
-                            item.img.split(',')[0]
-                          }`
-                        )
-                        ;<img
-                          key={index}
-                          src="\public\instrument\木吉他\YAMAHA_FGX3\FGX3-3.jpeg"
-                          className="prodImg"
-                        />
-                      })} */}
-
-                    {/* 資料庫img存的是字串，直接.img會沒東西 */}
-                    {/* <div className="prodBriefingArea d-flex ">
-                    {InstrumentDetail && InstrumentDetail.length > 0 && (
+                  <div className="pic-Con ">
+                    <div className="main-Pic">
                       <img
-                        src={`/instrument/木吉他/YAMAHA_FG5/${InstrumentDetail[0].img}`}
-                        className="prodImg"
+                        src={`/instrument/${InstrumentDetail.subcategory_name}/${nameUnderline}/${selectedImg}`}
+                        className="h-100 w-100"
+                        style={{ objectFit: 'contain' }}
                       />
-                    )}
-                  </div> */}
+                    </div>
+                    <div className="sub-Pic-Con row w-100">
+                      {images.map((v) => {
+                        {
+                          /* console.log(v) */
+                        }
+                        return (
+                          <div
+                            key={v}
+                            className={`col-3 p-0 sub-Pic-border ${
+                              selectedImg == v ? 'active' : ''
+                            }`}
+                          >
+                            <div
+                              className={`sub-Pic p-2`}
+                              onClick={(e) => {
+                                document
+                                  .querySelector('.active')
+                                  .classList.remove('active')
+                                setSelectedImg(v)
+                              }}
+                            >
+                              <img
+                                src={`/instrument/${InstrumentDetail.subcategory_name}/${nameUnderline}/${v}`}
+                                className="img_small w-100 h-100"
+                              />
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
                   </div>
-                  {/* <div className="pic-Con ">
-                    <div className="main-Pic border border-secondary">
-                      <img
-                        src="/instrument/Orange_PPC108/PPC108_1.png"
-                        className="main-Pic"
-                      ></img>
-                    </div>
-                    <div className="sub-Pic-Con ">
-                      <div className="sub-Pic border border-secondary">
-                        <img
-                          src="/instrument/Orange_PPC108/PPC108_1.png"
-                          className="sub-Pic"
-                        ></img>
-                      </div>
-                      <div className="sub-Pic border border-secondary">
-                        <img
-                          src="/instrument/Orange_PPC108/PPC108_2.png"
-                          className="sub-Pic"
-                        ></img>
-                      </div>
-                      <div className="sub-Pic border border-secondary">
-                        <img
-                          src="/instrument/Orange_PPC108/PPC108_3.png"
-                          className="sub-Pic"
-                        ></img>
-                      </div>
-                      <div className="sub-Pic border border-secondary">
-                        <img
-                          src="/instrument/Orange_PPC108/PPC108_1.png"
-                          className="sub-Pic"
-                        ></img>
-                      </div>
-                    </div>
-                  </div> */}
 
                   {/* 手機版productbrief-card放這 */}
                   <div className="Right-mobile">
-                    <div className="prodBriefing sticky-top">
-                      {InstrumentDetail && InstrumentDetail.length > 0 && (
-                        <div className="prodMainName">
-                          {InstrumentDetail[0].name}Orange Micro Terror
-                        </div>
-                      )}
+                    <div
+                      className="prodBriefing sticky-top"
+                      style={{ zIndex: '20' }}
+                    >
+                      <div className="prodMainName">
+                        {InstrumentDetail.name}
+                      </div>
 
                       <div className="Rating">
                         <div className="star">
@@ -308,72 +301,46 @@ export default function InstrumentDetailPage() {
                             src="https://cdn.builder.io/api/v1/image/assets/TEMP/84522f0e347edba7963eb335fd5301feca031f8d880bba21dd9760a01286c3a5?"
                             className="starImg"
                           />
-                          <div className="ratingNumber">4.9</div>
-                          <div className="commentNumber">(10)</div>
+                          <div
+                            className="ratingNumber"
+                            style={{
+                              color: reviews.length > 0 ? '' : '#666666',
+                            }}
+                          >
+                            {reviews.length > 0 ? (
+                              <>
+                                {reviews.map((v) => {
+                                  let score = 0
+                                  return (score = v.stars / reviews.length)
+                                })}
+                              </>
+                            ) : (
+                              '尚無評價'
+                            )}
+                          </div>
+                          <div className="commentNumber">
+                            ({reviews.length})
+                          </div>
                         </div>
-                        <div className="sales">已售出 10</div>
+                        <div className="sales">
+                          已售出 {InstrumentDetail.sales}
+                        </div>
                       </div>
                       <div className="productPrice">
-                        <div className="price">NT$ 22,680</div>
+                        <div className="price">
+                          NT$ {InstrumentDetail.price}
+                        </div>
                         <div className="likesIcon icon-container ">
                           <FaHeart
                             className="likesIcon"
                             size="32px"
-                            style={{ color: `${colorChange ? 'red' : ''}` }}
+                            style={{ color: `${colorChange ? '#ec3f3f' : ''}` }}
                             onClick={colorToggle}
                           />
                         </div>
-                        {/* <img
-                        loading="lazy"
-                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/5ed2e715f1421a33de89ac321d6dcc6d56fbac40a7d43dfe2cf0ecb15054bd3f?"
-                        className="likesIcon"
-                        style={{ color: `${colorChange ? 'red' : ''}` }}
-                        onClick={colorToggle}
-                      /> */}
                       </div>
 
-                      <div className="Intro">
-                        小巧的放大器，巨大的音色。
-                        <br />
-                        <br /> Micro Terror是一種全球現象。從最初的 Tiny Terror
-                        中汲取靈感，這個微型怪物將一個閥門前置放大器連接到一個固態輸出部分，以獲得巨大的音調，使其小型框架成為一種嘲弄。
-                        <br />
-                        <br />
-                        Micro Terror 重量不到 1
-                        公斤，可以說是市場上最便攜的放大器頭。與配套的 PPC108
-                        機櫃搭配使用時，Micro Terror 的 Aux
-                        輸入和耳機輸出使其成為完美的練習夥伴，即使是最雜亂的餐具櫃也足夠小。
-                        然而，不要被它的微型足跡所迷惑，因為尺寸是這款放大器唯一的小問題。Micro
-                        Terror 採用高強度鋼外殼，按照與 Terror
-                        系列其他產品相同的高標準製造，配備單個 ECC83 (12AX7)
-                        前置放大器閥，並與固態功率放大器耦合。這個小東西發出的聲音深度（和音量）確實令人震驚，橙色的咆哮和咬合聲很豐富。更重要的是，Micro
-                        Terror 可以與任何 8-16 歐姆音箱一起使用。
-                      </div>
-
-                      <div className="shoppingBtn" id="shoppingBtn">
-                        <div className="cartBtn">
-                          <img
-                            loading="lazy"
-                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
-                            className="cartIcon"
-                          />
-
-                          <div
-                            className="cart"
-                            role="presentation"
-                            onClick={() => {
-                              addInstrumentItem(InstrumentDetail, quantity)
-                            }}
-                          >
-                            加入購物車
-                          </div>
-                        </div>
-                        <div className="buyBtn">
-                          <Link href={'/pages/cart/check.js'}>
-                            <div className="buy">立即購買</div>
-                          </Link>
-                        </div>
-                      </div>
+                      <div className="Intro" style={{textAlign: 'justify'}}>{InstrumentDetail.info}</div>
                     </div>
                   </div>
 
@@ -382,245 +349,93 @@ export default function InstrumentDetailPage() {
                     {/* 規格 */}
                     <div className="outline detail-wrapp mt40">
                       <div className="detail-title">規格</div>
-                      <div className="list">
-                        {InstrumentDetail && InstrumentDetail.length > 0 && (
-                          <ul>
-                            {InstrumentDetail[0].outline}
-                            <li>輸出功率：20W</li>
-                            <li>單體輸出孔：8 ~ 16ohm</li>
-                            <li>真空管：PREAMP: 1 X 12AX7/ECC83</li>
-                            <li>尺寸：400mm x 210mm x 180mm</li>
-                            <li>重量：0.85kg</li>
-                          </ul>
-                        )}
+                      <div
+                        className="list py-3"
+                        style={{ borderRadius: '5px' }}
+                      >
+                        <ul className="m-0">
+                          {specs.map((v) => {
+                            return <li>{v}</li>
+                          })}
+                        </ul>
                       </div>
                     </div>
 
                     {/* 買家評論 */}
                     <div className="reviews mt40">
                       <div className="detail-title">買家評論</div>
-                      <div className="list">
-                        {/* 評論 */}
-                        <div className="review">
-                          <div className="review-area">
-                            <div className="review-title">
-                              <img
-                                loading="lazy"
-                                srcSet="..."
-                                className="review-avatar"
-                              />
-                              <div className="review-user">
-                                <div className="review-Name">
-                                  {InstrumentDetail &&
-                                    InstrumentDetail.length > 0 && (
-                                      <div className="user-Name">
-                                        {InstrumentDetail[0].user_id}
+                      <div
+                        className="list py-3"
+                        style={{ borderRadius: '5px' }}
+                      >
+                        {reviews.length > 0 ? (
+                          <>
+                            {reviews.map((v) => {
+                              return (
+                                <div className="review" key={v.id}>
+                                  <div className="review-area">
+                                    <div className="review-title">
+                                      <div className="userPhotoWrapper me-3">
+                                        {v.img ? (
+                                          <Image
+                                            src={`http://localhost:3005/user/${v.img}`}
+                                            alt={`${v.name}'s photo`}
+                                            width={32}
+                                            height={32}
+                                            className={`userPhoto`}
+                                          />
+                                        ) : (
+                                          <div className={`userPhotoDefault`}>
+                                            <FaUser
+                                              size={24}
+                                              className={`userDefaultIcon`}
+                                            />
+                                          </div>
+                                        )}
                                       </div>
-                                    )}
-                                  {InstrumentDetail &&
-                                    InstrumentDetail.length > 0 && (
-                                      <div className="review-Date">
-                                        {' '}
-                                        {InstrumentDetail[0].created_time}
+                                      <div className="review-user">
+                                        <div className="review-Name">
+                                          <div className="user-Name">
+                                            {v.nickname ? v.nickname : v.name}
+                                          </div>
+                                          <div className="review-Date">
+                                            {v.created_time}
+                                          </div>
+                                        </div>
+                                        <div
+                                          className="review-Star d-flex"
+                                          style={{ gap: '3px' }}
+                                        >
+                                          {statsDOM(v.stars)}
+                                        </div>
                                       </div>
-                                    )}
+                                    </div>
+                                    <div className="review-content mt-2">
+                                      {v.content}
+                                    </div>
+                                    <div className="comment-Like">
+                                      <div className="comment-Like-Number">
+                                        1人覺得有幫助
+                                      </div>
+                                      <div className="comment-Like-Icon">
+                                        <img
+                                          loading="lazy"
+                                          src="https://cdn.builder.io/api/v1/image/assets/TEMP/b33573d1006caa2dd045129e591ff98dd975245bb9b1f9ad55c74a65c6a47d58?"
+                                          className="comment-like-icon-img"
+                                        />
+                                        <div className="comment-Like-Word">
+                                          有幫助
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
-                                <div className="review-Star">
-                                  <img
-                                    loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                    className="img-13"
-                                  />
-                                  <img
-                                    loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                    className="img-13"
-                                  />
-                                  <img
-                                    loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                    className="img-13"
-                                  />
-                                  <img
-                                    loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                    className="img-13"
-                                  />
-                                  <img
-                                    loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                    className="img-13"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                            {InstrumentDetail &&
-                              InstrumentDetail.length > 0 && (
-                                <div className="review-content">
-                                  {InstrumentDetail[0].content}
-                                </div>
-                              )}
-                          </div>
-
-                          <div className="comment-Like">
-                            {InstrumentDetail &&
-                              InstrumentDetail.length > 0 && (
-                                <div className="comment-Like-Number">
-                                  {InstrumentDetail[0].likes}人覺得有幫助
-                                </div>
-                              )}
-                            <div className="comment-Like-Icon">
-                              <img
-                                loading="lazy"
-                                src="https://cdn.builder.io/api/v1/image/assets/TEMP/b33573d1006caa2dd045129e591ff98dd975245bb9b1f9ad55c74a65c6a47d58?"
-                                className="comment-like-icon-img"
-                              />
-                              <div className="comment-Like-Word">有幫助</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="review">
-                        <div className="review-area">
-                          <div className="review-title">
-                            <img
-                              loading="lazy"
-                              srcSet="..."
-                              className="review-avatar"
-                            />
-                            <div className="review-user">
-                              <div className="review-Name">
-                                <div className="user-Name">John Mayer</div>
-                                <div className="review-Date">2024-01-25</div>
-                              </div>
-                              <div className="review-Star">
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                  className="img-13"
-                                />
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                  className="img-13"
-                                />
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                  className="img-13"
-                                />
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                  className="img-13"
-                                />
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                  className="img-13"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                          <div className="review-content">
-                            初次見到這套軟體 全是英文 完全不知從何下手
-                            去Youtube上查了很多教學影片 也去網路上搜了各種資料
-                            還是不知道該從何著手。不過還好有在Youtu上看到這門課的宣傳影片
-                            就進到Ｈahow這網站裡買下了第一堂課
-                            原本只是想了解Logic的基本操作
-                            沒想到竟然連簡單的編曲技術也學會了（目前剛上完第三章）受益良多！！
-                            非常期待上完這堂課以後能做出什麼樣作品
-                            我會繼續力學習的！！非常感謝老師開這堂課！！
-                          </div>
-                          <div className="comment-Like">
-                            <div className="comment-Like-Number">
-                              1人覺得有幫助
-                            </div>
-                            <div className="comment-Like-Icon">
-                              <img
-                                loading="lazy"
-                                src="https://cdn.builder.io/api/v1/image/assets/TEMP/b33573d1006caa2dd045129e591ff98dd975245bb9b1f9ad55c74a65c6a47d58?"
-                                className="comment-like-icon-img"
-                              />
-                              <div className="comment-Like-Word">有幫助</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="review">
-                        <div className="review-area">
-                          <div className="review-title">
-                            <img
-                              loading="lazy"
-                              srcSet="..."
-                              className="review-avatar"
-                            />
-                            <div className="review-user">
-                              <div className="review-Name">
-                                <div className="user-Name">John Mayer</div>
-                                <div className="review-Date">2024-01-25</div>
-                              </div>
-                              <div className="review-Star">
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                  className="img-13"
-                                />
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                  className="img-13"
-                                />
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                  className="img-13"
-                                />
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                  className="img-13"
-                                />
-                                <img
-                                  loading="lazy"
-                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                  className="img-13"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                          <div className="review-content">
-                            初次見到這套軟體 全是英文 完全不知從何下手
-                            去Youtube上查了很多教學影片 也去網路上搜了各種資料
-                            還是不知道該從何著手。不過還好有在Youtu上看到這門課的宣傳影片
-                            就進到Ｈahow這網站裡買下了第一堂課
-                            原本只是想了解Logic的基本操作
-                            沒想到竟然連簡單的編曲技術也學會了（目前剛上完第三章）受益良多！！
-                            非常期待上完這堂課以後能做出什麼樣作品
-                            我會繼續力學習的！！非常感謝老師開這堂課！！
-                          </div>
-                          <div className="comment-Like">
-                            <div className="comment-Like-Number">
-                              1人覺得有幫助
-                            </div>
-                            <div className="comment-Like-Icon">
-                              <img
-                                loading="lazy"
-                                src="https://cdn.builder.io/api/v1/image/assets/TEMP/b33573d1006caa2dd045129e591ff98dd975245bb9b1f9ad55c74a65c6a47d58?"
-                                className="comment-like-icon-img"
-                              />
-                              <div className="comment-Like-Word">有幫助</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="more-review">
-                        <div className="more-review-word">更多回饋</div>
-                        <img
-                          loading="lazy"
-                          src="https://cdn.builder.io/api/v1/image/assets/TEMP/0121670ff626339b824728641b333ff15c591ace8f84c9c919e13179e8adc237?"
-                          className="img-33"
-                        />
+                              )
+                            })}
+                          </>
+                        ) : (
+                          <p className="m-0 fw-semibold">尚無評論</p>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -631,58 +446,117 @@ export default function InstrumentDetailPage() {
 
           {/*   ----------------------頁面內容 右半部---------------------- */}
           <div className="d-none d-sm-block col-sm-6 page-control">
-            {InstrumentDetail && InstrumentDetail.length > 0 && (
-              <ProductCardIns
-                className="Right-card"
-                data={InstrumentDetail[0]}
-                quantity={quantity}
-                setQuantity={setQuantity}
-                addInstrumentItem={addInstrumentItem}
-                increment={increment}
-                decrement={decrement}
-                remove={remove}
-              />
-            )}
+            <ProductCardIns
+              className="Right-card"
+              data={InstrumentDetail}
+              reviews={reviews}
+              quantity={quantity}
+              setQuantity={setQuantity}
+              addInstrumentItem={addInstrumentItem}
+              increment={increment}
+              decrement={decrement}
+              remove={remove}
+            />
           </div>
         </div>
         {/* 猜你喜歡 */}
-        <div className="you-may-like">
+        <div className="you-may-like d-none d-sm-block">
           <div className="detail-title ">猜你喜歡...</div>
           <div className="card-con">
-            {InstrumentDetail &&
-              InstrumentDetail.youmaylike &&
-              InstrumentDetail.youmaylike
-                .sort((a, b) => b.sales - a.sales)
-                .slice(0, 5)
-                .map((v, i) => (
-                  <CardIns
-                    key={i}
-                    id={v.id}
-                    puid={v.puid}
-                    name={v.name}
-                    price={v.price}
-                    img={v.img}
-                    sales={v.sales}
-                  />
-                ))}
+            {youmaylike.map((v, i) => {
+              {
+                /* console.log(v) */
+              }
+              return (
+                <CardIns
+                  key={i}
+                  id={v.id}
+                  puid={v.puid}
+                  name={v.name}
+                  category_name={v.category_name}
+                  price={v.price}
+                  img_small={v.img_small}
+                  sales={v.sales}
+                />
+              )
+            })}
           </div>
         </div>
         <div className="you-may-like-mobile">
           <div className="detail-title ">猜你喜歡...</div>
           {/* 手機版card-con */}
-          <div className="card-con-mobile row d-flex gy-4">
-            <div className="col-6">
-              <CardIns />
+          <div className="instrument-card-group">
+            {youmaylike.map((v, i) => {
+              {
+                /* console.log(v) */
+              }
+              return i < 4 ? (
+                <CardIns
+                  key={i}
+                  id={v.id}
+                  puid={v.puid}
+                  name={v.name}
+                  category_name={v.category_name}
+                  price={v.price}
+                  img_small={v.img_small}
+                  sales={v.sales}
+                />
+              ) : (
+                ''
+              )
+            })}
+          </div>
+        </div>
+      </div>
+      <div className="shoppingBtn sticky-top d-flex d-sm-none" id="shoppingBtn">
+        <div className="quantitySelector p-3">
+          <div
+            className="btn decrease-btn d-flex align-items-center"
+            role="presentation"
+            onClick={() => {
+              if (quantity > 1) {
+                setQuantity(quantity - 1)
+              }
+            }}
+          >
+            <FaMinus color="#666666" />
+          </div>
+          <div className="quantity" style={{ color: '#1d1d1d' }}>
+            {quantity}
+          </div>
+          <div
+            className={`btn increase-btn d-flex align-items-center ${
+              InstrumentDetail.stock === 0 ? 'noStock' : 'hasStock'
+            }`}
+            role="presentation"
+            onClick={() => {
+              setQuantity(quantity + 1)
+            }}
+          >
+            <FaPlus color="#fff" />
+          </div>
+        </div>
+        <div
+          className="d-flex jusify-content-evenly px-2"
+          style={{ gap: '12px' }}
+        >
+          <div className="cartBtn">
+            <img
+              loading="lazy"
+              src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
+              className="cartIcon"
+            />
+            <div
+              className="cart"
+              onClick={() => {
+                addLessonItem(v)
+              }}
+            >
+              加入購物車
             </div>
-            <div className="col-6">
-              <CardIns />
-            </div>
-            <div className="col-6">
-              <CardIns />
-            </div>
-            <div className="col-6">
-              <CardIns />
-            </div>
+          </div>
+          <div className="buyBtn">
+            <div className="buy">立即購買</div>
           </div>
         </div>
       </div>
@@ -716,7 +590,37 @@ export default function InstrumentDetailPage() {
           }
         }
 
+        .instrument-card-group {
+          display: flex;
+          margin-block: 30px;
+          gap: 35px;
+          flex-wrap: wrap;
+          @media screen and (max-width: 576px) {
+            gap: 15px 10px;
+          }
+        }
         /* --------------- header & navbar --------------- */
+        .userPhotoWrapper {
+          border-radius: 50%;
+          position: relative;
+          overflow: hidden;
+        }
+        .userPhoto {
+          object-fit: cover;
+        }
+        .userPhotoDefault {
+          width: 32px;
+          height: 32px;
+          background-color: #1581cc;
+          overflow: hidden;
+          position: relative;
+        }
+        .userDefaultIcon {
+          color: #fff;
+          position: absolute;
+          bottom: 0;
+          left: calc(50% - 12px);
+        }
         header {
           background-color: var(--primary);
           height: 60px;
@@ -767,10 +671,9 @@ export default function InstrumentDetailPage() {
             }
         }
 
-        /* prodBriefingArea */
         .prodBriefingArea{
-          width: 660px;
-          height: 394px;
+          width: 550px;
+          height: 550px;
           padding:0px;
           border-radius: 10px;
           overflow: hidden; 
@@ -786,40 +689,74 @@ export default function InstrumentDetailPage() {
      
      .pic-Con{
         display:flex;
-    height: 100%;
      flex-direction:column;
           justify-content:center;
           align-items:center;
      }
      .main-Pic{
-height:550px;
-width:550px;
-border-radius: 10px;
-border: 1px solid var(--body, #B9B9B9);
-
+      height:550px;
+      width:550px;
+      border-radius: 10px;
+      border: 1px solid #b9b9b9;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
      }
      .sub-Pic-Con{
         display:flex;
-        justify-content:space-between;
-height:130px;
-width:550px;
-{/* margin-top:5px; */}
-padding-top:20px;
-
+        width: 100%;
+        max-width: 550px;
+        align-items: center;
+        gap: 10px;
+        padding-top:20px;
      }
      .sub-Pic{
-height:130px;
-width:130px;
-border-radius: 10px;
-border: 1px solid var(--body, #B9B9B9);
-&:hover{
-border-radius: 10px;
-border: 5px solid var(--primary-light, #18A1FF);
-}
+      height:130px;
+      overflow: hidden;
+      @media screen and (max-width: 576px) {
+        height: 90px;
+      }
+     }
+     .sub-Pic-border {
+      border-radius: 10px;
+      width:130px;
+      border: 1px solid #B9B9B9;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      @media screen and (max-width: 576px) {
+        width: 90px;
+        height: 90px;
+      }
+     }
+     .active {
+        border: 5px solid #18A1FF;
+        border-radius: 10px;
+     }
+     .img_small {
+      object-fit: contain;
      }
         .mt-60 {
           margin-top: 60px;
         }
+
+        .likesIcon {
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+            border: 1px solid var(--body, #b9b9b9);
+            display: flex;
+            aspect-ratio: 1;
+            width: 34px;
+            height: 34px;
+            margin: auto 0;
+            padding: 0 7px;
+            transition: 0.2s;
+            color: #b9b9b9;
+          }
 
         /* ------------------ */
 
@@ -1072,45 +1009,85 @@ display:block;
                       }
 
                       .container{
-                        padding-bottom: 95px;
+                        padding-inline: 20px;
+                        padding-bottom: 30px;
+                        @media screen and (max-width: 576px) {
+                          padding-bottom: 0px;
+                        }
                       }
                       .shoppingBtn {
                         display: flex;
-                        {/* margin-top: 20px; */}
-                        justify-content: space-evenly;
-                        gap: 12px;
+                        flex-direction: column;
                         font-size: 16px;
                         color: var(--white, #fff);
                         font-weight: 700;
-                         position: fixed;
-                         bottom: 0;
+
+                        bottom: 0;
                         left: 0;
                         width: 100%;
-                        background-color:white;
-                        margin-top:870px;
-                        margin-bottom:45px;
-                        z-index:1200;
+                        background-color: white;
+                        padding-bottom: 5px;
+                        padding: 26px 0px 30px 0px;
+                        z-index: 1200;
                       }
 
                       .cartBtn {
                         display: flex;
-                        {/* justify-content: space-between; */}
+                        justify-content: center;
                         border-radius: 5px;
                         background-color: var(--body, #b9b9b9);
                         gap: 12px;
-                        padding: 8px 78px;
-                        flex: 1 0 0;
+                        padding: 8px;
+                        margin-left: 5px;
+                        width: 100%;
                       }
-                   .cart{
-                    line-height: normal;
-                   }
+
                       .buyBtn {
-                        justify-content: space-between;
+                        display: flex;
+                        justify-content: center;
                         border-radius: 5px;
                         background-color: #18a1ff;
                         gap: 12px;
-                        padding: 8px 78px;
-                        flex: 1 0 0;
+                        padding: 8px;
+                        margin-right: 5px;
+                        width: 100%;
+                      }
+
+                      .quantitySelector {
+                        display: flex;
+                        align-items: center;
+                        margin-top: 20px;
+                        @media screen and (max-width: 576px) {
+                          margin-top: 0px;
+                        }
+                      }
+                      .decrease-btn {
+                        height: 40px;
+                        width: 40px;
+                        border-radius: 5px 0px 0px 5px;
+                        border: 1px solid var(--body, #b9b9b9);
+                      }
+                      .quantity {
+                        display: flex;
+                        width: 78px;
+                        height: 40px;
+                        justify-content: center;
+                        align-items: center;
+                        border: 1px solid var(--body, #b9b9b9);
+                      }
+                      .increase-btn {
+                        height: 40px;
+                        width: 40px;
+                        border-radius: 0px 5px 5px 0px;
+                      }
+                      .hasStock {
+                        background-color: #18a1ff;
+                      }
+                      .hasStock:hover {
+                        background-color: #1581cc;
+                      }
+                      .noStock {
+                        background-color: #b9b9b9;
                       }
                    
                       {/* ---------- */}
