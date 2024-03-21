@@ -14,7 +14,7 @@ export function CartProvider({ children }) {
     return { ...v, qty: 1 }
   })
   //加入到購物車的項目
-  let [items, setItems] = useState(cartData)
+  let [items, setItems] = useState([])
 
   useEffect(() => {
     localStorage.setItem('CartData', JSON.stringify(items))
@@ -24,33 +24,33 @@ export function CartProvider({ children }) {
   const addInstrumentItem = (item, qty) => {
     // 檢查購物車是否已存在該商品
     const index = items.findIndex((v) => {
-      return (v.id = item.id)
+      return (v.id == item.id)
     })
+    console.log(index);
     if (index > -1) {
       increment(item, qty)
+    }else{
+      // 不存在購物車中，擴充該商品的"數量"屬性
+      //擴充item的屬性多一個qty
+      const newItem = { ...item, qty: qty }
+      const newItems = [...items, newItem]
+      setItems(newItems)
+      localStorage.setItem('CartData', JSON.stringify(newItems))
     }
-    // 不存在購物車中，擴充該商品的"數量"屬性
-    //擴充item的屬性多一個qty
-    const newItem = { ...item, qty: qty }
-    const newItems = [...items, newItem]
-    setItems(newItems)
-    localStorage.setItem('CartData', JSON.stringify(newItems))
+
   }
 
   const addLessonItem = (item) => {
     const index = items.findIndex((v) =>{
-      return (v.id =  item.id)
+      return (v.id == item.id)
     })
 
-    if(index > -1){
-      //結束程式
-      return
+    if(index == -1){
+      const newItem = {...item, qty: 1}
+      const newItems = [...items, newItem]
+      setItems(newItems)
+      localStorage.setItem('CartData', JSON.stringify(newItems))
     }
-
-    const newItem = {...item, qty: 1}
-    const newItems = [...items, newItem]
-    setItems(newItems)
-    localStorage.setItem('CartData', JSON.stringify(newItems))
   }
   //在購物車中，移除某商品的id
   const remove = (items, id) => {
@@ -241,6 +241,7 @@ export function CartProvider({ children }) {
     total = parseInt(calcInstrumentDiscount()) + parseInt(calcLessonDiscount())
     return total
   }
+
 
   return (
     <CartContext.Provider

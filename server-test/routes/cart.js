@@ -16,37 +16,56 @@ router.post('/form', upload.none(), async (req, res) => {
         address,
         totaldiscount,
         payment,
-        transportation_state,
+        transportationstate,
         cartdata,
+        orderID,
+        uid
     } = req.body;
-
+    const newOrderID = parseInt(orderID)
     const newCartData = JSON.parse(cartdata)
+    console.log(uid)
+    // const uuid = JSON.stringify(uid)
 
-    console.log(newCartData);
+    const now = new Date().toISOString();
+    console.log(req.body);
+ 
+    const orderTotal = 'INSERT INTO `order_total` (`id`, `user_id`, `payment`, `transportation_state`, `phone`, `discount`, `postcode`, `country`, `township`, `address`, `created_time`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())'
 
 
+    await db.execute(orderTotal,
+        [
+            uid,
+            payment,
+            transportationstate,
+            phone,
+            totaldiscount,
+            postcode,
+            township,
+            country,
+            address,
+        ]).then(() => {
+            // res.status(200).json({ status: 'success' });
+        })
+        .catch((error) => {
+            res.status(500).json({ status: 'error', error });
+        });
 
-    // await db
-    // .execute(
-    //   'INSERT INTO `order_total` (`id`, `user_id`, `payment`, `transportation_state`, `phone`, `discount`, `postcode`, `country`, `township`, `address`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-    //   [
-    //     username,
-    //     payment,
-    //     transportation_state,
-    //     phone,
-    //     totaldiscount,
-    //     postcode,
-    //     township,
-    //     country,
-    //     address,
-    //   ]
-    // )
-    // .then(() => {
-    //   res.status(200).json({ status: 'success', juid });
-    // })
-    // .catch((error) => {
-    //   res.status(500).json({ status: 'error', error });
-    // });
+    newCartData.map(async (v,i)=>{
+        // console.log(v);
+        await db.execute('INSERT INTO `order_item`  (`id`, `order_id`, `product_id`, `quantity`) VALUES (NULL, ?, ?, ?)',
+        [
+            newOrderID,
+            v.id,
+            v.qty,
+        ]
+        ).then(() => {
+            // res.status(200).json({ status: 'success' });
+        }).catch((error) => {
+            res.status(500).json({ status: 'error', error });
+        });
+    })
+    
+    
 
 //     const {
 //       uid,
@@ -111,7 +130,6 @@ router.post('/form', upload.none(), async (req, res) => {
 //       .catch((error) => {
 //         res.status(500).json({ status: 'error', error });
 //       });
-res.send('qq')
 });
 
 export default router;
