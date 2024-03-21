@@ -81,7 +81,7 @@ class Coupon extends Basic {
 
   //#region Find
   // 找到某個使用者下面的所有優惠券
-  async FindAll(user_id = 0) {
+  async FindAll(user_id) {
     try {
       const [target, useless] = await db.query(
         'Select * From coupon Where user_id = ?',
