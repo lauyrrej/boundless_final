@@ -103,7 +103,9 @@ export default function ProductBriefCard({
           </div>
 
           <div className="shoppingBtn">
-            <div className="cartBtn">
+            <div className="cartBtn" role='presentation' onClick={() => {
+                  addInstrumentItem(data, quantity)
+                }}>
               <img
                 loading="lazy"
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
@@ -112,18 +114,16 @@ export default function ProductBriefCard({
               <div
                 className="cart"
                 role="presentation"
-                onClick={() => {
-                  addInstrumentItem(data, quantity)
-                }}
+                
               >
                 加入購物車
               </div>
             </div>
+            <Link className="buy" href="/cart/check">
             <div className="buyBtn">
-              <Link className="buy" href="/cart/check">
                 立即購買
-              </Link>
             </div>
+            </Link>
           </div>
         </div>
       </div>
@@ -253,14 +253,14 @@ export default function ProductBriefCard({
             display: flex;
             margin-top: 20px;
             justify-content: space-between;
-            gap: 12px;
+            gap: 80px;
             font-size: 16px;
             color: var(--white, #fff);
             font-weight: 700;
           }
           .cartBtn {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             border-radius: 5px;
             background-color: var(--body, #b9b9b9);
             gap: 12px;
@@ -269,7 +269,7 @@ export default function ProductBriefCard({
             cursor: pointer;
             transition: 0.3s;
             &:hover {
-              background-color: #666666;
+              background-color: #000000;
             }
           }
           .buyBtn {

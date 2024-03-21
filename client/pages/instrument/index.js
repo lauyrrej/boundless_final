@@ -309,8 +309,51 @@ export default function Test({ onSearch }) {
   //       })
   //   })
   // }
+
   //-------------------搜尋功能
   const [data, setData] = useState(instrument)
+
+//-----------------篩選功能 //FIXME
+  // 價格篩選
+  //確保 priceLow 和 priceHigh 有被定義後再呼叫 priceRange 函式
+  // const priceRange = (priceLow, priceHigh) => {
+  //   if (priceLow !== '' && priceHigh !== '') {
+  //     console.log('priceLow:', priceLow)
+  //     console.log('priceHigh:', priceHigh)
+  //     fetch(
+  //       `http://localhost:3005/api/instrument?priceLow=${priceLow}&priceHigh=${priceHigh}`
+  //     )
+  //       .then((response) => response.json()) //在網路請求成功時將回應物件轉換為 JSON 格式，並回傳一個新的 Promise 物件。這個新的 Promise 物件會在 JSON 解析成功後被解析，而且 data 參數會包含解析後的 JSON 資料。
+
+  //       .then((data) => setData(data))
+  //     setIsFiltered(true)
+  //     console.log(data)
+  //   }
+  // }
+
+  // // 課程評價篩選
+  // const scoreState = ['all', '5', '4', '3']
+  // const [score, setScore] = useState('all')
+
+  // // 当选中的星级变化时，筛选商品列表
+  // useEffect(() => {
+  //   //   console.log('当前选择的评分:', score) // 调试日志，查看当前选择的评分
+  //   if (score === 'all') {
+  //     // console.log('显示所有课程')
+  //     setData(instrument)
+  //   } else {
+  //     const scoreNum = parseInt(score, 10)
+  //     // console.log('筛选评分为', scoreNum, '的课程')
+  //     const filtered = instrument.filter(
+  //       (instrument) => Math.round(instrument.average_rating) === scoreNum
+  //     )
+  //     // console.log('筛选结果:', filtered) // 调试日志，查看筛选结果
+  //     setData(filtered)
+  //     setIsFiltered(true)
+  //   }
+  // }, [score, instrument])
+
+
 
   // 在組件中定義 isFiltered 狀態，並提供一個函數來更新它的值
   const [isFiltered, setIsFiltered] = useState(false)
@@ -727,7 +770,10 @@ export default function Test({ onSearch }) {
                                       value={v}
                                       checked={v === score}
                                       onChange={(e) => {
-                                        setScore(e.target.value)
+                                        const value = e.target.value
+                                        setScore(
+                                          value === 'all' ? 'all' : value
+                                        ) 
                                       }}
                                     />
                                     &nbsp;{v === 'all' ? '全部' : v + '星'}

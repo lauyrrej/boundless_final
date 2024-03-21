@@ -549,7 +549,7 @@ export default function InstrumentDetailPage() {
             <div
               className="cart"
               onClick={() => {
-                addLessonItem(v)
+                addInstrumentItem(v)
               }}
             >
               加入購物車
@@ -1021,7 +1021,7 @@ display:block;
                         font-size: 16px;
                         color: var(--white, #fff);
                         font-weight: 700;
-
+                      
                         bottom: 0;
                         left: 0;
                         width: 100%;

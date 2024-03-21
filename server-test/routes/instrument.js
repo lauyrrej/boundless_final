@@ -8,22 +8,23 @@ const upload = multer();
 // 取得所有樂器資料
 // instrument?page=1&order=ASC&brandSelect=1&priceLow=&priceHigh=&score=all&sales=false&keyword=
 router.get('/', async (req, res, next) => {
-  // console.log(req.query);
+  //  console.log(req.query);
   // return
   // let priceLow = req.query.priceLow;
   // let priceHigh = req.query.priceHigh;
   let priceLow = req.query.priceLow !== undefined ? req.query.priceLow : ''; // 如果沒有提供查詢參數，則賦值為空字符串
-let priceHigh = req.query.priceHigh !== undefined ? req.query.priceHigh : '';
+  let priceHigh = req.query.priceHigh !== undefined ? req.query.priceHigh : '';
   console.log(priceLow);
   console.log(priceHigh);
 
 
   // 取得所有樂器分類資料
-  const [productCategory] = await db.execute(
+  const [category] = await db.execute(
     'SELECT `id`, `parent_id`, `name` FROM `instrument_category`'
   );
 
-  let [dataCount] = await db
+
+  let [instrument] = await db
     .execute(
       `SELECT product.*, instrument_category.name AS category_name 
   FROM product 
@@ -36,23 +37,26 @@ let priceHigh = req.query.priceHigh !== undefined ? req.query.priceHigh : '';
       return undefined;
     });
     
+
+
   let page = Number(req.query.page) || 1; // 目前頁碼
   let dataPerpage = 20; // 每頁 20 筆
   let offset = (page - 1) * dataPerpage; // 取得下一批資料
-  let pageTotal = Math.ceil(dataCount.length / dataPerpage); // 計算總頁數
+  let pageTotal = Math.ceil(instrument.length / dataPerpage); // 計算總頁數
   let pageString = ' LIMIT ' + offset + ',' + dataPerpage;
 
   // 排序用
   let orderDirection = req.query.order || 'ASC';
 
 
-  let data;
+   let finalData;
+   let finalInstrument=instrument;
   if (Object.keys(req.query).length !== 0) {
     // 所有篩選條件，預設條件: type=1(樂器)
     let sqlString = 'SELECT * FROM `product` WHERE `type` = 1';
     const brandSelect =
       req.query.brandSelect !== 'all'
-        ? ' AND `brandSelect` = ' + parseInt(req.query.brandSelect)
+        ? ' AND `brand_id` = ' + parseInt(req.query.brandSelect)
         : '';
 
     const priceLow =
@@ -65,44 +69,51 @@ let priceHigh = req.query.priceHigh !== undefined ? req.query.priceHigh : '';
         ? ' AND `price` <= ' + parseInt(req.query.priceHigh)
         : '';
 
-    const score =
-      req.query.score !== 'all'
-      ? 'AND `score` = ' + parseInt(req.query.score)
-      : '';
+    const score =''
+      // req.query.score !== 'all'
+      // ? ' AND `score` = ' + parseInt(req.query.score)
+      // : '';
      
     const promotion =
      req.query.promotion !== 'true'
-     ? ' AND `promotion` = ' + req.query.promotion + "'"
-     : '';
+     ? " AND `discount_state` = 0"
+     : " AND `discount_state` = 1"
+
 
     sqlString += brandSelect + priceLow + priceHigh + score + promotion + ' ORDER BY `price` ' + orderDirection;
-    [dataCount] = await db.execute(sqlString).catch(() => {
+    console.log(sqlString)
+    const [instrument2] = await db.execute(sqlString).catch(() => {
       return [];
     })
+    finalInstrument= instrument2
 
     page = Number(req.query.page) || 1; // 目前頁碼
     dataPerpage = 20; // 每頁 20 筆
     offset = (page - 1) * dataPerpage; // 取得下一批資料
-    if (dataCount) {
-    pageTotal = Math.ceil(dataCount.length / dataPerpage); // 計算總頁數
+    if (instrument2) {
+    pageTotal = Math.ceil(instrument2.length / dataPerpage); // 計算總頁數
     }
     pageString = ' LIMIT ' + offset + ',' + dataPerpage;
 
    sqlString += pageString;
-   [data] = await db.execute(sqlString).catch(() => {
+   const [data] = await db.execute(sqlString).catch(() => {
     return [];
   });
+
+    finalData=data
   }else{
       // 沒有篩選條件
-    [data] = await db 
+    const [data] = await db 
     .execute(
       'SELECT * FROM `product` WHERE `type` = 1 ORDER BY `price` ASC LIMIT 0, 20',
     )
     .catch(() => {
       return undefined;
     })
+
+    finalData=data
   }
-if (data && data != undefined){
+if (finalData){
    // 整理資料，把字串轉成陣列或物件
   //  const instrumentData = data.map((v) => {
   //  // priceLow可能為空值，先令其為空陣列
@@ -120,7 +131,7 @@ if (data && data != undefined){
   // });
 
    res.status(200).json({
-    productCategory,
+    instrument: finalInstrument,
     pageTotal,
     page,
   });
@@ -259,36 +270,26 @@ if (data && data != undefined){
 // const order = getOrder(orderby)
 // const order = getOrder(orderby)
 
+
 //instrument_category
 router.get('/categories', async (req, res) => {
   try {
     let [instrument_category] = await db.execute(
-      'SELECT * FROM `instrument_category` '
+      'SELECT `id`, `parent_id`, `name` FROM `instrument_category`'
     );
 
     if (instrument_category) {
       res.json(instrument_category);
     } else {
       res.json('沒有找到相應的資訊');
-      res.json('沒有找到相應的資訊');
     }
   } catch (error) {
-    console.error('發生錯誤：', error);
-    res.json('發生錯誤');
     console.error('發生錯誤：', error);
     res.json('發生錯誤');
   }
 });
 
-//特定分類的資料
-router.get('/category/:category', async (req, res) => {
-  try {
-    const category = req.params.category;
-    console.log(category);
-    let [instrument] = await db.execute(
-      'SELECT * FROM `product` ,  instrument_category.name AS category_name  WHERE `product.puid` = ?',
-      [category]
-    );
+
 //特定分類的資料
 router.get('/category/:category', async (req, res) => {
   try {
@@ -309,16 +310,7 @@ router.get('/category/:category', async (req, res) => {
     res.json('發生錯誤');
   }
 });
-    if (instrument.length > 0) {
-      res.json(instrument);
-    } else {
-      res.json('沒有找到相應的資訊');
-    }
-  } catch (error) {
-    console.error('發生錯誤：', error);
-    res.json('發生錯誤');
-  }
-});
+
 
 // 檢索屬於特定 puid 的產品，並且通過左連接獲取與之相關聯的產品評論
 // 檢索屬於特定 puid 的產品，並且通過左連接獲取與之相關聯的產品評論
