@@ -14,9 +14,10 @@ import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 import Datetime from '@/components/article/datetime'
-import { Tiptap } from '@/components/article/tiptap'
+import { Tiptap } from '@/components/article/tiptapEditor'
 // import Details from '@/components/article/Details'
-
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 export default function Auid() {
   // ----------------------手機版本  ----------------------
   // 主選單
@@ -25,14 +26,13 @@ export default function Auid() {
     setShowMenu(!showMenu)
   }
 
-  // ----------------------要資料  ----------------------
-
   // ----------------------跟後端要資料  ----------------------
   //-----------------------動態路由
   //  由router中獲得動態路由(屬性名稱pid，即檔案[pid].js)的值，router.query中會包含pid屬性
   // 1. 執行(呼叫)useRouter，會回傳一個路由器
   // 2. router.isReady(布林值)，true代表本元件已完成水合作用(hydration)，可以取得router.query的值
   const router = useRouter()
+  const mySwal = withReactContent(Swal)
 
   // ----------------------全部資料----------------------
   const [articleDetail, setArticleDetail] = useState({})
@@ -67,6 +67,57 @@ export default function Auid() {
   //   setDescription(initialContent)
   // }, [initialContent, setDescription])
 
+  // ----------------------Tiptap傳到後端  ----------------------
+  const [description, setDescription] = useState('')
+  const [content, setContent] = useState('')
+  const handleDescriptionChange = (newContent) => {
+    setContent(newContent);
+    console.log(newContent)
+  };
+
+  const [auid, setAuid] = useState(null)
+  useEffect(() => {
+    if (router.isReady) {
+      const { auid } = router.query
+      setAuid(auid)
+      getSingleDetail(auid)
+    }
+  }, [router.isReady])
+
+  // 送出更改
+  const sendForm = async (auid, content) => {
+    let formData = new FormData()
+    formData.append('content', content)
+    const res = await fetch('http://localhost:3005/api/article/edit/${auid}', {
+      method: 'PUT',
+      body: formData,
+      credentials: 'include',
+    })
+    const result = await res.json()
+    if (result.status === 'success') {
+      notifySuccess(auid)
+    } else {
+      console.log(result.error)
+    }
+  }
+  // 發起成功後，彈出訊息框，並跳轉到資訊頁面
+  const notifySuccess = (auid) => {
+    mySwal
+      .fire({
+        position: 'center',
+        icon: 'success',
+        iconColor: '#1581cc',
+        title: '編輯成功，將為您跳轉回文章',
+        showConfirmButton: false,
+        timer: 3000,
+      })
+      .then(
+        setTimeout(() => {
+          router.push(`/article/article-list/${auid}`)
+        }, 3000)
+      )
+  }
+
   // ----------------------假資料  ----------------------
 
   const [filterVisible, setFilterVisible] = useState(false)
@@ -84,8 +135,6 @@ export default function Auid() {
     stopPropagation(e)
     setFilterVisible(!filterVisible)
   }
-  // ----------------------Tiptap  ----------------------
-  const [description, setDescription] = useState('')
 
   return (
     <>
@@ -151,12 +200,13 @@ export default function Auid() {
           <div className="">
             {/* 主內容 */}
             <main className="content">
+              <h1 className="text-center">{articleDetail.title}</h1>
               <div className="">
-                <Tiptap setDescription={setDescription} initialContent={articleDetail.content}/>
+                <Tiptap setDescription={handleDescriptionChange} initialContent={articleDetail.content} />
               </div>
               <div className="main-img">
                 <Image
-                  src={`/article/${articleDetail.img}`}
+                  src={`http://localhost:3005/article/${articleDetail.img}`}
                   alt=""
                   className="big-pic object-fit-contain w-100"
                   responsive
@@ -175,10 +225,14 @@ export default function Auid() {
           </div>
         </div>
         <div className="page-button d-flex justify-content-between pt-5 pb-4">
-          <button type="button" className="btn">
-            上一步
-          </button>
-          <button type="button" className="btn btn-primary">
+          <Link
+            href={`/article/article-list/${auid}`}
+            className="btn"
+          >上一步
+          </Link>
+          <button onClick={() => {
+            sendForm(content)
+          }} type="button" className="btn btn-primary">
             確認更新
           </button>
         </div>

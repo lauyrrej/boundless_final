@@ -86,7 +86,7 @@ export default function ArticleList() {
   useEffect(() => {
     const getDatas = async () => {
       try {
-        const res = await fetch(`http://localhost:3005/api/article`)
+        const res = await fetch(`http://localhost:3005/api/article/comments`)
         const datas = await res.json()
         if (datas) {
           setArticle(datas) // 設定獲取的文章數據到狀態中
@@ -353,7 +353,7 @@ export default function ArticleList() {
             <main className="content me-2">
               <div className="d-flex justify-content-between align-items-center">
                 <h4 className="text-primary pt-2">
-                  熱門文章
+                  熱門文章{LoginUserData.name}
                 </h4>
                 <Link
                   href={`/article/article-list/article-publish`}
