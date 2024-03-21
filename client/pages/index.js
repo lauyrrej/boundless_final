@@ -80,10 +80,10 @@ export default function Index() {
           >
             會員中心
           </Link>
-          <Link className="mm-item" href="/lesson/lesson-list">
+          <Link className="mm-item" href="/lesson">
             探索課程
           </Link>
-          <Link className="mm-item" href="/instrument/instrument-list">
+          <Link className="mm-item" href="/instrument">
             樂器商城
           </Link>
           <Link className="mm-item" href="/jam/recruit-list">

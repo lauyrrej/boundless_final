@@ -102,16 +102,27 @@ router.get('/:id', async (req, res, next) => {
   let luid = req.params.id;
   console.log(luid);
   try {
-    let [data] = await db.execute(
-      'SELECT p.*, pr.*,lc.name as lesson_category_name' +
-        ' FROM `product` AS p ' +
-        ' LEFT JOIN `product_review` AS pr ON p.id = pr.product_id ' +
-        ' LEFT JOIN `lesson_category` AS lc ON p.lesson_category_id = lc.id ' +
-        ' WHERE p.`puid` = ? AND p.`lesson_category_id` IN (' +
-        '   SELECT `lesson_category_id` FROM `product` WHERE `puid` = ?' +
-        ')',
-      [luid, luid]
-    );
+   let [data] = await db.execute(
+     'SELECT ' +
+       '  p.*, ' +
+       '  pr.*, ' +
+       '  lc.name AS lesson_category_name, ' +
+       '  COUNT(pr.product_id) AS review_count, ' +
+       '  AVG(pr.stars) AS average_rating ' +
+       'FROM ' +
+       '  `product` AS p ' +
+       '  LEFT JOIN `product_review` AS pr ON p.id = pr.product_id ' +
+       '  LEFT JOIN `lesson_category` AS lc ON p.lesson_category_id = lc.id ' +
+       'WHERE ' +
+       '  p.`puid` = ? ' +
+       '  AND p.`lesson_category_id` IN ( ' +
+       '    SELECT `lesson_category_id` FROM `product` WHERE `puid` = ? ' +
+       '  ) ' +
+       'GROUP BY ' +
+       '  p.id;',
+     [luid, luid]
+   );
+
     //FIXME sql可以改一下
 
     let [product_review] = await db.execute(

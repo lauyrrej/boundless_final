@@ -23,7 +23,7 @@ import BS5Pagination from '@/components/common/pagination.js'
 
 import { useParams } from 'react-router-dom'
 
-import Pagination from '@/components/lesson/pagination.js'
+
 
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
@@ -160,7 +160,7 @@ export default function LessonList({}) {
           }, [])
           setTotalPage(pages.length)
           setLessonArray(pages[currentPage]) // 将分页后的结果传递给 resolve
-          console.log(LessonArray)
+          console.log(pages[currentPage])
         })
         .catch((error) => {
           console.log(error)
@@ -184,7 +184,7 @@ export default function LessonList({}) {
 
   const [data, setData] = useState(LessonArray)
 
-  //-----------------篩選功能 //FIXME
+  //-----------------篩選功能
   // 價格篩選
   //確保 priceLow 和 priceHigh 有被定義後再呼叫 priceRange 函式
   const priceRange = (priceLow, priceHigh) => {
@@ -354,14 +354,20 @@ export default function LessonList({}) {
         />
       </div>
       <div className="container position-relative">
+        {/* <NavbarMB
+          menuMbToggle={menuMbToggle}
+          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${
+            showMenu ? 'menu-mb-show' : ''
+          }`}
+        /> */}
         {/* 手機版主選單/navbar */}
         <div
           className={`menu-mb d-sm-none d-flex flex-column align-items-center ${
             showMenu ? 'menu-mb-show' : ''
           }`}
         >
-          {/* 用戶資訊 */}
-          <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
+        {/* 用戶資訊 */}
+        <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
             <div className="mb-photo-wrapper mb-2">
               <Image
                 src="/jam/amazingshow.jpg"
@@ -378,10 +384,10 @@ export default function LessonList({}) {
           >
             會員中心
           </Link>
-          <Link className="mm-item" href="/lesson/lesson-list">
+          <Link className="mm-item" href="/lesson/lesson">
             探索課程
           </Link>
-          <Link className="mm-item" href="/instrument/instrument-list">
+          <Link className="mm-item" href="/instrument/instrument">
             樂器商城
           </Link>
           <Link className="mm-item" href="/jam/recruit-list">
