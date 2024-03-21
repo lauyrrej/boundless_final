@@ -92,7 +92,7 @@ export default function Apply({
               </div>
             )}
           </div>
-          <Link href={`../../user`} className={`${styles.memberName}`}>
+          <Link href={`../../user/user-homepage/${uid}`} className={`${styles.memberName}`}>
             {applier.nickname ? applier.nickname : applier.name}
           </Link>
         </div>

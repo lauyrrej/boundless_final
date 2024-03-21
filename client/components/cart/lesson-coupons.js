@@ -1,3 +1,4 @@
+import { useState } from "react"
 export default function LessonCouponDropdowns({
   lessonCoupons,
   handleLessonSelector,
@@ -10,10 +11,14 @@ export default function LessonCouponDropdowns({
     )
   })
 
-  
-  let select = localStorage.getItem('LessonCoupon')
 
-  
+let select = ()=>{
+ if(typeof localStorage !== 'undefined'){
+  return localStorage.getItem('LessonCoupon')
+ }else{
+  return ''
+ }
+}
 
   return (
     <>
@@ -22,7 +27,7 @@ export default function LessonCouponDropdowns({
         className="form-select"
         aria-label="Default select example"
         defaultValue={'Default'}
-        value={select}
+        value={select()}
         onChange={(e) => {
           handleLessonSelector(e.target.value)
         }}

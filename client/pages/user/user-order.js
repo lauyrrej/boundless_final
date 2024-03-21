@@ -8,6 +8,7 @@ import jamHero from '@/assets/jam-hero.png'
 
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
+import { jwtDecode } from 'jwt-decode'
 
 // icons
 import { IoHome } from 'react-icons/io5'
@@ -44,9 +45,12 @@ export default function Test() {
     avatarImage = `http://localhost:3005/user/avatar_userDefault.jpg`
   }
 
+  let produceTestImage = `/instrument/上低音號/Jupiter_jbr700/jbr700_1.jpg`
+
   // ----------------------會員登入狀態  ----------------------
   //------獲取使用者jam 名稱 
   const [UserJAMName , setUserJAMName] = useState({id:'',my_jam:''})
+  const appKey = 'userToken'
   const getLoginUserJAMName = async (e) => {
     // 拿取Token回傳後端驗證狀態
     const Loginusertoken = localStorage.getItem(appKey)
@@ -78,6 +82,51 @@ export default function Test() {
       console.error('There was a problem with the fetch operation:', error)
     }
   }
+
+  //------獲取單一使用者全部訂單 
+  const getLoginUserOrder = async (e) => {
+    // 拿取Token回傳後端驗證狀態
+    const Loginusertoken = localStorage.getItem(appKey)
+
+    if (!Loginusertoken) {
+      console.error('沒有登入的token 故無法取得使用者資料。')
+      return null
+    }
+    const userID = jwtDecode(Loginusertoken)
+    const id = userID.id
+
+    try {
+      const response = await fetch(
+        `http://localhost:3005/api/user/order/${id}`,
+        {
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${Loginusertoken}`,
+          },
+          body: JSON.stringify(),
+        }
+      )
+      const LoginUserProfile = await response.json()
+      // console.log('Response from server:', LoginUserData)
+      // setUserData(LoginUserData)
+      // console.log(LoginUserProfile)
+      setuserData(LoginUserProfile)
+      // console.log(LoginUserData)
+      // 在這裡處理後端返回的資料
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error)
+    }
+  }
+
+  //-------------------------------------------------------------
+  //執行一次，如果有登入，獲得該使用者全部資料寫入userData 狀態
+  useEffect(() => {
+    if (LoginUserData) {
+      getLoginUserOrder()
+    }
+  }, []) 
+
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -522,53 +571,56 @@ export default function Test() {
                         <div className="user-title-userInfo">我的訂單</div>
                       </div>
                       <div className="user-orderList">
-                        <div className="user-order-item-instrument">
-                          <div className="user-order-item-instrument-leftSide">
+
+
+                        <div className="user-order-item-instrument ">
+                          <div className="user-order-item-instrument-leftSide col-lg-3 col-12">
                             <div className="user-order-item-instrument-leftSide-img">
-                              <img src="" alt="" />
+                              <Image src={produceTestImage} alt='' priority style={{ borderRadius: 10, padding:5 }} width={150} height={150}></Image>
                             </div>
-                            <div className="user-order-item-instrument-leftSide-btn btn btn-primary">
+                            {/* <div className="user-order-item-instrument-leftSide-btn btn btn-primary">
                               退貨
-                            </div>
+                            </div> */}
                           </div>
-                          <div className="user-order-item-instrument-detail">
-                            <div className="user-order-item-instrument-detail-row">
+                          <div className="user-order-item-instrument-detail col-lg-9 col-12">
+                            <div className="user-order-item-instrument-detail-row ">
                               <div className="user-order-item-instrument-detail-row-col-productName">
                                 <p>
                                   <span>商品名稱：</span> YBH_621S X 1
                                 </p>
                               </div>
                             </div>
-                            <div className="user-order-item-instrument-detail-row">
-                              <div className="user-order-item-instrument-detail-row-col">
+                            <div className="user-order-item-instrument-detail-row row">
+                              <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
                                 <h5>訂單編號</h5>
                                 <p>31700023464729</p>
                               </div>
-                              <div className="user-order-item-instrument-detail-row-col">
+                              <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
                                 <h5>購買日期</h5>
                                 <p>2024/01/14</p>
                               </div>
-                              <div className="user-order-item-instrument-detail-row-col ">
+                              <div className="user-order-item-instrument-detail-row-col col-lg-3 col-12">
                                 <h5>付款金額</h5>
                                 <p>$ 72000</p>
                               </div>
                             </div>
-                            <div className="user-order-item-instrument-detail-row">
-                              <div className="user-order-item-instrument-detail-row-col">
+                            <div className="user-order-item-instrument-detail-row row">
+                              <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
                                 <h5>付款方式</h5>
                                 <p>信用卡</p>
                               </div>
-                              <div className="user-order-item-instrument-detail-row-col">
+                              <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
                                 <h5>商品狀態</h5>
                                 <p>配送完成</p>
                               </div>
-                              <div className="user-order-item-instrument-detail-row-col-address">
+                              <div className="user-order-item-instrument-detail-row-col-address col-lg-4 col-5">
                                 <h5>配送地址</h5>
                                 <p>320桃園市中壢區新生路二段421號</p>
                               </div>
                             </div>
                           </div>
                         </div>
+
                         <div className="user-order-item-lesson">
                           <div className="user-order-item-lesson-leftSide">
                             <div className="user-order-item-lesson-leftSide-img">
@@ -732,10 +784,15 @@ export default function Test() {
             /* padding-left: 25px;*/
             display: flex;
             width: 1050px;
-            height: 250px;
+            /*height: 250px;*/
             align-items: center;
             gap: 20px;
             border-bottom: 1px solid var(--body, #b9b9b9);
+
+            @media screen and (max-width: 576px) {
+              flex-direction: column;
+            }
+
 
             .user-order-item-instrument-leftSide {
               /* padding-left: 25px; */
@@ -786,6 +843,11 @@ export default function Test() {
                   width: 700px;
                   padding: 0px 20px 5px 0px;
                   font-size: 20px;
+                  @media screen and (max-width: 576px) {
+                    margin-Left:30px
+                  }
+
+                  
 
                   & span {
                     font-family: 'Noto Sans TC';
@@ -797,21 +859,28 @@ export default function Test() {
                 }
 
                 .user-order-item-instrument-detail-row-col {
-                  width: 200px;
+                  
                   display: flex;
                   padding: 0px 20px 5px 0px;
                   align-items: center;
-
                   display: -webkit-box;
                   -webkit-box-orient: vertical;
                   -webkit-line-clamp: 2;
                   overflow: hidden;
-
                   text-overflow: ellipsis;
+                  @media screen and (max-width: 576px) {
+                    margin-Left:30px
+                  }
+                  
                 }
 
+                
                 .user-order-item-instrument-detail-row-col-address {
-                  width: 800px;
+                  /*width: 800px;*/
+                  padding: 0px 20px 5px 0px;
+                  @media screen and (max-width: 576px) {
+                    margin-Left:30px
+                  }
                   & h5 {
                     font-family: 'Noto Sans TC';
                     font-size: 20px;
@@ -819,6 +888,7 @@ export default function Test() {
                     font-weight: 400;
                     line-height: normal;
                     color: var(--primary-deep, #124365);
+                    
                   }
                 }
               }

@@ -20,9 +20,14 @@ import { FaTrash } from 'react-icons/fa6'
 import { useCart } from '@/hooks/use-cart'
 import { wrap } from 'lodash'
 
+// 會員認證hook
+import { useAuth } from '@/hooks/user/use-auth'
+import { jwtDecode } from 'jwt-decode'
+
 //confirmlist
 import LessonConfirmList from '@/components/cart/confirm-lesson-items.js'
 import InstrumentConfirmList from '@/components/cart/confirm-instrument-items.js'
+import { TRUE } from 'sass'
 
 export default function Test() {
   let UserInfo = JSON.parse(localStorage.getItem('UserInfo'))
@@ -42,6 +47,37 @@ export default function Test() {
     calcTotalPrice,
   } = useCart()
 
+
+  // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
+  //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
+  const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
+    useAuth()
+  const [userData, setUserData] = useState()
+  //檢查token
+  useEffect(() => {
+    handleLoginStatus()
+    //獲得資料
+    getLoginUserData()
+  }, [])
+  //登出功能
+
+  //檢查是否獲取資料
+  // console.log(LoginUserData)
+  //   讀取使用者資料後 定義大頭貼路徑
+  let avatarImage
+  if (LoginUserData.img) {
+    avatarImage = `http://localhost:3005/user/${LoginUserData.img}`
+  } else if (LoginUserData.photo_url) {
+    avatarImage = `${LoginUserData.photo_url}`
+  } else {
+    avatarImage = `http://localhost:3005/user/avatar_userDefault.jpg`
+  }
+
+  let uid 
+  if(LoginUserData){
+    uid = LoginUserData.uid
+    // console.log(uid)
+  }
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -67,9 +103,71 @@ export default function Test() {
     setFilterVisible(!filterVisible)
   }
 
+
+  const [intial,setInitial] = useState('true');
+
+
+  const [orderID, setOrderID] = useState(1)
+
+  
+  const  originOrderID = ()=>{
+    const data = localStorage.getItem('orderID')
+    const parseData = parseInt(data)
+    return parseData 
+  }
+
+  
+  
+
+
+  const username = UserInfo[0].Name
+  const phone = UserInfo[0].Phone
+  const email = UserInfo[0].Email
+  const address = UserInfo[0].Address
   const country = localStorage.getItem('Country')
   const township = localStorage.getItem('Township')
   const postcode = localStorage.getItem('Postcode')
+  const totaldiscount = calcTotalDiscount()
+  const payment = calcTotalPrice()
+  const transportationstate = '運送中'
+  const cartData = localStorage.getItem('CartData')
+
+  const sendForm = async (
+    username,
+    phone,
+    email,
+    country,
+    township,
+    postcode,
+    address,
+    totaldiscount,
+    payment,
+    transportationstate,
+    cartData,
+    orderID,
+    uid,
+  )=>{
+    let formData = new FormData()
+    formData.append('username', username)
+    formData.append('phone', phone)
+    formData.append('email', email)
+    formData.append('country', country)
+    formData.append('township', township)
+    formData.append('postcode',postcode)
+    formData.append('address', address)
+    formData.append('totaldiscount', totaldiscount)
+    formData.append('payment', payment)
+    formData.append('transportationstate', transportationstate)
+    formData.append('cartdata', cartData)
+    formData.append('orderID', orderID)
+    formData.append('uid', uid)
+
+    const res = await fetch('http://localhost:3005/api/cart/form', {
+      method: 'POST',
+      body: formData,
+      credentials: 'include',
+    })
+  }
 
   return (
     <>
@@ -206,7 +304,14 @@ export default function Test() {
                     </label>
                     <div className="address-location col-sm-10 col-6">
                       <div>{postcode}</div>
-                      <div className="col-10"> {country} {township} {UserInfo[0].Address}</div>
+                      <div className="col-10 address-location-info">
+                       <div>
+                        {country} {township} 
+                       </div>
+                       <div>
+                       {UserInfo[0].Address}
+                       </div>
+                       </div>
                     </div>
                   </div>
                 </div>
@@ -265,6 +370,27 @@ export default function Test() {
                   <div
                     className="b-btn b-btn-primary d-flex w-100 h-100 justify-content-center"
                     style={{ padding: '14px 0' }}
+                    onClick={
+                      () => {
+                        setOrderID(orderID+1)
+                        localStorage.setItem('orderID', orderID)
+                        sendForm(
+                          username,
+                          phone,
+                          email,
+                          country,
+                          township,
+                          postcode,
+                          address,
+                          totaldiscount,
+                          payment,
+                          transportationstate,
+                          cartData,
+                          orderID,
+                          uid
+                      )
+                      }
+                    }
                   >
                     確認付款
                   </div>
@@ -274,6 +400,8 @@ export default function Test() {
           </div>
         </>
       </div>
+
+      {/* 手機版 */}
       <div className="flow-cart-mb">
         <div
           className="d-flex flex-column position-sticky"
@@ -310,6 +438,27 @@ export default function Test() {
             <div
               className="b-btn b-btn-primary d-flex w-100 h-100 justify-content-center"
               style={{ padding: '14px 0' }}
+              onClick={
+                () => {
+                  setOrderID(orderID+1)
+                  localStorage.setItem('orderID', orderID)
+                  sendForm(
+                    username,
+                    phone,
+                    email,
+                    country,
+                    township,
+                    postcode,
+                    address,
+                    totaldiscount,
+                    payment,
+                    transportationstate,
+                    cartData,
+                    orderID,
+                    uid,
+                )
+                }
+              }
             >
               確認付款
             </div>
@@ -557,99 +706,8 @@ export default function Test() {
           gap: 12px;
           padding: 12px;
           color: black;
-          .instrument-item {
-            display: grid;
-            place-content: center;
-            grid-template-columns: repeat(8, 110px);
-            @media screen and (max-width: 576px) {
-              grid-template-columns: repeat(4, 1fr);
-            }
-            .instrument-item-name {
-              grid-row: 1/2;
-              grid-column: 1/3;
-              margin-block: auto;
-              padding-left: 10px;
-              @media screen and (max-width: 576px) {
-                grid-column: 1/3;
-                padding-left: 0;
-              }
-            }
-            .instrument-item-price {
-              grid-row: 1/2;
-              grid-column: 3/5;
-              margin: auto;
-              @media screen and (max-width: 576px) {
-                display: none;
-              }
-            }
-            .instrument-item-quantity {
-              padding: 0 26px;
-              grid-row: 1/2;
-              grid-column: 5/6;
-              margin: auto;
-              @media screen and (max-width: 576px) {
-                display: none;
-              }
-            }
-            .instrument-item-total {
-              grid-row: 1/2;
-              grid-column: 6/8;
-              margin: auto;
-              @media screen and (max-width: 576px) {
-                grid-column: 3/4;
-              }
-            }
-            .instrument-item-payment{
-              grid-row: 1/2;
-              grid-column: 8/9;
-              margin: auto;
-              @media screen and (max-width: 576px) {
-                grid-column: 4/5;
-              }
-            }
-            .quantity-left-minus {
-              margin: auto;
-
-              width: 40px;
-              height: 40px;
-              .minussign::before {
-                content: '\x91';
-                color: #000;
-                /* sidebar-font */
-                font-family: 'Noto Sans TC';
-                font-size: 16px;
-                font-style: normal;
-                font-weight: 700;
-                line-height: normal;
-              }
-            }
-            .quantity-right-plus {
-              width: 40px;
-              height: 40px;
-              .plussign::before {
-                content: '\x17';
-                color: var(--white, #fff);
-                /* sidebar-font */
-                font-family: 'Noto Sans TC';
-                font-size: 12px;
-                font-style: normal;
-                font-weight: 700;
-                line-height: normal;
-              }
-            }
-            .input-number {
-              text-align: center;
-              color: #000;
-
-              /* sidebar-font */
-              font-family: 'Noto Sans TC';
-              font-size: 16px;
-              font-style: normal;
-              font-weight: 700;
-              line-height: normal;
-            }
           }
-        }
+
         .cart-subtotal {
           color: black;
           display: flex;
@@ -687,7 +745,6 @@ export default function Test() {
       }
       .address-location{
         display: flex;
-        /* width: 664px; */
         align-items: flex-start;
         align-content: flex-start;
         gap: 12px 45px;
@@ -697,6 +754,16 @@ export default function Test() {
           gap: 12px 20px;
         }
       }
+      .address-location-info{
+        display:flex;
+        column-gap:15px;
+        @media screen and (max-width: 576px) {
+          display:block;
+          white-space: pre-wrap;
+          overflow-wrap: break-word;
+        }
+      }
+
       .credit-card-info{
         color: black;
         .minussign{
