@@ -814,9 +814,10 @@ router.put('/joinJam', upload.none(), async (req, res) => {
 
   // 更新所有申請: 刪除狀態(valid=0, state=4)
   const applyResult = await db
-    .execute('UPDATE `jam_apply` SET `state` = 4, `valid` = 0 WHERE `applier_uid` = ?', [
-      user_uid,
-    ])
+    .execute(
+      'UPDATE `jam_apply` SET `state` = 4, `valid` = 0 WHERE `applier_uid` = ?',
+      [user_uid]
+    )
     .then(() => {
       return 1;
     })
@@ -1051,32 +1052,50 @@ router.put('/formRightNow', upload.none(), async (req, res) => {
 
 // 編輯資訊
 router.put('/editInfo', upload.single('cover_img'), async (req, res) => {
-  // 檔案上傳流程
+  const { juid, bandName, introduce, works_link } = req.body;
   // console.log(req.file);
   const now = new Date().toISOString();
-  // 取新檔名
-  let newCover = Date.now() + extname(req.file.originalname);
-  rename(req.file.path, resolve(__dirname, 'public/jam', newCover), (error) => {
-    if (error) {
-      console.log('更名失敗' + error);
-      return;
-    }
-    console.log('更名成功');
-  });
-
-  // 更新資料庫
-  const { juid, bandName, introduce, works_link } = req.body;
-  await db
-    .execute(
-      'UPDATE `jam` SET `name` = ?, `introduce` = ?, cover_img = ?, works_link = ?, `updated_time` = ?  WHERE `juid` = ?',
-      [bandName, introduce, newCover, works_link, now, juid]
-    )
-    .then(() => {
-      res.status(200).json({ status: 'success' });
-    })
-    .catch((error) => {
-      res.status(500).json({ status: 'error', error });
-    });
+  // 有上傳圖片
+  if (req.file) {
+    // 檔案上傳流程
+    // 取新檔名
+    let newCover = Date.now() + extname(req.file.originalname);
+    rename(
+      req.file.path,
+      resolve(__dirname, 'public/jam', newCover),
+      (error) => {
+        if (error) {
+          console.log('更名失敗' + error);
+          return;
+        }
+        console.log('更名成功');
+      }
+    );
+    await db
+      .execute(
+        'UPDATE `jam` SET `name` = ?, `introduce` = ?, cover_img = ?, works_link = ?, `updated_time` = ?  WHERE `juid` = ?',
+        [bandName, introduce, newCover, works_link, now, juid]
+      )
+      .then(() => {
+        res.status(200).json({ status: 'success' });
+      })
+      .catch((error) => {
+        res.status(500).json({ status: 'error', error });
+      });
+  } else {
+    // 沒上傳圖片
+    await db
+      .execute(
+        'UPDATE `jam` SET `name` = ?, `introduce` = ?, works_link = ?, `updated_time` = ?  WHERE `juid` = ?',
+        [bandName, introduce, works_link, now, juid]
+      )
+      .then(() => {
+        res.status(200).json({ status: 'success' });
+      })
+      .catch((error) => {
+        res.status(500).json({ status: 'error', error });
+      });
+  }
 });
 
 function generateUid() {
