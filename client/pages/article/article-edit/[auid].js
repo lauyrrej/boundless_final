@@ -151,8 +151,10 @@ export default function Auid() {
           <div className="">
             {/* 主內容 */}
             <main className="content">
+              <h1 className="text-center">{articleDetail.title}</h1>
               <div className="">
-                <Tiptap setDescription={setDescription} initialContent={articleDetail.content}/>
+                <Tiptap setDescription={setDescription} initialContent={articleDetail.content}
+                />
               </div>
               <div className="main-img">
                 <Image

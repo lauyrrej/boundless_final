@@ -93,7 +93,7 @@ export default function Articlecard({
           }
         }
         .article-info {
-          width: 180px;
+          width: 250px;
         }
         .article-author {
           width: 30px;

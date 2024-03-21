@@ -23,7 +23,7 @@ import withReactContent from 'sweetalert2-react-content'
 import CityCountyData from '@/data/CityCountyData.json'
 import playerData from '@/data/player.json'
 // tiptap
-import { Tiptap } from '@/components/article/tiptap'
+import { Tiptap } from '@/components/article/tiptapPublish'
 
 const mySwal = withReactContent(Swal)
 export default function Publish() {
@@ -271,10 +271,44 @@ export default function Publish() {
                 <h3>自訂文章內文</h3>
               </div>
             </div>
-            <Tiptap setDescription={setDescription} initialContent="" id='content' name='content' onChange={(e) => {
+            <Tiptap setDescription={setDescription} onChange={(e) => {
               setContent(e.target.value)
             }} />
             <hr />
+            {/* setting content */}
+            {/* <div className="set-rwd">
+              <div className="rwd-title">
+                <h3>自訂文章摘要</h3>
+              </div>
+              <div className="rwd-content">
+                <h5 className="text-secondary">
+                  系統已經先擷取，你也可以自行修改摘要說明。
+                </h5>
+                <div>
+                  <label
+                    htmlFor="exampleFormControlTextarea1"
+                    className="form-label"
+                  ></label>
+                  <textarea
+                    className="form-control"
+                    id="content"
+                    name="content"
+                    rows={3}
+                    onChange={(e) => {
+                      setContent(e.target.value)
+                    }}
+                    placeholder="輸入內容..."
+                    defaultValue={''}
+                  />
+                </div>
+                {descriptionCheck ? (
+                  ''
+                ) : (
+                  <div className="bad-words">偵測到不雅字詞</div>
+                )}
+              </div>
+            </div>
+            <hr /> */}
             {/* setting category */}
             <div className="set-rwd">
               <div className="rwd-title">

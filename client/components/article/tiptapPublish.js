@@ -100,7 +100,7 @@ const MenuBar = ({ editor }) => {
 
 export const Tiptap = ({ setDescription, initialContent }) => {
   const editor = useEditor({
-    extensions: [StarterKit, Underline],
+    extensions: [StarterKit, Underline,],
     content: '',
     onUpdate: ({ editor }) => {
       const html = editor.getHTML()
@@ -118,7 +118,7 @@ const [init, setInit] = useState('')
   return (
     <div className="textEditor">
       <MenuBar editor={editor} />
-      <EditorContent name='content' id='content' editor={editor} />
+      <EditorContent editor={editor} />
     </div>
   )
 }
