@@ -101,15 +101,15 @@ export default function Index() {
           <section className="carousel-section">
             <div
               id="carouselExampleIndicators"
-              class="carousel slide"
+              className="carousel slide"
               data-bs-ride="carousel"
             >
-              <div class="carousel-indicators">
+              <div className="carousel-indicators">
                 <button
                   type="button"
                   data-bs-target="#carouselExampleIndicators"
                   data-bs-slide-to="0"
-                  class="active"
+                  className="active"
                   aria-current="true"
                   aria-label="Slide 1"
                 ></button>
@@ -138,36 +138,36 @@ export default function Index() {
                   aria-label="Slide 5"
                 ></button>
               </div>
-              <div class="carousel-inner" style={{ borderRadius: '10px' }}>
-                <div class="carousel-item active" data-bs-interval="6000">
+              <div className="carousel-inner" style={{ borderRadius: '10px' }}>
+                <div className="carousel-item active" data-bs-interval="4000">
                   <Image
                     src="/課程與師資/lesson_img/lesson_001.jpeg"
                     alt="..."
                     fill
                   />
                 </div>
-                <div class="carousel-item" data-bs-interval="6000">
+                <div className="carousel-item" data-bs-interval="4000">
                   <Image
                     src="/課程與師資/lesson_img/lesson_009.jpeg"
                     alt="..."
                     fill
                   />
                 </div>
-                <div class="carousel-item" data-bs-interval="6000">
+                <div className="carousel-item" data-bs-interval="4000">
                   <Image
                     src="/課程與師資/lesson_img/lesson_008.jpeg"
                     alt="..."
                     fill
                   />
                 </div>
-                <div class="carousel-item" data-bs-interval="6000">
+                <div className="carousel-item" data-bs-interval="4000">
                   <Image
                     src="/課程與師資/lesson_img/lesson_004.jpeg"
                     alt="..."
                     fill
                   />
                 </div>
-                <div class="carousel-item" data-bs-interval="6000">
+                <div className="carousel-item" data-bs-interval="4000">
                   <Image
                     src="/課程與師資/lesson_img/lesson_005.jpeg"
                     alt="..."
@@ -176,28 +176,28 @@ export default function Index() {
                 </div>
               </div>
               <button
-                class="carousel-control-prev"
+                className="carousel-control-prev"
                 type="button"
                 data-bs-target="#carouselExampleIndicators"
                 data-bs-slide="prev"
               >
                 <span
-                  class="carousel-control-prev-icon"
+                  className="carousel-control-prev-icon"
                   aria-hidden="true"
                 ></span>
-                <span class="visually-hidden">Previous</span>
+                <span className="visually-hidden">Previous</span>
               </button>
               <button
-                class="carousel-control-next"
+                className="carousel-control-next"
                 type="button"
                 data-bs-target="#carouselExampleIndicators"
                 data-bs-slide="next"
               >
                 <span
-                  class="carousel-control-next-icon"
+                  className="carousel-control-next-icon"
                   aria-hidden="true"
                 ></span>
-                <span class="visually-hidden">Next</span>
+                <span className="visually-hidden">Next</span>
               </button>
             </div>
           </section>
