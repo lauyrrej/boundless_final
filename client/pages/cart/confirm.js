@@ -20,6 +20,10 @@ import { FaTrash } from 'react-icons/fa6'
 import { useCart } from '@/hooks/use-cart'
 import { wrap } from 'lodash'
 
+// 會員認證hook
+import { useAuth } from '@/hooks/user/use-auth'
+import { jwtDecode } from 'jwt-decode'
+
 //confirmlist
 import LessonConfirmList from '@/components/cart/confirm-lesson-items.js'
 import InstrumentConfirmList from '@/components/cart/confirm-instrument-items.js'
@@ -43,6 +47,37 @@ export default function Test() {
     calcTotalPrice,
   } = useCart()
 
+
+  // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
+  //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
+  const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
+    useAuth()
+  const [userData, setUserData] = useState()
+  //檢查token
+  useEffect(() => {
+    handleLoginStatus()
+    //獲得資料
+    getLoginUserData()
+  }, [])
+  //登出功能
+
+  //檢查是否獲取資料
+  // console.log(LoginUserData)
+  //   讀取使用者資料後 定義大頭貼路徑
+  let avatarImage
+  if (LoginUserData.img) {
+    avatarImage = `http://localhost:3005/user/${LoginUserData.img}`
+  } else if (LoginUserData.photo_url) {
+    avatarImage = `${LoginUserData.photo_url}`
+  } else {
+    avatarImage = `http://localhost:3005/user/avatar_userDefault.jpg`
+  }
+
+  let uid 
+  if(LoginUserData){
+    uid = LoginUserData.uid
+    // console.log(uid)
+  }
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -110,6 +145,7 @@ export default function Test() {
     transportationstate,
     cartData,
     orderID,
+    uid,
   )=>{
     let formData = new FormData()
     formData.append('username', username)
@@ -124,6 +160,7 @@ export default function Test() {
     formData.append('transportationstate', transportationstate)
     formData.append('cartdata', cartData)
     formData.append('orderID', orderID)
+    formData.append('uid', uid)
 
     const res = await fetch('http://localhost:3005/api/cart/form', {
       method: 'POST',
@@ -350,6 +387,7 @@ export default function Test() {
                           transportationstate,
                           cartData,
                           orderID,
+                          uid
                       )
                       }
                     }
@@ -417,6 +455,7 @@ export default function Test() {
                     transportationstate,
                     cartData,
                     orderID,
+                    uid,
                 )
                 }
               }

@@ -18,10 +18,13 @@ router.post('/form', upload.none(), async (req, res) => {
         payment,
         transportationstate,
         cartdata,
-        orderID
+        orderID,
+        uid
     } = req.body;
     const newOrderID = parseInt(orderID)
     const newCartData = JSON.parse(cartdata)
+    console.log(uid)
+    // const uuid = JSON.stringify(uid)
 
     const now = new Date().toISOString();
     console.log(req.body);
@@ -31,7 +34,7 @@ router.post('/form', upload.none(), async (req, res) => {
 
     await db.execute(orderTotal,
         [
-            username,
+            uid,
             payment,
             transportationstate,
             phone,
