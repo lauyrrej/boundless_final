@@ -25,6 +25,9 @@ import toast, { Toaster } from 'react-hot-toast'
 // 購物車hook
 import { useCart } from '@/hooks/use-cart'
 
+//日期格式
+import { format } from 'date-fns'
+
 export default function LessonDetailPage() {
   // ----------------------手機版本  ----------------------
   // 主選單
@@ -85,8 +88,8 @@ export default function LessonDetailPage() {
       // 進入狀態前檢查資料類型有值，以避免錯誤
       if (data) {
           setLessonDetail(data)
-         
-        console.log(LessonDetail.data[0].price.toLocaleString())
+ 
+        console.log(LessonDetail.product_review[0].created_time)
       }
     } catch (e) {
       console.error(e)
@@ -291,7 +294,7 @@ export default function LessonDetailPage() {
                     <div className="achievement mt40">
                       <div className="detail-title">你將學到</div>
                       <div className="list">
-                        <ol>
+                        <ul>
                           {LessonDetail &&
                             LessonDetail.data.length > 0 &&
                             LessonDetail.data[0].achievement
@@ -299,7 +302,7 @@ export default function LessonDetailPage() {
                               .map((line, index) => (
                                 <li key={index}>{line}</li>
                               ))}
-                        </ol>
+                        </ul>
                       </div>
                     </div>
 
@@ -326,8 +329,10 @@ export default function LessonDetailPage() {
                                       {LessonDetail.product_review[index].name}
                                       <div className="review-Date">
                                         {
-                                          LessonDetail.product_review[index]
-                                            .created_time
+                                          format(
+    new Date(LessonDetail.product_review[index]
+                                            .created_time),
+    'yyyy-MM-dd HH:mm:ss')
                                         }
                                       </div>
                                     </div>

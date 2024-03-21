@@ -7,7 +7,9 @@ import toast, { Toaster } from 'react-hot-toast'
 //跳轉頁面
 import Link from 'next/link'
 
+
 export default function ProductBriefCard({
+
     id,
     average_rating,
     review_count,
@@ -27,6 +29,7 @@ export default function ProductBriefCard({
   addLessonItem = () => {},
   calcTotalItems = () => {},
 }) {
+    
   //收藏按鍵的功能
   const [colorChange, setcolorChange] = useState(false)
   const colorToggle = () => {
@@ -110,7 +113,8 @@ export default function ProductBriefCard({
                   onshelf_time,
                 })
                 calcTotalItems() // Moved inside the onClick function
-                notify()
+                  notify()
+                //   console.log(id)
               }}
             >
               <img

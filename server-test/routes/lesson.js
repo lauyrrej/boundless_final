@@ -40,10 +40,10 @@ router.get('/', async (req, res) => {
 
     // Response
     if (results.length > 0) {
-      res.json(results);
+      res.status(200).json(results);
       console.log(results);
     } else {
-      res.json({ message: '沒有找到相應的資訊' });
+      res.status(404).json({ message: '沒有找到相應的資訊' });
     }
   } catch (error) {
     console.error('發生錯誤：', error);
@@ -60,14 +60,14 @@ router.get('/categories', async (req, res) => {
     );
 
     if (lesson_category) {
-      res.json(lesson_category);
+       res.status(200).json(lesson_category);
       console.log(lesson_category);
     } else {
-      res.json('沒有找到相應的資訊');
+      res.status(404).json('沒有找到相應的資訊');
     }
   } catch (error) {
     console.error('發生錯誤：', error);
-    res.json('發生錯誤');
+    res.status(500).json('Internal server error');
   }
 });
 
@@ -87,13 +87,13 @@ router.get('/category/:category', async (req, res) => {
     let [lessons] = await db.execute(query, queryParams);
 
     if (lessons.length > 0) {
-      res.json(lessons);
+      res.status(200).json(lessons);
     } else {
-      res.json({ message: '沒有找到相應的資訊' });
+       res.status(404).send({ message: '沒有找到相應的資訊' });
     }
   } catch (error) {
     console.error('發生錯誤：', error);
-    res.status(500).json({ error: '發生錯誤' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
@@ -149,10 +149,10 @@ router.get('/:id', async (req, res, next) => {
       console.log({ data });
       res.status(200).json({ data, product_review, youwilllike });
     } else {
-      res.status(404).send('Data not found');
+      res.status(404).send('沒有找到相應的資訊');
     }
   } catch (error) {
-    console.error('Database error:', error);
+    console.error('發生錯誤:', error);
     res.status(500).send('Internal server error');
   }
 });

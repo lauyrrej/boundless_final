@@ -37,21 +37,19 @@ export function CartProvider({ children }) {
     localStorage.setItem('CartData', JSON.stringify(newItems))
   }
 
-  const addLessonItem = (item) => {
-    const index = items.findIndex((v) =>{
-      return (v.id =  item.id)
-    })
+   const addLessonItem = (item) => {
+     const index = items.findIndex((v) => {
+       return v.id == item.id
+     })
 
-    if(index > -1){
-      //結束程式
-      return
-    }
-
-    const newItem = {...item, qty: 1}
-    const newItems = [...items, newItem]
-    setItems(newItems)
-    localStorage.setItem('CartData', JSON.stringify(newItems))
-  }
+     if (index == -1) {
+       const newItem = { ...item, qty: 1 }
+       const newItems = [...items, newItem]
+       setItems(newItems)
+       localStorage.setItem('CartData', JSON.stringify(newItems))
+     }
+   }
+    
   //在購物車中，移除某商品的id
   const remove = (items, id) => {
     const newItems = items.filter((v, i) => {
