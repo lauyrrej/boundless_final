@@ -14,7 +14,7 @@ export function CartProvider({ children }) {
     return { ...v, qty: 1 }
   })
   //加入到購物車的項目
-  let [items, setItems] = useState(cartData)
+  let [items, setItems] = useState([])
 
   useEffect(() => {
     localStorage.setItem('CartData', JSON.stringify(items))
