@@ -86,7 +86,7 @@ export default function ArticleList() {
   useEffect(() => {
     const getDatas = async () => {
       try {
-        const res = await fetch(`http://localhost:3005/api/article`)
+        const res = await fetch(`http://localhost:3005/api/article/comments`)
         const datas = await res.json()
         if (datas) {
           setArticle(datas) // 設定獲取的文章數據到狀態中

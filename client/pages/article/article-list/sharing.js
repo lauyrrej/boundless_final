@@ -83,32 +83,21 @@ export default function ArticleList() {
   // ----------------------會員登入狀態  ----------------------
 
   // 全部article資料
-  const getSingleDetail = async (category_id) => {
-    try {
-      const res = await fetch(`http://localhost:3005/api/article/${category_id}`)
-      // res.json()是解析res的body的json格式資料，得到JS的資料格式
-      const data = await res.json()
-
-      // 設定到state中，觸發重新渲染(re-render)，會進入到update階段
-      // 進入狀態前檢查資料類型有值，以避免錯誤
-      if (data) {
-        setArticleDetail(data[0])
-        // 只拿第一筆資料
-        // console.log(articleDetail.title)
-        console.log(data)
-      }
-    } catch (e) {
-      console.error(e)
-    }
-  }
-  // 初次渲染"之後(After)"+router.isReady改變時，執行其中程式碼
   useEffect(() => {
-    // 如果isReady是true，確保能得到query的值
-    if (router.isReady) {
-      const { category_id } = router.query
-      getSingleDetail(category_id)
+    const getDatas = async () => {
+      try {
+        const res = await fetch(`http://localhost:3005/api/article/sharing`)
+        const datas = await res.json()
+        if (datas) {
+          setArticle(datas) // 設定獲取的文章數據到狀態中
+          console.log(datas)
+        }
+      } catch (e) {
+        console.error(e)
+      }
     }
-  }, [router.isReady])
+    getDatas() // 在元件渲染後立即獲取文章數據
+  }, []) // 空的依賴陣列表示只在元件第一次渲染時執行一次
 
   // article-category資料
   // const [articleCategory, setArticleCategory] = useState([])
@@ -235,7 +224,7 @@ export default function ArticleList() {
                   </Link>
                 </li>
                 <li>
-                  <Link href={`/article/article-list`}>音樂評論</Link>
+                  <Link href={`/article/article-list/comments`}>音樂評論</Link>
                 </li>
                 <li>
                   <Link href={`/article/article-list`}>技術分享</Link>

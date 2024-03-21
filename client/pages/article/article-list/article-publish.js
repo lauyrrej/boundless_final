@@ -22,17 +22,33 @@ import withReactContent from 'sweetalert2-react-content'
 //data
 import CityCountyData from '@/data/CityCountyData.json'
 import playerData from '@/data/player.json'
+// tiptap
+import { Tiptap } from '@/components/article/tiptap'
 
 const mySwal = withReactContent(Swal)
-
 export default function Publish() {
+
   // ----------------------表單  ----------------------
 
   // ---------------------- 標題 ----------------------
   const router = useRouter()
   const [title, setTitle] = useState('')
   const [titleCheck, setTitleCheck] = useState(true)
-  const [img, setImg] = useState('')
+  const [img, setImg] = useState('') // 照片預覽
+  // ----------------------Tiptap  ----------------------
+  const [description, setDescription] = useState('')
+
+  // ---------------------- 圖片上傳 ----------------------
+  const [file, setFile] = useState(null)
+  const handleFileChange = (e)=>{
+    const file = e.target.files[0]
+    if(file){
+      setFile(file)
+    }else{
+      setFile(null)
+    }
+  }
+
   // 文章分類
   const [category_id, setCategory] = useState(true)
 
@@ -58,10 +74,6 @@ export default function Publish() {
       setComplete(0)
       return false
     }
-    if (img === '') {
-      setComplete(0)
-      return false
-    }
     if (descriptionCheck === false || content === '') {
       setComplete(0)
       return false
@@ -71,7 +83,7 @@ export default function Publish() {
   }
   
   // 表單送出
-  const sendForm = async (title, category_id, content, img) => {
+  const sendForm = async (title, category_id, content, file) => {
     if (!checkComplete()) {
       return false
     }
@@ -79,14 +91,14 @@ export default function Publish() {
     formData.append('title', title)
     formData.append('category_id', category_id)
     formData.append('content', content)
-    // formData.append('img', img)
+    formData.append('myFile', file)
 
     // 確認formData內容
     for (let [key, value] of formData.entries()) {
       // console.log(`${key}: ${value}`)
     }
     const res = await fetch(
-      'http://localhost:3005/api/article/article-list/article-publish',
+      'http://localhost:3005/api/article/upload',
       {
         method: 'POST',
         body: formData,
@@ -253,6 +265,16 @@ export default function Publish() {
               </div>
             </div>
             <hr />
+            {/* TipTap */}
+            <div className="set-rwd">
+              <div className="rwd-title">
+                <h3>自訂文章內文</h3>
+              </div>
+            </div>
+            <Tiptap setDescription={setDescription} initialContent="" id='content' name='content' onChange={(e) => {
+              setContent(e.target.value)
+            }} />
+            <hr />
             {/* setting category */}
             <div className="set-rwd">
               <div className="rwd-title">
@@ -273,40 +295,6 @@ export default function Publish() {
               </div>
             </div>
             <hr />
-            {/* setting content */}
-            <div className="set-rwd">
-              <div className="rwd-title">
-                <h3>自訂文章摘要</h3>
-              </div>
-              <div className="rwd-content">
-                <h5 className="text-secondary">
-                  系統已經先擷取，你也可以自行修改摘要說明。
-                </h5>
-                <div>
-                  <label
-                    htmlFor="exampleFormControlTextarea1"
-                    className="form-label"
-                  ></label>
-                  <textarea
-                    className="form-control"
-                    id="content"
-                    name="content"
-                    rows={3}
-                    onChange={(e) => {
-                      setContent(e.target.value)
-                    }}
-                    placeholder="輸入內容..."
-                    defaultValue={''}
-                  />
-                </div>
-                {descriptionCheck ? (
-                  ''
-                ) : (
-                  <div className="bad-words">偵測到不雅字詞</div>
-                )}
-              </div>
-            </div>
-            <hr />
             {/* setting img */}
             <div className="set-rwd">
               <div className="rwd-title">
@@ -322,13 +310,8 @@ export default function Publish() {
                     type="file"
                     name="myFile"
                     id="myFile"
-                    onChange={(e) => {
-                      const file = e.target.files[0];
-                      if(file){
-                        const fileUrl = URL.createObjectURL(file);
-                      setImg(fileUrl)
-                      }
-                    }}
+                    accept='image/*'
+                    onChange={handleFileChange}
                   />
                 </div>
                 <h5 className="text-secondary mt-4">
@@ -339,58 +322,6 @@ export default function Publish() {
                 </h5>
               </div>
             </div>
-            <hr />
-            {/* setting publish */}
-            <div className="set-rwd">
-              <div className="rwd-title">
-                <h3>選擇發布方式</h3>
-              </div>
-            </div>
-            {/* form-check */}
-            <div className="form-check123">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="flexRadioDefault"
-                id="flexRadioDefault1"
-              />
-              <label className="form-check-label" htmlFor="flexRadioDefault1">
-                立刻發佈
-              </label>
-            </div>
-            <div className="form-check123">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="flexRadioDefault"
-                id="flexRadioDefault1"
-              />
-              <label className="form-check-label" htmlFor="flexRadioDefault1">
-                私密發佈(僅取得連結的使用者可以看到文章)
-              </label>
-            </div>
-            <div className="form-check123">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="flexRadioDefault"
-                id="flexRadioDefault1"
-              />
-              <label className="form-check-label" htmlFor="flexRadioDefault1">
-                排程發佈
-              </label>
-            </div>
-            <div className="form-check123">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="flexRadioDefault"
-                id="flexRadioDefault1"
-              />
-              <label className="form-check-label" htmlFor="flexRadioDefault1">
-                儲存成草稿
-              </label>
-            </div>
             {/* pagination */}
             <div className="page-button d-flex justify-content-between pt-5 pb-4">
               <button type="button" className="btn">
@@ -398,7 +329,7 @@ export default function Publish() {
               </button>
               <button
                 onClick={() => {
-                  sendForm(title, category_id, content, img)
+                  sendForm(title, category_id, content, file)
                 }}
                 type="button"
                 className="btn btn-primary"

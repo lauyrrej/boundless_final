@@ -161,7 +161,7 @@ export default function Auid() {
               <p className="pt-2">{articleDetail.content}</p>
               <div className="main-img">
                 <Image
-                  src={`/article/${articleDetail.img}`}
+                  src={`http://localhost:3005/article/${articleDetail.img}`}
                   alt=""
                   className="big-pic object-fit-contain w-100"
                   responsive
