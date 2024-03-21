@@ -37,6 +37,9 @@ export default function Test() {
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
   const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
     useAuth()
+
+
+
   const [userData, setUserData] = useState()
   //檢查token
   useEffect(() => {
@@ -165,7 +168,7 @@ export default function Test() {
   // #endregion
   // sql --- 分類 0:全部 / 2:樂器 / 1:課程 / 3:已使用 ---
   const [kind, setKind] = useState(0)
-  const [valid, setValid] = useState(1)
+  const [valid, setValid] = useState(999)
 
   const startIndex = useMemo(() => {
     return (currentPage - 1) * 9
@@ -188,6 +191,8 @@ export default function Test() {
   useEffect(() => {
     // component did mounted 呼叫api，這樣只會做一遍
     // userID=1
+      let userID = 0
+
     CouponClass.FindAll(LoginUserData.id).then(async (res) => {
       setDataSort(res)
 
@@ -204,11 +209,12 @@ export default function Test() {
   // 999全部 1未使用 0已使用
   const SelectAll = function () {
     // 1. 找到"未使用"的目標
-    setValid(1)
+    setValid(999)
     // 2. 撈全部的資料
     setKind(0)
     // 3. 將頁數設定為完整的資料
     setDataPage(GetArr(dataSort.length / 9))
+    setCurrentPage(1)
   }
 
   const SelectCourse = function () {
@@ -221,6 +227,7 @@ export default function Test() {
     setDataPage(
       GetArr(dataSort.filter((i) => i.valid === 1 && i.kind === 2).length / 9)
     )
+    setCurrentPage(1)
   }
 
   const SelectIn = function () {
@@ -233,6 +240,7 @@ export default function Test() {
     setDataPage(
       GetArr(dataSort.filter((i) => i.valid === 1 && i.kind === 1).length / 9)
     )
+    setCurrentPage(1)
   }
 
   const SelectExpired = function () {
@@ -240,6 +248,7 @@ export default function Test() {
     setKind(0)
     const filter = dataSort.filter((i) => !i.valid)
     setDataPage(GetArr(filter.length / 9))
+    setCurrentPage(1)
   }
 
   return (
@@ -735,7 +744,7 @@ export default function Test() {
                           .filter((i) => (kind !== 0 ? i.kind === kind : true))
                           // 篩選是否使用過????
                           .filter((i) =>
-                            valid !== -1 ? i.valid === valid : true
+                            valid !== 999 ? i.valid === valid : i
                           )
                           // 頁數篩選
                           .slice(startIndex, endIndex)
