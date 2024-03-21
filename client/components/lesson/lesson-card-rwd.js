@@ -13,7 +13,7 @@ export default function CourseCard({
   review_count,
   price,
   teacher_name,
-  img,
+  img_small,
   length,
   sales,
   discount,
@@ -21,14 +21,16 @@ export default function CourseCard({
   return (
     <>
       <Link href={`/lesson/${luid}`}>
-        <article className="course-container">
-          <Image
-            className="course-image"
-            loading="lazy"
-            src={`/課程與師資/lesson_small/${img}`}
-            alt="Course Preview"
-            fill
-          />
+        <div className="course-container">
+          <div className="course-image-container">
+            <img
+              className="course-image"
+              loading="lazy"
+              src={`/課程與師資/lesson_small/${img_small}`}
+              alt="/課程與師資/lesson_small/${img_small}"
+              fill
+            />
+          </div>
           <div className="course-details">
             <h2 className="course-title">{name}</h2>
             <p className="course-instructor">by {teacher_name}老師</p>
@@ -72,7 +74,7 @@ export default function CourseCard({
               />
             </div>
           </div>
-        </article>
+        </div>
         <style jsx>{`
           .course-container {
             background-color: #fff;
@@ -80,27 +82,36 @@ export default function CourseCard({
             gap: 8px;
             font-size: 13px;
             font-weight: 400;
-            padding: 10px;
+            padding: 10px 6px;
+            align-items: center;
+            width: 390px;
+            height: 147px;
+            border-bottom: solid #b9b9b9;
+          }
+          .course-image-container {
+            object-fit: hidden;
+            width: 120px;
+            height: 120px;
+            border-radius: 5px;
           }
           .course-image {
-            aspect-ratio: 1;
-            object-fit: cover;
             width: 120px;
-            max-width: 100%;
+            height: 120px;
+            object-fit: hidden;
             margin: auto 0;
+            flex: 1 0 0;
+            align-self: stretch;
           }
           .course-details {
             display: flex;
             flex-grow: 1;
             flex-direction: column;
-            padding: 0 20px;
           }
           .course-title {
             color: var(--dark, #1d1d1d);
             font-family: Noto Sans TC, sans-serif;
             font-size: 16px;
             margin: 0;
-            overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
             -webkit-line-clamp: 2;
