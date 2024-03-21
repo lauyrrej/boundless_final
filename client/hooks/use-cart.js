@@ -42,15 +42,13 @@ export function CartProvider({ children }) {
       return (v.id =  item.id)
     })
 
-    if(index > -1){
-      //結束程式
-      return
+    if(index == -1){
+      const newItem = {...item, qty: 1}
+      const newItems = [...items, newItem]
+      setItems(newItems)
+      localStorage.setItem('CartData', JSON.stringify(newItems))
     }
 
-    const newItem = {...item, qty: 1}
-    const newItems = [...items, newItem]
-    setItems(newItems)
-    localStorage.setItem('CartData', JSON.stringify(newItems))
   }
   //在購物車中，移除某商品的id
   const remove = (items, id) => {
@@ -241,6 +239,7 @@ export function CartProvider({ children }) {
     total = parseInt(calcInstrumentDiscount()) + parseInt(calcLessonDiscount())
     return total
   }
+
 
   return (
     <CartContext.Provider
