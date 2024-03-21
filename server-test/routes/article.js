@@ -70,7 +70,7 @@ router.get('/:auid', async (req, res, next) => {
   // 使用正确的参数名称
   let [data] = await db
     .execute(
-      'SELECT article.*, article_category.name AS category_name FROM article JOIN article_category ON article.category_id = article_category.id WHERE article.auid = ?',
+      'SELECT article.*, article_category.name AS category_name, article_comment.content AS comment_content,article_comment.created_time AS comment_created_time,article_comment.likes AS comment_likes, user.name AS user_name, user.img AS user_img FROM article JOIN article_category ON article.category_id = article_category.id LEFT JOIN article_comment ON article.id = article_comment.article_id LEFT JOIN user ON article_comment.user_id = user.id WHERE article.auid = ?',
       [auid]
     )
     .catch(() => {
@@ -84,8 +84,7 @@ router.get('/:auid', async (req, res, next) => {
   }
 });
 
-// 照片上傳(抓不到image)
-router.post('/upload', upload.single('myFile'), async (req, res) => {
+router.post('/upload/:auid', upload.single('myFile'), async (req, res) => {
   const now = new Date().toISOString();
   let newCover = Date.now() + extname(req.file.originalname);
   rename(req.file.path, resolve(__dirname, 'public/article', newCover), (error) => {
@@ -114,13 +113,14 @@ router.post('/upload', upload.single('myFile'), async (req, res) => {
 }
 );
 
-router.put('/edit', upload.none(''), async (req, res) => {
+router.put('/edit/:auid', upload.none(''), async (req, res) => {
   const { content } = req.body;
+  const auid = req.params.auid;
   console.log(req.body)
   await db
     .execute(
-      'UPDATE `article` SET `content` = ? WHERE `juid` = ?',
-      [auid, content]
+      'UPDATE `article` SET `content` = ? WHERE `auid` = ?',
+      [content, auid]
     )
     .then(() => {
       console.log('更新成功');

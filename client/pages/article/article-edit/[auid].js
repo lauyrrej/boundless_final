@@ -84,13 +84,11 @@ export default function Auid() {
     }
   }, [router.isReady])
 
-  // 表單送出
   // 送出更改
   const sendForm = async (auid, content) => {
     let formData = new FormData()
-    formData.append('auid', auid)
     formData.append('content', content)
-    const res = await fetch('http://localhost:3005/api/article/edit', {
+    const res = await fetch('http://localhost:3005/api/article/edit/${auid}', {
       method: 'PUT',
       body: formData,
       credentials: 'include',

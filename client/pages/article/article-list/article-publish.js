@@ -277,42 +277,7 @@ export default function Publish() {
             <div className='content'>
               <Tiptap setDescription={handleDescriptionChange} />
             </div>
-
             <hr />
-            {/* setting content */}
-            {/* <div className="set-rwd">
-              <div className="rwd-title">
-                <h3>自訂文章摘要</h3>
-              </div>
-              <div className="rwd-content">
-                <h5 className="text-secondary">
-                  系統已經先擷取，你也可以自行修改摘要說明。
-                </h5>
-                <div>
-                  <label
-                    htmlFor="exampleFormControlTextarea1"
-                    className="form-label"
-                  ></label>
-                  <textarea
-                    className="form-control"
-                    id="content"
-                    name="content"
-                    rows={3}
-                    onChange={(e) => {
-                      setContent(e.target.value)
-                    }}
-                    placeholder="輸入內容..."
-                    defaultValue={''}
-                  />
-                </div>
-                {descriptionCheck ? (
-                  ''
-                ) : (
-                  <div className="bad-words">偵測到不雅字詞</div>
-                )}
-              </div>
-            </div>
-            <hr /> */}
             {/* setting category */}
             <div className="set-rwd">
               <div className="rwd-title">
@@ -362,9 +327,9 @@ export default function Publish() {
             </div>
             {/* pagination */}
             <div className="page-button d-flex justify-content-between pt-5 pb-4">
-              <button type="button" className="btn">
+              <Link href={`/article/article-list`} className="btn">
                 上一步
-              </button>
+              </Link>
               <button
                 onClick={() => {
                   sendForm(title, category_id, content, file)
