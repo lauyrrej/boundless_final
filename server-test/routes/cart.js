@@ -20,7 +20,7 @@ router.post('/form', upload.none(), async (req, res) => {
         cartdata,
         orderID
     } = req.body;
-
+    const newOrderID = parseInt(orderID)
     const newCartData = JSON.parse(cartdata)
 
     const now = new Date().toISOString();
@@ -51,7 +51,7 @@ router.post('/form', upload.none(), async (req, res) => {
         // console.log(v);
         await db.execute('INSERT INTO `order_item`  (`id`, `order_id`, `product_id`, `quantity`) VALUES (NULL, ?, ?, ?)',
         [
-            orderID,
+            newOrderID,
             v.id,
             v.qty,
         ]

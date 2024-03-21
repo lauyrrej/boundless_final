@@ -8,6 +8,7 @@ import jamHero from '@/assets/jam-hero.png'
 
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
+import { jwtDecode } from 'jwt-decode'
 
 // icons
 import { IoHome } from 'react-icons/io5'
@@ -49,6 +50,7 @@ export default function Test() {
   // ----------------------會員登入狀態  ----------------------
   //------獲取使用者jam 名稱 
   const [UserJAMName , setUserJAMName] = useState({id:'',my_jam:''})
+  const appKey = 'userToken'
   const getLoginUserJAMName = async (e) => {
     // 拿取Token回傳後端驗證狀態
     const Loginusertoken = localStorage.getItem(appKey)
@@ -80,6 +82,51 @@ export default function Test() {
       console.error('There was a problem with the fetch operation:', error)
     }
   }
+
+  //------獲取單一使用者全部訂單 
+  const getLoginUserOrder = async (e) => {
+    // 拿取Token回傳後端驗證狀態
+    const Loginusertoken = localStorage.getItem(appKey)
+
+    if (!Loginusertoken) {
+      console.error('沒有登入的token 故無法取得使用者資料。')
+      return null
+    }
+    const userID = jwtDecode(Loginusertoken)
+    const id = userID.id
+
+    try {
+      const response = await fetch(
+        `http://localhost:3005/api/user/order/${id}`,
+        {
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${Loginusertoken}`,
+          },
+          body: JSON.stringify(),
+        }
+      )
+      const LoginUserProfile = await response.json()
+      // console.log('Response from server:', LoginUserData)
+      // setUserData(LoginUserData)
+      // console.log(LoginUserProfile)
+      setuserData(LoginUserProfile)
+      // console.log(LoginUserData)
+      // 在這裡處理後端返回的資料
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error)
+    }
+  }
+
+  //-------------------------------------------------------------
+  //執行一次，如果有登入，獲得該使用者全部資料寫入userData 狀態
+  useEffect(() => {
+    if (LoginUserData) {
+      getLoginUserOrder()
+    }
+  }, []) 
+
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
