@@ -274,12 +274,12 @@ if (finalData){
 //instrument_category
 router.get('/categories', async (req, res) => {
   try {
-    let [instrument_category] = await db.execute(
+    let [productCategory] = await db.execute(
       'SELECT `id`, `parent_id`, `name` FROM `instrument_category`'
     );
 
-    if (instrument_category) {
-      res.json(instrument_category);
+    if (productCategory) {
+      res.json(productCategory);
     } else {
       res.json('沒有找到相應的資訊');
     }

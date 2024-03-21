@@ -212,6 +212,8 @@ export default function Test({ onSearch }) {
     }
   }
 
+
+
   // const getDatassearch = async (params) => {
   //   try {
   //     const res = await fetch(
@@ -395,6 +397,35 @@ export default function Test({ onSearch }) {
     setIsFiltered(true)
   }
 
+//-------------------渲染分類功能li
+const [InstrumentCategory, setInstrumentCategory] = useState([])
+
+function getInstrumentCategory() {
+  return new Promise((resolve, reject) => {
+    let url = 'http://localhost:3005/api/instrument/categories'
+    fetch(url, {
+      method: 'GET',
+      credentials: 'include',
+    })
+      .then((response) => {
+        return response.json()
+      })
+      .then((result) => {
+        resolve(result)
+        console.log(result)
+        setInstrumentCategory(result)
+      })
+      .catch((error) => {
+        console.log(error)
+        reject()
+      })
+  })
+}
+
+useEffect(() => {
+  getInstrumentCategory()
+}, [])
+
   // 設定sidebar下拉狀態
   const [openAccordion, setOpenAccordion] = useState(null)
 
@@ -476,7 +507,7 @@ export default function Test({ onSearch }) {
                 <li>
                   <Link href={`/instrument`}>全部</Link>
                 </li>
-                {productCategory && productCategory.map((v) => {
+                {InstrumentCategory.map((v) => {
                   return v.parent_id === 0 ? (
                     <li
                       className="accordion"
@@ -502,7 +533,7 @@ export default function Test({ onSearch }) {
                           className="accordion-collapse collapse"
                           data-bs-parent={`#accordion${v.name}`}
                         >
-                          {productCategory.map((subv) => {
+                          {InstrumentCategory.map((subv) => {
                             return v.id === subv.parent_id ? (
                               <div
                                 className="accordion-body d-flex flex-column px-0 pt-3 pb-0"
@@ -564,7 +595,7 @@ export default function Test({ onSearch }) {
               <Link href={`/instrument`} className="sm-item active">
                 全部
               </Link>
-              {productCategory && productCategory.map((v) => {
+              {InstrumentCategory.map((v) => {
                 return v.parent_id === 0 ? (
                   <li
                     className="accordion sm-item"
@@ -590,7 +621,7 @@ export default function Test({ onSearch }) {
                         className="accordion-collapse collapse"
                         data-bs-parent={`#accordion${v.name}`}
                       >
-                        {productCategory.map((subv) => {
+                        {InstrumentCategory.map((subv) => {
                           return v.id === subv.parent_id ? (
                             <div
                               className="accordion-body d-flex flex-column px-0 pt-3 pb-0"
@@ -939,9 +970,12 @@ export default function Test({ onSearch }) {
             </main>
             <div className="d-flex justify-content-center">
               <BS5Pagination
-                forcePage={page - 1}
+                 forcePage={1}
                 onPageChange={handlePageClick}
-                pageCount={pageTotal}
+                pageCount={10}
+                // forcePage={page - 1}
+                // onPageChange={handlePageClick}
+                // pageCount={pageTotal}
               />
             </div>
           </div>
