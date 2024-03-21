@@ -16,7 +16,7 @@ router.post('/form', upload.none(), async (req, res) => {
         address,
         totaldiscount,
         payment,
-        transportation_state,
+        transportationstate,
         cartdata,
         orderID
     } = req.body;
@@ -24,32 +24,31 @@ router.post('/form', upload.none(), async (req, res) => {
     const newCartData = JSON.parse(cartdata)
 
     const now = new Date().toISOString();
-    console.log(username);
+    console.log(req.body);
  
-    const orderTotal = 'INSERT INTO `order_total` (`id`, `user_id`, `payment`, `transportation_state`, `phone`, `discount`, `postcode`, `country`, `township`, `address`, `created_time`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+    const orderTotal = 'INSERT INTO `order_total` (`id`, `user_id`, `payment`, `transportation_state`, `phone`, `discount`, `postcode`, `country`, `township`, `address`, `created_time`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())'
 
 
     await db.execute(orderTotal,
         [
-            JSON.stringify(username),
+            username,
             payment,
-            transportation_state,
+            transportationstate,
             phone,
             totaldiscount,
             postcode,
             township,
             country,
             address,
-            now,
         ]).then(() => {
-            res.status(200).json({ status: 'success' });
+            // res.status(200).json({ status: 'success' });
         })
         .catch((error) => {
             res.status(500).json({ status: 'error', error });
         });
 
     newCartData.map(async (v,i)=>{
-        console.log(v);
+        // console.log(v);
         await db.execute('INSERT INTO `order_item`  (`id`, `order_id`, `product_id`, `quantity`) VALUES (NULL, ?, ?, ?)',
         [
             orderID,

@@ -24,22 +24,25 @@ export function CartProvider({ children }) {
   const addInstrumentItem = (item, qty) => {
     // 檢查購物車是否已存在該商品
     const index = items.findIndex((v) => {
-      return (v.id = item.id)
+      return (v.id == item.id)
     })
+    console.log(index);
     if (index > -1) {
       increment(item, qty)
+    }else{
+      // 不存在購物車中，擴充該商品的"數量"屬性
+      //擴充item的屬性多一個qty
+      const newItem = { ...item, qty: qty }
+      const newItems = [...items, newItem]
+      setItems(newItems)
+      localStorage.setItem('CartData', JSON.stringify(newItems))
     }
-    // 不存在購物車中，擴充該商品的"數量"屬性
-    //擴充item的屬性多一個qty
-    const newItem = { ...item, qty: qty }
-    const newItems = [...items, newItem]
-    setItems(newItems)
-    localStorage.setItem('CartData', JSON.stringify(newItems))
+
   }
 
   const addLessonItem = (item) => {
     const index = items.findIndex((v) =>{
-      return (v.id =  item.id)
+      return (v.id == item.id)
     })
 
     if(index == -1){
@@ -48,7 +51,6 @@ export function CartProvider({ children }) {
       setItems(newItems)
       localStorage.setItem('CartData', JSON.stringify(newItems))
     }
-
   }
   //在購物車中，移除某商品的id
   const remove = (items, id) => {
