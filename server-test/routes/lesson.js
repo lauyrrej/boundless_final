@@ -51,6 +51,7 @@ router.get('/', async (req, res) => {
   }
 });
 
+
 //lesson_category
 router.get('/categories', async (req, res) => {
   try {
