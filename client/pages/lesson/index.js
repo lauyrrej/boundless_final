@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
+import NavbarMb from '@/components/common/navbar-mb'
 import Footer from '@/components/common/footer'
 //試抓資料區
 import Card from '@/components/lesson/lesson-card'
@@ -10,6 +11,7 @@ import Cardrwd from '@/components/lesson/lesson-card-rwd'
 import Link from 'next/link'
 import Image from 'next/image'
 import lessonHero from '@/assets/lesson-hero.jpg'
+import Head from 'next/head'
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
@@ -242,26 +244,7 @@ export default function LessonList({}) {
 
   //-------------------排序功能
 
-  // 手機版排序函数
-  const handleSort = (sortType) => {
-    setDataSort(sortType)
-    // 根据传入的排序类型执行相应的排序操作
-    switch (sortType) {
-      case 'upToDate':
-        sortBySales()
-        break
-      case 'review':
-        sortByRating()
-        break
-      case 'classLength':
-        sortByLength()
-        break
-      default:
-        // 默认排序方式
-        sortBySales()
-        break
-    }
-  }
+  
   //最熱門
   const sortBySales = () => {
     const sortedProducts = [...LessonArray].sort((a, b) => b.sales - a.sales)
@@ -363,7 +346,10 @@ export default function LessonList({}) {
   }, [category])
 
   return (
-    <>
+      <>
+          <Head>
+              <title>探索課程</title>
+          </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       <div className="hero d-none d-sm-block">
         <Image
@@ -385,40 +371,7 @@ export default function LessonList({}) {
             showMenu ? 'menu-mb-show' : ''
           }`}
         >
-          {/* 用戶資訊 */}
-          <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
-            <div className="mb-photo-wrapper mb-2">
-              <Image
-                src="/jam/amazingshow.jpg"
-                alt="user photo mb"
-                fill
-              ></Image>
-            </div>
-            <div>用戶名稱</div>
-          </div>
-          <Link
-            className="mm-item"
-            href="/user"
-            style={{ borderTop: '1px solid #b9b9b9' }}
-          >
-            會員中心
-          </Link>
-          <Link className="mm-item" href="/lesson/lesson">
-            探索課程
-          </Link>
-          <Link className="mm-item" href="/instrument/instrument">
-            樂器商城
-          </Link>
-          <Link className="mm-item" href="/jam/recruit-list">
-            Let &apos;s JAM!
-          </Link>
-          <Link className="mm-item" href="/article/article-list">
-            樂友論壇
-          </Link>
-          <div className="mm-item" style={{ color: '#1581cc' }}>
-            登出
-            <ImExit size={20} className="ms-2" />
-          </div>
+          <NavbarMb />
         </div>
 
         <div className="row">
@@ -537,7 +490,9 @@ export default function LessonList({}) {
                       <option value="review" onClick={sortByRating}>
                         依評價
                       </option>
-                      <option value="classLength">依時數</option>
+                      <option value="classLength" onClick={sortByRating}>
+                        依時數
+                      </option>
                     </select>
                   </div>
 
@@ -713,6 +668,7 @@ export default function LessonList({}) {
                   // 如果已经进行了筛选或搜索，渲染筛选后的 Lesson 数据
                   data.map((v, i) => {
                     const {
+                      lesson_category_name,
                       id,
                       puid,
                       name,
@@ -730,6 +686,7 @@ export default function LessonList({}) {
                       <div className="mb-4" key={id}>
                         {isSmallScreen ? (
                           <Cardrwd
+                            lesson_category_id={lesson_category_name}
                             id={id}
                             luid={puid}
                             name={name}
@@ -743,7 +700,7 @@ export default function LessonList({}) {
                           />
                         ) : (
                           <Card
-                            course-card
+                            lesson_category_id={lesson_category_name}
                             id={id}
                             luid={puid}
                             name={name}
@@ -764,7 +721,9 @@ export default function LessonList({}) {
                   // 如果没有进行筛选或搜索，渲染原始的 Lesson 数据
                   LessonArray.map((v, i) => {
                     const {
+                      lesson_category_name,
                       id,
+
                       puid,
                       name,
                       average_rating,
@@ -777,10 +736,12 @@ export default function LessonList({}) {
                       sales,
                       length,
                     } = v
+                    console.log(lesson_category_name)
                     return (
                       <div className="mb-4" key={id}>
                         {isSmallScreen ? (
                           <Cardrwd
+                            lesson_category_id={lesson_category_name}
                             id={id}
                             luid={puid}
                             name={name}
@@ -794,7 +755,7 @@ export default function LessonList({}) {
                           />
                         ) : (
                           <Card
-                            course-card
+                            lesson_category_id={lesson_category_name}
                             id={id}
                             luid={puid}
                             name={name}

@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
+import NavbarMb from '@/components/common/navbar-mb'
 import Link from 'next/link'
 import Image from 'next/image'
+import Head from 'next/head'
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
@@ -89,7 +91,7 @@ export default function LessonDetailPage() {
       if (data) {
           setLessonDetail(data)
  
-        console.log(LessonDetail.data)
+        console.log(LessonDetail.data[0].name)
       }
     } catch (e) {
       console.error(e)
@@ -114,6 +116,11 @@ export default function LessonDetailPage() {
 
   return (
     <>
+      <Head>
+        {LessonDetail && LessonDetail.data.length > 0 && (
+          <title>{LessonDetail.data[0].name}</title>
+        )}
+      </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
@@ -122,40 +129,7 @@ export default function LessonDetailPage() {
             showMenu ? 'menu-mb-show' : ''
           }`}
         >
-          {/* 用戶資訊 */}
-          <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
-            <div className="mb-photo-wrapper mb-2">
-              <Image
-                src="/jam/amazingshow.jpg"
-                alt="user photo mb"
-                fill
-              ></Image>
-            </div>
-            <div>用戶名稱</div>
-          </div>
-          <Link
-            className="mm-item"
-            href="/user"
-            style={{ borderTop: '1px solid #b9b9b9' }}
-          >
-            會員中心
-          </Link>
-          <Link className="mm-item" href="/lesson/lesson-list">
-            探索課程
-          </Link>
-          <Link className="mm-item" href="/instrument/instrument-list">
-            樂器商城
-          </Link>
-          <Link className="mm-item" href="/jam/recruit-list">
-            Let &apos;s JAM!
-          </Link>
-          <Link className="mm-item" href="/article/article-list">
-            樂友論壇
-          </Link>
-          <div className="mm-item" style={{ color: '#1581cc' }}>
-            登出
-            <ImExit size={20} className="ms-2" />
-          </div>
+          <NavbarMb />
         </div>
         <div className="row">
           {/* 麵包屑 */}
@@ -195,7 +169,10 @@ export default function LessonDetailPage() {
 
                   {/* Mobile version product brief card */}
                   <div className="Right-mobile">
-                    <div className="prodBriefing sticky-top">
+                    <div
+                      className="prodBriefing sticky-top"
+                      style={{ zIndex: '20' }}
+                    >
                       {LessonDetail && LessonDetail.data.length > 0 && (
                         <div className="prodMainName">
                           {LessonDetail.data[0].name} Logic Pro X 從零開始
