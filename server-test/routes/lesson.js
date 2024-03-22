@@ -102,6 +102,7 @@ router.get('/:id', async (req, res, next) => {
   console.log(luid);
   try {
     let [data] = await db.execute(
+
       'SELECT ' +
         '  p.*, ' +
         '  pr.*, ' +
@@ -119,6 +120,7 @@ router.get('/:id', async (req, res, next) => {
         '  ) ' +
         'GROUP BY ' +
         '  p.id;',
+
       [luid, luid]
     );
 
