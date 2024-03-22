@@ -89,7 +89,6 @@ export default function LessonDetailPage() {
       if (data) {
           setLessonDetail(data)
  
-        console.log(LessonDetail.data)
       }
     } catch (e) {
       console.error(e)
@@ -105,12 +104,9 @@ export default function LessonDetailPage() {
       getLessonDetail(luid)
     }
   }, [router.isReady])
+  
 
-  console.log('render')
-
-  console.log(router.query, ' isReady=', router.isReady)
-
-  const notify = () => toast('{LessonDetail.data[0].name}已加入購物車.')
+  const notify = () => toast(`${LessonDetail.data[0].name}已加入購物車.`)
 
   return (
     <>

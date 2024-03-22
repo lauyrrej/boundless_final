@@ -43,7 +43,7 @@ console.log(id);
 
   //toast
     const notify = () =>
-      toast('{LessonDetail.data[0].name}已加入購物車.')
+      toast(`${name}已加入購物車.`)
 
   return (
     <>
