@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
@@ -100,19 +100,31 @@ const MenuBar = ({ editor }) => {
 
 export const Tiptap = ({ setDescription, initialContent }) => {
   const editor = useEditor({
-    extensions: [StarterKit, Underline],
-    content: initialContent,
-
+    extensions: [StarterKit, Underline,],
+    content: '',
     onUpdate: ({ editor }) => {
       const html = editor.getHTML()
       setDescription(html)
+      console.log(html)
     },
   })
+
+  // 處理上傳內文
+  const handleChange = (e)=>{
+    const newContent = e.target.value;
+    setDescription(newContent);
+  }
+
+const [init, setInit] = useState('')
+  useEffect(() => {
+    if(editor)
+    editor.commands.setContent(initialContent)
+  }, [initialContent])
 
   return (
     <div className="textEditor">
       <MenuBar editor={editor} />
-      <EditorContent editor={editor} />
+      <EditorContent editor={editor} onChange={handleChange} />
     </div>
   )
 }

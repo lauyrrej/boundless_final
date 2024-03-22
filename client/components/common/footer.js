@@ -12,8 +12,8 @@ export default function Footer() {
           footer {
             background-color: #000;
             color: #fff;
-            width: 100%;
             height: 45px;
+            width: 100%;
             font-size: 16px;
           }
         `}
