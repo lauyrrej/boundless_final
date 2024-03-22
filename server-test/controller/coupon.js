@@ -33,7 +33,7 @@ class Coupon_template extends Basic {
     this.valid = true;
   }
 
-  // FindAll，代表查找所有模板
+  // FindAll，代表查找coupon所有模板
   async FindAll() {
     try {
       const queryString = `Select * From coupon_template`;
@@ -142,7 +142,7 @@ class Coupon extends Basic {
   }
 
   //#endregion
-  // 算單筆折價，不知道能不能用到，他媽的
+  // 算單筆折價，不知道能不能用到
   async CalcDiscountSingle(product_id = 0) {
     try {
       // 先找出product價格

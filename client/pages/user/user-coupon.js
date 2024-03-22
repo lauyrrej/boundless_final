@@ -38,8 +38,6 @@ export default function Test() {
   const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
     useAuth()
 
-
-
   const [userData, setUserData] = useState()
   //檢查token
   useEffect(() => {
@@ -487,7 +485,11 @@ export default function Test() {
                         </li>
                         {/* userID*/}
                         <button
-                          className="sort breadcrumb-item"
+                          className="b-btn b-lesson-btn px-5 py-3"
+                          style={{
+                            backgroundColor: 'rgb(255, 255, 255)',
+                            border: '1px solid rgb(255, 255, 255)',
+                          }}
                           onClick={async () => {
                             const obj = {
                               user_id: avatarUserID,
@@ -509,7 +511,7 @@ export default function Test() {
                             }
                           }}
                         >
-                          領取
+                          立即領取
                         </button>
                       </ol>
                     </nav>
@@ -895,6 +897,7 @@ export default function Test() {
         .coupon-content {
           display: flex;
           width: 1070px;
+          height:800px;
           padding: 20px 10px;
           flex-direction: column;
           align-items: flex-start;
@@ -933,7 +936,7 @@ export default function Test() {
         @media screen and (max-width: 576px) {
           .coupon-content {
             width: 390px;
-            padding: 10px;
+            padding: 10px;  
             overflow: hidden;
           }
         }

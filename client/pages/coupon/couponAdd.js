@@ -1,58 +1,91 @@
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
-import toast, { Toaster } from 'react-hot-toast'
+// #region ---common ---
+import { useEffect, useMemo, useState } from 'react'
 import Navbar from '@/components/common/navbar'
 import NavbarMb from '@/components/common/navbar-mb'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
-import Head from 'next/head'
 import jamHero from '@/assets/jam-hero.png'
-// data
-import CityCountyData from '@/data/CityCountyData.json'
+import Head from 'next/head'
+
+// 會員認證hook
+import { useAuth } from '@/hooks/user/use-auth'
+
+// lesson card
+import Card from '@/components/lesson/lesson-card'
+import Cardrwd from '@/components/lesson/lesson-card-rwd'
+
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
+import { IoIosSearch } from 'react-icons/io'
 import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
-import { IoIosSearch } from 'react-icons/io'
-// 自製元件
-import JamCard from '@/components/jam/jam-card'
-import BS5Pagination from '@/components/common/pagination'
-import { useAuth } from '@/hooks/user/use-auth'
-import { useJam } from '@/hooks/use-jam'
+// #endregion common ---
+// ---coupon ---
+import styles from '@/pages/user/coupon.module.scss'
+import Coupon from '@/components/coupon/coupon.js'
+// API
+import CouponClass from '@/API/Coupon'
 
-export default function JamList() {
-  const router = useRouter()
-  const {
-    invalidJam,
-    invalidEdit,
-    notifyInvalidToast,
-    notifyInvalidEditToast,
-  } = useJam()
-  // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
+//  Sweet Alert
+import Swal from 'sweetalert2'
+
+export default function Test() {
+  // #region ---會員登入狀態 & 會員資料獲取 ---
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
   const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
     useAuth()
+
+  const [userData, setUserData] = useState()
   //檢查token
   useEffect(() => {
     handleLoginStatus()
     //獲得資料
     getLoginUserData()
-    // 若使用者嘗試進入以解散或不存在的jam，跳出警告訊息
-    if (invalidJam === false) {
-      notifyInvalidToast()
-    }
-    if (invalidEdit === false) {
-      notifyInvalidEditToast()
-    }
-    document.addEventListener('click', () => {
-      setFilterVisible(false)
-    })
   }, [])
-  // ----------------------手機版本  ----------------------
+  //登出功能
+
+  //檢查是否獲取資料
+  // console.log(LoginUserData)
+  //   讀取使用者資料後 定義大頭貼路徑
+  let avatarImage
+  if (LoginUserData.img) {
+    avatarImage = `/user/${LoginUserData.img}`
+  } else if (LoginUserData.photo_url) {
+    avatarImage = `${LoginUserData.photo_url}`
+  } else {
+    avatarImage = `/user/avatar_userDefault.jpg`
+  }
+
+  // userID????
+  let avatarUserID
+  if (LoginUserData.id) {
+    avatarUserID = LoginUserData.id
+  }
+
+  // #endregion
+  // #region ---會員登入狀態 ---
+  // 在電腦版或手機版時
+  const [isSmallScreen, setIsSmallScreen] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth <= 576)
+    }
+
+    handleResize()
+
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+  // #endregion
+  // #region ---手機版本 ---
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
   const menuMbToggle = () => {
@@ -63,187 +96,20 @@ export default function JamList() {
   const sidebarToggle = () => {
     setShowSidebar(!showSidebar)
   }
-
-  // ----------------------條件篩選  ----------------------
-  const [filterVisible, setFilterVisible] = useState(false)
   // 阻止事件冒泡造成篩選表單關閉
   const stopPropagation = (e) => {
     e.stopPropagation()
   }
-  // 顯示表單
-  const onshow = (e) => {
-    stopPropagation(e)
-    setFilterVisible(!filterVisible)
-  }
-  // ---------------------- filter 資料  ----------------------
-  const [search, setSearch] = useState('')
-
-  const [genre, setgenre] = useState('')
-
-  // 篩選城市用的資料
-  const cityData = CityCountyData.map((v, i) => {
-    return v.CityName
-  }).filter((v) => {
-    return v !== '釣魚臺' && v !== '南海島'
-  })
-  const [region, setRegion] = useState('')
-
-  // 清除表單內容
-  const cleanFilter = () => {
-    setgenre('all')
-    setRegion('all')
-  }
-  // ---------------------- JAM 資料  ----------------------
-  // ------------------------------------------------------- 製作分頁
-  const [page, setPage] = useState(1)
-  const [pageTotal, setPageTotal] = useState(0)
-  // 資料排序
-  const [order, setOrder] = useState('ASC')
-  // 點按分頁時，要送至伺服器的query string參數
-  const handlePageClick = (event) => {
-    router.push({
-      pathname: router.pathname,
-
-      query: {
-        page: event.selected + 1,
-        order: order,
-        search: search,
-        genre: genre,
-        region: region,
-      },
-    })
-  }
-
-  // 點擊篩選表確認
-  const handleLoadData = () => {
-    // 要送至伺服器的query string參數
-
-    // 註: 重新載入資料需要跳至第一頁
-    const params = {
-      page: 1, // 跳至第一頁
-      order: order,
-      search: search,
-      genre: genre,
-      region: region,
-    }
-
-    // console.log(params)
-
-    router.push({
-      pathname: router.pathname,
-      query: params,
-    })
-  }
-  const handleOrder = (order) => {
-    setOrder(order)
-    const params = {
-      page: 1,
-      order: order,
-      search: search,
-      genre: genre,
-      region: region,
-    }
-
-    router.push({
-      pathname: router.pathname,
-      query: params,
-    })
-  }
-
-  const checkLogin = (LoginUserData) => {
-    if (
-      !LoginUserData ||
-      LoginUserData.status === 'error' ||
-      LoginUserData.length == 0
-    ) {
-      toast('請先登入', {
-        icon: 'ℹ️',
-        style: {
-          border: '1px solid #666666',
-          padding: '16px',
-          color: '#1d1d1d',
-        },
-        duration: 3000,
-      })
-    } else {
-      router.push('/jam/recruit-list/form')
-    }
-  }
-
-  const [jams, setJams] = useState([])
-  const [genreData, setGenreData] = useState([])
-  // 向伺服器要求資料，設定到狀態中用的函式
-  // params 中儲存所有可能的query篩選條件
-  const getDatas = async (params) => {
-    // 用URLSearchParams產生查詢字串
-    const searchParams = new URLSearchParams(params)
-
-    try {
-      const res = await fetch(
-        `http://localhost:3005/api/jam/allFormedJam?${searchParams.toString()}`
-      )
-
-      // res.json()是解析res的body的json格式資料，得到JS的資料格式
-      const datas = await res.json()
-
-      // 設定到state中，觸發重新渲染(re-render)，會進入到update階段
-      // 進入狀態前檢查資料類型為陣列，以避免錯誤
-      // console.log(datas)
-      if (datas) {
-        // 設定獲取頁數總合
-        setPageTotal(datas.pageTotal)
-        // 設定獲取項目
-        setPage(datas.page)
-        setJams(datas.jamData)
-        setGenreData(datas.genreData)
-      }
-    } catch (e) {
-      console.error(e)
-    }
-  }
-
-  useEffect(() => {
-    if (router.isReady) {
-      // 從router.query得到所有查詢字串參數
-      const { order, page, genre, region, search } = router.query
-      // 要送至伺服器的query string參數
-
-      // console.log(router.query)
-
-      // 設定回所有狀態(注意所有從查詢字串來都是字串類型)，都要給預設值
-      setPage(Number(page) || 1)
-      setOrder(order || 'ASC')
-      setgenre(genre || 'all')
-      setRegion(region || 'all')
-      setSearch(search || '')
-
-      // 載入資料
-      getDatas(router.query)
-      // console.log(router.query)
-    }
-
-    // eslint-disable-next-line
-  }, [router.query, router.isReady])
+  // 領取
+  const [dataSort, setDataSort] = useState([])
 
   return (
     <>
-      <Head>
-        <title>活動中的JAM</title>
-      </Head>
-      <Toaster
-        containerStyle={{
-          top: 80,
-          zIndex: 101,
-        }}
-      />
+      <Head menuMbToggle={menuMbToggle}>{/* <title>我的優惠券</title> */}</Head>
       <Navbar menuMbToggle={menuMbToggle} />
-      <div className="page-hero d-none d-sm-block">
-        <Image
-          src={jamHero}
-          className="object-fit-cover w-100"
-          alt="cover"
-          priority
-        />
+      {/* 先把HeroSection隱藏 */}
+      <div className="page-shero d-none d-sm-block">
+        <Image src={jamHero} className="object-fit-cover w-100" alt="cover" />
       </div>
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
@@ -254,335 +120,177 @@ export default function JamList() {
         >
           <NavbarMb />
         </div>
+
         <div className="row">
-          {/* sidebar */}
-          <div className="sidebar-wrapper d-none d-sm-block col-sm-2">
-            <div className="sidebar">
-              <ul className="d-flex flex-column">
-                <li>
-                  <Link href={`/jam/recruit-list`}>團員募集</Link>
-                </li>
-                <li>
-                  <Link href={`/jam/jam-list`} className="active">
-                    活動中的JAM
-                  </Link>
-                </li>
-                <li>
-                  <Link href={`/jam/Q&A`}>什麼是JAM？</Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          {/*   ----------------------頁面內容  ---------------------- */}
+          {/* ---頁面內容 --- */}
           <div className="col-12 col-sm-10 page-control">
-            {/* 手機版sidebar */}
-            <div
-              className={`sidebar-mb d-sm-none ${
-                showSidebar ? 'sidebar-mb-show' : ''
-              }`}
-            >
-              <div className="sm-close">
-                <IoClose
-                  size={32}
-                  onClick={() => {
-                    setShowSidebar(false)
-                  }}
-                />
-              </div>
-              <Link href={`/jam/recruit-list`} className="sm-item">
-                團員募集
-              </Link>
-              <Link href={`/jam/jam-list`} className="sm-item active">
-                活動中的JAM
-              </Link>
-              <Link href={`/jam/Q&A`} className="sm-item">
-                什麼是JAM？
-              </Link>
-            </div>
-            {/* 手機版 發起/我的JAM 按鍵 */}
-            {LoginUserData.my_jam ? (
-              <Link
-                href={`/jam/recruit-list/${LoginUserData.my_jam}`}
-                className="fixed-btn b-btn b-btn-primary d-block d-sm-none"
-              >
-                我的JAM
-              </Link>
-            ) : (
-              <div
-                role="presentation"
-                className="fixed-btn b-btn b-btn-primary d-block d-sm-none"
-                onClick={() => {
-                  checkLogin(LoginUserData)
-                }}
-              >
-                發起JAM
-              </div>
-            )}
-
-            {/*  ---------------------- 頂部功能列  ---------------------- */}
+            {/* --- 頂部功能列 --- */}
             <div className="top-function-container">
-              {/*  ---------------------- 麵包屑  ---------------------- */}
-              <div className="breadcrumb-wrapper">
+              {/* --- 麵包屑 --- */}
+              <div className="breadcrumb-wrapper-ns">
                 <ul className="d-flex align-items-center p-0 m-0">
                   <IoHome size={20} />
-                  <li style={{ marginLeft: '8px' }}>Let&apos;s JAM!</li>
-                  <FaChevronRight />
-                  <li style={{ marginLeft: '10px' }}>活動中的JAM</li>
+                  <li style={{ marginLeft: '8px' }}>春季活動優惠領取</li>
                 </ul>
-              </div>
-
-              <div className="top-function-flex">
-                {/*  ---------------------- 搜尋欄  ---------------------- */}
-                <div className="search-sidebarBtn d-sm-flex align-items-center">
-                  <div
-                    className="d-flex d-sm-none b-btn b-btn-body"
-                    role="presentation"
-                    style={{ paddingInline: '16px' }}
-                    onClick={sidebarToggle}
-                  >
-                    選單
-                  </div>
-                  {/* 手機板搜尋欄 */}
-                  <div className="search input-group d-sm-none">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="請輸入關鍵字..."
-                      value={search}
-                      onChange={(e) => {
-                        setSearch(e.target.value)
-                      }}
-                    />
-                    <div
-                      className="search-btn btn d-flex justify-content-center align-items-center p-0"
-                      role="presentation"
-                      onClick={handleLoadData}
-                    >
-                      <IoIosSearch size={25} />
-                    </div>
-                  </div>
-                  {LoginUserData.my_jam ? (
-                    <Link
-                      href={`/jam/recruit-list/${LoginUserData.my_jam}`}
-                      className="b-btn b-btn-primary px-3 d-none d-sm-block"
-                    >
-                      我的JAM
-                    </Link>
-                  ) : (
-                    <div
-                      role="presentation"
-                      className="b-btn b-btn-primary px-3 d-none d-sm-block"
-                      style={{ height: '36px' }}
-                      onClick={() => {
-                        checkLogin(LoginUserData)
-                      }}
-                    >
-                      發起JAM
-                    </div>
-                  )}
-                  {/* 電腦版搜尋欄 */}
-                  <div
-                    className="search input-group d-none d-sm-flex ms-3"
-                    style={{ width: '250px' }}
-                  >
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="請輸入關鍵字..."
-                      value={search}
-                      onChange={(e) => {
-                        setSearch(e.target.value)
-                      }}
-                    />
-                    <div
-                      className="search-btn btn d-flex justify-content-center align-items-center p-0"
-                      role="presentation"
-                      onClick={handleLoadData}
-                    >
-                      <IoIosSearch size={25} />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="filter-sort d-flex justify-content-between">
-                  <div className="sort-mb d-block d-sm-none">
-                    <select
-                      className="form-select"
-                      name="order"
-                      value={order}
-                      onChange={(e) => {
-                        handleOrder(e.target.value)
-                      }}
-                    >
-                      <option value="ASC">舊到新</option>
-                      <option value="DESC">新到舊</option>
-                    </select>
-                  </div>
-                  {/*  ---------------------- 條件篩選  ---------------------- */}
-                  <form className="d-flex align-items-center position-relative">
-                    <div
-                      className="filter-text d-flex align-items-center me-sm-4"
-                      role="presentation"
-                      onClick={onshow}
-                    >
-                      條件篩選
-                      <FaFilter size={13} />
-                      <div
-                        className={`filter ${
-                          filterVisible === false ? 'd-none' : 'd-block'
-                        }`}
-                        onClick={stopPropagation}
-                        role="presentation"
-                      >
-                        {/* 音樂風格 */}
-                        <div className="filter-item">
-                          <div
-                            className="filter-title"
-                            style={{ color: '#faad14' }}
-                          >
-                            音樂風格
-                          </div>
-                          <select
-                            className="form-select"
-                            value={genre}
-                            name="genre"
-                            onChange={(e) => {
-                              setgenre(e.target.value)
-                            }}
-                          >
-                            <option value="all">全部</option>
-                            {genreData.map((v) => {
-                              return (
-                                <option key={v.id} value={v.id}>
-                                  {v.name}
-                                </option>
-                              )
-                            })}
-                          </select>
-                        </div>
-
-                        {/* 地區 */}
-                        <div className="filter-item">
-                          <div
-                            className="filter-title"
-                            style={{ color: '#1d1d1d' }}
-                          >
-                            地區
-                          </div>
-                          <select
-                            className="form-select"
-                            value={region}
-                            name="region"
-                            onChange={(e) => {
-                              setRegion(e.target.value)
-                            }}
-                          >
-                            <option value="all">全部</option>
-                            {cityData.map((v, i) => {
-                              return (
-                                <option key={i} value={v}>
-                                  {v}
-                                </option>
-                              )
-                            })}
-                          </select>
-                        </div>
-                        <div
-                          className="d-flex justify-content-between gap-2 mt-2"
-                          style={{ paddingInline: '10px' }}
-                        >
-                          <div
-                            className="filter-btn clean-btn w-100 d-flex justify-content-center"
-                            role="presentation"
-                            onClick={cleanFilter}
-                          >
-                            清除
-                          </div>
-                          <div
-                            role="presentation"
-                            className="filter-btn confirm-btn w-100 d-flex justify-content-center"
-                            onClick={handleLoadData}
-                          >
-                            確認
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-                  {/* ---------------------- 資料排序  ---------------------- */}
-                  <div className="sort d-none d-sm-flex justify-content-between align-items-center">
-                    <div className="d-flex align-items-center">
-                      排序
-                      <FaSortAmountDown size={14} />
-                    </div>
-                    <div
-                      className={`sort-item ${order === 'ASC' ? 'active' : ''}`}
-                      role="presentation"
-                      onClick={() => {
-                        handleOrder('ASC')
-                      }}
-                    >
-                      舊到新
-                    </div>
-                    <div
-                      className={`sort-item ${
-                        order === 'DESC' ? 'active' : ''
-                      }`}
-                      role="presentation"
-                      onClick={() => {
-                        handleOrder('DESC')
-                      }}
-                    >
-                      新到舊
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
             {/* 主內容 */}
             <main className="content">
-              {jams.length > 0 ? (
-                jams.map((v) => {
-                  return (
-                    <JamCard
-                      key={v.juid}
-                      juid={v.juid}
-                      name={v.name}
-                      cover_img={v.cover_img}
-                      genre={v.genre}
-                      region={v.region}
-                      formed_time={v.formed_time}
-                      genreData={genreData}
-                    />
-                  )
-                })
-              ) : (
-                <div className="no-result">查無資料</div>
-              )}
+              <div className="container custom-container">
+                <div className="row p-0">
+                  <div
+                    className="col-sm-10 col-12"
+                    style={{
+                      backgroundColor: 'rgb(255, 255, 255)',
+                    }}
+                  >
+                    <div className="coupon-content col-12">
+                      {/* 活動領取 */}
+                      <div className="row">
+                        <div className="col-9">
+                          <img
+                            className="couponImg"
+                            // style={{
+                            //   width: '100%',
+                            //   minWidth: '390px',
+                            // }}
+                            src="bannerNew.jpg"
+                          />
+                        </div>
+                        <div className="col-3 d-flex align-items-center justify-content-center">
+                          <button
+                            className="b-btn b-lesson-btn px-3 py-3"
+                            style={{
+                              backgroundColor: 'rgb(255, 255, 255)',
+                              border: '1px solid rgb(0, 0, 0)',
+                            }}
+                            onClick={async () => {
+                              const obj = {
+                                user_id: avatarUserID,
+                                coupon_template_id: 1,
+                              }
+                              const res = await CouponClass.Create(obj)
+                              const swal = await Swal.fire({
+                                title: res === true ? '領取成功' : '領取失敗',
+                                icon: res === true ? 'success' : 'error',
+                                showConfirmButton: false,
+                                timer: 1000,
+                              })
+
+                              if (res === true) {
+                                const data = await CouponClass.FindAll(
+                                  LoginUserData.id
+                                )
+                                setDataSort(data)
+                              }
+                            }}
+                          >
+                            立即領取
+                          </button>
+                        </div>
+                      </div>
+
+                      {/*  */}
+                      <div className="d-flax"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </main>
-            <div className="d-flex justify-content-center">
-              <BS5Pagination
-                forcePage={page - 1}
-                onPageChange={handlePageClick}
-                pageCount={pageTotal}
-              />
-            </div>
           </div>
         </div>
       </div>
       <Footer />
-
       <style jsx>{`
-        .content {
+        /* ---user sidebar--- */
+        .sidebar-user-info {
           display: flex;
-          flex-wrap: wrap;
-          gap: 20px;
+          padding: 0px 12px;
+          flex-direction: column;
           align-items: flex-start;
-          align-content: flex-start;
-          align-self: 'stretch';
-          @media screen and (max-width: 576px) {
+          gap: 10px;
+          align-self: stretch;
+          /* position: relative; */
+          .sidebar-user-info-imgBox {
+            width: 100px;
+            height: 100px;
+            border-radius: 100px;
+            /* react Image 要加上這兩條參數 家在外層容器的css , Image本身要fill */
+            position: relative;
+            overflow: hidden;
+          }
+          .sidebar-user-info-text {
+            display: flex;
+            width: 100px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+            color: var(--dark, #1d1d1d);
+            text-align: center;
+            /* h5 */
+            font-family: 'Noto Sans TC';
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            .sidebar-user-info-band {
+              margin-bottom: 20px;
+            }
+          }
+          .sidebar-user-info-Camera-img {
+            width: 30px;
+            height: 30px;
+            position: absolute;
+            left: 85px;
+            top: 70px;
+            fill: var(--light-gray, #cfcfcf);
+          }
+        }
+        /* --- contect--- */
+        .custom-container {
+          padding: 0;
+          color: #000;
+          .coupon-pagination {
+            display: flex;
             justify-content: center;
+            align-items: center;
+            gap: 10px;
+            align-self: stretch;
+          }
+        }
+        .content {
+          gap: 20px;
+        }
+        .content .coupon-content {
+          display: flex;
+          height: fit-content;
+          padding: 20px 10px;
+          flex-direction: column;
+          align-items: center;
+          border-radius: 5px;
+          background: var(--gray-30, rgba(185, 185, 185, 0.3));
+          .couponImg {
+            width: 100%;
+            min-width: 390px;
+            border-radius:5px;
+             @media screen and (max-width: 576px) {
+              width: 70%;
+              min-width: 280px;
+            }
+          }
+          .coupon-content-top {
+            display: flex;
+            align-items: flex-start;
+            align-self: stretch;
+            color: var(--primary-deep, #124365);
+            text-align: center;
+            justify-content: space-between;
+            /* h3 */
+            font-family: 'Noto Sans TC';
+            font-size: 28px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: normal;
           }
         }
       `}</style>
