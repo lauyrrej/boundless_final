@@ -41,6 +41,7 @@ export default function Auid() {
       const res = await fetch(`http://localhost:3005/api/article/${auid}`)
       // res.json()是解析res的body的json格式資料，得到JS的資料格式
       const data = await res.json()
+      console.log(data);
 
       // 設定到state中，觸發重新渲染(re-render)，會進入到update階段
       // 進入狀態前檢查資料類型有值，以避免錯誤
@@ -88,7 +89,8 @@ export default function Auid() {
   const sendForm = async (auid, content) => {
     let formData = new FormData()
     formData.append('content', content)
-    const res = await fetch('http://localhost:3005/api/article/edit/${auid}', {
+    // console.log(auid, content);
+    const res = await fetch(`http://localhost:3005/api/article/edit/${auid}`, {
       method: 'PUT',
       body: formData,
       credentials: 'include',
@@ -231,7 +233,7 @@ export default function Auid() {
           >上一步
           </Link>
           <button onClick={() => {
-            sendForm(content)
+            sendForm(articleDetail.auid ,content)
           }} type="button" className="btn btn-primary">
             確認更新
           </button>

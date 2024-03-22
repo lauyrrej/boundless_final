@@ -117,6 +117,7 @@ router.put('/edit/:auid', upload.none(''), async (req, res) => {
   const { content } = req.body;
   const auid = req.params.auid;
   console.log(req.body)
+  console.log(req.params);
   await db
     .execute(
       'UPDATE `article` SET `content` = ? WHERE `auid` = ?',
