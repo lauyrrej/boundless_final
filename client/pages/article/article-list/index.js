@@ -227,7 +227,7 @@ export default function ArticleList() {
                   <Link href={`/article/article-list/comments`}>音樂評論</Link>
                 </li>
                 <li>
-                  <Link href={`/article/article-list`}>技術分享</Link>
+                  <Link href={`/article/article-list/sharing`}>技術分享</Link>
                 </li>
               </ul>
             </div>
@@ -355,7 +355,7 @@ export default function ArticleList() {
                 <h4 className="text-primary pt-2">
                   熱門文章
                 </h4>
-                <Link
+                {/* <Link
                   href={`/article/article-list/article-publish`}
                   className="icon-btn"
                 >
@@ -364,7 +364,30 @@ export default function ArticleList() {
                     style={{ color: 'gray', cursor: 'pointer' }}
                   />
                   發布文章
-                </Link>
+                </Link> */}
+                {LoginUserData.uid ? (
+                  <Link
+                    href={`/article/article-list/article-publish`}
+                    className="icon-btn"
+                  >
+                    <MdNoteAdd
+                      size={35}
+                      style={{ color: 'gray', cursor: 'pointer' }}
+                    />
+                    發布文章
+                  </Link>
+                ) : (
+                    <Link
+                      href={`/login`}
+                      className="icon-btn"
+                    >
+                      <MdNoteAdd
+                        size={35}
+                        style={{ color: 'gray', cursor: 'pointer' }}
+                      />
+                    發布文章
+                    </Link>
+                )}
               </div>
               <div className="content-pop d-flex flex-wrap">
                 {filterArticle.slice(0, 4).map((v, i) => {

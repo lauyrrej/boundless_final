@@ -926,7 +926,7 @@ export default function Test() {
                 .user-acticleList-item-text {
                   text-align: right;
                   font-size: 20px;
-                  padding: 3px;
+                  padding: 3px;item
                 }
 
                 .user-acticleList-item-btn {

@@ -105,7 +105,7 @@ export const Tiptap = ({ setDescription, initialContent }) => {
     onUpdate: ({ editor }) => {
       const html = editor.getHTML()
       setDescription(html)
-      console.log(html)
+      // console.log(html)
     },
   })
 
