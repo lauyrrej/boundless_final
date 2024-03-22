@@ -153,7 +153,26 @@ export default function InstrumentDetailPage() {
   const notify = () => toast('{InstrumentDetail[0].name)}已加入購物車.')
 
   // const quantity = localStorage.getItem('quantity')
+let nameimg 
 
+  if(InstrumentDetail){
+    console.log(InstrumentDetail.category_name)
+    
+    nameimg = `/instrument/${InstrumentDetail.category_name}/${nameUnderline}/${selectedImg}`
+  }else {
+    nameimg ="/instrument/defult.jpg"
+  }
+
+  // console.log(InstrumentDetail.subcategory_name)
+
+// let avatarImage
+//   if (LoginUserData.img) {
+//     avatarImage = `http://localhost:3005/user/${LoginUserData.img}`
+//   } else if (LoginUserData.photo_url) {
+//     avatarImage = `${LoginUserData.photo_url}`
+//   } else {
+//     avatarImage = `http://localhost:3005/user/avatar_userDefault.jpg`
+//   }
   // console.log(quantity)
   return (
     <>
@@ -247,7 +266,7 @@ export default function InstrumentDetailPage() {
                   <div className="pic-Con ">
                     <div className="main-Pic">
                       <img
-                        src={`/instrument/${InstrumentDetail.subcategory_name}/${nameUnderline}/${selectedImg}`}
+                        src={nameimg}
                         className="h-100 w-100"
                         style={{ objectFit: 'contain' }}
                       />
@@ -274,7 +293,7 @@ export default function InstrumentDetailPage() {
                               }}
                             >
                               <img
-                                src={`/instrument/${InstrumentDetail.subcategory_name}/${nameUnderline}/${v}`}
+                                src={`${nameimg}`}
                                 className="img_small w-100 h-100"
                               />
                             </div>

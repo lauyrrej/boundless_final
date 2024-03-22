@@ -5,7 +5,7 @@ import { FaChevronLeft } from 'react-icons/fa6'
 export default function BS5Pagination({ forcePage, onPageChange, pageCount }) {
   return (
     <ReactPaginate
-      forcePage={1}
+      forcePage={0}
       nextLabel=<FaChevronRight />
       onPageChange={onPageChange}
       pageRangeDisplayed={3}

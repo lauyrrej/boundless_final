@@ -129,7 +129,7 @@ export default function Test({ onSearch }) {
   const [page, setPage] = useState(1)
   const [pageTotal, setPageTotal] = useState(0)
   // 資料排序
-  const [orderby, setOrderby] = useState('ASC')
+  const [orderby, setOrderby] = useState('DESC')
   // 條件品牌
   const [brand, setBrand] = useState('all')
   // 條件關鍵字
@@ -207,6 +207,14 @@ export default function Test({ onSearch }) {
       // 在這裡處理獲取的資料，例如更新狀態
       setInstrument(datas.instrument)
       setProductCategory(datas.category)
+      // 設定獲取頁數總合
+      setPageTotal(datas.pageTotal)
+      // 設定獲取項目
+      setPage(datas.page)
+      setBrandSelect(datas.brandSelect)
+      setPriceLow(datas.priceLow)
+      setPriceHigh(datas.priceHigh)
+      setKeyword(datas.Keyword)
     } catch (error) {
       console.error('Error fetching data:', error)
     }
@@ -249,7 +257,7 @@ export default function Test({ onSearch }) {
 
       // 設定回所有狀態(注意所有從查詢字串來都是字串類型)，都要給預設值
       setPage(Number(page) || 1)
-      setOrderby(orderby || 'ASC')
+      setOrderby(orderby || 'DESC')
       setBrandSelect(brandSelect || 'all')
       setPriceLow(priceLow || '')
       setPriceHigh(priceHigh || '')
@@ -795,7 +803,6 @@ useEffect(() => {
                                 >
                                   <label className="form-check-label">
                                     <input
-                                      className="form-check-input"
                                       type="radio"
                                       name="score"
                                       value={v}
@@ -921,6 +928,7 @@ useEffect(() => {
                       img_small,
                       sales,
                     } = v
+                    console.log(v)
                     return (
                       <div className="mb-4" key={id}>
                         <Card
@@ -962,20 +970,22 @@ useEffect(() => {
                           category_name={category_name}
                           img_small={img_small}
                           sales={sales}
+                          
                         />
                       </div>
+                      
                     )
+                    console.log(category_name)
                   })}
+             
+
               </div>
             </main>
             <div className="d-flex justify-content-center">
               <BS5Pagination
-                 forcePage={1}
+                forcePage={page - 1}
                 onPageChange={handlePageClick}
-                pageCount={10}
-                // forcePage={page - 1}
-                // onPageChange={handlePageClick}
-                // pageCount={pageTotal}
+                pageCount={pageTotal}
               />
             </div>
           </div>
@@ -1005,6 +1015,9 @@ useEffect(() => {
           .hot-instrument-card {
             flex-wrap: wrap;
           }
+          .instrument-card-group {
+          gap: 10px;
+        }
           .hot-instrument-card > :global(div) {
             flex-basis: calc(
               40% - 40px

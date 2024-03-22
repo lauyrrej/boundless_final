@@ -26,7 +26,7 @@ export default function InstrumentCard({
   const [isDiscount, setIsDiscount] = useState(!!discount)
   return (
     <>
-      <Link href={`/instrument/${puid}`}>
+      <Link href={`/instrument/${category_name}/${puid}`}>
         <div className="product-card">
           <FaHeart
             size={24}
