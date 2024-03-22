@@ -54,7 +54,7 @@ export default function NavbarMb() {
       })
       .then(
         setTimeout(() => {
-          router.push(`/`)
+          router.push(`/`).then(() => window.location.reload())
         }, 2000)
       )
   }

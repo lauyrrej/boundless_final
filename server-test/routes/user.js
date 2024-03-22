@@ -138,8 +138,6 @@ router.get('/homepageArticle/:uid', async (req, res) => {
    userID = userIDResult[0].id;
   }
   try {
-    
-
     let [articleData] = await db.execute(
       'SELECT article.*, article_category.name AS category_name,article_comment.likes AS comment_likes, user.name AS user_name, user.img AS user_img, article_user.nickname AS article_author_name, article_user.img AS article_author_img FROM article JOIN article_category ON article.category_id = article_category.id LEFT JOIN article_comment ON article.id = article_comment.article_id LEFT JOIN user ON article_comment.user_id = user.id LEFT JOIN user AS article_user ON article.user_id = article_user.id  WHERE article.user_id = ? ORDER BY article.id',[userID]
     );

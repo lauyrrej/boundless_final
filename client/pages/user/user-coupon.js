@@ -37,6 +37,7 @@ export default function Test() {
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
   const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
     useAuth()
+
   const [userData, setUserData] = useState()
   //檢查token
   useEffect(() => {
@@ -57,6 +58,13 @@ export default function Test() {
   } else {
     avatarImage = `/user/avatar_userDefault.jpg`
   }
+
+  // userID????
+  let avatarUserID
+  if (LoginUserData.id) {
+    avatarUserID = LoginUserData.id
+  }
+  // console.log(avatarUserID)
 
   // #endregion
   // #region ---會員登入狀態 ---
@@ -158,7 +166,7 @@ export default function Test() {
   // #endregion
   // sql --- 分類 0:全部 / 2:樂器 / 1:課程 / 3:已使用 ---
   const [kind, setKind] = useState(0)
-  const [valid, setValid] = useState(1)
+  const [valid, setValid] = useState(999)
 
   const startIndex = useMemo(() => {
     return (currentPage - 1) * 9
@@ -181,12 +189,13 @@ export default function Test() {
   useEffect(() => {
     // component did mounted 呼叫api，這樣只會做一遍
     // userID=1
-    CouponClass.FindAll(1).then(async (res) => {
+      let userID = 0
+
+    CouponClass.FindAll(LoginUserData.id).then(async (res) => {
       setDataSort(res)
 
       // 一頁有九筆資料
       const page = GetArr(res.length / 9)
-
       setDataPage(page)
     })
   }, [])
@@ -195,37 +204,41 @@ export default function Test() {
     setCurrentPage(1)
   }, [sort])
 
+  // 999全部 1未使用 0已使用
   const SelectAll = function () {
-    // 1. 找到還沒被使用過的目標
-    setValid(1)
+    // 1. 找到"未使用"的目標
+    setValid(999)
     // 2. 撈全部的資料
     setKind(0)
     // 3. 將頁數設定為完整的資料
     setDataPage(GetArr(dataSort.length / 9))
+    setCurrentPage(1)
   }
 
   const SelectCourse = function () {
-    // 挑選有效的
+    // 挑選"未使用"的
     setValid(1)
-    // 挑出課程
+    // 選中課程
     setKind(2)
 
-    // 將頁數設定為"有效的"課程
+    // 將頁數設定為"未使用"的課程
     setDataPage(
       GetArr(dataSort.filter((i) => i.valid === 1 && i.kind === 2).length / 9)
     )
+    setCurrentPage(1)
   }
 
   const SelectIn = function () {
-    // 挑選沒有過期的
+    // 挑選"未使用"的
     setValid(1)
     // 選中樂器
     setKind(1)
 
-    // 將頁數設定為尚未過期的樂器
+    // 將頁數設定為"未使用"的樂器
     setDataPage(
       GetArr(dataSort.filter((i) => i.valid === 1 && i.kind === 1).length / 9)
     )
+    setCurrentPage(1)
   }
 
   const SelectExpired = function () {
@@ -233,6 +246,7 @@ export default function Test() {
     setKind(0)
     const filter = dataSort.filter((i) => !i.valid)
     setDataPage(GetArr(filter.length / 9))
+    setCurrentPage(1)
   }
 
   return (
@@ -347,7 +361,7 @@ export default function Test() {
                   <Link href="/user/user-favorite">我的收藏</Link>
                 </li>
                 <li key={6}>
-                  <Link href="/coupon/user-Coupon">我的優惠券</Link>
+                  <Link href="/user/user-Coupon">我的優惠券</Link>
                 </li>
                 <li key={7}>
                   <Link href="/user/user-lesson">我的課程</Link>
@@ -375,28 +389,28 @@ export default function Test() {
                   }}
                 />
               </div>
-              <Link href="#" className="sm-item active">
+              <Link href="/user/user-info" className="sm-item active">
                 會員資訊
               </Link>
-              <Link href="#" className="sm-item">
+              <Link href="/user/user-jam" className="sm-item">
                 我的樂團
               </Link>
-              <Link href="#" className="sm-item">
+              <Link href="/user/user-order" className="sm-item">
                 我的訂單
               </Link>
-              <Link href="#" className="sm-item">
+              <Link href="/user/user-acticle" className="sm-item">
                 我的文章
               </Link>
-              <Link href="#" className="sm-item">
+              <Link href="/user/user-favorite" className="sm-item">
                 我的收藏
               </Link>
-              <Link href="#" className="sm-item">
+              <Link href="/user/user-Coupon" className="sm-item">
                 我的優惠券
               </Link>
-              <Link href="#" className="sm-item">
+              <Link href="/user/user-lesson" className="sm-item">
                 我的課程
               </Link>
-              <Link href="#" className="sm-item">
+              <Link href="/user/user-notify" className="sm-item">
                 我的訊息
               </Link>
             </div>
@@ -469,13 +483,17 @@ export default function Test() {
                             已使用
                           </a>
                         </li>
-                        {/* userID???? */}
+                        {/* userID*/}
                         <button
-                          className="sort breadcrumb-item"
+                          className="b-btn b-lesson-btn px-5 py-3"
+                          style={{
+                            backgroundColor: 'rgb(255, 255, 255)',
+                            border: '1px solid rgb(255, 255, 255)',
+                          }}
                           onClick={async () => {
                             const obj = {
-                              user_id: 1,
-                              coupon_template_id: 3,
+                              user_id: avatarUserID,
+                              coupon_template_id: 1,
                             }
                             const res = await CouponClass.Create(obj)
                             const swal = await Swal.fire({
@@ -486,12 +504,14 @@ export default function Test() {
                             })
 
                             if (res === true) {
-                              const data = await CouponClass.FindAll(1)
+                              const data = await CouponClass.FindAll(
+                                LoginUserData.id
+                              )
                               setDataSort(data)
                             }
                           }}
                         >
-                          領取
+                          立即領取
                         </button>
                       </ol>
                     </nav>
@@ -548,8 +568,8 @@ export default function Test() {
                       role="presentation"
                       onClick={onshow}
                     >
-                      條件篩選
-                      <FaFilter size={13} />
+                      {/* 條件篩選
+                      <FaFilter size={13} /> */}
                       <div
                         className={`filter ${
                           filterVisible === false ? 'd-none' : 'd-block'
@@ -560,7 +580,7 @@ export default function Test() {
                         {/*條件篩選*/}
 
                         {/* 品牌 */}
-                        <div className="filter-item">
+                        {/* <div className="filter-item">
                           <div className="filter-title">選擇品牌</div>
                           <select
                             className="form-select"
@@ -582,7 +602,7 @@ export default function Test() {
                               )
                             })}
                           </select>
-                        </div>
+                        </div> */}
                         {/* 價格區間 */}
                         {/* <div className="filter-item">
                           <div className="filter-title">價格區間</div>
@@ -639,7 +659,7 @@ export default function Test() {
                           </div>
                         </div> */}
                         {/* 促銷商品 */}
-                        <div className="filter-item">
+                        {/* <div className="filter-item">
                           <div className="form-check">
                             <label className="form-check-label filter-title mb-0">
                               <input
@@ -669,7 +689,7 @@ export default function Test() {
                           <div className="filter-btn confirm-btn w-100 d-flex justify-content-center">
                             確認
                           </div>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   </form>
@@ -715,7 +735,7 @@ export default function Test() {
                     <div className="coupon-content col-12">
                       <div className="coupon-content-top">
                         <div className="user-title-userInfo">
-                          我的優惠券{LoginUserData.name}
+                          {LoginUserData.nickname}的優惠券
                         </div>
                       </div>
                       {/* components */}
@@ -724,9 +744,9 @@ export default function Test() {
                         {dataSort
                           // 篩選課程/樂器
                           .filter((i) => (kind !== 0 ? i.kind === kind : true))
-                          // 篩選是否使用過
+                          // 篩選是否使用過????
                           .filter((i) =>
-                            valid !== 1 ? i.valid === valid : true
+                            valid !== 999 ? i.valid === valid : i
                           )
                           // 頁數篩選
                           .slice(startIndex, endIndex)
@@ -877,6 +897,7 @@ export default function Test() {
         .coupon-content {
           display: flex;
           width: 1070px;
+          height:800px;
           padding: 20px 10px;
           flex-direction: column;
           align-items: flex-start;
@@ -915,7 +936,7 @@ export default function Test() {
         @media screen and (max-width: 576px) {
           .coupon-content {
             width: 390px;
-            padding: 10px;
+            padding: 10px;  
             overflow: hidden;
           }
         }

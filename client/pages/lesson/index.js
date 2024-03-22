@@ -159,6 +159,9 @@ export default function LessonList({}) {
             return acc
           }, [])
           setTotalPage(pages.length)
+            setLessonArray(pages[currentPage]) // 将分页后的结果传递给 resolve
+            console.log(LessonArray)
+            
           setLessonArray(pages[currentPage]) // 将分页后的结果传递给 resolve
           console.log(pages[currentPage])
         })
@@ -344,6 +347,7 @@ export default function LessonList({}) {
       setShowHotCourses(true)
     }
   }, [category])
+
 
   return (
       <>
@@ -677,8 +681,8 @@ export default function LessonList({}) {
                       price,
                       teacher_name,
                       teacher_id,
-                      img,
-                      img_small,
+                        img,
+                        img_small,
                       sales,
                       length,
                     } = v
@@ -731,8 +735,8 @@ export default function LessonList({}) {
                       price,
                       teacher_name,
                       teacher_id,
-                      img,
-                      img_small,
+                        img,
+                        img_small,
                       sales,
                       length,
                     } = v

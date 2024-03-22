@@ -18,7 +18,7 @@ export default function Coupon({
           <div className="col-3">
             <img
               className={`${styles.couponImg} my-3 p-2`}
-              src="/coupon/logoWhite.jpg"
+              src={`/coupon/${valid ? 'logoWhite.jpg' : 'logoValid.jpg'}`}
               alt="..."
             />
           </div>

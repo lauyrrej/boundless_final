@@ -42,11 +42,11 @@ export default function UserJam() {
   //   讀取使用者資料後 定義大頭貼路徑
   let avatarImage
   if (LoginUserData.img) {
-    avatarImage = `/user/${LoginUserData.img}`
+    avatarImage = `http://localhost:3005/user/${LoginUserData.img}`
   } else if (LoginUserData.photo_url) {
     avatarImage = `${LoginUserData.photo_url}`
   } else {
-    avatarImage = `/user/avatar_userDefault.jpg`
+    avatarImage = `http://localhost:3005/user/avatar_userDefault.jpg`
   }
 
   // ----------------------會員登入狀態  ----------------------
@@ -304,6 +304,7 @@ export default function UserJam() {
             showMenu ? 'menu-mb-show' : ''
           }`}
         >
+          {/* 用戶資訊 */}
           <NavbarMb/>
         </div>
         <div className="row">
@@ -344,25 +345,16 @@ export default function UserJam() {
                   <Link href="/user/user-info">會員資訊</Link>
                 </li>
                 <li key={2}>
-                  <Link href="/user/user-jam">我的樂團</Link>
+                  <Link href={LoginUserData.jamstate == '1' ?  `/jam/recruit-list/${LoginUserData.my_jam}`: `/user/user-jam`}>我的樂團</Link>
                 </li>
                 <li key={3}>
                   <Link href="/user/user-order">我的訂單</Link>
                 </li>
                 <li key={4}>
-                  <Link href="/user/user-acticle">我的文章</Link>
+                  <Link href="/user/user-article">我的文章</Link>
                 </li>
                 <li key={5}>
-                  <Link href="/user/user-favorite">我的收藏</Link>
-                </li>
-                <li key={6}>
-                  <Link href="/coupon/userCoupon">我的優惠券</Link>
-                </li>
-                <li key={7}>
-                  <Link href="/user/user-lesson">我的課程</Link>
-                </li>
-                <li key={8}>
-                  <Link href="/user/user-notify">我的訊息</Link>
+                  <Link href="/user/user-coupon">我的優惠券</Link>
                 </li>
               </ul>
             </div>
@@ -385,36 +377,20 @@ export default function UserJam() {
                 />
               </div>
 
-              <Link href="/user/user-info" className="sm-item">
+              <Link href={`/user/user-info`} className="sm-item ">
                 會員資訊
               </Link>
-
-              <Link href="/user/user-jam" className="sm-item active">
+              <Link href={LoginUserData.jamstate == '1' ?  `/jam/recruit-list/${LoginUserData.my_jam}`: `/user/user-jam`} className="sm-item active">
                 我的樂團
               </Link>
-
-              <Link href="/user/user-order" className="sm-item">
+              <Link href={`/user/user-order`} className="sm-item">
                 我的訂單
               </Link>
-
-              <Link href="/user/user-acticle" className="sm-item">
+              <Link href={`/user/user-article`} className="sm-item">
                 我的文章
               </Link>
-
-              <Link href="/user/user-favorite" className="sm-item">
-                我的收藏
-              </Link>
-
-              <Link href="/coupon/userCoupon" className="sm-item">
+              <Link href={`/user/user-coupon`} className="sm-item">
                 我的優惠券
-              </Link>
-
-              <Link href="/user/user-lesson" className="sm-item">
-                我的課程
-              </Link>
-
-              <Link href="/user/user-notify" className="sm-item">
-                我的訊息
               </Link>
             </div>
             {/*  ---------------------- 頂部功能列  ---------------------- */}
