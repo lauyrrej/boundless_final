@@ -14,6 +14,7 @@ export default function ProductBriefCard({
   quantity = 1,
   setQuantity = {},
   addInstrumentItem = () => {},
+  notifyBuy = () => {},
   increment = () => {},
   decrement = () => {},
   remove = () => {},
@@ -114,7 +115,10 @@ export default function ProductBriefCard({
               <div
                 className="cart"
                 role="presentation"
-                
+                onClick={() => {
+                  addInstrumentItem(data, quantity)
+                  notifyBuy()
+                }}
               >
                 加入購物車
               </div>

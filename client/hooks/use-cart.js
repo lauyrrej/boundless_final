@@ -68,12 +68,13 @@ export function CartProvider({ children }) {
      const index = items.findIndex((v) => {
        return v.id == item.id
      })
-
      if (index == -1) {
        const newItem = { ...item, qty: 1 }
        const newItems = [...items, newItem]
        setItems(newItems)
        localStorage.setItem('CartData', JSON.stringify(newItems))
+     } else {
+      return 0
      }
    }
     
@@ -229,6 +230,32 @@ export function CartProvider({ children }) {
     })
   }
 
+  const alreadyBought = () => {
+    toast('購物車中已存在該商品', {
+      icon: 'ℹ️',
+      style: {
+        border: '1px solid #666666',
+        padding: '16px',
+        color: '#1d1d1d',
+      },
+      duration: 3000,
+    })
+  }
+
+  const notifyBuy = () => {
+    toast.success('商品已加入購物車', {
+      style: {
+        border: '1px solid #666666',
+        padding: '16px',
+        color: '#1d1d1d',
+      },
+      iconTheme: {
+        primary: '#1581cc',
+      },
+      duration: 2500,
+    })
+  }
+
   useEffect(() => {
     const lastInstrumentCoupon = JSON.parse(
       localStorage.getItem('InstrumentCoupon') ?? '[]'
@@ -291,7 +318,8 @@ export function CartProvider({ children }) {
         calcTotalDiscount,
         confirmOrderSubmit,
         cartNull,
-
+        notifyBuy,
+        alreadyBought,
       }}
     >
       {children}

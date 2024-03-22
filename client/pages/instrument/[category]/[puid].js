@@ -42,7 +42,7 @@ export default function InstrumentDetailPage() {
   }
 
   // ----------------------加入右上角購物車的功能  ----------------------
-  const { addInstrumentItem, increment, decrement, remove } = useCart()
+  const { addInstrumentItem, increment, decrement, remove, notifyBuy } = useCart()
 
   // ----------------------假資料  ----------------------
 
@@ -475,6 +475,7 @@ let nameimg
               increment={increment}
               decrement={decrement}
               remove={remove}
+              notifyBuy={notifyBuy}
             />
           </div>
         </div>
