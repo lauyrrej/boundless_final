@@ -244,12 +244,6 @@ export default function RecruitList() {
       <Head>
         <title>團員募集</title>
       </Head>
-      <Toaster
-        containerStyle={{
-          top: 80,
-          zIndex: 101,
-        }}
-      />
       <Navbar menuMbToggle={menuMbToggle} />
       <div className="page-hero d-none d-sm-block">
         <Image

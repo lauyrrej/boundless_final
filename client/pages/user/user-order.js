@@ -108,7 +108,7 @@ export default function Test() {
     // console.log(userOrderData.productResult[0][0])
     if(userOrderData.productResult){
       OrderData = userOrderData
-      console.log(OrderData.productResult[0][0])
+      // console.log(OrderData.productResult[0][0])
     }
     
   }, [userOrderData]) 
@@ -760,9 +760,7 @@ export default function Test() {
                                   </div>
                                   
                                 </div>
-                                
                               </div>
-                              
                             ))}
                           </div>
                           

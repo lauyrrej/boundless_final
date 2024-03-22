@@ -102,7 +102,7 @@ router.get('/:id', async (req, res, next) => {
   console.log(luid);
   try {
     let [data] = await db.execute(
-      'SELECT p.*, pr.*,lc.name as lesson_category_name' +
+      'SELECT pr.*, p.*,lc.name as lesson_category_name' +
         ' FROM `product` AS p ' +
         ' LEFT JOIN `product_review` AS pr ON p.id = pr.product_id ' +
         ' LEFT JOIN `lesson_category` AS lc ON p.lesson_category_id = lc.id ' +

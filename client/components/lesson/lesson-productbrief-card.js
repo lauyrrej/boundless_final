@@ -33,6 +33,7 @@ export default function ProductBriefCard({
   }
 
   // ----------------------加入右上角購物車的功能  ----------------------
+// console.log(id);
 
   //toast
     const notify = () =>

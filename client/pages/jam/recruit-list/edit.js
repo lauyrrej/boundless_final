@@ -273,12 +273,6 @@ export default function Info() {
       <Head>
         <title>修改表單</title>
       </Head>
-      <Toaster
-        containerStyle={{
-          top: 80,
-          zIndex: 101,
-        }}
-      />
       <Navbar menuMbToggle={menuMbToggle} />
       <div
         className="container position-relative"

@@ -362,10 +362,10 @@ router.post("/editProfile/:id", checkToken, async function (req, res) {
 
   if (orderResult.length > 0) {
     for (const order of orderResult) {
-      const orderId = order.id;
+      const orderId = order.ouid;
     
       // 使用當前訂單的 id 進行查詢
-      const [result] = await db.execute('SELECT  p.* , oi.* , ot.* FROM `order_item` oi LEFT JOIN `product` p ON CONVERT(p.id USING utf8mb4) = CONVERT(oi.product_id USING utf8mb4) LEFT JOIN `order_total` ot ON CONVERT(ot.id USING utf8mb4) = CONVERT(oi.order_id USING utf8mb4) WHERE oi.order_id = ?;', [orderId]);
+      const [result] = await db.execute('SELECT  p.* , oi.* , ot.* FROM `order_item` oi LEFT JOIN `product` p ON CONVERT(p.id USING utf8mb4) = CONVERT(oi.product_id USING utf8mb4) LEFT JOIN `order_total` ot ON CONVERT(ot.ouid USING utf8mb4) = CONVERT(oi.ouid USING utf8mb4) WHERE oi.ouid = ?;', [orderId]);
       if(result != ""){
         productResult.push(result); // 將查詢結果添加到 productResult 中
       }
