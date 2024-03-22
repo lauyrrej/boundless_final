@@ -102,10 +102,9 @@ router.get('/:id', async (req, res, next) => {
   console.log(luid);
   try {
     let [data] = await db.execute(
-
-      'SELECT ' +
+      'SELECT' +
         '  p.*, ' +
-        '  pr.*, ' +
+        // '  pr.user_id AS pr_user_id, pr.content AS pr_content, pr.likes AS pr_likes, ' +
         '  lc.name AS lesson_category_name, ' +
         '  COUNT(pr.product_id) AS review_count, ' +
         '  AVG(pr.stars) AS average_rating ' +

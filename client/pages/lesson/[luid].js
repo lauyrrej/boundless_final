@@ -89,7 +89,7 @@ export default function LessonDetailPage() {
       if (data) {
           setLessonDetail(data)
  
-        console.log(LessonDetail.youwilllike)
+        console.log(LessonDetail.data)
       }
     } catch (e) {
       console.error(e)
@@ -374,7 +374,7 @@ export default function LessonDetailPage() {
 
                               <div className="comment-Like text-end">
                                 <div className="comment-Like-Number">
-                                  {LessonDetail.product_review[index].likes}{' '}
+                                  {LessonDetail.product_review[index].likes}
                                   人覺得有幫助
                                 </div>
                                 {/* Like Icon */}
@@ -441,7 +441,7 @@ export default function LessonDetailPage() {
                 name={LessonDetail.data[0].name}
                 homework={LessonDetail.data[0].homework}
                 sales={LessonDetail.data[0].sales}
-                price={LessonDetail.data[0].price.toLocaleString()}
+                price={LessonDetail.data[0].price}
                 discount={LessonDetail.data[0].discount}
                 discount_state={LessonDetail.data[0].discount_state}
                 length={LessonDetail.data[0].length}
@@ -482,10 +482,26 @@ export default function LessonDetailPage() {
           <div className="detail-title ">猜你喜歡...</div>
           {/* 手機版card-con */}
           <div className="card-con-mobile">
-            <HoriCard />
-            <HoriCard />
-            <HoriCard />
-            //FIXME 標題字體小一點
+            {LessonDetail &&
+              LessonDetail.youwilllike &&
+              LessonDetail.youwilllike
+                .sort((a, b) => b.sales - a.sales) // Sort courses based on sales volume
+                .slice(0, 3) // Get top 3 courses
+                .map((v, i) => (
+                  <HoriCard
+                    key={i}
+                    id={v.id}
+                    luid={v.puid}
+                    name={v.name}
+                    average_rating={Math.round(v.average_rating)}
+                    review_count={v.review_count}
+                    price={v.price}
+                    teacher_name={v.teacher_name}
+                    img={v.img}
+                    length={v.length}
+                    sales={v.sales}
+                  />
+                ))}
           </div>
         </div>
       </div>
