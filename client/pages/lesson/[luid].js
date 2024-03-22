@@ -625,12 +625,10 @@ export default function LessonDetailPage() {
           padding: 8px 12px;
         }
 
-        .outline {
-           {
-            /* height: 243px;
-          width: 660px; */
-          }
-        }
+        /*.outline {           
+             height: 243px;
+          width: 660px;           
+        }*/
         .outline ul,
         .suitable ul {
           list-style-type: disc;
@@ -685,17 +683,17 @@ export default function LessonDetailPage() {
           padding: 4px 0 4px 80px;
         }
         .teacher-info {
-           {
+           
             /* height: 217px;
           width: 660px; */
-          }
+          
         }
         .teacher-info-area {
           display: flex;
-           {
-            /* height: 166px;
+           
+          /* height: 166px;
           width: 660px; */
-          }
+          
         }
         .teacher-img-con {
           width: 140px;
@@ -718,9 +716,9 @@ export default function LessonDetailPage() {
         /* ------------- */
 
         .you-will-like {
-           {
+           
             /* height: 508px; */
-          }
+          
           width: 100%;
           margin-top: 30px;
         }
@@ -754,9 +752,9 @@ export default function LessonDetailPage() {
           .Right {
             display: none;
           }
-           {
+           
             /* 手機版productbrief-card */
-          }
+          
           .prodBriefingArea {
             width: 100%;
             height: 204px;
@@ -774,9 +772,9 @@ export default function LessonDetailPage() {
           }
           .prodBriefing {
             /* background-color: #ff9595; */
-             {
+             
               /* margin-left: 110px; */
-            }
+            
             margin-top: 20px;
           }
           .prodMainName {
@@ -875,9 +873,9 @@ export default function LessonDetailPage() {
           }
           .shoppingBtn {
             display: flex;
-             {
+             
               /* margin-top: 20px; */
-            }
+            
             justify-content: space-evenly;
             gap: 12px;
             font-size: 16px;
@@ -915,13 +913,11 @@ export default function LessonDetailPage() {
             width: 100%;
           }
 
-           {
-            /* ---------- */
-          }
+           
 
-           {
+           
             /* detail-mobile */
-          }
+          
           .detail {
             max-width: 100%;
           }
@@ -934,14 +930,14 @@ export default function LessonDetailPage() {
           .you-will-like {
             display: none;
           }
-          //FIXME
+          /*//FIXME*/
           .you-will-like-mobile {
             display: block;
           }
           .card-con-mobile {
             display: block;
           }
-          //FIXME
+          /*//FIXME*/
         }
       `}</style>
     </>

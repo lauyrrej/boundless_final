@@ -573,7 +573,7 @@ let nameimg
             >
               加入購物車
             </div>
-          </div>
+          </div> 
           <div className="buyBtn">
             <div className="buy">立即購買</div>
           </div>
@@ -916,6 +916,8 @@ list-style-type: disc;
 max-width: 390px;
  }
    .sub-Pic-Con{
+        display:flex;
+        justify-content:space-between;
 width:100%;
 {/* margin-top:5px; */}
 padding-top:20px;

@@ -114,16 +114,22 @@ export default function ProductBriefCard({
               <div
                 className="cart"
                 role="presentation"
-                
               >
                 加入購物車
               </div>
             </div>
-            <Link className="buy" href="/cart/check">
-            <div className="buyBtn">
-                立即購買
-            </div>
+            
+            <Link className="buyBtn" href="/cart/check">
+            
+              <div className="buyBtn"
+                onClick={() => {
+                      addInstrumentItem(data, quantity)
+                    }}>
+                    立即購買
+              </div>
+            
             </Link>
+            
           </div>
         </div>
       </div>
@@ -252,7 +258,7 @@ export default function ProductBriefCard({
           .shoppingBtn {
             display: flex;
             margin-top: 20px;
-            justify-content: space-between;
+            justify-content: space-evenly;
             gap: 80px;
             font-size: 16px;
             color: var(--white, #fff);
