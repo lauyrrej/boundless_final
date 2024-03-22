@@ -63,7 +63,7 @@ console.log(id);
             <div className="sales">購買人數 {sales}</div>
           </div>
           <div className="productPrice">
-            <div className="price">NT$ {price}</div>
+            <div className="price">NT$ {price.toLocaleString()}</div>
             {/* 收藏功能 */}
             {/* 做好的 onClick*/}
             <div className="likesIcon icon-container ">
@@ -115,7 +115,7 @@ console.log(id);
                   onshelf_time,
                 })
                 calcTotalItems() // Moved inside the onClick function
-                  notify()
+                notify()
                 //   console.log(id)
               }}
             >

@@ -441,7 +441,7 @@ export default function LessonDetailPage() {
                 name={LessonDetail.data[0].name}
                 homework={LessonDetail.data[0].homework}
                 sales={LessonDetail.data[0].sales}
-                price={LessonDetail.data[0].price.toLocaleString()}
+                price={LessonDetail.data[0].price}
                 discount={LessonDetail.data[0].discount}
                 discount_state={LessonDetail.data[0].discount_state}
                 length={LessonDetail.data[0].length}
