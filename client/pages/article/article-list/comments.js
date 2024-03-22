@@ -90,7 +90,7 @@ export default function ArticleList() {
         const datas = await res.json()
         if (datas) {
           setArticle(datas) // 設定獲取的文章數據到狀態中
-          console.log(datas)
+          // console.log(datas)
         }
       } catch (e) {
         console.error(e)
@@ -227,7 +227,7 @@ export default function ArticleList() {
                   <Link href={`/article/article-list/comments`}>音樂評論</Link>
                 </li>
                 <li>
-                  <Link href={`/article/article-list`}>技術分享</Link>
+                  <Link href={`/article/article-list/sharing`}>技術分享</Link>
                 </li>
               </ul>
             </div>
