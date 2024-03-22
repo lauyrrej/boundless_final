@@ -138,8 +138,6 @@ router.get('/homepageArticle/:uid', async (req, res) => {
    userID = userIDResult[0].id;
   }
   try {
-    
-
     let [articleData] = await db.execute(
       'SELECT article.*, article_category.name AS category_name,article_comment.likes AS comment_likes, user.name AS user_name, user.img AS user_img, article_user.nickname AS article_author_name, article_user.img AS article_author_img FROM article JOIN article_category ON article.category_id = article_category.id LEFT JOIN article_comment ON article.id = article_comment.article_id LEFT JOIN user ON article_comment.user_id = user.id LEFT JOIN user AS article_user ON article.user_id = article_user.id  WHERE article.user_id = ? ORDER BY article.id',[userID]
     );
@@ -320,15 +318,11 @@ router.post("/editProfile/:id", checkToken, async function (req, res) {
   const id = req.params.id;
   let { email, name, password, phone, postcode, country, township, address, birthday, genre_like, play_instrument, info, gender, nickname, privacy } = req.body;
   // console.log(req.body)
-  // console.log(email)
-  // console.log(name)
-  // console.log(birthday)
   // birthday = new Date(birthday)
   // if(birthday.length > 10){
   //   birthday = birthday.split('T')[0]
   //   console.log(birthday)
   // }
-  // console.log(birthday)
 
 
   // 更新資料庫
@@ -341,18 +335,46 @@ router.post("/editProfile/:id", checkToken, async function (req, res) {
   return res.json({ status: 'success', data: { result } })
 });
 
-//該使用者查詢訂單
-router.post("/order/:id", checkToken, async function (req, res) {
+//該使用者查詢訂單 checkToken 先拿掉 記得加回來
+//router.post("/order/:id", checkToken, async function (req, res) {
+  router.post("/order/:id", async function (req, res) {
   const id = req.params.id;
-  let { email, name, password, phone, postcode, country, township, address, birthday, genre_like, play_instrument, info, gender, nickname, privacy } = req.body;
-  // console.log(req.body)
+  // console.log(id)
 
+  // 透過id 找到user uid
+  const [userUIDResult] = await db.execute(
+    "SELECT `uid` FROM `user` WHERE `id` = ? AND `valid` = 1",[id]
+  );
+  let UID
+  if(userUIDResult){
+  UID = userUIDResult[0].uid;
+  }
 
-  // 更新資料庫
-  const [result] = await db.execute(`UPDATE user SET email = ?, name =? , phone = ?, postcode = ? , country = ? , township = ?, address = ? , birthday = STR_TO_DATE(?, '%Y-%m-%d') , genre_like = ? , play_instrument = ?, info = ?, gender = ?, nickname = ?, privacy = ? WHERE id = ?;`, [email, name, phone, postcode, country, township, address, birthday, genre_like, play_instrument, info, gender, nickname, privacy, id]);
+ //正確版 join
+  //  let [userHomePageData] = await db.execute("SELECT email, nickname, phone, birthday , genre_like , play_instrument , info, gender , privacy , j.state AS my_jamState, j.name AS my_jam , photo_url , img FROM `user` u LEFT JOIN `jam` j ON CONVERT(j.juid USING utf8mb4) = CONVERT(u.my_jam USING utf8mb4) WHERE u.uid = ? AND u.valid = 1", [uid])
 
+  // 透過UID抓訂單 
+  const [orderResult] = await db.execute(`SELECT * FROM order_total WHERE user_id = ?;`,[UID])
 
-  return res.json({ status: 'success', data: { result } })
+  let productResult = []; 
+
+  if (orderResult.length > 0) {
+    for (const order of orderResult) {
+      const orderId = order.ouid;
+    
+      // 使用當前訂單的 id 進行查詢
+      const [result] = await db.execute('SELECT  p.* , oi.* , ot.* FROM `order_item` oi LEFT JOIN `product` p ON CONVERT(p.id USING utf8mb4) = CONVERT(oi.product_id USING utf8mb4) LEFT JOIN `order_total` ot ON CONVERT(ot.ouid USING utf8mb4) = CONVERT(oi.ouid USING utf8mb4) WHERE oi.ouid = ?;', [orderId]);
+      if(result != ""){
+        productResult.push(result); // 將查詢結果添加到 productResult 中
+      }
+      
+    }
+  }
+
+  // const [productResult] = await db.execute(`SELECT * FROM order_item WHERE order_id = ?;`,[orderResult[0].id])
+  // return res.json({ status: 'success', data: { orderResult , productResult}  })
+  return res.json({ status: 'success', data: {productResult}})
+  // return res.json({ status: 'success' })
 });
 
 // 註冊 = 檢查資料庫是否有此email及密碼 ,如果沒有 就增加sql

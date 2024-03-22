@@ -45,6 +45,7 @@ export default function Test() {
     handleLessonSelector,
     calcTotalDiscount,
     calcTotalPrice,
+    confirmOrderSubmit,
   } = useCart()
 
 
@@ -388,7 +389,9 @@ export default function Test() {
                           cartData,
                           orderID,
                           uid
-                      )
+                        )
+                        confirmOrderSubmit()
+                        localStorage.removeItem('CartData')
                       }
                     }
                   >
@@ -457,6 +460,8 @@ export default function Test() {
                     orderID,
                     uid,
                 )
+                confirmOrderSubmit()
+                localStorage.removeItem('CartData')
                 }
               }
             >

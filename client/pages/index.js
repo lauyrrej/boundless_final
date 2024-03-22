@@ -52,6 +52,7 @@ export default function Index() {
             showMenu ? 'menu-mb-show' : ''
           }`}
         >
+
           <NavbarMb/>
         </div>
         <div>

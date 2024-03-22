@@ -1,10 +1,32 @@
 import { createContext, useContext, useState, useEffect } from 'react'
+import toast from 'react-hot-toast'
 import CartData from '@/data/cart/cart.json'
 import CouponData from '@/data/cart/coupons.json'
+import { useRouter } from 'next/router'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 export const CartContext = createContext()
 
 export function CartProvider({ children }) {
+  const router = useRouter()
+  const mySwal = withReactContent(Swal)
+  const confirmOrderSubmit = () => {
+    mySwal
+      .fire({
+        position: 'center',
+        icon: 'success',
+        iconColor: '#1581cc',
+        title: '結帳成功！',
+        showConfirmButton: false,
+        timer: 2000,
+      })
+      .then(
+        setTimeout(() => {
+          router.push(`/user/user-order`)
+        }, 2000)
+      )
+  }
   let cartData = CartData.map((v) => {
     // if (v.type == 1) {
     //   return { ...v, qty: 1 }
@@ -16,6 +38,7 @@ export function CartProvider({ children }) {
   //加入到購物車的項目
   let [items, setItems] = useState([])
 
+
   useEffect(() => {
     localStorage.setItem('CartData', JSON.stringify(items))
   }, [items])
@@ -24,12 +47,12 @@ export function CartProvider({ children }) {
   const addInstrumentItem = (item, qty) => {
     // 檢查購物車是否已存在該商品
     const index = items.findIndex((v) => {
-      return (v.id == item.id)
+      return v.id == item.id
     })
-    console.log(index);
+    console.log(index)
     if (index > -1) {
       increment(item, qty)
-    }else{
+    } else {
       // 不存在購物車中，擴充該商品的"數量"屬性
       //擴充item的屬性多一個qty
       const newItem = { ...item, qty: qty }
@@ -37,21 +60,25 @@ export function CartProvider({ children }) {
       setItems(newItems)
       localStorage.setItem('CartData', JSON.stringify(newItems))
     }
-
   }
 
-  const addLessonItem = (item) => {
-    const index = items.findIndex((v) =>{
-      return (v.id == item.id)
-    })
 
-    if(index == -1){
-      const newItem = {...item, qty: 1}
-      const newItems = [...items, newItem]
-      setItems(newItems)
-      localStorage.setItem('CartData', JSON.stringify(newItems))
-    }
-  }
+
+   const addLessonItem = (item) => {
+     const index = items.findIndex((v) => {
+       return v.id == item.id
+     })
+     if (index == -1) {
+       const newItem = { ...item, qty: 1 }
+       const newItems = [...items, newItem]
+       setItems(newItems)
+       localStorage.setItem('CartData', JSON.stringify(newItems))
+     } else {
+      return 0
+     }
+   }
+    
+
   //在購物車中，移除某商品的id
   const remove = (items, id) => {
     const newItems = items.filter((v, i) => {
@@ -128,7 +155,7 @@ export function CartProvider({ children }) {
   //計算個數
   const calcTotalItems = () => {
     let total = 0
-    total=items.length
+    total = items.length
     return total
   }
 
@@ -191,31 +218,50 @@ export function CartProvider({ children }) {
     setinstrumentDiscount(e)
   }
 
+  const cartNull = () => {
+    toast('購物車是空的', {
+      icon: 'ℹ️',
+      style: {
+        border: '1px solid #666666',
+        padding: '16px',
+        color: '#1d1d1d',
+      },
+      duration: 3000,
+    })
+  }
+
+  const alreadyBought = () => {
+    toast('購物車中已存在該商品', {
+      icon: 'ℹ️',
+      style: {
+        border: '1px solid #666666',
+        padding: '16px',
+        color: '#1d1d1d',
+      },
+      duration: 3000,
+    })
+  }
+
+  const notifyBuy = () => {
+    toast.success('商品已加入購物車', {
+      style: {
+        border: '1px solid #666666',
+        padding: '16px',
+        color: '#1d1d1d',
+      },
+      iconTheme: {
+        primary: '#1581cc',
+      },
+      duration: 2500,
+    })
+  }
+
   useEffect(() => {
     const lastInstrumentCoupon = JSON.parse(
       localStorage.getItem('InstrumentCoupon') ?? '[]'
     )
     setinstrumentDiscount(lastInstrumentCoupon)
   }, [])
-
-  // const [name, setName] = useState('')
-  // const [phone, setPhone] = useState('')
-  // const [email, setEmail] = useState('')
-  // const [address, setAddress] = useState('')
-
-  // const UserInfo = (e) => {
-
-  //   let UserInfo = JSON.stringify([
-  //     { Name: name, Phone: phone, Email: email, Address: address },
-  //   ])
-  //   setName(e.target.value)
-  //   setPhone(e.target.value)
-  //   setEmail(e.target.value)
-  //   setAddress(e.target.value)
-  //   // useEffect(() => {
-  //   //   localStorage.setItem('UserInfo', UserInfo)
-  //   // }, [UserInfo])
-  // }
 
   const calcLessonDiscount = () => {
     let total = 0
@@ -241,7 +287,6 @@ export function CartProvider({ children }) {
     total = parseInt(calcInstrumentDiscount()) + parseInt(calcLessonDiscount())
     return total
   }
-
 
   return (
     <CartContext.Provider
@@ -271,6 +316,10 @@ export function CartProvider({ children }) {
         calcTotalItems,
         calcTotalPrice,
         calcTotalDiscount,
+        confirmOrderSubmit,
+        cartNull,
+        notifyBuy,
+        alreadyBought,
       }}
     >
       {children}

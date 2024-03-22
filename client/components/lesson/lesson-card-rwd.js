@@ -7,6 +7,7 @@ import { GoClock } from 'react-icons/go'
 import { MdOutlinePeopleAlt } from 'react-icons/md'
 
 export default function CourseCard({
+    lesson_category_id,
   luid,
   name,
   average_rating,
@@ -20,7 +21,7 @@ export default function CourseCard({
 }) {
   return (
     <>
-      <Link href={`/lesson/${luid}`}>
+      <Link href={`/lesson/${lesson_category_id}/${luid}`}>
         <div className="course-container">
           <div className="course-image-container">
             <img

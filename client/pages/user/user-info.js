@@ -4,6 +4,7 @@ import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
+import NavbarMb from '@/components/common/navbar-mb'
 
 //圖片
 import jamHero from '@/assets/jam-hero.png'
@@ -41,7 +42,7 @@ export default function Test() {
   //登出功能
 
   //檢查是否獲取資料
-  // console.log(LoginUserData)
+  console.log(LoginUserData)
   //   讀取使用者資料後 定義大頭貼路徑
   let avatarImage
   if (LoginUserData.img) {
@@ -292,47 +293,7 @@ export default function Test() {
           }`}
         >
           {/* 用戶資訊 */}
-          <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
-            <div className="mb-photo-wrapper mb-2">
-              <Image
-                src={avatarImage}
-                alt="user photo mb"
-                fill
-                sizes="(max-width: 150px)"
-              ></Image>
-            </div>
-            <div>{LoginUserData.nickname}</div>
-          </div>
-          <Link
-            className="mm-item"
-            href="/user/user-info"
-            style={{ borderTop: '1px solid #b9b9b9' }}
-          >
-            會員中心
-          </Link>
-          <Link className="mm-item" href="/lesson/lesson-list">
-            探索課程
-          </Link>
-          <Link className="mm-item" href="/instrument/instrument-list">
-            樂器商城
-          </Link>
-          <Link className="mm-item" href="/jam/recruit-list">
-            Let &apos;s JAM!
-          </Link>
-          <Link className="mm-item" href="/article/article-list">
-            樂友論壇
-          </Link>
-          {/*eslint-disable-next-line jsx-a11y/click-events-have-key-events*/}
-          <div
-            onClick={handleLogout}
-            //onclick 要加這個 不然ES會跳沒有給身障人士使用
-            role="presentation"
-            className="mm-item"
-            style={{ color: '#1581cc' }}
-          >
-            登出
-            <ImExit size={20} className="ms-2" />
-          </div>
+          <NavbarMb/>
         </div>
         <div className="row">
           {/* sidebar */}
@@ -372,7 +333,7 @@ export default function Test() {
                   <Link href="/user/user-info">會員資訊</Link>
                 </li>
                 <li key={2}>
-                  <Link href="/user/user-jam">我的樂團</Link>
+                <Link href={LoginUserData.jamstate == '1' ?  `/jam/recruit-list/${LoginUserData.my_jam}`: `/user/user-jam`}>我的樂團</Link>
                 </li>
                 <li key={3}>
                   <Link href="/user/user-order">我的訂單</Link>
@@ -381,16 +342,7 @@ export default function Test() {
                   <Link href="/user/user-article">我的文章</Link>
                 </li>
                 <li key={5}>
-                  <Link href="/user/user-favorite">我的收藏</Link>
-                </li>
-                <li key={6}>
                   <Link href="/user/user-coupon">我的優惠券</Link>
-                </li>
-                <li key={7}>
-                  <Link href="/user/user-lesson">我的課程</Link>
-                </li>
-                <li key={8}>
-                  <Link href="/user/user-notify">我的訊息</Link>
                 </li>
               </ul>
             </div>
@@ -413,30 +365,22 @@ export default function Test() {
                 />
               </div>
 
-              <Link href={`/jam/recruit-list`} className="sm-item active">
+              <Link href={`/user/user-info`} className="sm-item active">
                 會員資訊
               </Link>
-              <Link href={`/jam/recruit-list`} className="sm-item">
+              <Link href={LoginUserData.jamstate == '1' ?  `/jam/recruit-list/${LoginUserData.my_jam}`: `/user/user-jam`} className="sm-item">
                 我的樂團
               </Link>
-              <Link href={`/jam/recruit-list`} className="sm-item">
+              <Link href={`/user/user-order`} className="sm-item">
                 我的訂單
               </Link>
-              <Link href={`/jam/recruit-list`} className="sm-item">
+              <Link href={`/user/user-article`} className="sm-item">
                 我的文章
               </Link>
-              <Link href={`/jam/recruit-list`} className="sm-item">
-                我的收藏
-              </Link>
-              <Link href={`/jam/recruit-list`} className="sm-item">
+              <Link href={`/user/user-coupon`} className="sm-item">
                 我的優惠券
               </Link>
-              <Link href={`/jam/recruit-list`} className="sm-item">
-                我的課程
-              </Link>
-              <Link href={`/jam/recruit-list`} className="sm-item">
-                我的訊息
-              </Link>
+              
             </div>
             {/*  ---------------------- 頂部功能列  ---------------------- */}
             <div className="top-function-container">
@@ -490,6 +434,7 @@ export default function Test() {
                           </div>
                         </div>
                       </div>
+                      
                       <div className="user-info-item">
                         <div className="user-info-item-titleText">真實姓名</div>
                         <div className="user-info-item-Content">
