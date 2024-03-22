@@ -486,8 +486,25 @@ export default function LessonDetailPage() {
         <div
           className="cartBtn"
           onClick={() => {
-            addLessonItem(v)
+            addLessonItem({
+              id,
+              img,
+              img_small,
+              type,
+              lesson_category_id,
+              name,
+              homework,
+              sales,
+              price,
+              discount,
+              discount_state,
+              length,
+              info,
+              onshelf_time,
+            })
+            calcTotalItems() // Moved inside the onClick function
             notify()
+            //   console.log(id)
           }}
         >
           <Toaster />
@@ -500,7 +517,31 @@ export default function LessonDetailPage() {
         </div>
 
         <div className="buyBtn">
-          <div className="buy">立即購買</div>
+          <div
+            className="buy"
+            onClick={() =>
+              addLessonItem({
+                id,
+                img,
+                img_small,
+                type,
+                lesson_category_id,
+                name,
+                homework,
+                sales,
+                price,
+                discount,
+                discount_state,
+                length,
+                info,
+                onshelf_time,
+              })
+            }
+          >
+            <Link className="buy" href="/cart/check">
+              立即購買
+            </Link>
+          </div>
         </div>
       </div>
       <Footer />
@@ -925,7 +966,7 @@ export default function LessonDetailPage() {
           .detail {
             max-width: 100%;
           }
-          //FIXME
+          /*//FIXME*/
           .review-content {
             max-width: 100%;
             word-wrap: break-word;
