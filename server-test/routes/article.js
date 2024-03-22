@@ -84,7 +84,7 @@ router.get('/:auid', async (req, res, next) => {
   }
 });
 
-router.post('/upload/:auid', upload.single('myFile'), async (req, res) => {
+router.post('/upload', upload.single('myFile'), async (req, res) => {
   const now = new Date().toISOString();
   let newCover = Date.now() + extname(req.file.originalname);
   rename(req.file.path, resolve(__dirname, 'public/article', newCover), (error) => {
@@ -94,13 +94,15 @@ router.post('/upload/:auid', upload.single('myFile'), async (req, res) => {
     }
     console.log('更名成功')
   })
-  const { title, content, category_id } = req.body;
+  const { title, content, category_id, user_id } = req.body;
   console.log(req.body)
   const auid = generateUid();
+  // const user_id = req.user.id;
+  console.log(user_id)
   await db
     .execute(
-      'INSERT INTO `article` (`id`,`auid`, `title`, `content`, `category_id`, `img` ) VALUES (NULL, ?, ?, ?, ?, ?)',
-      [auid, title, content, parseInt(category_id), newCover]
+      'INSERT INTO `article` (`id`,`auid`, `title`, `content`, `category_id`, `img`, `user_id` ) VALUES (NULL, ?, ?, ?, ?, ?, ?)',
+      [auid, title, content, parseInt(category_id), newCover, user_id]
     )
     .then(() => {
       console.log('更新成功');
