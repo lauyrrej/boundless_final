@@ -150,7 +150,6 @@ let [youwilllike] = await db.execute(
 );
 
 
-
     if ({ data, product_review, youwilllike }) {
       console.log({ data });
       res.status(200).json({ data, product_review, youwilllike });
@@ -162,4 +161,5 @@ let [youwilllike] = await db.execute(
     res.status(500).send('Internal server error');
   }
 });
+
 export default router;

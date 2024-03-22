@@ -481,7 +481,7 @@ export default function Test() {
                           <div className="user-btnGroup-btn1">
                             <div>
                               <Link href={`/user/user-homepage/${LoginUserData.uid}`}>
-                                預覽個人首頁
+                                查看個人首頁
                               </Link>
                             </div>
                           </div>

@@ -100,31 +100,31 @@ export default function ArticleList() {
   }, []) // 空的依賴陣列表示只在元件第一次渲染時執行一次
 
   // article-category資料
-  const [articleCategory, setArticleCategory] = useState([])
-  function getArticleCategory() {
-    return new Promise((resolve, reject) => {
-      let url = 'http://localhost:3005/api/article/categories'
-      fetch(url, {
-        method: 'GET',
-        credentials: 'include',
-      })
-        .then((response) => {
-          return response.json()
-        })
-        .then((result) => {
-          resolve(result)
-          //   console.log(result)
-          setArticleCategory(result)
-        })
-        .catch((error) => {
-          console.log(error)
-          reject()
-        })
-    })
-  }
-  useEffect(() => {
-    getArticleCategory()
-  }, [])
+  // const [articleCategory, setArticleCategory] = useState([])
+  // function getArticleCategory() {
+  //   return new Promise((resolve, reject) => {
+  //     let url = 'http://localhost:3005/api/article/categories'
+  //     fetch(url, {
+  //       method: 'GET',
+  //       credentials: 'include',
+  //     })
+  //       .then((response) => {
+  //         return response.json()
+  //       })
+  //       .then((result) => {
+  //         resolve(result)
+  //         //   console.log(result)
+  //         setArticleCategory(result)
+  //       })
+  //       .catch((error) => {
+  //         console.log(error)
+  //         reject()
+  //       })
+  //   })
+  // }
+  // useEffect(() => {
+  //   getArticleCategory()
+  // }, [])
 
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -224,7 +224,7 @@ export default function ArticleList() {
                   </Link>
                 </li>
                 <li>
-                  <Link href={`/article/article-list`}>音樂評論</Link>
+                  <Link href={`/article/article-list/comments`}>音樂評論</Link>
                 </li>
                 <li>
                   <Link href={`/article/article-list`}>技術分享</Link>
@@ -353,7 +353,7 @@ export default function ArticleList() {
             <main className="content me-2">
               <div className="d-flex justify-content-between align-items-center">
                 <h4 className="text-primary pt-2">
-                  熱門文章{LoginUserData.name}
+                  熱門文章
                 </h4>
                 <Link
                   href={`/article/article-list/article-publish`}

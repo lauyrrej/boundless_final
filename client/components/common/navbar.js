@@ -19,7 +19,7 @@ import useFirebase from '@/hooks/user/use-firebase'
 import { useCart } from '@/hooks/use-cart'
 
 export default function Navbar({ menuMbToggle }) {
-      const {calcTotalItems } = useCart()
+  const { calcTotalItems } = useCart()
   const [showMenu, setShowMenu] = useState(false)
   const { logoutFirebase } = useFirebase()
 
@@ -74,7 +74,7 @@ export default function Navbar({ menuMbToggle }) {
       })
       .then(
         setTimeout(() => {
-          router.push(`/login`)
+          router.push(`/`).then(() => window.location.reload());
         }, 2000)
       )
   }
@@ -143,9 +143,13 @@ export default function Navbar({ menuMbToggle }) {
           </ul>
           {/* 手機版 navbar */}
           <div className="navbar-mb d-lg-none d-flex justify-content-end align-items-center">
-            <Link href="/cart/check" className="p-0 me-3">
-              <IoCart size={30} />
-            </Link>
+            <div className="p-0 me-3 cart-icon">
+              <Link href="/cart/check">
+                <IoCart size={30} className="cart-icon" />
+                <span className="button__badge">{calcTotalItems()}</span>
+              </Link>
+            </div>
+
             <IoMenu size={30} className="ms-3" onClick={menuMbToggle} />
           </div>
           {/* 登入狀態下 點擊右上角叫出小視窗          */}

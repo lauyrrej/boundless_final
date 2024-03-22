@@ -46,7 +46,7 @@ export default function Articlecard({
               <h5 className="fw-bold clamped-text">{title}</h5>
               <p className="text-secondary">{content}</p>
             </div>
-            <img className="article-image" src={`/article/${img}`} alt="" />
+            <img className="article-image" src={`http://localhost:3005/article/${img}`} alt="" />
           </div>
         </Link>
         {/* views-like */}
@@ -93,7 +93,7 @@ export default function Articlecard({
           }
         }
         .article-info {
-          width: 180px;
+          width: 250px;
         }
         .article-author {
           width: 30px;

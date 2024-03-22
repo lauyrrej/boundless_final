@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { useEffect, useState } from 'react'
+import { useMemo, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
@@ -15,7 +15,7 @@ import { FaFilter } from 'react-icons/fa6'
 import { FaSortAmountDown } from 'react-icons/fa'
 import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
-import ArticleCard from '@/components/article/article-card'
+import ArticleCard from '@/components/user/article-cardForUser'
 
 
 //選項資料 data
@@ -56,7 +56,7 @@ export default function Test() {
 
 
   const getHomePageData = async (uid) => {
-    // console.log(uid)
+    console.log(uid)
   try {
     const response = await fetch(
       `http://localhost:3005/api/user/user-homepage/${uid}`,
@@ -86,6 +86,7 @@ export default function Test() {
   useEffect(() => {
     if(uid){
       getHomePageData(uid)
+      getDatas(uid)
     }
   }, [uid]) 
   //-------------------------------資料處理-------------------------------
@@ -239,6 +240,70 @@ export default function Test() {
   // console.log(privacyPhone)
   // console.log(privacyEmail)
 
+  //-------------------------獲得該文章資料 code來自 article-list
+  const getDatas = async (uid) => {
+    console.log(uid)
+    try {
+      const res = await fetch(`http://localhost:3005/api/user/homepageArticle/${uid}`,
+      {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(),
+      })
+      const datas = await res.json()
+      if (datas) {
+        setArticle(datas) // 設定獲取的文章數據到狀態中
+        console.log(datas)
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+  // useEffect(() => {
+  //   getDatas() // 在元件渲染後立即獲取文章數據
+  // }, [])
+
+  // 純func書籤
+  const handleToggleFav = (id) => {
+    const newArticles = article.map((v, i) => {
+      if (v.id === id) return { ...v, fav: !v.fav }
+      else return v
+    })
+    setArticle(newArticles)
+  }
+
+
+
+// 後端資料庫
+const [article, setArticle] = useState([])
+const [search, setSearch] = useState('')
+
+// // 資料排序
+const [dataSort, setDataSort] = useState('latest')
+
+const filterArticle = useMemo(() => {
+  // 首先根據排序條件對文章進行排序
+  let sorted = []
+  // if (dataSort === 'latest') {
+  //   sorted = article.sort(
+  //     (a, b) => new Date(b.published_time) - new Date(a.published_time)
+  //   )
+  // } else if (dataSort === 'oldest') {
+  //   sorted = article.sort(
+  //     (a, b) => new Date(a.published_time) - new Date(b.published_time)
+  //   )
+  // } else {
+    sorted = article
+  // }
+
+  // 然後應用搜索過濾器
+  return sorted.filter((article) => {
+    return article.title.includes(search)
+  })
+}, [article, dataSort, search])
+
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -280,18 +345,19 @@ export default function Test() {
           {/* 用戶資訊 */}
           <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
             <div className="mb-photo-wrapper mb-2">
-              <Image
-                src="/jam/amazingshow.jpg"
+            <Image
+                src={avatarImage}
                 alt="user photo mb"
                 fill
-                priority
+                sizes="(max-width: 150px)"
               ></Image>
             </div>
-            <div>用戶名稱</div>
+            {/* 暫時註解 本頁暫不想放入讀取登入者資料 如果手機板改成元件再開啟 */}
+            {/* <div>{LoginUserData.nickname}</div> */}
           </div>
           <Link
             className="mm-item"
-            href="/user"
+            href="/user/user-info"
             style={{ borderTop: '1px solid #b9b9b9' }}
           >
             會員中心
@@ -336,9 +402,9 @@ export default function Test() {
             <main className="content">
               <div className="container custom-container">
                 <div className="row">
-                  <div className="col-lg-3 col-sm-12">
-                    <div className="user-homePage-sideWarp">
-                      <div className="user-homePage-content-left">
+                  <div className="col-lg-3 col-12">
+                    <div className="user-homePage-sideWarp ">
+                      <div className="user-homePage-content-left col-12 ">
                         <div className="user-homePage-topInfo">
                           <div className="user-homePage-avatar">
                             <Image className="avatar" src={avatarImage} alt="" priority  width={150} height={150}/>
@@ -379,7 +445,7 @@ export default function Test() {
                               </div>
                               <div className="user-homePage-info-item-Content">
                                 <div className="user-homePage-info-item-contentText">
-                                {birthday}
+                                {privacyBD === "1" ? birthday : "未公開"}
                                 </div>
                               </div>
                             </div>
@@ -416,7 +482,8 @@ export default function Test() {
                               </div>
                               <div className="user-homePage-info-item-Content">
                                 <div className="user-homePage-info-item-contentText">
-                                {userHomePageData.phone}
+                                {privacyPhone === "1" ? userHomePageData.phone : "未公開"}
+                                
                                 </div>
                               </div>
                             </div>
@@ -426,7 +493,7 @@ export default function Test() {
                               </div>
                               <div className="user-homePage-info-item-Content">
                                 <div className="user-homePage-info-item-contentText">
-                                {userHomePageData.email}
+                                {privacyEmail === "1" ? userHomePageData.email : "未公開"}
                                 </div>
                               </div>
                             </div>
@@ -435,7 +502,7 @@ export default function Test() {
                       </div>
                     </div>
                   </div>
-                  <div className="col-lg-9 col-sm-12 user-homePage-content-right">
+                  <div className="col-lg-9 col-12 user-homePage-content-right ">
                     <div className="user-homePage-content-right-Info">
                       <div className="user-homePage-content-right-titleText">
                         自我介紹
@@ -450,7 +517,45 @@ export default function Test() {
                         發表文章
                       </div>
                       <div className="user-homePage-content-right-article-cardList">
-                        導入ArticleCard元件 爆版
+                        {/* 導入ArticleCard元件 爆版 */}
+                        {filterArticle.map((v, i) => {
+                  const {
+                    id,
+                    auid,
+                    title,
+                    content,
+                    img,
+                    user_id,
+                    author,
+                    published_time,
+                    articles,
+                    fav,
+                    category_name,
+                    comment_likes,
+                    article_author_name,
+                    article_author_img,
+                  } = v
+                  return (
+                    <ArticleCard
+                      key={id}
+                      id={id}
+                      auid={auid}
+                      title={title}
+                      content={content}
+                      img={img}
+                      user_id={user_id}
+                      author={author}
+                      published_time={published_time}
+                      articles={articles}
+                      fav={fav}
+                      category_name={category_name}
+                      handleToggleFav={handleToggleFav}
+                      comment_likes={comment_likes}
+                      article_author_name={article_author_name}
+                      article_author_img={article_author_img}
+                    />
+                  )
+                })}
                         {/* <ArticleCard />
                         <ArticleCard />
                         <ArticleCard />
@@ -486,15 +591,13 @@ export default function Test() {
           align-items: flex-start;
           gap: 10px;
           .user-homePage-content-left {
-            display: flex;
-            width: 330px;
-            max-width: 330px;
+            display: flex;           
             padding: 25px 0px;
             flex-direction: column;
-
             align-items: flex-start;
             border-radius: 10px;
             background: var(--gray-30, rgba(185, 185, 185, 0.3));
+            margin-bottom: 20px;
 
             .user-homePage-topInfo {
               display: flex;
@@ -635,7 +738,7 @@ export default function Test() {
 
         .user-homePage-content-right {
           display: flex;
-          padding-left: 30px;
+          
           flex-direction: column;
           justify-content: start;
           align-items: center;
@@ -643,11 +746,11 @@ export default function Test() {
           flex: 1 0 0;
 
           @media screen and (max-width: 576px) {
-            padding-left: 0px;
+            {/* padding-left: 0px; */}
           }
 
           .user-homePage-content-right-Info {
-            width: 940px;
+            
             display: flex;
             padding: 10px;
             flex-direction: column;
@@ -658,7 +761,7 @@ export default function Test() {
             background: var(--gray-30, rgba(185, 185, 185, 0.3));
 
             @media screen and (max-width: 576px) {
-              width: 380px;
+              {/* width: 370px; */}
             }
 
             .user-homePage-content-right-titleText {
@@ -695,10 +798,9 @@ export default function Test() {
             align-self: stretch;
             border-radius: 10px;
             background: var(--gray-30, rgba(185, 185, 185, 0.3));
-            width: 940px;
 
             @media screen and (max-width: 576px) {
-              width: 380px;
+              max-width: 366px;
             }
             .user-homePage-content-right-article-titleText {
               color: var(--primary-deep, #124365);

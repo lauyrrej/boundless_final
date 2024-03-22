@@ -170,6 +170,38 @@ header {
   align-items: center;
   font-weight: bold;
 }
+// 折疊式選單
+.accordion-item {
+  border: none;
+}
+.accordion-button {
+  padding: 0;
+  color: $secondary;
+  font-size: $h5;
+  font-weight: 700;
+}
+.accordion-button:focus {
+  z-index: 3;
+  outline: 0;
+  box-shadow: none;
+}
+.accordion-button:not(.collapsed) {
+  color: $primary;
+  background-color: #fff;
+  box-shadow: none;
+}
+.accordion-button:hover {
+  color: $primary;
+}
+.accordion-body {
+  color: $secondary;
+  font-size: $h6;
+}
+.subcategory-link {
+  &:hover {
+    color: $primary;
+  }
+}
 
 .page-control {
   padding-inline: 30px 0;
@@ -457,7 +489,7 @@ header {
   overflow: hidden;
   position: relative;
   aspect-ratio: 1.61;
-  max-height: 500px;
+  max-height: 600px;
   min-height: 255px;
 }
 .carousel-item img {

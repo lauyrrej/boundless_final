@@ -1,23 +1,13 @@
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
-import { debounce } from 'lodash'
 import { useAuth } from '@/hooks/user/use-auth'
-import { useJam } from '@/hooks/use-jam'
-import toast, { Toaster } from 'react-hot-toast'
+import { Toaster } from 'react-hot-toast'
 import Navbar from '@/components/common/navbar'
+import NavbarMb from '@/components/common/navbar-mb'
 import Footer from '@/components/common/footer'
-import MemberInfo from '@/components/jam/member-info'
-import Apply from '@/components/jam/apply'
 import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
-import Swal from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
 import 'animate.css'
-// icons
-import { IoHome } from 'react-icons/io5'
-import { FaChevronRight } from 'react-icons/fa6'
-import { ImExit } from 'react-icons/im'
 // scss
 import styles from '@/pages/jam/jam.module.scss'
 
@@ -62,47 +52,8 @@ export default function Index() {
             showMenu ? 'menu-mb-show' : ''
           }`}
         >
-          {/* 用戶資訊 */}
-          <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
-            <div className="mb-photo-wrapper mb-2">
-              <Image
-                src="/jam/amazingshow.jpg"
-                alt="user photo mb"
-                fill
-              ></Image>
-            </div>
-            <div>用戶名稱</div>
-          </div>
-          <Link
-            className="mm-item"
-            href="/user"
-            style={{ borderTop: '1px solid #b9b9b9' }}
-          >
-            會員中心
-          </Link>
-          <Link className="mm-item" href="/lesson">
-            探索課程
-          </Link>
-          <Link className="mm-item" href="/instrument">
-            樂器商城
-          </Link>
-          <Link className="mm-item" href="/jam/recruit-list">
-            Let &apos;s JAM!
-          </Link>
-          <Link className="mm-item" href="/article/article-list">
-            樂友論壇
-          </Link>
-          <div
-            className="mm-item"
-            style={{ color: '#1581cc' }}
-            role="presentation"
-            onClick={() => {
-              handleLogout()
-            }}
-          >
-            登出
-            <ImExit size={20} className="ms-2" />
-          </div>
+
+          <NavbarMb/>
         </div>
         <div>
           <h1 hidden>Boundless 線上音樂學習平台</h1>
@@ -110,15 +61,18 @@ export default function Index() {
           <section className="carousel-section">
             <div
               id="carouselExampleIndicators"
-              class="carousel slide"
-              data-bs-ride="carousel"
+              className="carousel slide"
+              data-bs-ride=""
+              onLoad={() => {
+                document.querySelector('.carousel').setAttribute('data-bs-ride', 'carousel')
+              }}
             >
-              <div class="carousel-indicators">
+              <div className="carousel-indicators">
                 <button
                   type="button"
                   data-bs-target="#carouselExampleIndicators"
                   data-bs-slide-to="0"
-                  class="active"
+                  className="active"
                   aria-current="true"
                   aria-label="Slide 1"
                 ></button>
@@ -147,66 +101,66 @@ export default function Index() {
                   aria-label="Slide 5"
                 ></button>
               </div>
-              <div class="carousel-inner" style={{ borderRadius: '10px' }}>
-                <div class="carousel-item active" data-bs-interval="6000">
+              <div className="carousel-inner" style={{ borderRadius: '10px' }}>
+                <div className="carousel-item active" data-bs-interval="4000">
                   <Image
                     src="/課程與師資/lesson_img/lesson_001.jpeg"
                     alt="..."
                     fill
                   />
                 </div>
-                <div class="carousel-item" data-bs-interval="6000">
+                <div className="carousel-item" data-bs-interval="4000">
                   <Image
                     src="/課程與師資/lesson_img/lesson_009.jpeg"
                     alt="..."
                     fill
                   />
                 </div>
-                <div class="carousel-item" data-bs-interval="6000">
+                <div className="carousel-item" data-bs-interval="4000">
                   <Image
                     src="/課程與師資/lesson_img/lesson_008.jpeg"
                     alt="..."
                     fill
                   />
                 </div>
-                <div class="carousel-item" data-bs-interval="6000">
+                <div className="carousel-item" data-bs-interval="4000">
                   <Image
                     src="/課程與師資/lesson_img/lesson_004.jpeg"
                     alt="..."
                     fill
                   />
                 </div>
-                <div class="carousel-item" data-bs-interval="6000">
+                <div className="carousel-item" data-bs-interval="4000">
                   <Image
-                    src="/課程與師資/lesson_img/lesson_005.jpeg"
+                    src="/banner.jpg"
                     alt="..."
                     fill
                   />
                 </div>
               </div>
               <button
-                class="carousel-control-prev"
+                className="carousel-control-prev"
                 type="button"
                 data-bs-target="#carouselExampleIndicators"
                 data-bs-slide="prev"
               >
                 <span
-                  class="carousel-control-prev-icon"
+                  className="carousel-control-prev-icon"
                   aria-hidden="true"
                 ></span>
-                <span class="visually-hidden">Previous</span>
+                <span className="visually-hidden">Previous</span>
               </button>
               <button
-                class="carousel-control-next"
+                className="carousel-control-next"
                 type="button"
                 data-bs-target="#carouselExampleIndicators"
                 data-bs-slide="next"
               >
                 <span
-                  class="carousel-control-next-icon"
+                  className="carousel-control-next-icon"
                   aria-hidden="true"
                 ></span>
-                <span class="visually-hidden">Next</span>
+                <span className="visually-hidden">Next</span>
               </button>
             </div>
           </section>

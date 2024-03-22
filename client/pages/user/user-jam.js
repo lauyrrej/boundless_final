@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Toaster } from 'react-hot-toast'
 import Navbar from '@/components/common/navbar'
+import NavbarMb from '@/components/common/navbar-mb'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -74,10 +75,10 @@ export default function UserJam() {
   // ]
 
   // 正式加入
-  const joinJam = async (id, user_id, juid, applier_play) => {
+  const joinJam = async (user_id, user_uid, juid, applier_play) => {
     let formData = new FormData()
-    formData.append('id', id)
     formData.append('user_id', user_id)
+    formData.append('user_uid', user_uid)
     formData.append('juid', juid)
     formData.append('applier_play', applier_play)
     try {
@@ -94,7 +95,7 @@ export default function UserJam() {
   }
 
   // 加入提醒&成功訊息
-  const notifyJoin = (id, user_id, juid, applier_play) => {
+  const notifyJoin = (user_id, user_uid, juid, applier_play) => {
     mySwal
       .fire({
         title: '確定加入此樂團？',
@@ -122,7 +123,7 @@ export default function UserJam() {
       })
       .then(async (result) => {
         if (result.isConfirmed) {
-          const res = await joinJam(id, user_id, juid, applier_play)
+          const res = await joinJam(user_id, user_uid, juid, applier_play)
           if (res.status === 'success') {
             mySwal.fire({
               title: '加入成功，導向樂團資訊頁',
@@ -244,7 +245,7 @@ export default function UserJam() {
             className="b-btn b-btn-primary"
             style={{ width: '50px', height: '32px' }}
             onClick={() => {
-              notifyJoin(id, LoginUserData.id, juid, applier_play)
+              notifyJoin(LoginUserData.id, LoginUserData.uid, juid, applier_play)
             }}
           >
             加入
@@ -303,48 +304,7 @@ export default function UserJam() {
             showMenu ? 'menu-mb-show' : ''
           }`}
         >
-          {/* 用戶資訊 */}
-          <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
-            <div className="mb-photo-wrapper mb-2">
-              <Image
-                src={avatarImage}
-                alt="user photo mb"
-                fill
-                sizes="(max-width: 150px)"
-              ></Image>
-            </div>
-            <div>{LoginUserData.nickname}</div>
-          </div>
-          <Link
-            className="mm-item"
-            href="/user/user-info"
-            style={{ borderTop: '1px solid #b9b9b9' }}
-          >
-            會員中心
-          </Link>
-          <Link className="mm-item" href="/lesson/lesson-list">
-            探索課程
-          </Link>
-          <Link className="mm-item" href="/instrument/instrument-list">
-            樂器商城
-          </Link>
-          <Link className="mm-item" href="/jam/recruit-list">
-            Let &apos;s JAM!
-          </Link>
-          <Link className="mm-item" href="/article/article-list">
-            樂友論壇
-          </Link>
-          {/*eslint-disable-next-line jsx-a11y/click-events-have-key-events*/}
-          <div
-            onClick={handleLogout}
-            //onclick 要加這個 不然ES會跳沒有給身障人士使用
-            role="presentation"
-            className="mm-item"
-            style={{ color: '#1581cc' }}
-          >
-            登出
-            <ImExit size={20} className="ms-2" />
-          </div>
+          <NavbarMb/>
         </div>
         <div className="row">
           {/* sidebar */}
