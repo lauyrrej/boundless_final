@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react'
+import toast from 'react-hot-toast'
 import CartData from '@/data/cart/cart.json'
 import CouponData from '@/data/cart/coupons.json'
 
@@ -24,12 +25,12 @@ export function CartProvider({ children }) {
   const addInstrumentItem = (item, qty) => {
     // 檢查購物車是否已存在該商品
     const index = items.findIndex((v) => {
-      return (v.id == item.id)
+      return v.id == item.id
     })
-    console.log(index);
+    console.log(index)
     if (index > -1) {
       increment(item, qty)
-    }else{
+    } else {
       // 不存在購物車中，擴充該商品的"數量"屬性
       //擴充item的屬性多一個qty
       const newItem = { ...item, qty: qty }
@@ -37,8 +38,8 @@ export function CartProvider({ children }) {
       setItems(newItems)
       localStorage.setItem('CartData', JSON.stringify(newItems))
     }
-
   }
+
 
 
    const addLessonItem = (item) => {
@@ -131,7 +132,7 @@ export function CartProvider({ children }) {
   //計算個數
   const calcTotalItems = () => {
     let total = 0
-    total=items.length
+    total = items.length
     return total
   }
 
@@ -194,6 +195,18 @@ export function CartProvider({ children }) {
     setinstrumentDiscount(e)
   }
 
+  const cartNull = () => {
+    toast('購物車是空的', {
+      icon: 'ℹ️',
+      style: {
+        border: '1px solid #666666',
+        padding: '16px',
+        color: '#1d1d1d',
+      },
+      duration: 3000,
+    })
+  }
+
   useEffect(() => {
     const lastInstrumentCoupon = JSON.parse(
       localStorage.getItem('InstrumentCoupon') ?? '[]'
@@ -245,7 +258,6 @@ export function CartProvider({ children }) {
     return total
   }
 
-
   return (
     <CartContext.Provider
       value={{
@@ -274,6 +286,7 @@ export function CartProvider({ children }) {
         calcTotalItems,
         calcTotalPrice,
         calcTotalDiscount,
+        cartNull,
       }}
     >
       {children}

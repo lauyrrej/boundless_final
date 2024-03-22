@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 import Navbar from '@/components/common/navbar'
 import NavbarMb from '@/components/common/navbar-mb'
 import Footer from '@/components/common/footer'
@@ -230,12 +230,6 @@ export default function JamList() {
       <Head>
         <title>活動中的JAM</title>
       </Head>
-      <Toaster
-        containerStyle={{
-          top: 80,
-          zIndex: 101,
-        }}
-      />
       <Navbar menuMbToggle={menuMbToggle} />
       <div className="page-hero d-none d-sm-block">
         <Image
