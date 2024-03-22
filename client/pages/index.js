@@ -2,13 +2,12 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '@/hooks/user/use-auth'
 import { Toaster } from 'react-hot-toast'
 import Navbar from '@/components/common/navbar'
+import NavbarMb from '@/components/common/navbar-mb'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
 import 'animate.css'
-// icons
-import { ImExit } from 'react-icons/im'
 // scss
 import styles from '@/pages/jam/jam.module.scss'
 
@@ -53,47 +52,7 @@ export default function Index() {
             showMenu ? 'menu-mb-show' : ''
           }`}
         >
-          {/* 用戶資訊 */}
-          <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
-            <div className="mb-photo-wrapper mb-2">
-              <Image
-                src="/jam/amazingshow.jpg"
-                alt="user photo mb"
-                fill
-              ></Image>
-            </div>
-            <div>用戶名稱</div>
-          </div>
-          <Link
-            className="mm-item"
-            href="/user"
-            style={{ borderTop: '1px solid #b9b9b9' }}
-          >
-            會員中心
-          </Link>
-          <Link className="mm-item" href="/lesson/lesson-list">
-            探索課程
-          </Link>
-          <Link className="mm-item" href="/instrument/instrument-list">
-            樂器商城
-          </Link>
-          <Link className="mm-item" href="/jam/recruit-list">
-            Let &apos;s JAM!
-          </Link>
-          <Link className="mm-item" href="/article/article-list">
-            樂友論壇
-          </Link>
-          <div
-            className="mm-item"
-            style={{ color: '#1581cc' }}
-            role="presentation"
-            onClick={() => {
-              handleLogout()
-            }}
-          >
-            登出
-            <ImExit size={20} className="ms-2" />
-          </div>
+          <NavbarMb/>
         </div>
         <div>
           <h1 hidden>Boundless 線上音樂學習平台</h1>
@@ -102,7 +61,10 @@ export default function Index() {
             <div
               id="carouselExampleIndicators"
               className="carousel slide"
-              data-bs-ride="carousel"
+              data-bs-ride=""
+              onLoad={() => {
+                document.querySelector('.carousel').setAttribute('data-bs-ride', 'carousel')
+              }}
             >
               <div className="carousel-indicators">
                 <button
@@ -169,7 +131,7 @@ export default function Index() {
                 </div>
                 <div className="carousel-item" data-bs-interval="4000">
                   <Image
-                    src="/課程與師資/lesson_img/lesson_005.jpeg"
+                    src="/banner.jpg"
                     alt="..."
                     fill
                   />

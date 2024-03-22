@@ -89,7 +89,8 @@ export default function Auid() {
   const sendForm = async (auid, content) => {
     let formData = new FormData()
     formData.append('content', content)
-    const res = await fetch('http://localhost:3005/api/article/edit/${auid}', {
+    // console.log(auid, content);
+    const res = await fetch(`http://localhost:3005/api/article/edit/${auid}`, {
       method: 'PUT',
       body: formData,
       credentials: 'include',
@@ -232,7 +233,7 @@ export default function Auid() {
           >上一步
           </Link>
           <button onClick={() => {
-            sendForm(content)
+            sendForm(articleDetail.auid ,content)
           }} type="button" className="btn btn-primary">
             確認更新
           </button>
