@@ -9,6 +9,7 @@ import { ImExit } from 'react-icons/im'
 // sweetalert
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import { Toaster } from 'react-hot-toast'
 
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
@@ -19,7 +20,7 @@ import useFirebase from '@/hooks/user/use-firebase'
 import { useCart } from '@/hooks/use-cart'
 
 export default function Navbar({ menuMbToggle }) {
-  const { calcTotalItems } = useCart()
+  const { calcTotalItems, cartNull } = useCart()
   const [showMenu, setShowMenu] = useState(false)
   const { logoutFirebase } = useFirebase()
 
@@ -74,13 +75,19 @@ export default function Navbar({ menuMbToggle }) {
       })
       .then(
         setTimeout(() => {
-          router.push(`/`)
+          router.push(`/`).then(() => window.location.reload())
         }, 2000)
       )
   }
 
   return (
     <>
+    <Toaster
+        containerStyle={{
+          top: 80,
+          zIndex: 101,
+        }}
+      />
       <header className="w-100 d-flex justify-content-between align-items-center">
         <Link href="/" className="d-none d-lg-block ">
           <Image src={logo} alt="logo" className="logo" />
@@ -103,12 +110,23 @@ export default function Navbar({ menuMbToggle }) {
             <li>
               <Link href="/article/article-list">樂友論壇</Link>
             </li>
-            <li className="ms-3 cart-icon">
-              <Link href="/cart/check">
+            <li
+              className="ms-3 cart-icon"
+              onClick={() => {
+                const haveCart = localStorage.getItem('CartData')
+                const trueCart = JSON.parse(haveCart)
+                if (trueCart.length > 0) {
+                  router.push(`/cart/check`)
+                } else {
+                  cartNull()
+                }
+              }}
+            >
+              <div className="cart">
                 <IoCart size={30} className="cart-icon" />
 
                 <span className="button__badge">{calcTotalItems()}</span>
-              </Link>
+              </div>
             </li>
             <li className="login-state d-flex justify-content-center">
               {LoginUserData.id ? (
@@ -143,11 +161,19 @@ export default function Navbar({ menuMbToggle }) {
           </ul>
           {/* 手機版 navbar */}
           <div className="navbar-mb d-lg-none d-flex justify-content-end align-items-center">
-            <div className="p-0 me-3 cart-icon">
-              <Link href="/cart/check">
+            <div className="p-0 me-3 cart-icon" onClick={() => {
+                const haveCart = localStorage.getItem('CartData')
+                const trueCart = JSON.parse(haveCart)
+                if (trueCart.length > 0) {
+                  router.push(`/cart/check`)
+                } else {
+                  cartNull()
+                }
+              }}>
+              <div className="cart">
                 <IoCart size={30} className="cart-icon" />
                 <span className="button__badge">{calcTotalItems()}</span>
-              </Link>
+              </div>
             </div>
 
             <IoMenu size={30} className="ms-3" onClick={menuMbToggle} />
@@ -189,6 +215,21 @@ export default function Navbar({ menuMbToggle }) {
         .navbar-wrapper {
           position: relative;
           z-index: 120; /* 設置 z-index */
+        }
+
+        .cart {
+          display: block;
+          padding: 5px 12px;
+          border-radius: 10px;
+          color: #fff;
+          font-size: 20px;
+          font-weight: 600;
+          text-decoration: none;
+          cursor: pointer;
+          &:hover {
+            color: #124365;
+            background-color: #fff;
+          }
         }
         .avatar-menu {
           width: 160px;

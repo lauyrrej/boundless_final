@@ -5,6 +5,7 @@ import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
+import NavbarMb from '@/components/common/navbar-mb'
 //
 import { debounce } from 'lodash'
 
@@ -19,6 +20,7 @@ import { jwtDecode } from 'jwt-decode'
 import CityCountyData from '@/data/CityCountyData.json'
 import playerData from '@/data/player.json'
 import genreData from '@/data/genre.json'
+import { countries, townships, postcodes } from '@/data/cart/twzipcode-data'
 
 // sweetalert
 import Swal from 'sweetalert2'
@@ -114,6 +116,16 @@ export default function Test() {
     updated_time: '',
     valid: '',
   })
+//---------------------------------------------------
+
+  
+  // 縣市連動
+  // 記錄陣列的索引值，預設值是-1，相當於"請選擇xxx"
+  const [countryIndex, setCountryIndex] = useState(-1)
+  const [townshipIndex, setTownshipIndex] = useState(-1)
+
+
+
   //------獲取單一使用者全部資料 包含密碼
   const getLoginUserProfile = async (e) => {
     // 拿取Token回傳後端驗證狀態
@@ -161,7 +173,7 @@ export default function Test() {
   }, []) // 在 LoginUserData.name 改變時觸發 useEffect
 
   // console.log(userData.id)
-  // console.log(userData)
+  console.log(userData)
 
   // ----------------------會員登入狀態  ----------------------
 
@@ -391,21 +403,21 @@ export default function Test() {
   // 資料排序
   const [dataSort, setDataSort] = useState('latest')
   // ----------------------條件篩選  ----------------------
-  const [filterVisible, setFilterVisible] = useState(false)
-  useEffect(() => {
-    document.addEventListener('click', (e) => {
-      setFilterVisible(false)
-    })
-  }, [])
-  // 阻止事件冒泡造成篩選表單關閉
-  const stopPropagation = (e) => {
-    e.stopPropagation()
-  }
-  // 顯示表單
-  const onshow = (e) => {
-    stopPropagation(e)
-    setFilterVisible(!filterVisible)
-  }
+  // const [filterVisible, setFilterVisible] = useState(false)
+  // useEffect(() => {
+  //   document.addEventListener('click', (e) => {
+  //     setFilterVisible(false)
+  //   })
+  // }, [])
+  // // 阻止事件冒泡造成篩選表單關閉
+  // const stopPropagation = (e) => {
+  //   e.stopPropagation()
+  // }
+  // // 顯示表單
+  // const onshow = (e) => {
+  //   stopPropagation(e)
+  //   setFilterVisible(!filterVisible)
+  // }
   // filter假資料
   const brandData = [
     { id: 1, name: 'YAMAHA' },
@@ -481,47 +493,7 @@ export default function Test() {
           }`}
         >
           {/* 用戶資訊 */}
-          <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
-            <div className="mb-photo-wrapper mb-2">
-              <Image
-                src={avatarImage}
-                alt="user photo mb"
-                fill
-                sizes="(max-width: 150px)"
-              ></Image>
-            </div>
-            <div>{LoginUserData.nickname}</div>
-          </div>
-          <Link
-            className="mm-item"
-            href="/user/user-info"
-            style={{ borderTop: '1px solid #b9b9b9' }}
-          >
-            會員中心
-          </Link>
-          <Link className="mm-item" href="/lesson/lesson-list">
-            探索課程
-          </Link>
-          <Link className="mm-item" href="/instrument/instrument-list">
-            樂器商城
-          </Link>
-          <Link className="mm-item" href="/jam/recruit-list">
-            Let &apos;s JAM!
-          </Link>
-          <Link className="mm-item" href="/article/article-list">
-            樂友論壇
-          </Link>
-          {/*eslint-disable-next-line jsx-a11y/click-events-have-key-events*/}
-          <div
-            onClick={handleLogout}
-            //onclick 要加這個 不然ES會跳沒有給身障人士使用
-            role="presentation"
-            className="mm-item"
-            style={{ color: '#1581cc' }}
-          >
-            登出
-            <ImExit size={20} className="ms-2" />
-          </div>
+          <NavbarMb/>
         </div>
         <div className="row">
           {/* sidebar */}
@@ -561,7 +533,7 @@ export default function Test() {
                   <Link href="/user/user-info">會員資訊</Link>
                 </li>
                 <li key={2}>
-                  <Link href="/user/user-jam">我的樂團</Link>
+                  <Link href={LoginUserData.jamstate == '1' ?  `/jam/recruit-list/${LoginUserData.my_jam}`: `/user/user-jam`}>我的樂團</Link>
                 </li>
                 <li key={3}>
                   <Link href="/user/user-order">我的訂單</Link>
@@ -570,16 +542,7 @@ export default function Test() {
                   <Link href="/user/user-article">我的文章</Link>
                 </li>
                 <li key={5}>
-                  <Link href="/user/user-favorite">我的收藏</Link>
-                </li>
-                <li key={6}>
                   <Link href="/user/user-coupon">我的優惠券</Link>
-                </li>
-                <li key={7}>
-                  <Link href="/user/user-lesson">我的課程</Link>
-                </li>
-                <li key={8}>
-                  <Link href="/user/user-notify">我的訊息</Link>
                 </li>
               </ul>
             </div>
@@ -604,29 +567,20 @@ export default function Test() {
                 />
               </div>
 
-              <Link href={`/jam/recruit-list`} className="sm-item active">
+              <Link href={`/user/user-info`} className="sm-item active">
                 會員資訊
               </Link>
-              <Link href={`/jam/recruit-list`} className="sm-item">
+              <Link href={LoginUserData.jamstate == '1' ?  `/jam/recruit-list/${LoginUserData.my_jam}`: `/user/user-jam`} className="sm-item ">
                 我的樂團
               </Link>
-              <Link href={`/jam/recruit-list`} className="sm-item">
+              <Link href={`/user/user-order`} className="sm-item">
                 我的訂單
               </Link>
-              <Link href={`/jam/recruit-list`} className="sm-item">
+              <Link href={`/user/user-article`} className="sm-item">
                 我的文章
               </Link>
-              <Link href={`/jam/recruit-list`} className="sm-item">
-                我的收藏
-              </Link>
-              <Link href={`/jam/recruit-list`} className="sm-item">
+              <Link href={`/user/user-coupon`} className="sm-item">
                 我的優惠券
-              </Link>
-              <Link href={`/jam/recruit-list`} className="sm-item">
-                我的課程
-              </Link>
-              <Link href={`/jam/recruit-list`} className="sm-item">
-                我的訊息
               </Link>
             </div>
             {/*  ---------------------- 頂部功能列  ---------------------- */}
@@ -1171,20 +1125,28 @@ export default function Test() {
                                 value={userData.country}
                                 name="region"
                                 onChange={(e) => {
+                                  const selectedCountry = countries[e.target.value]
                                   setuserData({
                                     ...userData,
                                     country: e.target.value,
+                                    
                                   })
+                                  setCountryIndex(e.target.selectedIndex+1)
                                 }}
                               >
-                                <option value="">請選擇</option>
-                                {cityData.map((v, i) => {
+                                <option disabled value="">請選擇</option>
+                                {/* {cityData.map((v, i) => {
                                   return (
                                     <option key={i} value={v}>
                                       {v}
                                     </option>
                                   )
-                                })}
+                                })} */}
+                                {countries.map((value, index) => (
+                                <option key={index} value={value}>
+                                  {value}
+                                </option>
+                              ))}
                               </select>
                             </div>
 
@@ -1193,7 +1155,7 @@ export default function Test() {
                                 className="form-select col-4 col-sm1"
                                 style={{ width: 'auto' }}
                                 value={userData.township}
-                                name="region"
+                                name="township"
                                 onChange={(e) => {
                                   setuserData({
                                     ...userData,
@@ -1201,14 +1163,20 @@ export default function Test() {
                                   })
                                 }}
                               >
-                                <option value="">請選擇</option>
-                                {townData.map((v, i) => {
+                                <option  value="">請選擇</option>
+                                {countryIndex == -1 ? townData.map((v, i) => {
                                   return (
                                     <option key={i} value={v}>
                                       {v}
                                     </option>
                                   )
-                                })}
+                                }) : ''}
+                                {countryIndex > -1 &&
+                                townships[countryIndex - 2].map((value, index) => (
+                                  <option key={index} value={value}>
+                                    {value}
+                                  </option>
+                                ))}
                               </select>
                             </div>
 

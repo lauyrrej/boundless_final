@@ -38,6 +38,10 @@ export default function Test() {
     calcTotalPrice,
   } = useCart()
 
+  const [selected, setSeleted] = useState('credit-card')
+
+  console.log(selected);
+
   //form
   const handleSubmit = (e) => {
     //取消表單預設行為，因為要使用js做進一步檢查
@@ -95,10 +99,6 @@ const [data, setData] = useState({
 
 
 
-
-console.log(UserInfoData[0].Name);
-
-
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -107,22 +107,6 @@ console.log(UserInfoData[0].Name);
   }
 
   // ----------------------假資料  ----------------------
-
-  const [filterVisible, setFilterVisible] = useState(false)
-  useEffect(() => {
-    document.addEventListener('click', (e) => {
-      setFilterVisible(false)
-    })
-  }, [])
-  // 阻止事件冒泡造成篩選表單關閉
-  const stopPropagation = (e) => {
-    e.stopPropagation()
-  }
-  // 顯示表單
-  const onshow = (e) => {
-    stopPropagation(e)
-    setFilterVisible(!filterVisible)
-  }
 
   return (
     <>
@@ -301,6 +285,11 @@ console.log(UserInfoData[0].Name);
                         id="transfer"
                         value={'transfer'}
                         name="paymethods"
+                        onChange={()=>{
+                          setSeleted('transfer')
+                        }
+                        }
+                        checked = {selected === 'transfer' ? true : false}
                       />
                       <label htmlFor="transfer">轉帳匯款</label>
                     </div>
@@ -311,7 +300,11 @@ console.log(UserInfoData[0].Name);
                         id="credit-card"
                         value={'credit-card'}
                         name="paymethods"
-                        checked={true}
+                        onChange={()=>{
+                          setSeleted('credit-card')
+                        }
+                        }
+                        checked = {selected === 'credit-card' ? true : false}
                       />
                       <label htmlFor="credit-card">信用卡</label>
                       <div className="credit-card-pic">
@@ -333,6 +326,11 @@ console.log(UserInfoData[0].Name);
                         id="mobliepayment"
                         value={'mobliepayment'}
                         name="paymethods"
+                        onChange={()=>{
+                          setSeleted('mobliepayment')
+                        }
+                        }
+                        checked = {selected == 'mobliepayment' ? true : false}
                       />
                       <label htmlFor="mobliepayment">Line Pay</label>
                       <div className="credit-card-pic">
@@ -345,7 +343,8 @@ console.log(UserInfoData[0].Name);
                   <div>
                     <hr />
                   </div>
-                  <div className="row g-3 align-items-center">
+                  {selected === 'credit-card' ? (<>
+                    <div className="row g-3 align-items-center">
                     <label
                       htmlFor="name"
                       className="col-form-label col-sm-2 col-3 h6"
@@ -464,6 +463,23 @@ console.log(UserInfoData[0].Name);
                       />
                     </div>
                   </div>
+                  </>) : ''}
+                  {selected === 'mobliepayment' ? (<>
+                    <div id="type3">
+                      <h1>TYPE 4</h1>
+                      <div class="btn-9">
+                        CLICK
+                      </div>
+                        
+                      <div class="btn-10">
+                        CLICK
+                      </div>
+                        
+                        <div class="btn-11">
+                        CLICK
+                      </div>
+                    </div>
+                  </>) : ''}
                 </div>
               </div>
             </div>
@@ -872,7 +888,7 @@ console.log(UserInfoData[0].Name);
             background-color: #FFF;
             padding: 20px 30px;
             }
-        }
+      }
       `}</style>
     </>
   )

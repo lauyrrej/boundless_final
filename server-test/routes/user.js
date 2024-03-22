@@ -104,7 +104,7 @@ router.get("/user-homepage/:uid", async (req, res) => {
     // let [userHomePageData] = await db.execute("SELECT email, nickname, phone, birthday , genre_like , play_instrument , info, gender , privacy , my_jam , photo_url , img FROM `user`  WHERE `uid` = ? AND `valid` = 1", [uid]);
 
     //正確版 join
-    let [userHomePageData] = await db.execute("SELECT email, nickname, phone, birthday , genre_like , play_instrument , info, gender , privacy , j.name AS my_jam , photo_url , img FROM `user` u LEFT JOIN `jam` j ON CONVERT(j.juid USING utf8mb4) = CONVERT(u.my_jam USING utf8mb4) WHERE u.uid = ? AND u.valid = 1", [uid])
+    let [userHomePageData] = await db.execute("SELECT email, nickname, phone, birthday , genre_like , play_instrument , info, gender , privacy , j.state AS my_jamState, j.name AS my_jam , photo_url , img FROM `user` u LEFT JOIN `jam` j ON CONVERT(j.juid USING utf8mb4) = CONVERT(u.my_jam USING utf8mb4) WHERE u.uid = ? AND u.valid = 1", [uid])
 
     //單獨
     // let [jamNameData] = await db.execute("SELECT  j.name AS my_jam FROM `user` u LEFT JOIN `jam` j ON CONVERT(j.juid USING utf8mb4) = CONVERT(u.my_jam USING utf8mb4) WHERE u.uid = ?", [uid])
@@ -122,6 +122,63 @@ router.get("/user-homepage/:uid", async (req, res) => {
     res.json("發生錯誤");
   }
   // res.json({ status: 'success', data: { result } })
+});
+
+// 個人首頁 獲得該使用者發布之文章 code來自article.js
+router.get('/homepageArticle/:uid', async (req, res) => {
+  const uid = req.params.uid;
+  // console.log(uid);
+  
+  // 再不更動article資料庫的情況下 透過uid 找到user id
+  const [userIDResult] = await db.execute(
+    "SELECT * FROM `user` WHERE `uid` = ? AND `valid` = 1",[uid]
+  );
+ let userID
+  if(userIDResult){
+   userID = userIDResult[0].id;
+  }
+  try {
+    let [articleData] = await db.execute(
+      'SELECT article.*, article_category.name AS category_name,article_comment.likes AS comment_likes, user.name AS user_name, user.img AS user_img, article_user.nickname AS article_author_name, article_user.img AS article_author_img FROM article JOIN article_category ON article.category_id = article_category.id LEFT JOIN article_comment ON article.id = article_comment.article_id LEFT JOIN user ON article_comment.user_id = user.id LEFT JOIN user AS article_user ON article.user_id = article_user.id  WHERE article.user_id = ? ORDER BY article.id',[userID]
+    );
+    if (articleData) {
+      res.json(articleData);
+    } else {
+      res.json('沒有找到相應的資訊');
+    }
+  } catch (error) {
+    console.error('發生錯誤：', error);
+    res.json('發生錯誤' + error);
+  }
+});
+
+// 我的文章頁 獲得該使用者發布之文章 code來自article.js
+router.get('/MyArticle/:id', async (req, res) => {
+  const id = req.params.id;
+  // console.log(id);
+  
+  // 再不更動article資料庫的情況下 透過uid 找到user id
+  const [userIDResult] = await db.execute(
+    "SELECT * FROM `user` WHERE `id` = ? AND `valid` = 1",[id]
+  );
+ let userID
+  if(userIDResult){
+   userID = userIDResult[0].id;
+  }
+  // console.log(userIDResult[0]);
+  try {
+    let [articleData] = await db.execute(
+      'SELECT article.*, article_category.name AS category_name,article_comment.likes AS comment_likes, user.name AS user_name, user.img AS user_img, article_user.nickname AS article_author_name, article_user.img AS article_author_img FROM article JOIN article_category ON article.category_id = article_category.id LEFT JOIN article_comment ON article.id = article_comment.article_id LEFT JOIN user ON article_comment.user_id = user.id LEFT JOIN user AS article_user ON article.user_id = article_user.id  WHERE article.user_id = ? ORDER BY article.id',[userID]
+    );
+    if (articleData) {
+      res.json(articleData);
+    } else {
+      res.json('沒有找到相應的資訊');
+    }
+  } catch (error) {
+    console.error('發生錯誤：', error);
+    res.json('發生錯誤' + error);
+  }
 });
 
 //登入 目前設定 email 就是帳號 不可更改
@@ -235,7 +292,7 @@ router.get("/:id", checkToken, async function (req, res) {
   // );
 
   // 不回傳密碼跟創建時間的版本  3/18 原版 join jam.name 來當my_jamname 名稱版本 
-  let [singerUser] = await db.execute("SELECT u.id, uid, u.name , email, nickname, phone, birthday, postcode, country, township, address, genre_like, play_instrument , info, gender , privacy, google_uid, j.name AS my_jamname, my_jam , photo_url, my_lesson, img FROM `user` u LEFT JOIN `jam` j ON CONVERT(j.juid USING utf8mb4) = CONVERT(u.my_jam USING utf8mb4) WHERE u.id = ? AND u.valid = 1", [id])
+  let [singerUser] = await db.execute("SELECT u.id, uid, u.name , email, nickname, phone, birthday, postcode, country, township, address, genre_like, play_instrument , info, gender , privacy, google_uid, j.state AS my_jamState, j.name AS my_jamname, my_jam , photo_url, my_lesson, img FROM `user` u LEFT JOIN `jam` j ON CONVERT(j.juid USING utf8mb4) = CONVERT(u.my_jam USING utf8mb4) WHERE u.id = ? AND u.valid = 1", [id])
 
   const resUser = singerUser[0];
 
@@ -261,15 +318,11 @@ router.post("/editProfile/:id", checkToken, async function (req, res) {
   const id = req.params.id;
   let { email, name, password, phone, postcode, country, township, address, birthday, genre_like, play_instrument, info, gender, nickname, privacy } = req.body;
   // console.log(req.body)
-  // console.log(email)
-  // console.log(name)
-  // console.log(birthday)
   // birthday = new Date(birthday)
   // if(birthday.length > 10){
   //   birthday = birthday.split('T')[0]
   //   console.log(birthday)
   // }
-  // console.log(birthday)
 
 
   // 更新資料庫
@@ -280,6 +333,48 @@ router.post("/editProfile/:id", checkToken, async function (req, res) {
   // return res.json(resUser);
   //改檔老師寫法
   return res.json({ status: 'success', data: { result } })
+});
+
+//該使用者查詢訂單 checkToken 先拿掉 記得加回來
+//router.post("/order/:id", checkToken, async function (req, res) {
+  router.post("/order/:id", async function (req, res) {
+  const id = req.params.id;
+  // console.log(id)
+
+  // 透過id 找到user uid
+  const [userUIDResult] = await db.execute(
+    "SELECT `uid` FROM `user` WHERE `id` = ? AND `valid` = 1",[id]
+  );
+  let UID
+  if(userUIDResult){
+  UID = userUIDResult[0].uid;
+  }
+
+ //正確版 join
+  //  let [userHomePageData] = await db.execute("SELECT email, nickname, phone, birthday , genre_like , play_instrument , info, gender , privacy , j.state AS my_jamState, j.name AS my_jam , photo_url , img FROM `user` u LEFT JOIN `jam` j ON CONVERT(j.juid USING utf8mb4) = CONVERT(u.my_jam USING utf8mb4) WHERE u.uid = ? AND u.valid = 1", [uid])
+
+  // 透過UID抓訂單 
+  const [orderResult] = await db.execute(`SELECT * FROM order_total WHERE user_id = ?;`,[UID])
+
+  let productResult = []; 
+
+  if (orderResult.length > 0) {
+    for (const order of orderResult) {
+      const orderId = order.ouid;
+    
+      // 使用當前訂單的 id 進行查詢
+      const [result] = await db.execute('SELECT  p.* , oi.* , ot.* FROM `order_item` oi LEFT JOIN `product` p ON CONVERT(p.id USING utf8mb4) = CONVERT(oi.product_id USING utf8mb4) LEFT JOIN `order_total` ot ON CONVERT(ot.ouid USING utf8mb4) = CONVERT(oi.ouid USING utf8mb4) WHERE oi.ouid = ?;', [orderId]);
+      if(result != ""){
+        productResult.push(result); // 將查詢結果添加到 productResult 中
+      }
+      
+    }
+  }
+
+  // const [productResult] = await db.execute(`SELECT * FROM order_item WHERE order_id = ?;`,[orderResult[0].id])
+  // return res.json({ status: 'success', data: { orderResult , productResult}  })
+  return res.json({ status: 'success', data: {productResult}})
+  // return res.json({ status: 'success' })
 });
 
 // 註冊 = 檢查資料庫是否有此email及密碼 ,如果沒有 就增加sql
@@ -312,7 +407,7 @@ router.post('/', async (req, res) => {
   }
 
   // return res.json({ status: 'success 2', message: '成功' })
-
+const uNickname = "USER-" + uuid 
   // 先查詢是否已存在該用戶
   const [users] = await db.execute("SELECT * FROM user WHERE email = ?;", [
     newUser.email,
@@ -322,7 +417,7 @@ router.post('/', async (req, res) => {
     return res.json({ status: "error 2", message: "該帳號已存在" });
   } else {
     // 用戶不存在，插入新用戶
-    const [result] = await db.execute('INSERT INTO user (email, uid, password, created_time , valid) VALUES (?, ?, ?, ?, 1);', [newUser.email, uuid, newUser.password, YYYYMMDDTime]);
+    const [result] = await db.execute('INSERT INTO user (nickname , email, uid, password, created_time , valid) VALUES (?, ?, ?, ?, ?, 1);', [uNickname ,newUser.email, uuid, newUser.password, YYYYMMDDTime]);
     // console.log('User inserted:', result);
   }
 

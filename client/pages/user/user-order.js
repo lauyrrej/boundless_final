@@ -5,9 +5,11 @@ import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
 import jamHero from '@/assets/jam-hero.png'
+import NavbarMb from '@/components/common/navbar-mb'
 
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
+import { jwtDecode } from 'jwt-decode'
 
 // icons
 import { IoHome } from 'react-icons/io5'
@@ -44,25 +46,31 @@ export default function Test() {
     avatarImage = `http://localhost:3005/user/avatar_userDefault.jpg`
   }
 
+  let produceTestImage = `/instrument/上低音號/Jupiter_jbr700/jbr700_1.jpg`
+
   // ----------------------會員登入狀態  ----------------------
-  //------獲取使用者jam 名稱 
-  const [UserJAMName , setUserJAMName] = useState({id:'',my_jam:''})
-  const getLoginUserJAMName = async (e) => {
+  
+
+  //------獲取單一使用者全部訂單 
+  const appKey = 'userToken'
+  const [userOrderData, setuserOrderData] = useState([])
+  const getLoginUserOrder = async (e) => {
     // 拿取Token回傳後端驗證狀態
     const Loginusertoken = localStorage.getItem(appKey)
 
     if (!Loginusertoken) {
-      console.error('沒有登入的token 故無法取得使用者樂團名稱。')
+      console.error('沒有登入的token 故無法取得使用者資料。')
       return null
     }
     const userID = jwtDecode(Loginusertoken)
     const id = userID.id
+    // console.log(id)
 
     try {
       const response = await fetch(
-        `http://localhost:3005/api/user/jamname/${id}`,
+        `http://localhost:3005/api/user/order/${id}`,
         {
-          method: 'get',
+          method: 'post',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${Loginusertoken}`,
@@ -70,14 +78,45 @@ export default function Test() {
           body: JSON.stringify(),
         }
       )
-      const LoginUserJAMName = await response.json()
-      setUserJAMName(LoginUserJAMName)
-      // console.log(UserJAMName)
+      const orderDatas = await response.json()
+      // console.log('Response from server:', LoginUserData)
+      // setUserData(LoginUserData)
+      // console.log(LoginUserProfile)
+      
+      // console.log(orderDatas.data)
+      setuserOrderData(orderDatas.data)
+      
+      
       // 在這裡處理後端返回的資料
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error)
     }
   }
+
+  //-------------------------------------------------------------
+  //執行一次，如果有登入，獲得該使用者全部資料寫入userData 狀態
+  useEffect(() => {
+    if (LoginUserData) {
+      getLoginUserOrder()
+    }
+  }, []) 
+  let OrderData = []
+  let i = 0
+  let y = 0
+  
+  useEffect(() => {
+    // 檢查獲得訂單
+    // console.log(userOrderData.productResult[0][0])
+    if(userOrderData.productResult){
+      OrderData = userOrderData
+      // console.log(OrderData.productResult[0][0])
+    }
+    
+  }, [userOrderData]) 
+
+
+  
+  
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -169,47 +208,7 @@ export default function Test() {
           }`}
         >
           {/* 用戶資訊 */}
-          <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
-            <div className="mb-photo-wrapper mb-2">
-              <Image
-                src={avatarImage}
-                alt="user photo mb"
-                fill
-                sizes="(max-width: 150px)"
-              ></Image>
-            </div>
-            <div>{LoginUserData.nickname}</div>
-          </div>
-          <Link
-            className="mm-item"
-            href="/user/user-info"
-            style={{ borderTop: '1px solid #b9b9b9' }}
-          >
-            會員中心
-          </Link>
-          <Link className="mm-item" href="/lesson/lesson-list">
-            探索課程
-          </Link>
-          <Link className="mm-item" href="/instrument/instrument-list">
-            樂器商城
-          </Link>
-          <Link className="mm-item" href="/jam/recruit-list">
-            Let &apos;s JAM!
-          </Link>
-          <Link className="mm-item" href="/article/article-list">
-            樂友論壇
-          </Link>
-          {/*eslint-disable-next-line jsx-a11y/click-events-have-key-events*/}
-          <div
-            onClick={handleLogout}
-            //onclick 要加這個 不然ES會跳沒有給身障人士使用
-            role="presentation"
-            className="mm-item"
-            style={{ color: '#1581cc' }}
-          >
-            登出
-            <ImExit size={20} className="ms-2" />
-          </div>
+          <NavbarMb/>
         </div>
         <div className="row">
           {/* sidebar */}
@@ -249,7 +248,7 @@ export default function Test() {
                   <Link href="/user/user-info">會員資訊</Link>
                 </li>
                 <li key={2}>
-                  <Link href="/user/user-jam">我的樂團</Link>
+                  <Link href={LoginUserData.jamstate == '1' ?  `/jam/recruit-list/${LoginUserData.my_jam}`: `/user/user-jam`}>我的樂團</Link>
                 </li>
                 <li key={3}>
                   <Link href="/user/user-order">我的訂單</Link>
@@ -258,16 +257,7 @@ export default function Test() {
                   <Link href="/user/user-article">我的文章</Link>
                 </li>
                 <li key={5}>
-                  <Link href="/user/user-favorite">我的收藏</Link>
-                </li>
-                <li key={6}>
                   <Link href="/user/user-coupon">我的優惠券</Link>
-                </li>
-                <li key={7}>
-                  <Link href="/user/user-lesson">我的課程</Link>
-                </li>
-                <li key={8}>
-                  <Link href="/user/user-notify">我的訊息</Link>
                 </li>
               </ul>
             </div>
@@ -289,14 +279,20 @@ export default function Test() {
                   }}
                 />
               </div>
-              <Link href={`/jam/recruit-list`} className="sm-item active">
-                團員募集
+              <Link href={`/user/user-info`} className="sm-item ">
+                會員資訊
               </Link>
-              <Link href={`/jam/jam-list`} className="sm-item">
-                活動中的JAM
+              <Link href={LoginUserData.jamstate == '1' ?  `/jam/recruit-list/${LoginUserData.my_jam}`: `/user/user-jam`} className="sm-item ">
+                我的樂團
               </Link>
-              <Link href={`/jam/Q&A`} className="sm-item">
-                什麼是JAM？
+              <Link href={`/user/user-order`} className="sm-item active">
+                我的訂單
+              </Link>
+              <Link href={`/user/user-article`} className="sm-item">
+                我的文章
+              </Link>
+              <Link href={`/user/user-coupon`} className="sm-item ">
+                我的優惠券
               </Link>
             </div>
             {/*  ---------------------- 頂部功能列  ---------------------- */}
@@ -522,54 +518,213 @@ export default function Test() {
                         <div className="user-title-userInfo">我的訂單</div>
                       </div>
                       <div className="user-orderList">
-                        <div className="user-order-item-instrument">
-                          <div className="user-order-item-instrument-leftSide">
+
+
+                        {/* <div className="user-order-item-instrument ">
+                          <div className="user-order-item-instrument-leftSide col-lg-3 col-12">
                             <div className="user-order-item-instrument-leftSide-img">
-                              <img src="" alt="" />
-                            </div>
-                            <div className="user-order-item-instrument-leftSide-btn btn btn-primary">
+                              <Image src={produceTestImage} alt='' priority style={{ borderRadius: 10, padding:5 }} width={150} height={150}></Image>
+                            </div> */}
+                            {/* <div className="user-order-item-instrument-leftSide-btn btn btn-primary">
                               退貨
-                            </div>
-                          </div>
-                          <div className="user-order-item-instrument-detail">
-                            <div className="user-order-item-instrument-detail-row">
+                            </div> */}
+                          {/* </div>
+                          <div className="user-order-item-instrument-detail col-lg-9 col-12">
+                            <div className="user-order-item-instrument-detail-row ">
                               <div className="user-order-item-instrument-detail-row-col-productName">
                                 <p>
                                   <span>商品名稱：</span> YBH_621S X 1
                                 </p>
                               </div>
                             </div>
-                            <div className="user-order-item-instrument-detail-row">
-                              <div className="user-order-item-instrument-detail-row-col">
+                            <div className="user-order-item-instrument-detail-row row">
+                              <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
                                 <h5>訂單編號</h5>
                                 <p>31700023464729</p>
                               </div>
-                              <div className="user-order-item-instrument-detail-row-col">
+                              <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
                                 <h5>購買日期</h5>
                                 <p>2024/01/14</p>
                               </div>
-                              <div className="user-order-item-instrument-detail-row-col ">
+                              <div className="user-order-item-instrument-detail-row-col col-lg-3 col-12">
                                 <h5>付款金額</h5>
                                 <p>$ 72000</p>
                               </div>
                             </div>
-                            <div className="user-order-item-instrument-detail-row">
-                              <div className="user-order-item-instrument-detail-row-col">
+                            <div className="user-order-item-instrument-detail-row row">
+                              <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
                                 <h5>付款方式</h5>
                                 <p>信用卡</p>
                               </div>
-                              <div className="user-order-item-instrument-detail-row-col">
+                              <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
                                 <h5>商品狀態</h5>
                                 <p>配送完成</p>
                               </div>
-                              <div className="user-order-item-instrument-detail-row-col-address">
+                              <div className="user-order-item-instrument-detail-row-col-address col-lg-4 col-5">
                                 <h5>配送地址</h5>
                                 <p>320桃園市中壢區新生路二段421號</p>
                               </div>
                             </div>
                           </div>
+                        </div> */}
+
+
+
+                        {/* {OrderData.productResult ? 
+                        <div className="user-order-item-instrument ">
+                          <div className="user-order-item-instrument-leftSide col-lg-3 col-12">
+                            <div className="user-order-item-instrument-leftSide-img">
+                              <Image src={produceTestImage} alt='' priority style={{ borderRadius: 10, padding:5 }} width={150} height={150}></Image>
+                            </div>
+                           
+                          </div>
+                          <div className="user-order-item-instrument-detail col-lg-9 col-12">
+                            <div className="user-order-item-instrument-detail-row ">
+                              <div className="user-order-item-instrument-detail-row-col-productName">
+                                <p>
+                                  <span>商品名稱：</span> { userOrderData.productResult[0][0].name} {OrderData.productResult[0][0].quantity != 1  ?   "  *  " + OrderData.productResult[0][0].quantity : ''}
+                                </p>
+                                
+                              </div>
+                            </div>
+                            <div className="user-order-item-instrument-detail-row row">
+                              <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
+                                <h5>訂單編號</h5>
+                                <p>{OrderData.productResult[0][0].order_id + 31700023464729}</p>
+                              </div>
+                              <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
+                                <h5>購買日期</h5>
+                                <p>{OrderData.productResult[0][0].onshelf_time}</p>
+                              </div>
+                              <div className="user-order-item-instrument-detail-row-col col-lg-3 col-12">
+                                <h5>付款金額</h5>
+                                <p>{OrderData.productResult[0][0].price * OrderData.productResult[0][0].quantity}</p>
+                              </div>
+                            </div>
+                            <div className="user-order-item-instrument-detail-row row">
+                              <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
+                                <h5>付款方式</h5>
+                                <p>信用卡</p>
+                              </div>
+                              <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
+                                <h5>商品狀態</h5>
+                                <p>{OrderData.productResult[0][0].transportation_state}</p>
+                              </div>
+                              <div className="user-order-item-instrument-detail-row-col-address col-lg-4 col-5">
+                                <h5>配送地址</h5>
+                                <p>{OrderData.productResult[0][0].postcode}{OrderData.productResult[0][0].country}{OrderData.productResult[0][0].township}{OrderData.productResult[0][0].address}</p>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                        <div className="user-order-item-lesson">
+                        : ''} */}
+
+                        {/* {userOrderData.productResult && userOrderData.productResult.map((product, index) => (
+                          <div className="user-order-item-instrument" key={index}>
+                            <div className="user-order-item-instrument-leftSide col-lg-3 col-12">
+                              <div className="user-order-item-instrument-leftSide-img">
+                                <Image src={product.image} alt={product.name} priority style={{ borderRadius: 10, padding:5 }} width={150} height={150}></Image>
+                              </div>
+                              
+                            </div>
+                            <div className="user-order-item-instrument-detail col-lg-9 col-12">
+                              <div className="user-order-item-instrument-detail-row">
+                                <div className="user-order-item-instrument-detail-row-col-productName">
+                                  <p>
+                                    <span>商品名稱：</span> {product[0].name} {product[0].quantity !== 1 ? ` * ${product[0].quantity}` : ''}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="user-order-item-instrument-detail-row row">
+                                <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
+                                  <h5>訂單編號</h5>
+                                  <p>{product.order_id + 31700023464729}</p>
+                                </div>
+                                <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
+                                  <h5>購買日期</h5>
+                                  <p>{product.onshelf_time}</p>
+                                </div>
+                                <div className="user-order-item-instrument-detail-row-col col-lg-3 col-12">
+                                  <h5>付款金額</h5>
+                                  <p>{product.price * product.quantity}</p>
+                                </div>
+                              </div>
+                              <div className="user-order-item-instrument-detail-row row">
+                                <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
+                                  <h5>付款方式</h5>
+                                  <p>信用卡</p>
+                                </div>
+                                <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
+                                  <h5>商品狀態</h5>
+                                  <p>{product.transportation_state}</p>
+                                </div>
+                                <div className="user-order-item-instrument-detail-row-col-address col-lg-4 col-5">
+                                  <h5>配送地址</h5>
+                                  <p>{product.postcode}{product.country}{product.township}{product.address}</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))} */}
+
+
+                        {userOrderData.productResult && userOrderData.productResult.map((productList, index) => (
+                          <div key={index}>
+                          
+                            {productList.map((product, innerIndex) => (
+                              <div className="user-order-item-instrument" key={innerIndex}>
+                                <div className="user-order-item-instrument-leftSide col-lg-3 col-12" style={{paddingTop:25}}>
+                                  <div className="user-order-item-instrument-leftSide-img " >
+                                  
+                                    <Image src={`/smallForOrder/${product.img_small}`} alt={product.name} priority style={{ borderRadius: 10, padding:5 ,height: '100%' , width:"100%", objectFit:'contain'}} width={150} height={150}  ></Image>
+                                  </div>
+                                </div>
+                                <div className="user-order-item-instrument-detail col-lg-9 col-12" style={{paddingTop:15}}>
+                                  <div className="user-order-item-instrument-detail-row">
+                                    <div className="user-order-item-instrument-detail-row-col-productName">
+                                      <p>
+                                        <span>商品名稱：</span> {product.name} {product.quantity !== 1 ? ` * ${product.quantity}` : ''}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <div className="user-order-item-instrument-detail-row row">
+                                    <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
+                                      <h5>訂單編號</h5>
+                                      <p>{product.order_id + 31700023464729}</p>
+                                    </div>
+                                    <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
+                                      <h5>購買日期</h5>
+                                      <p>{product.onshelf_time.split("T")[0]}</p>
+                                    </div>
+                                    <div className="user-order-item-instrument-detail-row-col col-lg-3 col-12">
+                                      <h5>付款金額</h5>
+                                      <p>${product.price * product.quantity}</p>
+                                    </div>
+                                  </div>
+                                  <div className="user-order-item-instrument-detail-row row">
+                                    <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
+                                      <h5>付款方式</h5>
+                                      <p>信用卡</p>
+                                    </div>
+                                    <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
+                                      <h5>商品狀態</h5>
+                                      <p>{product.transportation_state}</p>
+                                    </div>
+                                    <div className="user-order-item-instrument-detail-row-col-address col-lg-4 col-5">
+                                      <h5>配送地址</h5>
+                                      <p>{product.postcode}{product.country}{product.township}{product.address}</p>
+                                    </div>
+                                    
+                                  </div>
+                                  
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                          
+                        ))}
+
+                        {/* <div className="user-order-item-lesson">
                           <div className="user-order-item-lesson-leftSide">
                             <div className="user-order-item-lesson-leftSide-img">
                               <img src="" alt="" />
@@ -607,11 +762,13 @@ export default function Test() {
                               </div>
                             </div>
                           </div>
-                        </div>
+                        </div> */}
+
                       </div>
-                      <div className="user-orderList-pagination">
+
+                      {/* <div className="user-orderList-pagination">
                         <p>待放分頁元件 注意class</p>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>
@@ -732,10 +889,15 @@ export default function Test() {
             /* padding-left: 25px;*/
             display: flex;
             width: 1050px;
-            height: 250px;
+            /*height: 250px;*/
             align-items: center;
             gap: 20px;
             border-bottom: 1px solid var(--body, #b9b9b9);
+
+            @media screen and (max-width: 576px) {
+              flex-direction: column;
+            }
+
 
             .user-order-item-instrument-leftSide {
               /* padding-left: 25px; */
@@ -786,6 +948,11 @@ export default function Test() {
                   width: 700px;
                   padding: 0px 20px 5px 0px;
                   font-size: 20px;
+                  @media screen and (max-width: 576px) {
+                    margin-Left:30px
+                  }
+
+                  
 
                   & span {
                     font-family: 'Noto Sans TC';
@@ -797,21 +964,28 @@ export default function Test() {
                 }
 
                 .user-order-item-instrument-detail-row-col {
-                  width: 200px;
+                  
                   display: flex;
                   padding: 0px 20px 5px 0px;
                   align-items: center;
-
                   display: -webkit-box;
                   -webkit-box-orient: vertical;
                   -webkit-line-clamp: 2;
                   overflow: hidden;
-
                   text-overflow: ellipsis;
+                  @media screen and (max-width: 576px) {
+                    margin-Left:30px
+                  }
+                  
                 }
 
+                
                 .user-order-item-instrument-detail-row-col-address {
-                  width: 800px;
+                  /*width: 800px;*/
+                  padding: 0px 20px 5px 0px;
+                  @media screen and (max-width: 576px) {
+                    margin-Left:30px
+                  }
                   & h5 {
                     font-family: 'Noto Sans TC';
                     font-size: 20px;
@@ -819,6 +993,7 @@ export default function Test() {
                     font-weight: 400;
                     line-height: normal;
                     color: var(--primary-deep, #124365);
+                    
                   }
                 }
               }
