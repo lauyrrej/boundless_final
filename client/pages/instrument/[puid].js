@@ -897,8 +897,6 @@ list-style-type: disc;
 max-width: 390px;
  }
    .sub-Pic-Con{
-        display:flex;
-        justify-content:space-between;
 width:100%;
 {/* margin-top:5px; */}
 padding-top:20px;

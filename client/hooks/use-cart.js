@@ -40,18 +40,22 @@ export function CartProvider({ children }) {
     }
   }
 
-  const addLessonItem = (item) => {
-    const index = items.findIndex((v) => {
-      return v.id == item.id
-    })
 
-    if (index == -1) {
-      const newItem = { ...item, qty: 1 }
-      const newItems = [...items, newItem]
-      setItems(newItems)
-      localStorage.setItem('CartData', JSON.stringify(newItems))
-    }
-  }
+
+   const addLessonItem = (item) => {
+     const index = items.findIndex((v) => {
+       return v.id == item.id
+     })
+
+     if (index == -1) {
+       const newItem = { ...item, qty: 1 }
+       const newItems = [...items, newItem]
+       setItems(newItems)
+       localStorage.setItem('CartData', JSON.stringify(newItems))
+     }
+   }
+    
+
   //在購物車中，移除某商品的id
   const remove = (items, id) => {
     const newItems = items.filter((v, i) => {
