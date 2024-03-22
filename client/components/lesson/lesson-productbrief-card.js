@@ -36,6 +36,7 @@ export default function ProductBriefCard({
     //按按鍵切換狀態
     setcolorChange(!colorChange)
   }
+console.log(id);
 
   // ----------------------加入右上角購物車的功能  ----------------------
 // console.log(id);

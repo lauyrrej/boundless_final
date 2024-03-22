@@ -89,7 +89,7 @@ export default function LessonDetailPage() {
       if (data) {
           setLessonDetail(data)
  
-        console.log(LessonDetail.youwilllike)
+        console.log(LessonDetail.data)
       }
     } catch (e) {
       console.error(e)
@@ -374,7 +374,7 @@ export default function LessonDetailPage() {
 
                               <div className="comment-Like text-end">
                                 <div className="comment-Like-Number">
-                                  {LessonDetail.product_review[index].likes}{' '}
+                                  {LessonDetail.product_review[index].likes}
                                   人覺得有幫助
                                 </div>
                                 {/* Like Icon */}
