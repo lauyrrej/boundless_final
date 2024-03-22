@@ -402,21 +402,21 @@ export default function Test() {
   // 資料排序
   const [dataSort, setDataSort] = useState('latest')
   // ----------------------條件篩選  ----------------------
-  const [filterVisible, setFilterVisible] = useState(false)
-  useEffect(() => {
-    document.addEventListener('click', (e) => {
-      setFilterVisible(false)
-    })
-  }, [])
-  // 阻止事件冒泡造成篩選表單關閉
-  const stopPropagation = (e) => {
-    e.stopPropagation()
-  }
-  // 顯示表單
-  const onshow = (e) => {
-    stopPropagation(e)
-    setFilterVisible(!filterVisible)
-  }
+  // const [filterVisible, setFilterVisible] = useState(false)
+  // useEffect(() => {
+  //   document.addEventListener('click', (e) => {
+  //     setFilterVisible(false)
+  //   })
+  // }, [])
+  // // 阻止事件冒泡造成篩選表單關閉
+  // const stopPropagation = (e) => {
+  //   e.stopPropagation()
+  // }
+  // // 顯示表單
+  // const onshow = (e) => {
+  //   stopPropagation(e)
+  //   setFilterVisible(!filterVisible)
+  // }
   // filter假資料
   const brandData = [
     { id: 1, name: 'YAMAHA' },

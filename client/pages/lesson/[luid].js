@@ -25,6 +25,9 @@ import toast, { Toaster } from 'react-hot-toast'
 // 購物車hook
 import { useCart } from '@/hooks/use-cart'
 
+//日期格式
+import { format } from 'date-fns'
+
 export default function LessonDetailPage() {
   // ----------------------手機版本  ----------------------
   // 主選單
@@ -68,7 +71,8 @@ export default function LessonDetailPage() {
   // 2. router.isReady(布林值)，true代表本元件已完成水合作用(hydration)，可以取得router.query的值
   const router = useRouter()
 
-  const [LessonDetail, setLessonDetail] = useState()
+    const [LessonDetail, setLessonDetail] = useState()
+
 
   // 向伺服器要求資料，設定到狀態中用的函式
   const getLessonDetail = async (luid) => {
@@ -83,8 +87,9 @@ export default function LessonDetailPage() {
       // 設定到state中，觸發重新渲染(re-render)，會進入到update階段
       // 進入狀態前檢查資料類型有值，以避免錯誤
       if (data) {
-        setLessonDetail(data)
-        console.log(LessonDetail.product_review[0].user_img)
+          setLessonDetail(data)
+ 
+        console.log(LessonDetail.youwilllike)
       }
     } catch (e) {
       console.error(e)
@@ -323,10 +328,14 @@ export default function LessonDetailPage() {
                                     <div className="review-Name">
                                       {LessonDetail.product_review[index].name}
                                       <div className="review-Date">
-                                        {
-                                          LessonDetail.product_review[index]
-                                            .created_time
-                                        }
+                                        {format(
+                                          new Date(
+                                            LessonDetail.product_review[
+                                              index
+                                            ].created_time
+                                          ),
+                                          'yyyy-MM-dd HH:mm:ss'
+                                        )}
                                       </div>
                                     </div>
                                     <div className="review-Star">
@@ -363,12 +372,22 @@ export default function LessonDetailPage() {
                                 </div>
                               </div>
 
-                              <div className="comment-Like">
+                              <div className="comment-Like text-end">
                                 <div className="comment-Like-Number">
                                   {LessonDetail.product_review[index].likes}{' '}
                                   人覺得有幫助
                                 </div>
                                 {/* Like Icon */}
+                                <div className="comment-Like-Icon">
+                                  <img
+                                    loading="lazy"
+                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/b33573d1006caa2dd045129e591ff98dd975245bb9b1f9ad55c74a65c6a47d58?"
+                                    className="comment-like-icon-img"
+                                  />
+                                  <div className="comment-Like-Word">
+                                    有幫助
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           ))}
@@ -413,6 +432,8 @@ export default function LessonDetailPage() {
               <ProductCard
                 className="Right-card"
                 id={LessonDetail.data[0].id}
+                average_rating={LessonDetail.data[0].average_rating}
+                review_count={LessonDetail.data[0].review_count}
                 img={LessonDetail.data[0].img}
                 img_small={LessonDetail.data[0].img}
                 type={LessonDetail.data[0].type}
@@ -420,7 +441,7 @@ export default function LessonDetailPage() {
                 name={LessonDetail.data[0].name}
                 homework={LessonDetail.data[0].homework}
                 sales={LessonDetail.data[0].sales}
-                price={LessonDetail.data[0].price}
+                price={LessonDetail.data[0].price.toLocaleString()}
                 discount={LessonDetail.data[0].discount}
                 discount_state={LessonDetail.data[0].discount_state}
                 length={LessonDetail.data[0].length}
@@ -446,8 +467,10 @@ export default function LessonDetailPage() {
                     id={v.id}
                     luid={v.puid}
                     name={v.name}
+                    average_rating={Math.round(v.average_rating)}
+                    review_count={v.review_count}
                     price={v.price}
-                    teacher_id={v.teacher_id}
+                    teacher_name={v.teacher_name}
                     img={v.img}
                     length={v.length}
                     sales={v.sales}
@@ -645,7 +668,7 @@ export default function LessonDetailPage() {
           gap: 10px;
         }
 
-        \ .comment-Like {
+        .comment-Like {
           display: flex;
           justify-content: end;
           gap: 5px;
@@ -656,6 +679,7 @@ export default function LessonDetailPage() {
           border: 1px solid #1581cc;
           gap: 4px;
         }
+
         .more-review {
           justify-content: end;
           display: flex;
