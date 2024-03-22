@@ -24,11 +24,44 @@ import CityCountyData from '@/data/CityCountyData.json'
 import playerData from '@/data/player.json'
 // tiptap
 import { Tiptap } from '@/components/article/tiptapPublish'
+// 會員認證hook
+import { useAuth } from '@/hooks/user/use-auth'
 
 
 export default function Publish() {
   const mySwal = withReactContent(Swal)
   // ----------------------表單  ----------------------
+
+  // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
+  //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
+  const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
+    useAuth()
+  const [userData, setUserData] = useState()
+  //檢查token
+  useEffect(() => {
+    handleLoginStatus()
+    //獲得資料
+    getLoginUserData()
+  }, [])
+  //登出功能
+
+  //檢查是否獲取資料
+  console.log(LoginUserData)
+  //   讀取使用者資料後 定義大頭貼路徑
+  let avatarImage
+  if (LoginUserData.img) {
+    avatarImage = `http://localhost:3005/user/${LoginUserData.img}`
+  } else if (LoginUserData.photo_url) {
+    avatarImage = `${LoginUserData.photo_url}`
+  } else {
+    avatarImage = `/user/avatar_userDefault.jpg`
+  }
+  // 舊版會警告 因為先渲染但沒路徑 bad
+  // const avatarImage = `/user/${LoginUserData.img}`
+  // const avatargoogle = `${LoginUserData.photo_url}`
+  // const avatarDefault = `/user/avatar_userDefault.jpg`
+
+  // ----------------------會員登入狀態  ----------------------
 
   // ---------------------- 標題 ----------------------
   const router = useRouter()
@@ -55,7 +88,7 @@ export default function Publish() {
   }
 
   // 文章分類
-  const [category_id, setCategory] = useState(true)
+  const [category_id, setCategory] = useState('1')
 
   // ---------------------- 文章摘要 ----------------------
   const [descriptionCheck, setDescriptionCheck] = useState(true)
@@ -87,7 +120,7 @@ export default function Publish() {
   }
 
   // 表單送出
-  const sendForm = async (title, category_id, content, file) => {
+  const sendForm = async (title, category_id, content, file, user_id) => {
     if (!checkComplete()) {
       return false
     }
@@ -96,6 +129,7 @@ export default function Publish() {
     formData.append('category_id', category_id)
     formData.append('content', content)
     formData.append('myFile', file)
+    formData.append('user_id', user_id)
 
     // 確認formData內容
     for (let [key, value] of formData.entries()) {
@@ -332,7 +366,7 @@ export default function Publish() {
               </Link>
               <button
                 onClick={() => {
-                  sendForm(title, category_id, content, file)
+                  sendForm(title, category_id, content, file, LoginUserData.id)
                 }}
                 type="button"
                 className="btn btn-primary"
