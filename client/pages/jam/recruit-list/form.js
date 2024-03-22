@@ -658,7 +658,7 @@ export default function Form() {
                 <li>
                   發起的 JAM{' '}
                   <span className={`${styles.point}`}>以一個為限</span>
-                  ，且發起期間<span className={`${styles.point}`}>不得</span>
+                  ，發起後即視為有所屬，<span className={`${styles.point}`}>不得</span>
                   申請他人的 JAM。
                 </li>
                 <li>
