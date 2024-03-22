@@ -15,7 +15,8 @@ import { ImExit } from 'react-icons/im'
 import { IoClose } from 'react-icons/io5'
 import { RiUserSettingsFill } from 'react-icons/ri'
 import Datetime from '@/components/article/datetime'
-
+// 會員認證hook
+import { useAuth } from '@/hooks/user/use-auth'
 export default function Auid() {
   // ----------------------手機版本  ----------------------
   // 主選單
@@ -23,6 +24,38 @@ export default function Auid() {
   const menuMbToggle = () => {
     setShowMenu(!showMenu)
   }
+
+
+  // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
+  //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
+  const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
+    useAuth()
+  const [userData, setUserData] = useState()
+  //檢查token
+  useEffect(() => {
+    handleLoginStatus()
+    //獲得資料
+    getLoginUserData()
+  }, [])
+  //登出功能
+
+  //檢查是否獲取資料
+  console.log(LoginUserData)
+  //   讀取使用者資料後 定義大頭貼路徑
+  let avatarImage
+  if (LoginUserData.img) {
+    avatarImage = `http://localhost:3005/user/${LoginUserData.img}`
+  } else if (LoginUserData.photo_url) {
+    avatarImage = `${LoginUserData.photo_url}`
+  } else {
+    avatarImage = `/user/avatar_userDefault.jpg`
+  }
+  // 舊版會警告 因為先渲染但沒路徑 bad
+  // const avatarImage = `/user/${LoginUserData.img}`
+  // const avatargoogle = `${LoginUserData.photo_url}`
+  // const avatarDefault = `/user/avatar_userDefault.jpg`
+
+  // ----------------------會員登入狀態  ----------------------
 
   // ----------------------要資料  ----------------------
 
@@ -55,6 +88,16 @@ export default function Auid() {
     }
   }
   // 初次渲染"之後(After)"+router.isReady改變時，執行其中程式碼
+
+  // 字串轉HTML格式
+  const [myContent, setMyContent] = useState('')
+  const getContent = (content) => {
+    document.querySelector('.newContent').innerHTML = content
+  }
+  useEffect(() => {
+    setMyContent(getContent(articleDetail.content))
+  }, [articleDetail.content])
+
   useEffect(() => {
     // 如果isReady是true，確保能得到query的值
     if (router.isReady) {
@@ -146,22 +189,27 @@ export default function Auid() {
             {/* 主內容 */}
             <main className="content">
               <div className="d-flex justify-content-end">
-                <Link
-                  href={`/article/article-edit/${auid}`}
-                  className="icon-btn"
-                >
-                  <RiUserSettingsFill
-                    size={30}
-                    style={{ color: 'gray', cursor: 'pointer' }}
-                  />
-                  編輯
-                </Link>
+                {LoginUserData.id === articleDetail.user_id ? (
+                  <Link
+                    href={`/article/article-edit/${auid}`}
+                    className="icon-btn"
+                  >
+                    <RiUserSettingsFill
+                      size={30}
+                      style={{ color: 'gray', cursor: 'pointer' }}
+                    />
+                    編輯
+                  </Link>
+                ) : (''
+                )}
               </div>
               <h1 className="text-center">{articleDetail.title}</h1>
-              <p className="pt-2">{articleDetail.content}</p>
+              <div className='newContent'>
+                {myContent}
+              </div>
               <div className="main-img">
                 <Image
-                  src={`/article/${articleDetail.img}`}
+                  src={`http://localhost:3005/article/${articleDetail.img}`}
                   alt=""
                   className="big-pic object-fit-contain w-100"
                   responsive

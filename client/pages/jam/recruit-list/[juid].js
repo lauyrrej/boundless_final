@@ -3,14 +3,13 @@ import { useRouter } from 'next/router'
 import { debounce } from 'lodash'
 import { useAuth } from '@/hooks/user/use-auth'
 import { useJam } from '@/hooks/use-jam'
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 import Navbar from '@/components/common/navbar'
 import NavbarMb from '@/components/common/navbar-mb'
 import Footer from '@/components/common/footer'
 import MemberInfo from '@/components/jam/member-info'
 import Apply from '@/components/jam/apply'
 import Link from 'next/link'
-import Image from 'next/image'
 import Head from 'next/head'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
@@ -18,13 +17,13 @@ import 'animate.css'
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
-import { ImExit } from 'react-icons/im'
 // scss
 import styles from '@/pages/jam/jam.module.scss'
 
 export default function Info() {
   const router = useRouter()
-  const { setInvalidJam, notEnough, checkCancel, notifyAccept, notifyReject } = useJam()
+  const { setInvalidJam, notEnough, checkCancel, notifyAccept, notifyReject } =
+    useJam()
   // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
   const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
@@ -607,12 +606,6 @@ export default function Info() {
       <Head>
         <title>JAM資訊</title>
       </Head>
-      <Toaster
-        containerStyle={{
-          top: 80,
-          zIndex: 101,
-        }}
-      />
       <Navbar menuMbToggle={menuMbToggle} />
       <div
         className="container position-relative"
@@ -624,7 +617,7 @@ export default function Info() {
             showMenu ? 'menu-mb-show' : ''
           }`}
         >
-          <NavbarMb/>
+          <NavbarMb />
         </div>
         <div className={`${styles.row} row`}>
           {/* 麵包屑 */}
@@ -844,7 +837,10 @@ export default function Info() {
                     </div>
                     {/* -------------------------- 擔任職位 -------------------------- */}
                     <div className={`${styles.formItem} row`}>
-                      <label className={`${styles.itemTitle} col-12 col-sm-2`} htmlFor='myPlayer'>
+                      <label
+                        className={`${styles.itemTitle} col-12 col-sm-2`}
+                        htmlFor="myPlayer"
+                      >
                         擔任職位
                       </label>
                       <div
@@ -855,7 +851,7 @@ export default function Info() {
                           style={{ width: 'auto' }}
                           value={myPlayer}
                           name="myPlayer"
-                          id='myPlayer'
+                          id="myPlayer"
                           disabled={myApplyState ? true : false}
                           onChange={(e) => {
                             setMyPlayer(e.target.value)
@@ -876,7 +872,10 @@ export default function Info() {
                     </div>
                     {/* -------------------------- 想說的話 -------------------------- */}
                     <div className={`${styles.formItem} row`}>
-                      <label className={`${styles.itemTitle} col-12 col-sm-2`} htmlFor='message'>
+                      <label
+                        className={`${styles.itemTitle} col-12 col-sm-2`}
+                        htmlFor="message"
+                      >
                         想說的話
                       </label>
                       <div
@@ -886,7 +885,7 @@ export default function Info() {
                           className={`${styles.textArea} form-control`}
                           placeholder="建議可以提到自己喜歡的音樂、入團動機等，上限150字"
                           name="message"
-                          id='message'
+                          id="message"
                           maxLength={150}
                           disabled={myApplyState ? true : false}
                           onChange={(e) => {
