@@ -1,10 +1,31 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import CartData from '@/data/cart/cart.json'
 import CouponData from '@/data/cart/coupons.json'
+import { useRouter } from 'next/router'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 export const CartContext = createContext()
 
 export function CartProvider({ children }) {
+  const router = useRouter()
+  const mySwal = withReactContent(Swal)
+  const confirmOrderSubmit = () => {
+    mySwal
+      .fire({
+        position: 'center',
+        icon: 'success',
+        iconColor: '#1581cc',
+        title: '結帳成功！',
+        showConfirmButton: false,
+        timer: 2000,
+      })
+      .then(
+        setTimeout(() => {
+          router.push(`/user/user-order`)
+        }, 2000)
+      )
+  }
   let cartData = CartData.map((v) => {
     // if (v.type == 1) {
     //   return { ...v, qty: 1 }
@@ -15,6 +36,7 @@ export function CartProvider({ children }) {
   })
   //加入到購物車的項目
   let [items, setItems] = useState([])
+
 
   useEffect(() => {
     localStorage.setItem('CartData', JSON.stringify(items))
@@ -198,25 +220,6 @@ export function CartProvider({ children }) {
     setinstrumentDiscount(lastInstrumentCoupon)
   }, [])
 
-  // const [name, setName] = useState('')
-  // const [phone, setPhone] = useState('')
-  // const [email, setEmail] = useState('')
-  // const [address, setAddress] = useState('')
-
-  // const UserInfo = (e) => {
-
-  //   let UserInfo = JSON.stringify([
-  //     { Name: name, Phone: phone, Email: email, Address: address },
-  //   ])
-  //   setName(e.target.value)
-  //   setPhone(e.target.value)
-  //   setEmail(e.target.value)
-  //   setAddress(e.target.value)
-  //   // useEffect(() => {
-  //   //   localStorage.setItem('UserInfo', UserInfo)
-  //   // }, [UserInfo])
-  // }
-
   const calcLessonDiscount = () => {
     let total = 0
     total =
@@ -271,6 +274,7 @@ export function CartProvider({ children }) {
         calcTotalItems,
         calcTotalPrice,
         calcTotalDiscount,
+        confirmOrderSubmit,
       }}
     >
       {children}
