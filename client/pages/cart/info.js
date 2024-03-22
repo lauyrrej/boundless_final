@@ -21,6 +21,7 @@ import { FiMinus } from 'react-icons/fi'
 import { useCart } from '@/hooks/use-cart'
 
 import Twzipcode from '@/components/cart/twzipcode'
+import { userAgent } from 'next/server'
 
 export default function Test() {
   //hook
@@ -37,6 +38,10 @@ export default function Test() {
     calcTotalPrice,
   } = useCart()
 
+  const [selected, setSeleted] = useState('credit-card')
+
+  console.log(selected);
+
   //form
   const handleSubmit = (e) => {
     //取消表單預設行為，因為要使用js做進一步檢查
@@ -50,39 +55,48 @@ export default function Test() {
 
   //User-Info Data
 
-  const [name, setName] = useState('')
-  const [phone, setPhone] = useState('')
-  const [email, setEmail] = useState('')
-  const [address, setAddress] = useState('')
+  const [name, setName] = useState(  ()=>{
+    const saveItem = localStorage.getItem('UserInfo')
+    const parseItem = JSON.parse(saveItem)[0].Name
+    return parseItem || ''
+  })
+
+  const [phone, setPhone] = useState(  ()=>{
+    const saveItem = localStorage.getItem('UserInfo')
+    const parseItem = JSON.parse(saveItem)[0].Phone
+    return parseItem || ''})
+  const [email, setEmail] = useState(()=>{
+    const saveItem = localStorage.getItem('UserInfo')
+    const parseItem = JSON.parse(saveItem)[0].Email
+    return parseItem || ''})
+  const [address, setAddress] = useState(()=>{
+    const saveItem = localStorage.getItem('UserInfo')
+    const parseItem = JSON.parse(saveItem)[0].Address
+    return parseItem || ''})
 
   let UserInfo = JSON.stringify([
     { Name: name, Phone: phone, Email: email, Address: address },
   ])
 
+  let UserInfoData = JSON.parse(UserInfo)
 
   useEffect(() => {
     localStorage.setItem('UserInfo', UserInfo)
   }, [UserInfo])
 
 
-let UserInfoData = JSON.parse(UserInfo)
 
-if(typeof window !== 'undefined'){
-    const country = localStorage.getItem('Country')
-    const township = localStorage.getItem('Township')
-    const postcode = localStorage.getItem('Postcode')
-}
+  const country = localStorage.getItem('Country') || ''
+  const township = localStorage.getItem('Township') || ''
+  const postcode = localStorage.getItem('Postcode') || ''
+
 
 const [data, setData] = useState({
-  country: '',
-  township: '',
-  postcode: '',
+  country: country,
+  township: township,
+  postcode: postcode,
 })
 
-
-
-
-console.log(UserInfoData[0].Name);
 
 
   // ----------------------手機版本  ----------------------
@@ -93,22 +107,6 @@ console.log(UserInfoData[0].Name);
   }
 
   // ----------------------假資料  ----------------------
-
-  const [filterVisible, setFilterVisible] = useState(false)
-  useEffect(() => {
-    document.addEventListener('click', (e) => {
-      setFilterVisible(false)
-    })
-  }, [])
-  // 阻止事件冒泡造成篩選表單關閉
-  const stopPropagation = (e) => {
-    e.stopPropagation()
-  }
-  // 顯示表單
-  const onshow = (e) => {
-    stopPropagation(e)
-    setFilterVisible(!filterVisible)
-  }
 
   return (
     <>
@@ -222,7 +220,7 @@ console.log(UserInfoData[0].Name);
                         type="text"
                         className="form-control"
                         id="phone"
-                        value={UserInfo.Phone}
+                        value={UserInfoData[0].Phone}
                         onChange={(e) => setPhone(e.target.value)}
                       />
                     </div>
@@ -239,7 +237,7 @@ console.log(UserInfoData[0].Name);
                         type="text"
                         className="form-control"
                         id="email"
-                        value={UserInfo.Email}
+                        value={UserInfoData[0].Email}
                         onChange={(e) => setEmail(e.target.value)}
                       />
                     </div>
@@ -269,7 +267,7 @@ console.log(UserInfoData[0].Name);
                           type="text"
                           className="form-control"
                           id="addressinfo"
-                          value={UserInfo.Address}
+                          value={UserInfoData[0].Address}
                           onChange={(e) => setAddress(e.target.value)}
                         />
                       </div>
@@ -287,6 +285,11 @@ console.log(UserInfoData[0].Name);
                         id="transfer"
                         value={'transfer'}
                         name="paymethods"
+                        onChange={()=>{
+                          setSeleted('transfer')
+                        }
+                        }
+                        checked = {selected === 'transfer' ? true : false}
                       />
                       <label htmlFor="transfer">轉帳匯款</label>
                     </div>
@@ -297,7 +300,11 @@ console.log(UserInfoData[0].Name);
                         id="credit-card"
                         value={'credit-card'}
                         name="paymethods"
-                        checked={true}
+                        onChange={()=>{
+                          setSeleted('credit-card')
+                        }
+                        }
+                        checked = {selected === 'credit-card' ? true : false}
                       />
                       <label htmlFor="credit-card">信用卡</label>
                       <div className="credit-card-pic">
@@ -319,6 +326,11 @@ console.log(UserInfoData[0].Name);
                         id="mobliepayment"
                         value={'mobliepayment'}
                         name="paymethods"
+                        onChange={()=>{
+                          setSeleted('mobliepayment')
+                        }
+                        }
+                        checked = {selected == 'mobliepayment' ? true : false}
                       />
                       <label htmlFor="mobliepayment">Line Pay</label>
                       <div className="credit-card-pic">
@@ -331,7 +343,8 @@ console.log(UserInfoData[0].Name);
                   <div>
                     <hr />
                   </div>
-                  <div className="row g-3 align-items-center">
+                  {selected === 'credit-card' ? (<>
+                    <div className="row g-3 align-items-center">
                     <label
                       htmlFor="name"
                       className="col-form-label col-sm-2 col-3 h6"
@@ -450,6 +463,23 @@ console.log(UserInfoData[0].Name);
                       />
                     </div>
                   </div>
+                  </>) : ''}
+                  {selected === 'mobliepayment' ? (<>
+                    <div id="type3">
+                      <h1>TYPE 4</h1>
+                      <div class="btn-9">
+                        CLICK
+                      </div>
+                        
+                      <div class="btn-10">
+                        CLICK
+                      </div>
+                        
+                        <div class="btn-11">
+                        CLICK
+                      </div>
+                    </div>
+                  </>) : ''}
                 </div>
               </div>
             </div>
@@ -858,7 +888,7 @@ console.log(UserInfoData[0].Name);
             background-color: #FFF;
             padding: 20px 30px;
             }
-        }
+      }
       `}</style>
     </>
   )

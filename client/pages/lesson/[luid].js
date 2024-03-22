@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
+import NavbarMb from '@/components/common/navbar-mb'
 import Link from 'next/link'
 import Image from 'next/image'
+import Head from 'next/head'
 // icons
 import { IoHome } from 'react-icons/io5'
 import { FaChevronRight } from 'react-icons/fa6'
@@ -15,7 +17,6 @@ import { IoClose } from 'react-icons/io5'
 import { FaHeart } from 'react-icons/fa'
 
 import Card from '@/components/lesson/lesson-card'
-import Card from '@/components/lesson/lesson-card'
 import HoriCard from '@/components/lesson/lesson-card-hori'
 //右半部
 import ProductCard from '@/components/lesson/lesson-productbrief-card'
@@ -25,6 +26,9 @@ import toast, { Toaster } from 'react-hot-toast'
 
 // 購物車hook
 import { useCart } from '@/hooks/use-cart'
+
+//日期格式
+import { format } from 'date-fns'
 
 export default function LessonDetailPage() {
   // ----------------------手機版本  ----------------------
@@ -69,7 +73,8 @@ export default function LessonDetailPage() {
   // 2. router.isReady(布林值)，true代表本元件已完成水合作用(hydration)，可以取得router.query的值
   const router = useRouter()
 
-  const [LessonDetail, setLessonDetail] = useState()
+    const [LessonDetail, setLessonDetail] = useState()
+
 
   // 向伺服器要求資料，設定到狀態中用的函式
   const getLessonDetail = async (luid) => {
@@ -84,9 +89,9 @@ export default function LessonDetailPage() {
       // 設定到state中，觸發重新渲染(re-render)，會進入到update階段
       // 進入狀態前檢查資料類型有值，以避免錯誤
       if (data) {
-        setLessonDetail(data)
-        console.log(LessonDetail.product_review[0].user_img)
-        console.log(LessonDetail.product_review[0].user_img)
+          setLessonDetail(data)
+ 
+        console.log(LessonDetail.data[0].name)
       }
     } catch (e) {
       console.error(e)
@@ -107,12 +112,15 @@ export default function LessonDetailPage() {
 
   console.log(router.query, ' isReady=', router.isReady)
 
-
   const notify = () => toast('{LessonDetail.data[0].name}已加入購物車.')
-
 
   return (
     <>
+      <Head>
+        {LessonDetail && LessonDetail.data.length > 0 && (
+          <title>{LessonDetail.data[0].name}</title>
+        )}
+      </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
@@ -121,40 +129,7 @@ export default function LessonDetailPage() {
             showMenu ? 'menu-mb-show' : ''
           }`}
         >
-          {/* 用戶資訊 */}
-          <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
-            <div className="mb-photo-wrapper mb-2">
-              <Image
-                src="/jam/amazingshow.jpg"
-                alt="user photo mb"
-                fill
-              ></Image>
-            </div>
-            <div>用戶名稱</div>
-          </div>
-          <Link
-            className="mm-item"
-            href="/user"
-            style={{ borderTop: '1px solid #b9b9b9' }}
-          >
-            會員中心
-          </Link>
-          <Link className="mm-item" href="/lesson/lesson-list">
-            探索課程
-          </Link>
-          <Link className="mm-item" href="/instrument/instrument-list">
-            樂器商城
-          </Link>
-          <Link className="mm-item" href="/jam/recruit-list">
-            Let &apos;s JAM!
-          </Link>
-          <Link className="mm-item" href="/article/article-list">
-            樂友論壇
-          </Link>
-          <div className="mm-item" style={{ color: '#1581cc' }}>
-            登出
-            <ImExit size={20} className="ms-2" />
-          </div>
+          <NavbarMb />
         </div>
         <div className="row">
           {/* 麵包屑 */}
@@ -182,7 +157,6 @@ export default function LessonDetailPage() {
               <div>
                 <div className="Left">
                   {/* Product Briefing Area */}
-                  {/* Product Briefing Area */}
                   <div className="prodBriefingArea d-flex">
                     {LessonDetail && LessonDetail.data.length > 0 && (
                       <img
@@ -194,13 +168,13 @@ export default function LessonDetailPage() {
                   </div>
 
                   {/* Mobile version product brief card */}
-
-                  {/* Mobile version product brief card */}
                   <div className="Right-mobile">
-                    <div className="prodBriefing sticky-top">
+                    <div
+                      className="prodBriefing sticky-top"
+                      style={{ zIndex: '20' }}
+                    >
                       {LessonDetail && LessonDetail.data.length > 0 && (
                         <div className="prodMainName">
-                          {LessonDetail.data[0].name} Logic Pro X 從零開始
                           {LessonDetail.data[0].name} Logic Pro X 從零開始
                         </div>
                       )}
@@ -260,10 +234,7 @@ export default function LessonDetailPage() {
                   </div>
 
                   {/* Product Details */}
-                  {/* Product Details */}
                   <div className="detail">
-                    {/* Unit Overview */}
-                    <div className="outline detail-wrapp mt40">
                     {/* Unit Overview */}
                     <div className="outline detail-wrapp mt40">
                       <div className="detail-title">單元一覽</div>
@@ -282,9 +253,6 @@ export default function LessonDetailPage() {
 
                     {/* Target Audience */}
                     <div className="suitable mt40">
-
-                    {/* Target Audience */}
-                    <div className="suitable mt40">
                       <div className="detail-title">適合對象</div>
                       <div className="list">
                         <ul>
@@ -300,8 +268,6 @@ export default function LessonDetailPage() {
                     </div>
 
                     {/* What You Will Learn */}
-
-                    {/* What You Will Learn */}
                     <div className="achievement mt40">
                       <div className="detail-title">你將學到</div>
                       <div className="list">
@@ -313,7 +279,6 @@ export default function LessonDetailPage() {
                               .map((line, index) => (
                                 <li key={index}>{line}</li>
                               ))}
-                        </ul>
                         </ul>
                       </div>
                     </div>
@@ -340,10 +305,14 @@ export default function LessonDetailPage() {
                                     <div className="review-Name">
                                       {LessonDetail.product_review[index].name}
                                       <div className="review-Date">
-                                        {
-                                          LessonDetail.product_review[index]
-                                            .created_time
-                                        }
+                                        {format(
+                                          new Date(
+                                            LessonDetail.product_review[
+                                              index
+                                            ].created_time
+                                          ),
+                                          'yyyy-MM-dd HH:mm:ss'
+                                        )}
                                       </div>
                                     </div>
                                     <div className="review-Star">
@@ -380,12 +349,22 @@ export default function LessonDetailPage() {
                                 </div>
                               </div>
 
-                              <div className="comment-Like">
+                              <div className="comment-Like text-end">
                                 <div className="comment-Like-Number">
-                                  {LessonDetail.product_review[index].likes}{' '}
+                                  {LessonDetail.product_review[index].likes}
                                   人覺得有幫助
                                 </div>
                                 {/* Like Icon */}
+                                <div className="comment-Like-Icon">
+                                  <img
+                                    loading="lazy"
+                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/b33573d1006caa2dd045129e591ff98dd975245bb9b1f9ad55c74a65c6a47d58?"
+                                    className="comment-like-icon-img"
+                                  />
+                                  <div className="comment-Like-Word">
+                                    有幫助
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           ))}
@@ -394,11 +373,9 @@ export default function LessonDetailPage() {
                       <div className="more-review">
                         <div className="more-review-word">更多回饋</div>
                         {/* Icon */}
-                        {/* Icon */}
                       </div>
                     </div>
                   </div>
-                  {/* Instructor Information */}
                   {/* Instructor Information */}
                   <div className="teacher-info mt40">
                     <div className="detail-title">講師資訊</div>
@@ -410,7 +387,6 @@ export default function LessonDetailPage() {
                             src="/課程與師資/teacher_img/teacher_001.jpeg"
                             className="teacherImg"
                             alt="Teacher"
-                            alt="Teacher"
                           />
                         )}
                       </div>
@@ -418,13 +394,12 @@ export default function LessonDetailPage() {
                         <div className="teacher-name">徐歡CheerHsu</div>
                         <div className="teacher-info-detail">
                           本身為全職的音樂工作者，也是Youtuber「倆倆」的音樂影片製作人，擁有近百支以上音樂的MV製作經驗，在2017曾創下台灣Youtube熱門創作者影片的第四名，本身頻道總點閱率也達到一千五百萬成績。對於這方面的學習從不間斷，且已將音樂融入為生活習慣。
-                          本身為全職的音樂工作者，也是Youtuber「倆倆」的音樂影片製作人，擁有近百支以上音樂的MV製作經驗，在2017曾創下台灣Youtube熱門創作者影片的第四名，本身頻道總點閱率也達到一千五百萬成績。對於這方面的學習從不間斷，且已將音樂融入為生活習慣。
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              
+              </div>
             </main>
           </div>
 
@@ -434,6 +409,8 @@ export default function LessonDetailPage() {
               <ProductCard
                 className="Right-card"
                 id={LessonDetail.data[0].id}
+                average_rating={LessonDetail.data[0].average_rating}
+                review_count={LessonDetail.data[0].review_count}
                 img={LessonDetail.data[0].img}
                 img_small={LessonDetail.data[0].img}
                 type={LessonDetail.data[0].type}
@@ -467,8 +444,10 @@ export default function LessonDetailPage() {
                     id={v.id}
                     luid={v.puid}
                     name={v.name}
+                    average_rating={Math.round(v.average_rating)}
+                    review_count={v.review_count}
                     price={v.price}
-                    teacher_id={v.teacher_id}
+                    teacher_name={v.teacher_name}
                     img={v.img}
                     length={v.length}
                     sales={v.sales}
@@ -480,12 +459,26 @@ export default function LessonDetailPage() {
           <div className="detail-title ">猜你喜歡...</div>
           {/* 手機版card-con */}
           <div className="card-con-mobile">
-            <HoriCard />
-            <HoriCard />
-                      <HoriCard />
-                      //FIXME 標題字體小一點
-                      <HoriCard />
-                      //FIXME 標題字體小一點
+            {LessonDetail &&
+              LessonDetail.youwilllike &&
+              LessonDetail.youwilllike
+                .sort((a, b) => b.sales - a.sales) // Sort courses based on sales volume
+                .slice(0, 3) // Get top 3 courses
+                .map((v, i) => (
+                  <HoriCard
+                    key={i}
+                    id={v.id}
+                    luid={v.puid}
+                    name={v.name}
+                    average_rating={Math.round(v.average_rating)}
+                    review_count={v.review_count}
+                    price={v.price}
+                    teacher_name={v.teacher_name}
+                    img={v.img}
+                    length={v.length}
+                    sales={v.sales}
+                  />
+                ))}
           </div>
         </div>
       </div>
@@ -589,29 +582,17 @@ export default function LessonDetailPage() {
           &:hover {
             color: #1581cc;
           }
-          cursor: pointer;
-          transition: 0.3s;
-          &:hover {
-            color: #1581cc;
-          }
         }
 
         /* prodBriefingArea */
-        .prodBriefingArea {
-          width: 660px;
         .prodBriefingArea {
           width: 660px;
           height: 394px;
           padding: 0px;
           border-radius: 10px;
           overflow: hidden;
-          padding: 0px;
-          border-radius: 10px;
-          overflow: hidden;
         }
         .prodImg {
-          padding: 0px;
-
           padding: 0px;
 
           background-color: #ff9595;
@@ -632,19 +613,15 @@ export default function LessonDetailPage() {
         /* detail共用 */
         .detail {
           max-width: 100%;
-        .detail {
-          max-width: 100%;
         }
         .detail-title {
           color: var(--primary-deep, #0d3652);
           font: 700 24px Noto Sans TC, sans-serif;
           margin-bottom: 16px;
-          margin-bottom: 16px;
         }
 
         .list {
           background-color: rgba(185, 185, 185, 0.3);
-          padding: 8px 12px;
           padding: 8px 12px;
         }
 
@@ -653,17 +630,6 @@ export default function LessonDetailPage() {
             /* height: 243px;
           width: 660px; */
           }
-           {
-            /* height: 243px;
-          width: 660px; */
-          }
-        }
-        .outline ul,
-        .suitable ul {
-          list-style-type: disc;
-        }
-        .review-user {
-          margin-left: 10px;
         }
         .outline ul,
         .suitable ul {
@@ -683,9 +649,6 @@ export default function LessonDetailPage() {
           high: 44px;
           border: 1px solid black;
           border-radius: 44px;
-          high: 44px;
-          border: 1px solid black;
-          border-radius: 44px;
         }
         .review-Name {
           display: flex;
@@ -695,29 +658,21 @@ export default function LessonDetailPage() {
           font-style: normal;
           font-weight: 500;
           line-height: normal;
-          color: var(--primary-deep, #124365);
-          font-family: 'Noto Sans TC';
-          font-size: 16px;
-          font-style: normal;
-          font-weight: 500;
-          line-height: normal;
           gap: 10px;
         }
 
-        \ .comment-Like {
-
-        \ .comment-Like {
+        .comment-Like {
           display: flex;
           justify-content: end;
           gap: 5px;
         }
-        .comment-Like-Icon {
         .comment-Like-Icon {
           display: flex;
           border-radius: 3px;
           border: 1px solid #1581cc;
           gap: 4px;
         }
+
         .more-review {
           justify-content: end;
           display: flex;
@@ -734,17 +689,9 @@ export default function LessonDetailPage() {
             /* height: 217px;
           width: 660px; */
           }
-           {
-            /* height: 217px;
-          width: 660px; */
-          }
         }
         .teacher-info-area {
           display: flex;
-           {
-            /* height: 166px;
-          width: 660px; */
-          }
            {
             /* height: 166px;
           width: 660px; */
@@ -753,7 +700,6 @@ export default function LessonDetailPage() {
         .teacher-img-con {
           width: 140px;
           height: 140px;
-          margin: 8px 16px 8px 12px;
           margin: 8px 16px 8px 12px;
         }
         .teacherImg {
@@ -768,15 +714,10 @@ export default function LessonDetailPage() {
 
         .page-control {
         }
-        .page-control {
-        }
 
         /* ------------- */
 
         .you-will-like {
-           {
-            /* height: 508px; */
-          }
            {
             /* height: 508px; */
           }
@@ -787,30 +728,17 @@ export default function LessonDetailPage() {
           padding: 0;
           display: flex;
           justify-content: space-between;
-        .card-con {
-          padding: 0;
-          display: flex;
-          justify-content: space-between;
         }
-        .card-con-mobile {
-          display: block;
-          //TODO
         .card-con-mobile {
           display: block;
           //TODO
         }
         .Right-mobile {
           display: none;
-        .Right-mobile {
-          display: none;
         }
         .you-will-like-mobile {
           display: none;
-        .you-will-like-mobile {
-          display: none;
         }
-        .shoppingBtn {
-          display: none;
         .shoppingBtn {
           display: none;
         }
@@ -862,61 +790,7 @@ export default function LessonDetailPage() {
             font-family: Noto Sans TC, sans-serif;
           }
           /*  */
-         {
-          /* -----------RWD-------------*/
-        }
-        @media screen and (max-width: 576px) {
-          .breadcrumb-wrapper {
-            margin-bottom: 0px;
-          }
-          .Right {
-            display: none;
-          }
-           {
-            /* 手機版productbrief-card */
-          }
-          .prodBriefingArea {
-            width: 100%;
-            height: 204px;
-          }
-          .prodImg {
-            padding: 0px;
 
-            background-color: #ff9595;
-            border-radius: 10px;
-            height: 204px;
-          }
-
-          .Right-mobile {
-            display: block;
-          }
-          .prodBriefing {
-            /* background-color: #ff9595; */
-             {
-              /* margin-left: 110px; */
-            }
-            margin-top: 20px;
-          }
-          .prodMainName {
-            color: var(--dark, #1d1d1d);
-            /* font: 700 40px Noto Sans TC, sans-serif; */
-            font-weight: 700;
-            font-size: 40px;
-          }
-          /*  */
-          .font-family {
-            font-family: Noto Sans TC, sans-serif;
-          }
-          /*  */
-
-          .Rating {
-            justify-content: space-between;
-            display: flex;
-            margin-top: 10px;
-            width: 100%;
-            gap: 20px;
-            font-weight: 400;
-          }
           .Rating {
             justify-content: space-between;
             display: flex;
@@ -933,73 +807,13 @@ export default function LessonDetailPage() {
             gap: 10px;
             white-space: nowrap;
           }
-          .star {
-            justify-content: center;
-            align-items: center;
-            display: flex;
-            gap: 10px;
-            white-space: nowrap;
-          }
 
           .ratingNumber {
             color: var(--yellow, #faad14);
             align-self: stretch;
             font: 24px Noto Sans TC, sans-serif;
           }
-          .ratingNumber {
-            color: var(--yellow, #faad14);
-            align-self: stretch;
-            font: 24px Noto Sans TC, sans-serif;
-          }
 
-          .commentNumber {
-            color: var(--body, #b9b9b9);
-            align-self: stretch;
-            flex-grow: 1;
-            margin: auto 0;
-            font: 16px Noto Sans TC, sans-serif;
-          }
-          .sales {
-            color: var(--secondary, #5a5a5a);
-            margin: auto 0;
-            font: 16px Noto Sans TC, sans-serif;
-          }
-          .productPrice {
-            justify-content: space-between;
-            align-items: center;
-            display: flex;
-            margin-top: 10px;
-            gap: 20px;
-          }
-          .price {
-            color: var(--dark, #1d1d1d);
-            white-space: nowrap;
-            padding: 9px 21px 2px 0;
-            font: 700 28px Noto Sans TC, sans-serif;
-          }
-          .likesIcon {
-            justify-content: center;
-            align-items: center;
-            border-radius: 5px;
-            border: 1px solid var(--body, #b9b9b9);
-            display: flex;
-            aspect-ratio: 1;
-            width: 34px;
-            height: 34px;
-            margin: auto 0;
-            padding: 0 7px;
-          }
-          .likesIcon :hover {
-            background-color: #ffc0cb;
-          }
-          .lengthHomeworkArea {
-            display: flex;
-          }
-          .lengthhomework {
-            justify-content: space-between;
-            display: flex;
-            gap: 5px;
-          }
           .commentNumber {
             color: var(--body, #b9b9b9);
             align-self: stretch;
@@ -1055,35 +869,7 @@ export default function LessonDetailPage() {
           }
           .lessonIntro {
           }
-          .lengthHomeworkWord {
-            font-family: Noto Sans TC, sans-serif;
-            flex-grow: 1;
-          }
-          .lessonIntro {
-          }
 
-          .container {
-            padding-bottom: 20px;
-          }
-          .shoppingBtn {
-            display: flex;
-             {
-              /* margin-top: 20px; */
-            }
-            justify-content: space-evenly;
-            gap: 12px;
-            font-size: 16px;
-            color: var(--white, #fff);
-            font-weight: 700;
-
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: white;
-            padding-bottom: 5px;
-            padding: 26px 0px 30px 0px;
-            z-index: 1200;
-          }
           .container {
             padding-bottom: 20px;
           }
@@ -1132,56 +918,7 @@ export default function LessonDetailPage() {
            {
             /* ---------- */
           }
-          .cartBtn {
-            display: flex;
-            justify-content: center;
-            border-radius: 5px;
-            background-color: var(--body, #b9b9b9);
-            gap: 12px;
-            padding: 8px;
-            margin-left: 5px;
-            width: 100%;
-          }
 
-          .buyBtn {
-            display: flex;
-            justify-content: center;
-            border-radius: 5px;
-            background-color: #18a1ff;
-            gap: 12px;
-            padding: 8px;
-            margin-right: 5px;
-            width: 100%;
-          }
-
-           {
-            /* ---------- */
-          }
-
-           {
-            /* detail-mobile */
-          }
-          .detail {
-            max-width: 100%;
-          }
-          //FIXME
-          .review-content {
-            max-width: 100%;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-          }
-          .you-will-like {
-            display: none;
-          }
-          //FIXME
-          .you-will-like-mobile {
-            display: block;
-          }
-          .card-con-mobile {
-            display: block;
-          }
-          //FIXME
-        }
            {
             /* detail-mobile */
           }

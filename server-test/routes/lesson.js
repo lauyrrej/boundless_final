@@ -40,10 +40,10 @@ router.get('/', async (req, res) => {
 
     // Response
     if (results.length > 0) {
-      res.json(results);
+      res.status(200).json(results);
       console.log(results);
     } else {
-      res.json({ message: '沒有找到相應的資訊' });
+      res.status(404).json({ message: '沒有找到相應的資訊' });
     }
   } catch (error) {
     console.error('發生錯誤：', error);
@@ -60,14 +60,14 @@ router.get('/categories', async (req, res) => {
     );
 
     if (lesson_category) {
-      res.json(lesson_category);
+      res.status(200).json(lesson_category);
       console.log(lesson_category);
     } else {
-      res.json('沒有找到相應的資訊');
+      res.status(404).json('沒有找到相應的資訊');
     }
   } catch (error) {
     console.error('發生錯誤：', error);
-    res.json('發生錯誤');
+    res.status(500).json('Internal server error');
   }
 });
 
@@ -87,13 +87,13 @@ router.get('/category/:category', async (req, res) => {
     let [lessons] = await db.execute(query, queryParams);
 
     if (lessons.length > 0) {
-      res.json(lessons);
+      res.status(200).json(lessons);
     } else {
-      res.json({ message: '沒有找到相應的資訊' });
+      res.status(404).send({ message: '沒有找到相應的資訊' });
     }
   } catch (error) {
     console.error('發生錯誤：', error);
-    res.status(500).json({ error: '發生錯誤' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
@@ -103,15 +103,27 @@ router.get('/:id', async (req, res, next) => {
   console.log(luid);
   try {
     let [data] = await db.execute(
-      'SELECT p.*, pr.*,lc.name as lesson_category_name' +
-        ' FROM `product` AS p ' +
-        ' LEFT JOIN `product_review` AS pr ON p.id = pr.product_id ' +
-        ' LEFT JOIN `lesson_category` AS lc ON p.lesson_category_id = lc.id ' +
-        ' WHERE p.`puid` = ? AND p.`lesson_category_id` IN (' +
-        '   SELECT `lesson_category_id` FROM `product` WHERE `puid` = ?' +
-        ')',
+      'SELECT' +
+        '  p.*, ' +
+        // '  pr.user_id AS pr_user_id, pr.content AS pr_content, pr.likes AS pr_likes, ' +
+        '  lc.name AS lesson_category_name, ' +
+        '  COUNT(pr.product_id) AS review_count, ' +
+        '  AVG(pr.stars) AS average_rating ' +
+        'FROM ' +
+        '  `product` AS p ' +
+        '  LEFT JOIN `product_review` AS pr ON p.id = pr.product_id ' +
+        '  LEFT JOIN `lesson_category` AS lc ON p.lesson_category_id = lc.id ' +
+        'WHERE ' +
+        '  p.`puid` = ? ' +
+        '  AND p.`lesson_category_id` IN ( ' +
+        '    SELECT `lesson_category_id` FROM `product` WHERE `puid` = ? ' +
+        '  ) ' +
+        'GROUP BY ' +
+        '  p.id;',
+
       [luid, luid]
     );
+
     //FIXME sql可以改一下
 
     let [product_review] = await db.execute(
@@ -125,22 +137,31 @@ router.get('/:id', async (req, res, next) => {
       [luid]
     );
 
-    let [youwilllike] = await db.execute(
-      'SELECT p.* FROM `product` AS p ' +
-        'JOIN (SELECT `lesson_category_id` FROM `product` WHERE `puid` = ?) AS sub ' +
-        'ON p.`lesson_category_id` = sub.`lesson_category_id`',
-      [luid]
-    );
+let [youwilllike] = await db.execute(
+  'SELECT p.*, ' +
+    'COUNT(pr.product_id) AS review_count, ' +
+    'AVG(pr.stars) AS average_rating, ' +
+    'ti.name AS teacher_name ' +
+    'FROM `product` AS p ' +
+    'JOIN (SELECT `lesson_category_id` FROM `product` WHERE `puid` = ?) AS sub ' +
+    'ON p.`lesson_category_id` = sub.`lesson_category_id` ' +
+    'JOIN `product_review` AS pr ON p.`id` = pr.`product_id` ' +
+    'JOIN `teacher_info` AS ti ON p.`teacher_id` = ti.`id` ' +
+    'GROUP BY p.id',
+  [luid]
+);
+
 
     if ({ data, product_review, youwilllike }) {
       console.log({ data });
       res.status(200).json({ data, product_review, youwilllike });
     } else {
-      res.status(404).send('Data not found');
+      res.status(404).send('沒有找到相應的資訊');
     }
   } catch (error) {
-    console.error('Database error:', error);
+    console.error('發生錯誤:', error);
     res.status(500).send('Internal server error');
   }
 });
+
 export default router;

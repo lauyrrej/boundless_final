@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
 import jamHero from '@/assets/jam-hero.png'
 import Head from 'next/head'
+import NavbarMb from '@/components/common/navbar-mb'
 
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
+import { jwtDecode } from 'jwt-decode'
 
 // icons
 import { IoHome } from 'react-icons/io5'
@@ -29,6 +32,7 @@ export default function Test() {
     handleLoginStatus()
     //獲得資料
     getLoginUserData()
+    getDatas()
   }, [])
   //登出功能
 
@@ -46,6 +50,52 @@ export default function Test() {
 
   // ----------------------會員登入狀態  ----------------------
 
+  
+    
+
+
+  //-------------------------獲得該文章資料 code來自 article-list
+
+
+  const appKey = 'userToken'
+  const [article, setArticle] = useState([])
+  let datas
+  const getDatas = async () => {
+
+    // 拿取Token回傳後端驗證狀態
+    const Loginusertoken = localStorage.getItem(appKey)
+
+    if (!Loginusertoken) {
+      console.error('沒有登入的token 故無法取得使用者資料。')
+      return null
+    }
+    const userID = jwtDecode(Loginusertoken)
+    const id = userID.id
+
+    // console.log(uid)
+    try {
+      const res = await fetch(`http://localhost:3005/api/user/MyArticle/${id}`,
+      {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+       datas = await res.json()
+      if (datas) {
+        setArticle(datas) // 設定獲取的文章數據到狀態中
+        console.log(datas)
+      }
+      
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  useEffect(() => {
+    console.log(article);
+  }, [article]);
+  
   // ----------------------手機版本  ----------------------
   // 主選單
   const [showMenu, setShowMenu] = useState(false)
@@ -137,47 +187,7 @@ export default function Test() {
           }`}
         >
           {/* 用戶資訊 */}
-          <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
-            <div className="mb-photo-wrapper mb-2">
-              <Image
-                src={avatarImage}
-                alt="user photo mb"
-                fill
-                sizes="(max-width: 150px)"
-              ></Image>
-            </div>
-            <div>{LoginUserData.nickname}</div>
-          </div>
-          <Link
-            className="mm-item"
-            href="/user/user-info"
-            style={{ borderTop: '1px solid #b9b9b9' }}
-          >
-            會員中心
-          </Link>
-          <Link className="mm-item" href="/lesson/lesson-list">
-            探索課程
-          </Link>
-          <Link className="mm-item" href="/instrument/instrument-list">
-            樂器商城
-          </Link>
-          <Link className="mm-item" href="/jam/recruit-list">
-            Let &apos;s JAM!
-          </Link>
-          <Link className="mm-item" href="/article/article-list">
-            樂友論壇
-          </Link>
-          {/*eslint-disable-next-line jsx-a11y/click-events-have-key-events*/}
-          <div
-            onClick={handleLogout}
-            //onclick 要加這個 不然ES會跳沒有給身障人士使用
-            role="presentation"
-            className="mm-item"
-            style={{ color: '#1581cc' }}
-          >
-            登出
-            <ImExit size={20} className="ms-2" />
-          </div>
+          <NavbarMb/>
         </div>
         <div className="row">
           {/* sidebar */}
@@ -217,7 +227,7 @@ export default function Test() {
                   <Link href="/user/user-info">會員資訊</Link>
                 </li>
                 <li key={2}>
-                  <Link href="/user/user-jam">我的樂團</Link>
+                  <Link href={LoginUserData.jamstate == '1' ?  `/jam/recruit-list/${LoginUserData.my_jam}`: `/user/user-jam`}>我的樂團</Link>
                 </li>
                 <li key={3}>
                   <Link href="/user/user-order">我的訂單</Link>
@@ -226,16 +236,7 @@ export default function Test() {
                   <Link href="/user/user-article">我的文章</Link>
                 </li>
                 <li key={5}>
-                  <Link href="/user/user-favorite">我的收藏</Link>
-                </li>
-                <li key={6}>
                   <Link href="/user/user-coupon">我的優惠券</Link>
-                </li>
-                <li key={7}>
-                  <Link href="/user/user-lesson">我的課程</Link>
-                </li>
-                <li key={8}>
-                  <Link href="/user/user-notify">我的訊息</Link>
                 </li>
               </ul>
             </div>
@@ -257,14 +258,20 @@ export default function Test() {
                   }}
                 />
               </div>
-              <Link href={`/jam/recruit-list`} className="sm-item active">
-                團員募集
+              <Link href={`/user/user-info`} className="sm-item ">
+                會員資訊
               </Link>
-              <Link href={`/jam/jam-list`} className="sm-item">
-                活動中的JAM
+              <Link href={LoginUserData.jamstate == '1' ?  `/jam/recruit-list/${LoginUserData.my_jam}`: `/user/user-jam`} className="sm-item ">
+                我的樂團
               </Link>
-              <Link href={`/jam/Q&A`} className="sm-item">
-                什麼是JAM？
+              <Link href={`/user/user-order`} className="sm-item">
+                我的訂單
+              </Link>
+              <Link href={`/user/user-article`} className="sm-item active">
+                我的文章
+              </Link>
+              <Link href={`/user/user-coupon`} className="sm-item">
+                我的優惠券
               </Link>
             </div>
             {/*  ---------------------- 頂部功能列  ---------------------- */}
@@ -489,7 +496,9 @@ export default function Test() {
                       <div className="user-content-top">
                         <div className="user-title-userInfo">我的文章</div>
                         <div className="user-acticle-newBtn btn  btn-primary">
+                        <Link href="http://localhost:3000/article/article-list/article-publish">
                           <div>新文章</div>
+                          </Link>
                         </div>
                       </div>
 
@@ -517,7 +526,9 @@ export default function Test() {
                           </div>
                           <div className="user-acticleList-item-title-btnGroup col-sm-3 col-4 row ">
                             <div className=" btn btn-primary user-acticleList-item-title-newBtn col-sm-5 col-9">
-                              新文章
+                              <Link href="http://localhost:3000/article/article-list/article-publish">
+                                新文章
+                              </Link>
                             </div>
                             <div className=" btn btn-primary user-acticleList-item-title-btn col-sm-5 col-9">
                               刪除
@@ -526,7 +537,8 @@ export default function Test() {
                         </div>
                         <hr />
 
-                        <div className="user-acticleList-item d-flex row mb-2">
+                        {/* 單筆資料初版 */}
+                        {/* <div className="user-acticleList-item d-flex row mb-2">
                           <div className="form-check col-sm-6 col-6 ">
                             <input
                               className="form-check-input user-acticleList-item-acticleCheck"
@@ -538,6 +550,7 @@ export default function Test() {
                               className="form-check-label user-acticleList-item-acticleLabel"
                               htmlFor="user-acticleList-item-acticleCheck"
                             >
+                            {article[0] ? article[0].title : ''} 
                               那些在買七弦吉他前，需要注意的調 Tone
                               撇步！那些在買七弦吉他前，需要注意的調 Tone
                               撇步！那些在買七弦吉他前，需要注意的調 Tone
@@ -560,11 +573,54 @@ export default function Test() {
                             </div>
                           </div>
                         </div>
+
+                        <hr /> */}
+
+                        {article.map((item, index) => (
+                        <div>
+                        <div key={item.id} className="user-acticleList-item d-flex row mb-2">
+                          <div className="form-check col-sm-6 col-6 ">
+                            <input
+                              className="form-check-input user-acticleList-item-acticleCheck"
+                              type="checkbox"
+                              defaultValue=""
+                              id={`user-articleList-item-articleCheck-${index}`}
+                            />
+                            <label
+                              className="form-check-label user-acticleList-item-acticleLabel"
+                              htmlFor={`user-articleList-item-articleCheck-${index}`}
+                            >
+                            {item.title}
+                            </label>
+                          </div>
+                          <div className="user-acticleList-item-time col-sm-2 col-2">
+                          {item.created_time.split("T")[0]}
+                          </div>
+                          <div className="user-acticleList-item-message col-sm-1 col-1 px-2">
+                            10
+                          </div>
+                          <div className="user-acticleList-item-btnGroup col-sm-3 col-4 row ">
+                            <div className="user-acticleList-item-text   col-sm-5 col-9 ">
+                              已發布
+                            </div>
+                            <div className=" btn btn-primary user-acticleList-item-btn col-sm-5 col-9">
+                            <Link
+                              href={`/article/article-edit/${item.auid}`}
+                            >
+                              編輯
+                            </Link>
+                            </div>
+                          </div>                          
+                        </div>
                         <hr />
+                        </div>
+                        ))}
+
+
                       </div>
 
                       <div className="user-orderList-pagination">
-                        <p>待放分頁元件 注意class</p>
+                        {/* <p>待放分頁元件 注意class</p> */}
                       </div>
                     </div>
                   </div>
@@ -870,7 +926,7 @@ export default function Test() {
                 .user-acticleList-item-text {
                   text-align: right;
                   font-size: 20px;
-                  padding: 3px;
+                  padding: 3px;item
                 }
 
                 .user-acticleList-item-btn {

@@ -7,8 +7,12 @@ import toast, { Toaster } from 'react-hot-toast'
 //跳轉頁面
 import Link from 'next/link'
 
+
 export default function ProductBriefCard({
-  id,
+
+    id,
+    average_rating,
+    review_count,
   img,
   img_small,
   type,
@@ -25,14 +29,17 @@ export default function ProductBriefCard({
   addLessonItem = () => {},
   calcTotalItems = () => {},
 }) {
+    
   //收藏按鍵的功能
   const [colorChange, setcolorChange] = useState(false)
   const colorToggle = () => {
     //按按鍵切換狀態
     setcolorChange(!colorChange)
   }
+console.log(id);
 
   // ----------------------加入右上角購物車的功能  ----------------------
+// console.log(id);
 
   //toast
     const notify = () =>
@@ -50,13 +57,13 @@ export default function ProductBriefCard({
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/84522f0e347edba7963eb335fd5301feca031f8d880bba21dd9760a01286c3a5?"
                 className="starImg"
               />
-              <div className="ratingNumber">4.9</div>
-              <div className="commentNumber">(10)</div>
+              <div className="ratingNumber">{Math.round(average_rating)}</div>
+              <div className="commentNumber">({review_count})</div>
             </div>
             <div className="sales">購買人數 {sales}</div>
           </div>
           <div className="productPrice">
-            <div className="price">NT$ {price}</div>
+            <div className="price">NT$ {price.toLocaleString()}</div>
             {/* 收藏功能 */}
             {/* 做好的 onClick*/}
             <div className="likesIcon icon-container ">
@@ -67,14 +74,6 @@ export default function ProductBriefCard({
                 onClick={colorToggle}
               />
             </div>
-            {/* 本來的likesIcon */}
-            {/* <img
-              loading="lazy"
-              src="	https://cdn.builder.io/api/v1/image/assets/TEMP/5e…de89ac321d6dcc6d56fbac40a7d43dfe2cf0ecb15054bd3f?"
-              style={{ color: `${showSidebar ? 'red' : ''}` }}
-              className={`likesIcon ${showSidebar ? 'change-color' : ''}`}
-              onClick={sidebarToggle}
-            /> */}
           </div>
           <div className="lengthHomeworkArea">
             <div className="lengthhomework">
@@ -99,24 +98,25 @@ export default function ProductBriefCard({
             <div
               className="cartBtn"
               onClick={() => {
-                  addLessonItem({
-                      id,
-                      img,
-                      img_small,
-                      type,
-                      lesson_category_id,
-                      name,
-                      homework,
-                      sales,
-                      price,
-                      discount,
-                      discount_state,
-                      length,
-                      info,
-                      onshelf_time,
-                  });
-                  calcTotalItems();// Moved inside the onClick function
-                  notify();
+                addLessonItem({
+                  id,
+                  img,
+                  img_small,
+                  type,
+                  lesson_category_id,
+                  name,
+                  homework,
+                  sales,
+                  price,
+                  discount,
+                  discount_state,
+                  length,
+                  info,
+                  onshelf_time,
+                })
+                calcTotalItems() // Moved inside the onClick function
+                notify()
+                //   console.log(id)
               }}
             >
               <img
@@ -125,7 +125,7 @@ export default function ProductBriefCard({
                 className=""
               />
               <div className="cart">加入購物車</div>
-              <Toaster /> //FIXME吐司跑不出來
+              <Toaster />
             </div>
             <div
               className="buyBtn"
@@ -249,6 +249,11 @@ export default function ProductBriefCard({
             height: 34px;
             margin: auto 0;
             padding: 0 7px;
+            transition: 0.2s;
+            color: #b9b9b9;
+            &:hover {
+              color: #ec3f3f;
+            }
           }
           .likesIcon :hover {
             background-color: #ffc0cb;
@@ -304,7 +309,7 @@ export default function ProductBriefCard({
             cursor: pointer;
             transition: 0.3s;
             &:hover {
-              background-color: #000000;
+              background-color: #1581cc;
             }
           }
         `}

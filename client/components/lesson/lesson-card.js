@@ -31,13 +31,12 @@ export default function CourseCard({
               alt="Course Preview"
               fill
             />
-            <img
+            {/* <img
               loading="lazy"
               src="https://cdn.builder.io/api/v1/image/assets/TEMP/f63b958d31f22ceac9729085dc4ee70e1cc6d5a2dab24fdc0543dd3b1c72eac0?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&"
               alt=""
               className="icon-image"
-            />
-            //FIXME在列表頁上收藏應該可以拿掉？
+            /> */}
           </div>
 
           <section className="course-details">

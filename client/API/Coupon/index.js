@@ -9,12 +9,12 @@ class Coupon {
     this.url = 'coupon/'
   }
 
-  FindAll() {
+  FindAll(userID = 0) {
     return new Promise((resolve, reject) => {
       // 使用 API.Get 方法發送 GET 請求，查詢所有優惠券
       API.Get({
         // 設置完整的請求路徑
-        url: this.url + 'FindAll',
+        url: this.url + 'FindAll' + '/' + userID,
         success: (data) => {
           // 成功回調函式，處理從後端返回的優惠券數據
           const formatted = data.map((i) => {
@@ -28,10 +28,6 @@ class Coupon {
                 // 格式化截止日期時間
                 'YYYY-MM-DD HH:mm:ss'
               ),
-              // onshelf_time: moment(i.onshelf_time).format(
-              //   // 格式化上架日期時間
-              //   'YYYY-MM-DD HH:mm:ss'
-              // ),
             }
           })
           // 解析處理後的優惠券數據
@@ -42,18 +38,39 @@ class Coupon {
       })
     })
   }
+
+  // create
+  Create(
+    p = {
+      user_id: 0,
+      coupon_template_id: 0,
+    }
+  ) {
+    return new Promise((resolve, reject) => {
+      API.Post({
+        // 設置完整的請求路徑
+        url: this.url + 'Create',
+        param: p,
+        success: (data) => resolve(data),
+        fail: (err) => reject(err),
+      })
+    })
+  }
   // 傳參數進來，後端會將id參數valid改成0
   Update(id = 1) {
     return new Promise((resolve, reject) => {
       // 使用 API.Post 方法發送 POST 請求，向後端發送更改優惠券的請求
       API.Post({
         // 設置完整的請求路徑
-        url: this.url + 'Delete',
+        url: this.url + 'Update',
         success: (data) => resolve(data),
         fail: (err) => reject(err),
       })
     })
   }
+
+  // 折價物件:sql-product-type、coupon_ctemplate-id
+  CalcDiscount() {}
 }
 
 export default new Coupon()

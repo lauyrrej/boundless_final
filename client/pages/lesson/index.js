@@ -23,8 +23,6 @@ import BS5Pagination from '@/components/common/pagination.js'
 
 import { useParams } from 'react-router-dom'
 
-import Pagination from '@/components/lesson/pagination.js'
-
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
 
@@ -163,7 +161,7 @@ export default function LessonList({}) {
             console.log(LessonArray)
             
           setLessonArray(pages[currentPage]) // 将分页后的结果传递给 resolve
-          console.log(LessonArray)
+          console.log(pages[currentPage])
         })
         .catch((error) => {
           console.log(error)
@@ -187,7 +185,7 @@ export default function LessonList({}) {
 
   const [data, setData] = useState(LessonArray)
 
-  //-----------------篩選功能 //FIXME
+  //-----------------篩選功能
   // 價格篩選
   //確保 priceLow 和 priceHigh 有被定義後再呼叫 priceRange 函式
   const priceRange = (priceLow, priceHigh) => {
@@ -246,6 +244,27 @@ export default function LessonList({}) {
   }
 
   //-------------------排序功能
+
+  // 手機版排序函数
+  const handleSort = (sortType) => {
+    setDataSort(sortType)
+    // 根据传入的排序类型执行相应的排序操作
+    switch (sortType) {
+      case 'upToDate':
+        sortBySales()
+        break
+      case 'review':
+        sortByRating()
+        break
+      case 'classLength':
+        sortByLength()
+        break
+      default:
+        // 默认排序方式
+        sortBySales()
+        break
+    }
+  }
   //最熱門
   const sortBySales = () => {
     const sortedProducts = [...LessonArray].sort((a, b) => b.sales - a.sales)
@@ -358,6 +377,12 @@ export default function LessonList({}) {
         />
       </div>
       <div className="container position-relative">
+        {/* <NavbarMB
+          menuMbToggle={menuMbToggle}
+          className={`menu-mb d-sm-none d-flex flex-column align-items-center ${
+            showMenu ? 'menu-mb-show' : ''
+          }`}
+        /> */}
         {/* 手機版主選單/navbar */}
         <div
           className={`menu-mb d-sm-none d-flex flex-column align-items-center ${
@@ -382,10 +407,10 @@ export default function LessonList({}) {
           >
             會員中心
           </Link>
-          <Link className="mm-item" href="/lesson/lesson-list">
+          <Link className="mm-item" href="/lesson/lesson">
             探索課程
           </Link>
-          <Link className="mm-item" href="/instrument/instrument-list">
+          <Link className="mm-item" href="/instrument/instrument">
             樂器商城
           </Link>
           <Link className="mm-item" href="/jam/recruit-list">
@@ -411,7 +436,7 @@ export default function LessonList({}) {
                 {/* 分類功能 */}
                 {LessonCategory.map((v, index) => {
                   return (
-                    <Link key={index} href={'/lesson/?category === `${v.id}'}>
+                    <Link key={index} href={'/lesson/?category === ${v.id}'}>
                       <li onClick={() => handleCategoryChange(v.id)}>
                         {v.name}
                       </li>
@@ -424,7 +449,7 @@ export default function LessonList({}) {
 
           {/* 頁面內容 */}
           <div className="col-12 col-sm-10 page-control">
-            {/* 手機版sidebar */}
+            {/* 手機版分類sidebar */}
             <div
               className={`sidebar-mb d-sm-none ${
                 showSidebar ? 'sidebar-mb-show' : ''
@@ -438,21 +463,19 @@ export default function LessonList({}) {
                   }}
                 />
               </div>
-              <Link href={`/lesson`} className="sm-item active">
+              <Link href={`/lesson/?category === 0`} className="sm-item active">
                 全部
               </Link>
               {LessonCategory.map((v, index) => {
                 return (
                   <Link
                     key={index}
-                    href={`/lesson?${v.id}`}
+                    href={`/lesson/?category=${v.id}`}
                     className="sm-item"
-                    onClick={
-                      (() => handleCategoryChange(v.id),
-                      () => {
-                        setShowSidebar(false)
-                      })
-                    }
+                    onClick={() => {
+                      handleCategoryChange(v.id)
+                      setShowSidebar(false)
+                    }}
                   >
                     {v.name}
                   </Link>
@@ -475,21 +498,20 @@ export default function LessonList({}) {
               <div className="top-function-flex">
                 {/*  ---------------------- 搜尋欄  ---------------------- */}
                 <div className="search-sidebarBtn">
-                  {/* ?? */}
                   <div
                     className="d-flex d-sm-none b-btn b-btn-body"
                     role="presentation"
                     style={{ paddingInline: '16px' }}
                     onClick={sidebarToggle}
                   >
-                    選單
+                    課程分類
                   </div>
                   <div className="search input-group">
                     {/* 輸入欄位 */}
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="請輸入關鍵字..."
+                      placeholder="請輸入課程名稱..."
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
                     />
@@ -513,10 +535,12 @@ export default function LessonList({}) {
                         setDataSort(e.target.value)
                       }}
                     >
-                      <option selected value="upToDate">
+                      <option selected value="upToDate" onClick={sortBySales}>
                         最熱門
                       </option>
-                      <option value="review">依評價</option>
+                      <option value="review" onClick={sortByRating}>
+                        依評價
+                      </option>
                       <option value="classLength">依時數</option>
                     </select>
                   </div>
@@ -671,7 +695,7 @@ export default function LessonList({}) {
                               id={v.id}
                               luid={v.puid}
                               name={v.name}
-                              average_rating={averageRating}
+                              average_rating={average_rating}
                               price={v.price}
                               teacher_name={v.teacher_name}
                               img={v.img}
@@ -822,9 +846,14 @@ export default function LessonList({}) {
         @media screen and (max-width: 576px) {
           .content {
             padding-inline: 0;
+            display: flex;
           }
           .hot-lesson {
             display: none;
+          }
+          .lesson-card-group {
+            justify-content: center;
+            gap: 16px;
           }
         }
       `}</style>

@@ -73,6 +73,12 @@ export default function Test() {
     setFilterVisible(!filterVisible)
   }
 
+  let UserInfo = JSON.stringify([
+    { Name: '', Phone: '', Email: '', Address: '' },
+  ])
+  
+
+  localStorage.setItem('UserInfo', UserInfo)
 
   return (
     <>
