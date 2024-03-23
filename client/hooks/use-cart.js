@@ -73,8 +73,6 @@ export function CartProvider({ children }) {
        const newItems = [...items, newItem]
        setItems(newItems)
        localStorage.setItem('CartData', JSON.stringify(newItems))
-     } else {
-      return 0
      }
    }
     
@@ -210,12 +208,23 @@ export function CartProvider({ children }) {
     localStorage.setItem('LessonCoupon', e)
     setLessonDiscount(e)
   }
+  
+  // 抓不到 固定用註冊禮
+  const handleLessonCUIDSelector = (cuid) => {
+    // console.log(cuid)
+    localStorage.setItem('LessonCouponCUID', 18)
+  }
 
   const [instrumentDiscount, setinstrumentDiscount] = useState(0)
 
   const handleInstrumentSelector = (e) => {
     localStorage.setItem('InstrumentCoupon', e)
     setinstrumentDiscount(e)
+  }
+
+  const handleInstrumentCUIDSelector = (cuid) => {
+    // console.log(cuid)
+    localStorage.setItem('InstrumentCouponCUID', 2)
   }
 
   const cartNull = () => {
@@ -226,7 +235,7 @@ export function CartProvider({ children }) {
         padding: '16px',
         color: '#1d1d1d',
       },
-      duration: 3000,
+      duration: 2000,
     })
   }
 
@@ -238,12 +247,12 @@ export function CartProvider({ children }) {
         padding: '16px',
         color: '#1d1d1d',
       },
-      duration: 3000,
+      duration: 2000,
     })
   }
 
-  const notifyBuy = () => {
-    toast.success('商品已加入購物車', {
+  const notifyBuy = (name) => {
+    toast.success(`${name} 已加入購物車`, {
       style: {
         border: '1px solid #666666',
         padding: '16px',
@@ -252,7 +261,7 @@ export function CartProvider({ children }) {
       iconTheme: {
         primary: '#1581cc',
       },
-      duration: 2500,
+      duration: 2000,
     })
   }
 
@@ -299,7 +308,9 @@ export function CartProvider({ children }) {
         lessonCoupons,
         lessonDiscount,
         handleLessonSelector,
+        handleLessonCUIDSelector,
         handleInstrumentSelector,
+        handleInstrumentCUIDSelector,
         addLessonItem,
         addInstrumentItem,
         increment,

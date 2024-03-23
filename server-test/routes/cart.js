@@ -21,11 +21,13 @@ router.post('/form', upload.none(), async (req, res) => {
         transportationstate,
         cartdata,
         orderID,
-        uid
+        uid,
+        LessonCUID,
+        InstrumentCUID,
     } = req.body;
     const newOrderID = parseInt(orderID)
     const newCartData = JSON.parse(cartdata)
-    console.log(uid)
+    console.log(InstrumentCUID)
     // const uuid = JSON.stringify(uid)
 
     const now = new Date().toISOString();
@@ -68,7 +70,10 @@ router.post('/form', upload.none(), async (req, res) => {
             res.status(500).json({ status: 'error', error });
         });
     })
-    
+
+
+    const [resultLessonCUID] = await db.execute(`UPDATE coupon SET valid = 0 WHERE coupon_template_id = ?;`, [LessonCUID]);
+    const [resultInstrumentCUID] = await db.execute(`UPDATE coupon SET valid = 0 WHERE coupon_template_id = ?;`, [InstrumentCUID]);
     
 
 //     const {
