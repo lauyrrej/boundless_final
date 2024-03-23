@@ -208,12 +208,23 @@ export function CartProvider({ children }) {
     localStorage.setItem('LessonCoupon', e)
     setLessonDiscount(e)
   }
+  
+  // 抓不到 固定用註冊禮
+  const handleLessonCUIDSelector = (cuid) => {
+    // console.log(cuid)
+    localStorage.setItem('LessonCouponCUID', 18)
+  }
 
   const [instrumentDiscount, setinstrumentDiscount] = useState(0)
 
   const handleInstrumentSelector = (e) => {
     localStorage.setItem('InstrumentCoupon', e)
     setinstrumentDiscount(e)
+  }
+
+  const handleInstrumentCUIDSelector = (cuid) => {
+    // console.log(cuid)
+    localStorage.setItem('InstrumentCouponCUID', 2)
   }
 
   const cartNull = () => {
@@ -297,7 +308,9 @@ export function CartProvider({ children }) {
         lessonCoupons,
         lessonDiscount,
         handleLessonSelector,
+        handleLessonCUIDSelector,
         handleInstrumentSelector,
+        handleInstrumentCUIDSelector,
         addLessonItem,
         addInstrumentItem,
         increment,
