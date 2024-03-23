@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import Head from 'next/head'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Card from '@/components/instrument/card.js'
@@ -129,7 +130,7 @@ export default function Test({ onSearch }) {
   const [page, setPage] = useState(1)
   const [pageTotal, setPageTotal] = useState(0)
   // 資料排序
-  const [orderby, setOrderby] = useState('ASC')
+  const [orderby, setOrderby] = useState('popular')
   // 條件品牌
   const [brand, setBrand] = useState('all')
   // 條件關鍵字
@@ -146,7 +147,6 @@ export default function Test({ onSearch }) {
 
       query: {
         page: event.selected + 1,
-        orderby: orderby,
         brandSelect: brandSelect,
         priceLow: priceLow,
         priceHigh: priceHigh,
@@ -163,7 +163,6 @@ export default function Test({ onSearch }) {
     // 註: 重新載入資料需要跳至第一頁
     const params = {
       page: 1, // 跳至第一頁
-      orderby: orderby,
       brandSelect: brandSelect,
       priceLow: priceLow,
       priceHigh: priceHigh,
@@ -207,10 +206,20 @@ export default function Test({ onSearch }) {
       // 在這裡處理獲取的資料，例如更新狀態
       setInstrument(datas.instrument)
       setProductCategory(datas.category)
+      // 設定獲取頁數總合
+      setPageTotal(datas.pageTotal)
+      // 設定獲取項目
+      setPage(datas.page)
+      setBrandSelect(datas.brandSelect)
+      setPriceLow(datas.priceLow)
+      setPriceHigh(datas.priceHigh)
+      setKeyword(datas.Keyword)
     } catch (error) {
       console.error('Error fetching data:', error)
     }
   }
+
+
 
   // const getDatassearch = async (params) => {
   //   try {
@@ -232,7 +241,6 @@ export default function Test({ onSearch }) {
     if (router.isReady) {
       // 從router.query得到所有查詢字串參數
       const {
-        orderby,
         page,
         brandSelect,
         priceLow,
@@ -247,7 +255,6 @@ export default function Test({ onSearch }) {
 
       // 設定回所有狀態(注意所有從查詢字串來都是字串類型)，都要給預設值
       setPage(Number(page) || 1)
-      setOrderby(orderby || 'ASC')
       setBrandSelect(brandSelect || 'all')
       setPriceLow(priceLow || '')
       setPriceHigh(priceHigh || '')
@@ -309,8 +316,51 @@ export default function Test({ onSearch }) {
   //       })
   //   })
   // }
+
   //-------------------搜尋功能
   const [data, setData] = useState(instrument)
+
+//-----------------篩選功能 //FIXME
+  // 價格篩選
+  //確保 priceLow 和 priceHigh 有被定義後再呼叫 priceRange 函式
+  // const priceRange = (priceLow, priceHigh) => {
+  //   if (priceLow !== '' && priceHigh !== '') {
+  //     console.log('priceLow:', priceLow)
+  //     console.log('priceHigh:', priceHigh)
+  //     fetch(
+  //       `http://localhost:3005/api/instrument?priceLow=${priceLow}&priceHigh=${priceHigh}`
+  //     )
+  //       .then((response) => response.json()) //在網路請求成功時將回應物件轉換為 JSON 格式，並回傳一個新的 Promise 物件。這個新的 Promise 物件會在 JSON 解析成功後被解析，而且 data 參數會包含解析後的 JSON 資料。
+
+  //       .then((data) => setData(data))
+  //     setIsFiltered(true)
+  //     console.log(data)
+  //   }
+  // }
+
+  // // 課程評價篩選
+  // const scoreState = ['all', '5', '4', '3']
+  // const [score, setScore] = useState('all')
+
+  // // 当选中的星级变化时，筛选商品列表
+  // useEffect(() => {
+  //   //   console.log('当前选择的评分:', score) // 调试日志，查看当前选择的评分
+  //   if (score === 'all') {
+  //     // console.log('显示所有课程')
+  //     setData(instrument)
+  //   } else {
+  //     const scoreNum = parseInt(score, 10)
+  //     // console.log('筛选评分为', scoreNum, '的课程')
+  //     const filtered = instrument.filter(
+  //       (instrument) => Math.round(instrument.average_rating) === scoreNum
+  //     )
+  //     // console.log('筛选结果:', filtered) // 调试日志，查看筛选结果
+  //     setData(filtered)
+  //     setIsFiltered(true)
+  //   }
+  // }, [score, instrument])
+
+
 
   // 在組件中定義 isFiltered 狀態，並提供一個函數來更新它的值
   const [isFiltered, setIsFiltered] = useState(false)
@@ -338,19 +388,87 @@ export default function Test({ onSearch }) {
     const sortedProducts = [...instrument].sort((a, b) => b.sales - a.sales)
     setData(sortedProducts)
     setIsFiltered(true)
+    setOrderby('popular')
   }
   //最高價
   const sortBypriceHigh = () => {
     const sortedProducts = [...instrument].sort((a, b) => b.price - a.price)
     setData(sortedProducts)
     setIsFiltered(true)
+    setOrderby('priceHigh')
   }
   //最低價
   const sortBypriceLow = () => {
     const sortedProducts = [...instrument].sort((a, b) => a.price - b.price)
     setData(sortedProducts)
     setIsFiltered(true)
+    setOrderby('priceLow')
   }
+
+//-------------------渲染分類功能li
+const [InstrumentCategory, setInstrumentCategory] = useState([])
+
+function getInstrumentCategory() {
+  return new Promise((resolve, reject) => {
+    let url = 'http://localhost:3005/api/instrument/categories'
+    fetch(url, {
+      method: 'GET',
+      credentials: 'include',
+    })
+      .then((response) => {
+        return response.json()
+      })
+      .then((result) => {
+        resolve(result)
+        console.log(result)
+        setInstrumentCategory(result)
+      })
+      .catch((error) => {
+        console.log(error)
+        reject()
+      })
+  })
+}
+
+useEffect(() => {
+  getInstrumentCategory()
+}, [])
+
+  //-------------------選定特定分類
+
+  const [selectedCategory, setSelectedCategory] = useState('') // 儲存所選分類
+  function handleCategoryChange(id) {
+    console.log('Clicked on category with ID:', id)
+    // 在這裡執行你的其他邏輯，比如更新狀態
+    // 特別處理「全部」選項
+    if (id === 0) {
+      setSelectedCategory(0) // 使用空字串表示「全部」
+    } else {
+      setSelectedCategory(id)
+    }
+  }
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3005/api/instrument/category/${selectedCategory}`
+        )
+        const data = await response.json()
+        console.log(data)
+
+        setData(data) //連回渲染特定分類課程
+      } catch (error) {
+        console.error('Error fetching products:', error)
+      }
+      setIsFiltered(true)
+    }
+    //当selectedCategory变化时重新获取商品数据
+    if (selectedCategory !== '') {
+      fetchProducts()
+    }
+  }, [selectedCategory])
+
 
   // 設定sidebar下拉狀態
   const [openAccordion, setOpenAccordion] = useState(null)
@@ -374,6 +492,9 @@ export default function Test({ onSearch }) {
 
   return (
     <>
+    <Head>
+      <title>樂器商城</title>
+    </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       <div className="hero d-none d-sm-block">
         <Image
@@ -430,60 +551,62 @@ export default function Test({ onSearch }) {
           <div className="sidebar-wrapper d-none d-sm-block  col-sm-2">
             <div className="sidebar">
               <ul className="d-flex flex-column">
-                <li>
-                  <Link href={`/instrument`}>全部</Link>
-                </li>
-                {productCategory.map((v) => {
-                  return v.parent_id === 0 ? (
-                    <li
-                      className="accordion"
-                      style={{paddingBlock: '15px'}}
-                      id={`accordion${v.name}`}
-                      key={v.id}
+              <li onClick={() => handleCategoryChange(0)}>全部</li>
+      {/* 分類功能 */}
+      {InstrumentCategory.map((v) => {
+        return v.parent_id === 0 ? (
+          <li
+            className="accordion"
+            style={{ paddingBlock: '15px' }}
+            id={`accordion${v.name}`}
+            key={v.id}
+          >
+            <div className="accordion-item">
+              <h2 className="accordion-header">
+                <button
+                  className="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target={`#collapse${v.name}`}
+                  aria-expanded="false"
+                  aria-controls={`collapse${v.name}`}
+                >
+                  {v.name}
+                </button>
+              </h2>
+              <div
+                id={`collapse${v.name}`}
+                className="accordion-collapse collapse"
+                data-bs-parent={`#accordion${v.name}`}
+              >
+                {InstrumentCategory.map((subv) => {
+                  return v.id === subv.parent_id ? (
+                    <div
+                      className="accordion-body d-flex flex-column px-0 pt-3 pb-0"
+                      key={subv.id}
                     >
-                      <div className="accordion-item">
-                        <h2 className="accordion-header">
-                          <button
-                            className="accordion-button collapsed"
-                            type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target={`#collapse${v.name}`}
-                            aria-expanded="false"
-                            aria-controls={`collapse${v.name}`}
-                          >
-                            {v.name}
-                          </button>
-                        </h2>
-                        <div
-                          id={`collapse${v.name}`}
-                          className="accordion-collapse collapse"
-                          data-bs-parent={`#accordion${v.name}`}
-                        >
-                          {productCategory.map((subv) => {
-                            return v.id === subv.parent_id ? (
-                              <div
-                                className="accordion-body d-flex flex-column px-0 pt-3 pb-0"
-                                key={subv.id}
-                              >
-                                <Link
-                                  className="subcategory-link p-2"
-                                  href={`/instrument/${subv.name}`}
-                                >
-                                  {subv.name}
-                                </Link>
-                              </div>
-                            ) : (
-                              ''
-                            )
-                          })}
-                        </div>
-                      </div>
-                    </li>
+                      <Link
+                        className="subcategory-link p-2"
+                        href={`/instrument/?category=${subv.name}`}
+                        onClick={() => {
+                      handleCategoryChange(subv.id)
+                      setShowSidebar(false)
+                    }}
+                      >
+                        {subv.name}
+                      </Link>
+                    </div>
                   ) : (
                     ''
-                  )
+                  );
                 })}
-
+              </div>
+            </div>
+          </li>
+        ) : (
+          ''
+        );
+      })}
                 <li>
                   <Link href={`/instrument/activity`}>活動專區</Link>
                 </li>
@@ -521,7 +644,7 @@ export default function Test({ onSearch }) {
               <Link href={`/instrument`} className="sm-item active">
                 全部
               </Link>
-              {productCategory.map((v) => {
+              {InstrumentCategory.map((v) => {
                 return v.parent_id === 0 ? (
                   <li
                     className="accordion sm-item"
@@ -547,7 +670,7 @@ export default function Test({ onSearch }) {
                         className="accordion-collapse collapse"
                         data-bs-parent={`#accordion${v.name}`}
                       >
-                        {productCategory.map((subv) => {
+                        {InstrumentCategory.map((subv) => {
                           return v.id === subv.parent_id ? (
                             <div
                               className="accordion-body d-flex flex-column px-0 pt-3 pb-0"
@@ -621,13 +744,20 @@ export default function Test({ onSearch }) {
                       name="dataSort"
                       onChange={(e) => {
                         setDataSort(e.target.value)
+                        if(e.target.value == 'popular') {
+                          sortBySales()
+                        } else if (e.target.value == 'priceHigh') {
+                          sortBypriceHigh()
+                        } else if (e.target.value == 'priceLow') {
+                          sortBypriceLow()
+                        }
                       }}
                     >
-                      <option selected value="upToDate">
+                      <option selected={orderby == 'popular' ? true : false} value="popular">
                         最熱銷
                       </option>
-                      <option value="recent">最高價</option>
-                      <option value="recent">最低價</option>
+                      <option selected={orderby == 'priceHigh' ? true : false} value="priceHigh">最高價</option>
+                      <option selected={orderby == 'priceLow' ? true : false} value="priceLow">最低價</option>
                     </select>
                   </div>
                   {/*  ---------------------- 條件篩選  ---------------------- */}
@@ -721,13 +851,15 @@ export default function Test({ onSearch }) {
                                 >
                                   <label className="form-check-label">
                                     <input
-                                      className="form-check-input"
                                       type="radio"
                                       name="score"
                                       value={v}
                                       checked={v === score}
                                       onChange={(e) => {
-                                        setScore(e.target.value)
+                                        const value = e.target.value
+                                        setScore(
+                                          value === 'all' ? 'all' : value
+                                        ) 
                                       }}
                                     />
                                     &nbsp;{v === 'all' ? '全部' : v + '星'}
@@ -781,13 +913,13 @@ export default function Test({ onSearch }) {
                       <FaSortAmountDown size={14} />
                     </div>
 
-                    <div className="sort-item active" onClick={sortBySales}>
+                    <div className={`sort-item ${orderby == 'popular' ? 'active' : ''}`} onClick={sortBySales}>
                       最熱銷
                     </div>
-                    <div className="sort-item" onClick={sortBypriceHigh}>
+                    <div className={`sort-item ${orderby == 'priceHigh' ? 'active' : ''}`} onClick={sortBypriceHigh}>
                       最高價
                     </div>
-                    <div className="sort-item" onClick={sortBypriceLow}>
+                    <div className={`sort-item ${orderby == 'priceLow' ? 'active' : ''}`} onClick={sortBypriceLow}>
                       最低價
                     </div>
                   </div>
@@ -844,8 +976,9 @@ export default function Test({ onSearch }) {
                       img_small,
                       sales,
                     } = v
+                    console.log(v)
                     return (
-                      <div key={id}>
+                      <div className="mb-4" key={id}>
                         <Card
                           id={id}
                           puid={puid}
@@ -875,7 +1008,7 @@ export default function Test({ onSearch }) {
                       sales,
                     } = v
                     return (
-                      <div key={id}>
+                      <div key={id} className="mb-4">
                         <Card
                           id={id}
                           puid={puid}
@@ -885,10 +1018,15 @@ export default function Test({ onSearch }) {
                           category_name={category_name}
                           img_small={img_small}
                           sales={sales}
+                          
                         />
                       </div>
+                      
                     )
+                    console.log(category_name)
                   })}
+             
+
               </div>
             </main>
             <div className="d-flex justify-content-center">
@@ -913,9 +1051,6 @@ export default function Test({ onSearch }) {
           margin-block: 30px;
           gap: 35px;
           flex-wrap: wrap;
-          @media screen and (max-width: 576px) {
-            gap: 15px 10px;
-          }
         }
 
         .hot-instrument-card {
@@ -928,6 +1063,9 @@ export default function Test({ onSearch }) {
           .hot-instrument-card {
             flex-wrap: wrap;
           }
+          .instrument-card-group {
+          gap: 10px;
+        }
           .hot-instrument-card > :global(div) {
             flex-basis: calc(
               40% - 40px

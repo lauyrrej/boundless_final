@@ -169,7 +169,7 @@ export default function RecruitList() {
           padding: '16px',
           color: '#1d1d1d',
         },
-        duration: 3000,
+        duration: 2000,
       })
     } else {
       router.push('/jam/recruit-list/form')

@@ -68,7 +68,6 @@ export function CartProvider({ children }) {
      const index = items.findIndex((v) => {
        return v.id == item.id
      })
-
      if (index == -1) {
        const newItem = { ...item, qty: 1 }
        const newItems = [...items, newItem]
@@ -209,6 +208,12 @@ export function CartProvider({ children }) {
     localStorage.setItem('LessonCoupon', e)
     setLessonDiscount(e)
   }
+  
+  // 抓不到 固定用註冊禮
+  const handleLessonCUIDSelector = (cuid) => {
+    // console.log(cuid)
+    localStorage.setItem('LessonCouponCUID', 18)
+  }
 
   const [instrumentDiscount, setinstrumentDiscount] = useState(0)
 
@@ -217,15 +222,46 @@ export function CartProvider({ children }) {
     setinstrumentDiscount(e)
   }
 
+  const handleInstrumentCUIDSelector = (cuid) => {
+    // console.log(cuid)
+    localStorage.setItem('InstrumentCouponCUID', 2)
+  }
+
   const cartNull = () => {
-    toast('購物車是空的', {
+    toast('購物車是空的哦', {
       icon: 'ℹ️',
       style: {
         border: '1px solid #666666',
         padding: '16px',
         color: '#1d1d1d',
       },
-      duration: 3000,
+      duration: 2000,
+    })
+  }
+
+  const alreadyBought = () => {
+    toast('購物車中已存在該商品', {
+      icon: 'ℹ️',
+      style: {
+        border: '1px solid #666666',
+        padding: '16px',
+        color: '#1d1d1d',
+      },
+      duration: 2000,
+    })
+  }
+
+  const notifyBuy = (name) => {
+    toast.success(`${name} 已加入購物車`, {
+      style: {
+        border: '1px solid #666666',
+        padding: '16px',
+        color: '#1d1d1d',
+      },
+      iconTheme: {
+        primary: '#1581cc',
+      },
+      duration: 2000,
     })
   }
 
@@ -272,7 +308,9 @@ export function CartProvider({ children }) {
         lessonCoupons,
         lessonDiscount,
         handleLessonSelector,
+        handleLessonCUIDSelector,
         handleInstrumentSelector,
+        handleInstrumentCUIDSelector,
         addLessonItem,
         addInstrumentItem,
         increment,
@@ -291,7 +329,8 @@ export function CartProvider({ children }) {
         calcTotalDiscount,
         confirmOrderSubmit,
         cartNull,
-
+        notifyBuy,
+        alreadyBought,
       }}
     >
       {children}

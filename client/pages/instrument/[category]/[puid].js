@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/router'
 import Navbar from '@/components/common/navbar'
+import NavbarMb from '@/components/common/navbar-mb'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -42,7 +43,7 @@ export default function InstrumentDetailPage() {
   }
 
   // ----------------------加入右上角購物車的功能  ----------------------
-  const { addInstrumentItem, increment, decrement, remove } = useCart()
+  const { addInstrumentItem, increment, decrement, remove, notifyBuy } = useCart()
 
   // ----------------------假資料  ----------------------
 
@@ -127,13 +128,15 @@ export default function InstrumentDetailPage() {
       console.error(e)
     }
   }
+  const [price, setPrice] = useState('')
   useEffect(() => {
-    if (InstrumentDetail.name && InstrumentDetail.img) {
+    if (InstrumentDetail.name && InstrumentDetail.img && InstrumentDetail.price) {
       setNameUnderline(InstrumentDetail.name.replaceAll(' ', '_'))
       setImages(InstrumentDetail.img.split(','))
       setSelectedImg(InstrumentDetail.img.split(',')[0])
+      setPrice(InstrumentDetail.price.toLocaleString())
     }
-  }, [InstrumentDetail.name])
+  }, [InstrumentDetail])
 
   // 初次渲染"之後(After)"+router.isReady改變時，執行其中程式碼
   useEffect(() => {
@@ -153,7 +156,26 @@ export default function InstrumentDetailPage() {
   const notify = () => toast('{InstrumentDetail[0].name)}已加入購物車.')
 
   // const quantity = localStorage.getItem('quantity')
+let nameimg 
 
+  if(InstrumentDetail){
+    console.log(InstrumentDetail.category_name)
+    
+    nameimg = `/instrument/${InstrumentDetail.category_name}/${nameUnderline}/${selectedImg}`
+  }else {
+    nameimg ="/instrument/defult.jpg"
+  }
+
+  // console.log(InstrumentDetail.subcategory_name)
+
+// let avatarImage
+//   if (LoginUserData.img) {
+//     avatarImage = `http://localhost:3005/user/${LoginUserData.img}`
+//   } else if (LoginUserData.photo_url) {
+//     avatarImage = `${LoginUserData.photo_url}`
+//   } else {
+//     avatarImage = `http://localhost:3005/user/avatar_userDefault.jpg`
+//   }
   // console.log(quantity)
   return (
     <>
@@ -168,40 +190,7 @@ export default function InstrumentDetailPage() {
             showMenu ? 'menu-mb-show' : ''
           }`}
         >
-          {/* 用戶資訊 */}
-          <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
-            <div className="mb-photo-wrapper mb-2">
-              <Image
-                src="/jam/amazingshow.jpg"
-                alt="user photo mb"
-                fill
-              ></Image>
-            </div>
-            <div>用戶名稱</div>
-          </div>
-          <Link
-            className="mm-item"
-            href="/user"
-            style={{ borderTop: '1px solid #b9b9b9' }}
-          >
-            會員中心
-          </Link>
-          <Link className="mm-item" href="/lesson/lesson-list">
-            探索課程
-          </Link>
-          <Link className="mm-item" href="/instrument/instrument-list">
-            樂器商城
-          </Link>
-          <Link className="mm-item" href="/jam/recruit-list">
-            Let &apos;s JAM!
-          </Link>
-          <Link className="mm-item" href="/article/article-list">
-            樂友論壇
-          </Link>
-          <div className="mm-item" style={{ color: '#1581cc' }}>
-            登出
-            <ImExit size={20} className="ms-2" />
-          </div>
+          <NavbarMb/>
         </div>
         <div className="row">
           {/* 麵包屑 */}
@@ -247,7 +236,7 @@ export default function InstrumentDetailPage() {
                   <div className="pic-Con ">
                     <div className="main-Pic">
                       <img
-                        src={`/instrument/${InstrumentDetail.subcategory_name}/${nameUnderline}/${selectedImg}`}
+                        src={`/instrument/${InstrumentDetail.category_name}/${nameUnderline}/${selectedImg}`}
                         className="h-100 w-100"
                         style={{ objectFit: 'contain' }}
                       />
@@ -274,7 +263,7 @@ export default function InstrumentDetailPage() {
                               }}
                             >
                               <img
-                                src={`/instrument/${InstrumentDetail.subcategory_name}/${nameUnderline}/${v}`}
+                                src={`/instrument/${InstrumentDetail.category_name}/${nameUnderline}/${v}`}
                                 className="img_small w-100 h-100"
                               />
                             </div>
@@ -328,7 +317,7 @@ export default function InstrumentDetailPage() {
                       </div>
                       <div className="productPrice">
                         <div className="price">
-                          NT$ {InstrumentDetail.price}
+                          NT$ {price}
                         </div>
                         <div className="likesIcon icon-container ">
                           <FaHeart
@@ -456,6 +445,7 @@ export default function InstrumentDetailPage() {
               increment={increment}
               decrement={decrement}
               remove={remove}
+              notifyBuy={notifyBuy}
             />
           </div>
         </div>
@@ -549,12 +539,12 @@ export default function InstrumentDetailPage() {
             <div
               className="cart"
               onClick={() => {
-                addLessonItem(v)
+                addInstrumentItem(v)
               }}
             >
               加入購物車
             </div>
-          </div>
+          </div> 
           <div className="buyBtn">
             <div className="buy">立即購買</div>
           </div>
@@ -897,6 +887,8 @@ list-style-type: disc;
 max-width: 390px;
  }
    .sub-Pic-Con{
+        display:flex;
+        justify-content:space-between;
 width:100%;
 {/* margin-top:5px; */}
 padding-top:20px;
@@ -1015,11 +1007,12 @@ display:block;
                       }
                       .shoppingBtn {
                         display: flex;
-                        flex-direction: column;
+                        /* flex-direction: column; */
                         font-size: 16px;
                         color: var(--white, #fff);
                         font-weight: 700;
-
+                        justify-content: space-evenly;
+                        gap: 12px;
                         bottom: 0;
                         left: 0;
                         width: 100%;

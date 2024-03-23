@@ -24,9 +24,17 @@ export default function InstrumentCard({
   //   // )
   //   console.log(categoryName.name)
   const [isDiscount, setIsDiscount] = useState(!!discount)
+  const [toLocalePrice, setToLocalePrice] = useState('')
+  
+  useEffect(() => {
+    if(price){
+      const priceString = price.toLocaleString()
+    setToLocalePrice(priceString)
+    }
+  }, [price])
   return (
     <>
-      <Link href={`/instrument/${puid}`}>
+      <Link href={`/instrument/${category_name}/${puid}`}>
         <div className="product-card">
           <FaHeart
             size={24}
@@ -50,7 +58,7 @@ export default function InstrumentCard({
 
           <div className="product-details">
             <h3 className="product-title">{name}</h3>
-            <p className="product-price">NT${price}</p>
+            <p className="product-price">NT${toLocalePrice}</p>
             <p className="product-sold">已售出 {sales}</p>
           </div>
         </div>

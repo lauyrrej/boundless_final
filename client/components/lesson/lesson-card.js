@@ -7,6 +7,7 @@ import { GoClock } from 'react-icons/go'
 import { MdOutlinePeopleAlt } from 'react-icons/md'
 
 export default function CourseCard({
+    lesson_category_id,
   luid,
   name,
   average_rating,
@@ -21,7 +22,7 @@ export default function CourseCard({
 //   const [isDiscount, setIsDiscount] = useState(!!discount)
   return (
     <>
-      <Link href={`/lesson/${luid}`}>
+      <Link href={`/lesson/${ lesson_category_id}/${luid}`}>
         <article className="course-card">
           <div className="course-image-wrapper">
             <Image

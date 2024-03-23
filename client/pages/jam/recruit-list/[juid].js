@@ -243,7 +243,7 @@ export default function Info() {
           padding: '16px',
           color: '#1d1d1d',
         },
-        duration: 3000,
+        duration: 2000,
       })
       return false
     } else {
