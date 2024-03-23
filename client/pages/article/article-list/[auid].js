@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import Head from 'next/head'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
@@ -24,7 +25,6 @@ export default function Auid() {
   const menuMbToggle = () => {
     setShowMenu(!showMenu)
   }
-
 
   // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
@@ -126,6 +126,9 @@ export default function Auid() {
 
   return (
     <>
+      <Head>
+        <title>{articleDetail.title}</title>
+      </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
@@ -174,14 +177,22 @@ export default function Auid() {
           <div className="breadcrumb-wrapper-ns">
             <ul className="d-flex align-items-center p-0 m-0">
               <IoHome size={20} />
-              <li style={{ marginLeft: '8px' }}>樂友論壇</li>
-              <FaChevronRight />
               <Link href="/article/article-list">
-                <li style={{ marginLeft: '10px' }}>文章資訊</li>
+                <li style={{ marginLeft: '8px' }}>樂友論壇</li>
+              </Link>
+              <FaChevronRight />
+              <Link href={articleDetail.category_name == '技術'
+                    ? '/article/article-list/sharing'
+                    : '/article/article-list/comments'}>
+                <li style={{ marginLeft: '10px' }}>
+                  {articleDetail.category_name == '技術'
+                    ? '技術分享'
+                    : '音樂評論'}
+                </li>
               </Link>
               <FaChevronRight />
               <Link href="/article/article-list">
-                <li style={{ marginLeft: '10px' }}>文章內文</li>
+                <li style={{ marginLeft: '10px' }}>{articleDetail.title}</li>
               </Link>
             </ul>
           </div>
@@ -200,13 +211,12 @@ export default function Auid() {
                     />
                     編輯
                   </Link>
-                ) : (''
+                ) : (
+                  ''
                 )}
               </div>
               <h1 className="text-center">{articleDetail.title}</h1>
-              <div className='newContent'>
-                {myContent}
-              </div>
+              <div className="newContent mb-3">{myContent}</div>
               <div className="main-img">
                 <Image
                   src={`http://localhost:3005/article/${articleDetail.img}`}
@@ -294,6 +304,9 @@ export default function Auid() {
         main {
           padding-left: 55px;
           padding-right: 55px;
+          @media screen and (max-width: 576px) {
+            padding-inline: 10px;
+          }
         }
         h1 {
           padding-top: 5;
