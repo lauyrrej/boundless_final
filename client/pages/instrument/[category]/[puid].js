@@ -1036,11 +1036,12 @@ display:block;
                       }
                       .shoppingBtn {
                         display: flex;
-                        flex-direction: column;
+                        /* flex-direction: column; */
                         font-size: 16px;
                         color: var(--white, #fff);
                         font-weight: 700;
-                      
+                        justify-content: space-evenly;
+                        gap: 12px;
                         bottom: 0;
                         left: 0;
                         width: 100%;

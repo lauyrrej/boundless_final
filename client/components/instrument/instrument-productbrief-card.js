@@ -130,6 +130,8 @@ export default function ProductBriefCard({
             
             </Link>
             
+
+            
           </div>
         </div>
       </div>
@@ -259,14 +261,14 @@ export default function ProductBriefCard({
             display: flex;
             margin-top: 20px;
             justify-content: space-evenly;
-            gap: 80px;
+            gap: 12px;
             font-size: 16px;
             color: var(--white, #fff);
             font-weight: 700;
           }
           .cartBtn {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             border-radius: 5px;
             background-color: var(--body, #b9b9b9);
             gap: 12px;
