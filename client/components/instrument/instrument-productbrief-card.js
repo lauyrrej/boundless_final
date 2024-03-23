@@ -3,6 +3,7 @@ import { FaHeart } from 'react-icons/fa'
 import { FaPlus } from 'react-icons/fa'
 import { FaMinus } from 'react-icons/fa6'
 import { FaStar } from 'react-icons/fa'
+import { useRouter } from 'next/router'
 //收藏的功能
 
 //跳轉頁面
@@ -25,7 +26,7 @@ export default function ProductBriefCard({
     //按按鍵切換狀態
     setcolorChange(!colorChange)
   }
-
+  const router = useRouter()
   // name={InstrumentDetail[0].name}
   // sales={InstrumentDetail[0].sales}
   // price={InstrumentDetail[0].price}
@@ -43,12 +44,21 @@ export default function ProductBriefCard({
           <div className="prodMainName">{data.name}</div>
           <div className="Rating">
             <div className="star">
-              <FaStar size={20} color="#faad14"/>
-              <div className="ratingNumber" style={{color: reviews.length> 0 ? '' : '#666666'}}>
-              {reviews.length > 0 ? (<>{reviews.map((v) => {
-                  let score = 0
-                  return (score = v.stars / reviews.length)
-                })}</>) : '尚無評價'}
+              <FaStar size={20} color="#faad14" />
+              <div
+                className="ratingNumber"
+                style={{ color: reviews.length > 0 ? '' : '#666666' }}
+              >
+                {reviews.length > 0 ? (
+                  <>
+                    {reviews.map((v) => {
+                      let score = 0
+                      return (score = v.stars / reviews.length)
+                    })}
+                  </>
+                ) : (
+                  '尚無評價'
+                )}
               </div>
               <div className="commentNumber">({reviews.length})</div>
             </div>
@@ -67,7 +77,9 @@ export default function ProductBriefCard({
               />
             </div>
           </div>
-          <div className="Intro" style={{textAlign: 'justify'}}>{data.info}</div>
+          <div className="Intro" style={{ textAlign: 'justify' }}>
+            {data.info}
+          </div>
           {/* 數量選擇器 */}
           {/* 庫存等於0時應該顯示 暫無庫存*/}
 
@@ -104,30 +116,48 @@ export default function ProductBriefCard({
           </div>
 
           <div className="shoppingBtn">
-            <div className="cartBtn" role='presentation' onClick={() => {
+            <div
+              className="cartBtn"
+              role="presentation"
+              style={{
+                backgroundColor: data.stock > 0 ? '' : '#666666',
+                cursor: data.stock > 0 ? 'pointer' : 'default',
+              }}
+              onClick={() => {
+                if (data.stock > 0) {
                   addInstrumentItem(data, quantity)
-                }}>
+                  notifyBuy(data.name)
+                }
+              }}
+            >
               <img
                 loading="lazy"
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
                 className="cartIcon"
               />
-              <div
-                className="cart"
-                role="presentation"
-                onClick={() => {
-                  addInstrumentItem(data, quantity)
-                  notifyBuy()
-                }}
-              >
+              <div className="cart" role="presentation">
                 加入購物車
               </div>
             </div>
-            <Link className="buy" href="/cart/check">
-            <div className="buyBtn">
+            <div
+              className="buy"
+              onClick={() => {
+                if (data.stock > 0) {
+                  addInstrumentItem(data, quantity)
+                  router.push('/cart/check')
+                }
+              }}
+            >
+              <div
+                className="buyBtn"
+                style={{
+                  backgroundColor: data.stock > 0 ? '' : '#1581cc',
+                  cursor: data.stock > 0 ? 'pointer' : 'default',
+                }}
+              >
                 立即購買
+              </div>
             </div>
-            </Link>
           </div>
         </div>
       </div>
@@ -273,7 +303,7 @@ export default function ProductBriefCard({
             cursor: pointer;
             transition: 0.3s;
             &:hover {
-              background-color: #000000;
+              background-color: #666666;
             }
           }
           .buyBtn {

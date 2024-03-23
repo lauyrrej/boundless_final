@@ -7,12 +7,10 @@ import toast, { Toaster } from 'react-hot-toast'
 //跳轉頁面
 import Link from 'next/link'
 
-
 export default function ProductBriefCard({
-
-    id,
-    average_rating,
-    review_count,
+  id,
+  average_rating,
+  review_count,
   img,
   img_small,
   type,
@@ -28,22 +26,18 @@ export default function ProductBriefCard({
   onshelf_time,
   addLessonItem = () => {},
   calcTotalItems = () => {},
+  notifyBuy = () => {},
 }) {
-    
   //收藏按鍵的功能
   const [colorChange, setcolorChange] = useState(false)
   const colorToggle = () => {
     //按按鍵切換狀態
     setcolorChange(!colorChange)
   }
-console.log(id);
+  console.log(id)
 
   // ----------------------加入右上角購物車的功能  ----------------------
-// console.log(id);
-
-  //toast
-    const notify = () =>
-      toast(`${name}已加入購物車.`)
+  // console.log(id);
 
   return (
     <>
@@ -115,7 +109,7 @@ console.log(id);
                   onshelf_time,
                 })
                 calcTotalItems() // Moved inside the onClick function
-                notify()
+                notifyBuy(name)
                 //   console.log(id)
               }}
             >
@@ -129,7 +123,7 @@ console.log(id);
             </div>
             <div
               className="buyBtn"
-              onClick={() =>
+              onClick={() => {
                 addLessonItem({
                   id,
                   img,
@@ -146,7 +140,8 @@ console.log(id);
                   info,
                   onshelf_time,
                 })
-              }
+                notifyBuy()
+              }}
             >
               <Link className="buy" href="/cart/check">
                 立即購買
@@ -294,7 +289,7 @@ console.log(id);
             cursor: pointer;
             transition: 0.3s;
             &:hover {
-              background-color: #000000;
+              background-color: #666666;
             }
           }
 

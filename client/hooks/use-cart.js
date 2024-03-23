@@ -73,8 +73,6 @@ export function CartProvider({ children }) {
        const newItems = [...items, newItem]
        setItems(newItems)
        localStorage.setItem('CartData', JSON.stringify(newItems))
-     } else {
-      return 0
      }
    }
     
@@ -226,7 +224,7 @@ export function CartProvider({ children }) {
         padding: '16px',
         color: '#1d1d1d',
       },
-      duration: 3000,
+      duration: 2000,
     })
   }
 
@@ -238,12 +236,12 @@ export function CartProvider({ children }) {
         padding: '16px',
         color: '#1d1d1d',
       },
-      duration: 3000,
+      duration: 2000,
     })
   }
 
-  const notifyBuy = () => {
-    toast.success('商品已加入購物車', {
+  const notifyBuy = (name) => {
+    toast.success(`${name} 已加入購物車`, {
       style: {
         border: '1px solid #666666',
         padding: '16px',
@@ -252,7 +250,7 @@ export function CartProvider({ children }) {
       iconTheme: {
         primary: '#1581cc',
       },
-      duration: 2500,
+      duration: 2000,
     })
   }
 
