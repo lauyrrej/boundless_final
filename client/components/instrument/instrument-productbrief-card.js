@@ -143,6 +143,10 @@ export default function ProductBriefCard({
                 className="cartIcon"
               />
               <div className="cart" role="presentation">
+              <div
+                className="cart"
+                role="presentation"
+              >
                 加入購物車
               </div>
             </div>
@@ -293,15 +297,15 @@ export default function ProductBriefCard({
           .shoppingBtn {
             display: flex;
             margin-top: 20px;
-            justify-content: space-between;
-            gap: 80px;
+            justify-content: space-evenly;
+            gap: 12px;
             font-size: 16px;
             color: var(--white, #fff);
             font-weight: 700;
           }
           .cartBtn {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             border-radius: 5px;
             background-color: var(--body, #b9b9b9);
             gap: 12px;
