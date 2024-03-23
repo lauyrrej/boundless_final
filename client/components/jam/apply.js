@@ -80,7 +80,7 @@ export default function Apply({
           <div className={`${styles.userPhotoWrapper}`}>
             {applier.img ? (
               <Image
-                src={`/user/${applier.img}`}
+                src={`http://localhost:3005/user/${applier.img}`}
                 alt={`${applier.name}'s photo`}
                 width={32}
                 height={32}

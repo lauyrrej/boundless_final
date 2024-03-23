@@ -388,10 +388,11 @@ router.get('/getMyApply/:uid', async (req, res) => {
   // console.log(uid);
   const [datas] = await db
     .execute(
-      'SELECT * FROM `jam_apply` WHERE `valid` = 1 AND `applier_uid` = ? ',
+      'SELECT jam_apply.*, jam.title FROM `jam_apply` JOIN `jam` ON jam.juid = jam_apply.juid WHERE jam_apply.valid = 1 AND jam_apply.applier_uid = ? ',
       [uid]
     )
-    .catch(() => {
+    .catch((error) => {
+      console.log(error);
       return undefined;
     });
   if (datas && datas.length > 0) {
