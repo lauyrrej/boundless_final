@@ -62,10 +62,7 @@ export default function Index() {
             <div
               id="carouselExampleIndicators"
               className="carousel slide"
-              data-bs-ride=""
-              onLoad={() => {
-                document.querySelector('.carousel').setAttribute('data-bs-ride', 'carousel')
-              }}
+              data-bs-ride="carousel"
             >
               <div className="carousel-indicators">
                 <button

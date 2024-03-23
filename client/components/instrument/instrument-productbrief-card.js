@@ -1,8 +1,9 @@
-import { React, useState } from 'react'
+import { React, useEffect, useState } from 'react'
 import { FaHeart } from 'react-icons/fa'
 import { FaPlus } from 'react-icons/fa'
 import { FaMinus } from 'react-icons/fa6'
 import { FaStar } from 'react-icons/fa'
+import { useRouter } from 'next/router'
 //收藏的功能
 
 //跳轉頁面
@@ -14,6 +15,7 @@ export default function ProductBriefCard({
   quantity = 1,
   setQuantity = {},
   addInstrumentItem = () => {},
+  notifyBuy = () => {},
   increment = () => {},
   decrement = () => {},
   remove = () => {},
@@ -24,7 +26,7 @@ export default function ProductBriefCard({
     //按按鍵切換狀態
     setcolorChange(!colorChange)
   }
-
+  const router = useRouter()
   // name={InstrumentDetail[0].name}
   // sales={InstrumentDetail[0].sales}
   // price={InstrumentDetail[0].price}
@@ -35,6 +37,13 @@ export default function ProductBriefCard({
   // ----------------------加入右上角購物車的功能
   const [cartItems, setCartItems] = useState([])
   const [cartCount, setCartCount] = useState(0)
+  const [toLocalePrice, setToLocalePrice] = useState('')
+  useEffect(() => {
+    if(data.price){
+      const priceString = data.price.toLocaleString()
+    setToLocalePrice(priceString)
+    }
+  }, [data])
   return (
     <>
       <div className="Right sticky-top">
@@ -42,19 +51,28 @@ export default function ProductBriefCard({
           <div className="prodMainName">{data.name}</div>
           <div className="Rating">
             <div className="star">
-              <FaStar size={20} color="#faad14"/>
-              <div className="ratingNumber" style={{color: reviews.length> 0 ? '' : '#666666'}}>
-              {reviews.length > 0 ? (<>{reviews.map((v) => {
-                  let score = 0
-                  return (score = v.stars / reviews.length)
-                })}</>) : '尚無評價'}
+              <FaStar size={20} color="#faad14" />
+              <div
+                className="ratingNumber"
+                style={{ color: reviews.length > 0 ? '' : '#666666' }}
+              >
+                {reviews.length > 0 ? (
+                  <>
+                    {reviews.map((v) => {
+                      let score = 0
+                      return (score = v.stars / reviews.length)
+                    })}
+                  </>
+                ) : (
+                  '尚無評價'
+                )}
               </div>
               <div className="commentNumber">({reviews.length})</div>
             </div>
             <div className="sales">已售出 {data.sales}</div>
           </div>
           <div className="productPrice">
-            <div className="price">NT$ {data.price}</div>
+            <div className="price">NT$ {toLocalePrice}</div>
             {/* 收藏功能 */}
             {/* 做好的 onClick*/}
             <div className="likesIcon icon-container ">
@@ -66,13 +84,15 @@ export default function ProductBriefCard({
               />
             </div>
           </div>
-          <div className="Intro" style={{textAlign: 'justify'}}>{data.info}</div>
+          <div className="Intro" style={{ textAlign: 'justify' }}>
+            {data.info}
+          </div>
           {/* 數量選擇器 */}
           {/* 庫存等於0時應該顯示 暫無庫存*/}
 
           <div>
             {data.stock === 0 ? (
-              <h6 className="ms-4 mt-2">暫無庫存</h6>
+              <h5 className="mt-2">暫無庫存</h5>
             ) : (
               <div className="quantitySelector">
                 <div
@@ -103,27 +123,52 @@ export default function ProductBriefCard({
           </div>
 
           <div className="shoppingBtn">
-            <div className="cartBtn" role='presentation' onClick={() => {
+            <div
+              className="cartBtn"
+              role="presentation"
+              style={{
+                backgroundColor: data.stock > 0 ? '' : '#666666',
+                cursor: data.stock > 0 ? 'pointer' : 'default',
+              }}
+              onClick={() => {
+                if (data.stock > 0) {
                   addInstrumentItem(data, quantity)
-                }}>
+                  notifyBuy(data.name)
+                }
+              }}
+            >
               <img
                 loading="lazy"
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
                 className="cartIcon"
               />
+              <div className="cart" role="presentation">
               <div
                 className="cart"
                 role="presentation"
-                
               >
                 加入購物車
               </div>
             </div>
-            <Link className="buy" href="/cart/check">
-            <div className="buyBtn">
+            <div
+              className="buy"
+              onClick={() => {
+                if (data.stock > 0) {
+                  addInstrumentItem(data, quantity)
+                  router.push('/cart/check')
+                }
+              }}
+            >
+              <div
+                className="buyBtn"
+                style={{
+                  backgroundColor: data.stock > 0 ? '' : '#1581cc',
+                  cursor: data.stock > 0 ? 'pointer' : 'default',
+                }}
+              >
                 立即購買
+              </div>
             </div>
-            </Link>
           </div>
         </div>
       </div>
@@ -252,15 +297,15 @@ export default function ProductBriefCard({
           .shoppingBtn {
             display: flex;
             margin-top: 20px;
-            justify-content: space-between;
-            gap: 80px;
+            justify-content: space-evenly;
+            gap: 12px;
             font-size: 16px;
             color: var(--white, #fff);
             font-weight: 700;
           }
           .cartBtn {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             border-radius: 5px;
             background-color: var(--body, #b9b9b9);
             gap: 12px;
@@ -269,7 +314,7 @@ export default function ProductBriefCard({
             cursor: pointer;
             transition: 0.3s;
             &:hover {
-              background-color: #000000;
+              background-color: #666666;
             }
           }
           .buyBtn {

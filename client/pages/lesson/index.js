@@ -338,15 +338,15 @@ export default function LessonList({}) {
   const { category } = useParams() // 从URL参数中获取category值
   const [showHotCourses, setShowHotCourses] = useState(true) // 控制是否显示热门课程部分
 
-  useEffect(() => {
-    //   如果URL中存在category参数，则隱藏热门课程部分
-    if ('category') {
-      setShowHotCourses(false)
-    } else {
-      // 否则顯示热门课程部分
-      setShowHotCourses(true)
-    }
-  }, [category])
+//   useEffect(() => {
+//     //   如果URL中存在category参数，则隱藏热门课程部分
+//     if ('category') {
+//       setShowHotCourses(false)
+//     } else {
+//       // 否则顯示热门课程部分
+//       setShowHotCourses(true)
+//     }
+//   }, [category])
 
 
   return (
@@ -390,7 +390,7 @@ export default function LessonList({}) {
                 {LessonCategory.map((v, index) => {
                   return (
                     <Link key={index} href={'/lesson/?category === ${v.id}'}>
-                      <li onClick={() => handleCategoryChange(v.id)}>
+                      <li  onClick={() => handleCategoryChange(v.id)}>
                         {v.name}
                       </li>
                     </Link>
@@ -635,7 +635,7 @@ export default function LessonList({}) {
             </div>
             {/* 主內容 */}
             <div className="content">
-              {showHotCourses && (
+              {/* {showHotCourses && ( */}
                 <div className="hot-lesson">
                   <h4 className="text-primary">熱門課程</h4>
                   <div className="hot-lesson-card-group">
@@ -650,7 +650,7 @@ export default function LessonList({}) {
                               id={v.id}
                               luid={v.puid}
                               name={v.name}
-                              average_rating={average_rating}
+                              average_rating={v.average_rating}
                               price={v.price}
                               teacher_name={v.teacher_name}
                               img={v.img}
@@ -662,7 +662,7 @@ export default function LessonList({}) {
                       })}
                   </div>
                 </div>
-              )}
+              {/* )} */}
               <hr />
               {/*-------- 列表頁卡片迴圈------- */}
               <div className="lesson-card-group">

@@ -132,6 +132,9 @@ export default function Test() {
   const payment = calcTotalPrice()
   const transportationstate = '運送中'
   const cartData = localStorage.getItem('CartData')
+  const LessonCUID = localStorage.getItem('LessonCouponCUID')
+  const InstrumentCUID = localStorage.getItem('InstrumentCouponCUID')
+  
 
   const sendForm = async (
     username,
@@ -147,6 +150,8 @@ export default function Test() {
     cartData,
     orderID,
     uid,
+    LessonCUID,
+    InstrumentCUID,
   )=>{
     let formData = new FormData()
     formData.append('username', username)
@@ -162,6 +167,9 @@ export default function Test() {
     formData.append('cartdata', cartData)
     formData.append('orderID', orderID)
     formData.append('uid', uid)
+    formData.append('LessonCUID', LessonCUID)
+    formData.append('InstrumentCUID', InstrumentCUID)
+    
 
     const res = await fetch('http://localhost:3005/api/cart/form', {
       method: 'POST',
@@ -388,7 +396,9 @@ export default function Test() {
                           transportationstate,
                           cartData,
                           orderID,
-                          uid
+                          uid,
+                          LessonCUID,
+                          InstrumentCUID
                         )
                         confirmOrderSubmit()
                         localStorage.removeItem('CartData')
@@ -459,6 +469,8 @@ export default function Test() {
                     cartData,
                     orderID,
                     uid,
+                    LessonCUID,
+                    InstrumentCUID
                 )
                 confirmOrderSubmit()
                 localStorage.removeItem('CartData')
