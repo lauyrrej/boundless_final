@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import Head from 'next/head'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Card from '@/components/instrument/card.js'
@@ -129,7 +130,7 @@ export default function Test({ onSearch }) {
   const [page, setPage] = useState(1)
   const [pageTotal, setPageTotal] = useState(0)
   // 資料排序
-  const [orderby, setOrderby] = useState('DESC')
+  const [orderby, setOrderby] = useState('popular')
   // 條件品牌
   const [brand, setBrand] = useState('all')
   // 條件關鍵字
@@ -146,7 +147,6 @@ export default function Test({ onSearch }) {
 
       query: {
         page: event.selected + 1,
-        orderby: orderby,
         brandSelect: brandSelect,
         priceLow: priceLow,
         priceHigh: priceHigh,
@@ -163,7 +163,6 @@ export default function Test({ onSearch }) {
     // 註: 重新載入資料需要跳至第一頁
     const params = {
       page: 1, // 跳至第一頁
-      orderby: orderby,
       brandSelect: brandSelect,
       priceLow: priceLow,
       priceHigh: priceHigh,
@@ -242,7 +241,6 @@ export default function Test({ onSearch }) {
     if (router.isReady) {
       // 從router.query得到所有查詢字串參數
       const {
-        orderby,
         page,
         brandSelect,
         priceLow,
@@ -257,7 +255,6 @@ export default function Test({ onSearch }) {
 
       // 設定回所有狀態(注意所有從查詢字串來都是字串類型)，都要給預設值
       setPage(Number(page) || 1)
-      setOrderby(orderby || 'DESC')
       setBrandSelect(brandSelect || 'all')
       setPriceLow(priceLow || '')
       setPriceHigh(priceHigh || '')
@@ -391,18 +388,21 @@ export default function Test({ onSearch }) {
     const sortedProducts = [...instrument].sort((a, b) => b.sales - a.sales)
     setData(sortedProducts)
     setIsFiltered(true)
+    setOrderby('popular')
   }
   //最高價
   const sortBypriceHigh = () => {
     const sortedProducts = [...instrument].sort((a, b) => b.price - a.price)
     setData(sortedProducts)
     setIsFiltered(true)
+    setOrderby('priceHigh')
   }
   //最低價
   const sortBypriceLow = () => {
     const sortedProducts = [...instrument].sort((a, b) => a.price - b.price)
     setData(sortedProducts)
     setIsFiltered(true)
+    setOrderby('priceLow')
   }
 
 //-------------------渲染分類功能li
@@ -456,6 +456,9 @@ useEffect(() => {
 
   return (
     <>
+    <Head>
+      <title>樂器商城</title>
+    </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       <div className="hero d-none d-sm-block">
         <Image
@@ -703,13 +706,20 @@ useEffect(() => {
                       name="dataSort"
                       onChange={(e) => {
                         setDataSort(e.target.value)
+                        if(e.target.value == 'popular') {
+                          sortBySales()
+                        } else if (e.target.value == 'priceHigh') {
+                          sortBypriceHigh()
+                        } else if (e.target.value == 'priceLow') {
+                          sortBypriceLow()
+                        }
                       }}
                     >
-                      <option selected value="upToDate">
+                      <option selected={orderby == 'popular' ? true : false} value="popular">
                         最熱銷
                       </option>
-                      <option value="recent">最高價</option>
-                      <option value="recent">最低價</option>
+                      <option selected={orderby == 'priceHigh' ? true : false} value="priceHigh">最高價</option>
+                      <option selected={orderby == 'priceLow' ? true : false} value="priceLow">最低價</option>
                     </select>
                   </div>
                   {/*  ---------------------- 條件篩選  ---------------------- */}
@@ -865,13 +875,13 @@ useEffect(() => {
                       <FaSortAmountDown size={14} />
                     </div>
 
-                    <div className="sort-item active" onClick={sortBySales}>
+                    <div className={`sort-item ${orderby == 'popular' ? 'active' : ''}`} onClick={sortBySales}>
                       最熱銷
                     </div>
-                    <div className="sort-item" onClick={sortBypriceHigh}>
+                    <div className={`sort-item ${orderby == 'priceHigh' ? 'active' : ''}`} onClick={sortBypriceHigh}>
                       最高價
                     </div>
-                    <div className="sort-item" onClick={sortBypriceLow}>
+                    <div className={`sort-item ${orderby == 'priceLow' ? 'active' : ''}`} onClick={sortBypriceLow}>
                       最低價
                     </div>
                   </div>

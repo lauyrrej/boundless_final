@@ -437,13 +437,19 @@ export default function UserJam() {
                       ※ 非招募中、已取消的申請資料不會列出。
                     </div>
 
-                    <div className="user-notifyList ">
+                    <div className="user-notifyList">
                       <div className="user-notifyList-item row flex-nowrap">
                         <div
-                          className="fw-medium text-center col-3"
+                          className="fw-medium text-center col-1"
                           style={{ color: '#124365', paddingInline: '0' }}
                         >
                           樂團連結
+                        </div>
+                        <div
+                          className="fw-medium text-center col-4"
+                          style={{ color: '#124365', paddingInline: '0' }}
+                        >
+                          主旨
                         </div>
                         <div
                           className="fw-medium text-center col-3"
@@ -458,7 +464,7 @@ export default function UserJam() {
                           審核狀態
                         </div>
                         <div
-                          className="fw-medium text-center col-3"
+                          className="fw-medium text-center col-1"
                           style={{ color: '#124365', paddingInline: '0' }}
                         >
                           操作
@@ -466,14 +472,14 @@ export default function UserJam() {
                       </div>
                       <hr style={{ color: '#124365', marginInline: '0' }} />
                       {myApply.map((v) => {
-                        console.log(v)
+                        {/* console.log(v) */}
                         return (
                           <div
                             className="user-notifyList-item row flex-nowrap my-3"
                             key={v.id}
                           >
                             <div
-                              className="d-flex justify-content-center col-3"
+                              className="d-flex justify-content-center col-1"
                               style={{ color: '#124365', paddingInline: '0' }}
                             >
                               <Link
@@ -483,6 +489,12 @@ export default function UserJam() {
                               >
                                 <FaExternalLinkAlt />
                               </Link>
+                            </div>
+                            <div
+                              className="text-center col-4"
+                              style={{ paddingInline: '0' }}
+                            >
+                              {v.title}
                             </div>
                             <div
                               className="text-center col-3"
@@ -497,7 +509,7 @@ export default function UserJam() {
                               {switchSentence(v.state)}
                             </div>
                             <div
-                              className="d-flex justify-content-center col-3"
+                              className="d-flex justify-content-center col-1"
                               style={{ color: '#124365', paddingInline: '0' }}
                             >
                               {switchOption(

@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <>
       <footer className="d-flex align-items-center justify-content-center">
-        Copyright © 2023 Boundless. All rights reserved.
+        Copyright © 2024 Boundless. All rights reserved.
       </footer>
 
       <style jsx>

@@ -82,7 +82,7 @@ export default function Navbar({ menuMbToggle }) {
 
   return (
     <>
-    <Toaster
+      <Toaster
         containerStyle={{
           top: 80,
           zIndex: 101,
@@ -124,8 +124,11 @@ export default function Navbar({ menuMbToggle }) {
             >
               <div className="cart">
                 <IoCart size={30} className="cart-icon" />
-
-                <span className="button__badge">{calcTotalItems()}</span>
+                {calcTotalItems() == 0 ? (
+                  ''
+                ) : (
+                  <span className="button__badge">{calcTotalItems()}</span>
+                )}
               </div>
             </li>
             <li className="login-state d-flex justify-content-center">
@@ -161,18 +164,26 @@ export default function Navbar({ menuMbToggle }) {
           </ul>
           {/* 手機版 navbar */}
           <div className="navbar-mb d-lg-none d-flex justify-content-end align-items-center">
-            <div className="p-0 me-3 cart-icon" onClick={() => {
+            <div
+              className="p-0 me-3 cart-icon"
+              onClick={() => {
                 const haveCart = localStorage.getItem('CartData')
                 const trueCart = JSON.parse(haveCart)
+                console.log(trueCart)
                 if (trueCart.length > 0) {
                   router.push(`/cart/check`)
                 } else {
                   cartNull()
                 }
-              }}>
+              }}
+            >
               <div className="cart">
                 <IoCart size={30} className="cart-icon" />
-                <span className="button__badge">{calcTotalItems()}</span>
+                {calcTotalItems() == 0 ? (
+                  ''
+                ) : (
+                  <span className="button__badge">{calcTotalItems()}</span>
+                )}
               </div>
             </div>
 
