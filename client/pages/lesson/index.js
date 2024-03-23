@@ -117,20 +117,6 @@ export default function LessonList({}) {
 
   const [priceLow, setPriceLow] = useState('')
   const [priceHigh, setPriceHigh] = useState('')
-  // 課程評價
-  //   const scoreState = ['all', '5', '4', '3']
-  //   const [score, setScore] = useState('all')
-
-  // 促銷課程
-  const [sales, setSales] = useState(false)
-
-  // 清除表單內容
-  const cleanFilter = () => {
-    setPriceLow('')
-    setPriceHigh('')
-    setScore('all')
-    setSales(false)
-  }
 
   //-------------------連資料庫
   const perPage = 12
@@ -159,9 +145,9 @@ export default function LessonList({}) {
             return acc
           }, [])
           setTotalPage(pages.length)
-            setLessonArray(pages[currentPage]) // 将分页后的结果传递给 resolve
-            console.log(LessonArray)
-            
+          setLessonArray(pages[currentPage]) // 将分页后的结果传递给 resolve
+          console.log(LessonArray)
+
           setLessonArray(pages[currentPage]) // 将分页后的结果传递给 resolve
           console.log(pages[currentPage])
         })
@@ -205,27 +191,61 @@ export default function LessonList({}) {
     }
   }
 
-  // 課程評價篩選
+//   課程評價篩選
   const scoreState = ['all', '5', '4', '3']
   const [score, setScore] = useState('all')
+  const [confirmClicked, setConfirmClicked] = useState(false) // 新状态来跟踪确认按钮点击
+// //   当点击确认按钮时触发的useEffect
+//   useEffect(() => {
+//     if (score === 'all') {
+//       setData(LessonArray)
+//     } else {
+//       const scoreNum = parseInt(score, 10)
+//       const filtered = LessonArray.filter(
+//         (lesson) => Math.round(lesson.average_rating) === scoreNum
+//       )
+//       setData(filtered)
+//       setIsFiltered(true)
+//     }
+//     setConfirmClicked(false) // 处理完后重置确认按钮的点击状态
+//   }, [confirmClicked]) // 依赖于确认按钮点击状态
 
-  // 当选中的星级变化时，筛选商品列表
+  // 促銷課程篩選
+  const [sales, setSales] = useState(false)
+
+  // 监听confirmClicked变化，执行筛选逻辑
   useEffect(() => {
-    //   console.log('当前选择的评分:', score) // 调试日志，查看当前选择的评分
-    if (score === 'all') {
-      // console.log('显示所有课程')
-      setData(LessonArray)
-    } else {
-      const scoreNum = parseInt(score, 10)
-      // console.log('筛选评分为', scoreNum, '的课程')
-      const filtered = LessonArray.filter(
-        (lesson) => Math.round(lesson.average_rating) === scoreNum
-      )
-      // console.log('筛选结果:', filtered) // 调试日志，查看筛选结果
-      setData(filtered)
-      setIsFiltered(true)
+    if (confirmClicked) {
+      if (sales == true) {
+        // 筛选促销课程
+        const salesCourses = LessonArray.filter(
+          (lesson) => lesson.discount_state == 1
+        )
+        setData(salesCourses)
+        setIsFiltered(true)
+      } else {
+        // 不筛选，显示所有课程
+        setData(LessonArray)
+      }
+      // 重置confirmClicked状态以便下次点击
+      setConfirmClicked(false)
     }
-  }, [score, LessonArray])
+  }, [confirmClicked, sales]) // 添加sales作为依赖项，确保筛选逻辑正确执行
+
+  // 点击确认按钮的处理函数
+  const handleConfirmClick = () => {
+      setConfirmClicked(true)
+      console.log(confirmClicked)
+  }
+
+  // 清除表單內容
+  const cleanFilter = () => {
+    setPriceLow('')
+    setPriceHigh('')
+    setScore('all')
+    setSales(false)
+    setData(LessonArray)
+  }
 
   //-------------------搜尋功能
   const [search, setSearch] = useState('')
@@ -247,7 +267,6 @@ export default function LessonList({}) {
 
   //-------------------排序功能
 
-  
   //最熱門
   const sortBySales = () => {
     const sortedProducts = [...LessonArray].sort((a, b) => b.sales - a.sales)
@@ -338,22 +357,22 @@ export default function LessonList({}) {
   const { category } = useParams() // 从URL参数中获取category值
   const [showHotCourses, setShowHotCourses] = useState(true) // 控制是否显示热门课程部分
 
-//   useEffect(() => {
-//     //   如果URL中存在category参数，则隱藏热门课程部分
-//     if ('category') {
-//       setShowHotCourses(false)
-//     } else {
-//       // 否则顯示热门课程部分
-//       setShowHotCourses(true)
-//     }
-//   }, [category])
-
+  useEffect(() => {
+    //   如果URL中存在category参数，则隱藏热门课程部分
+    if ('all') {
+      setShowHotCourses(false)
+    } else {
+      // 否则顯示热门课程部分
+      setShowHotCourses(true)
+    }
+    console.log(showHotCourses)
+  }, [])
 
   return (
-      <>
-          <Head>
-              <title>探索課程</title>
-          </Head>
+    <>
+      <Head>
+        <title>探索課程</title>
+      </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       <div className="hero d-none d-sm-block">
         <Image
@@ -384,13 +403,27 @@ export default function LessonList({}) {
             <div className="sidebar">
               <ul className="d-flex flex-column">
                 <Link href={'/lesson/?category === 0'}>
-                  <li onClick={() => handleCategoryChange(0)}>全部</li>
+                  <li
+                    onClick={() => handleCategoryChange(0)}
+                    style={{
+                      color: selectedCategory === 0 ? '#18a1ff' : '',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    全部
+                  </li>
                 </Link>
                 {/* 分類功能 */}
                 {LessonCategory.map((v, index) => {
                   return (
-                    <Link key={index} href={'/lesson/?category === ${v.id}'}>
-                      <li  onClick={() => handleCategoryChange(v.id)}>
+                    <Link key={index} href={'/lesson/?category=${v.id}'}>
+                      <li
+                        onClick={() => handleCategoryChange(v.id)}
+                        style={{
+                          color: selectedCategory === v.id ? '#18a1ff' : '',
+                          cursor: 'pointer',
+                        }}
+                      >
                         {v.name}
                       </li>
                     </Link>
@@ -577,19 +610,20 @@ export default function LessonList({}) {
                             })}
                           </div>
                         </div>
-                        {/* 促銷商品 */}
+                        {/* 促銷課程 */}
                         <div className="filter-item">
                           <div className="form-check">
                             <label className="form-check-label filter-title mb-0">
                               <input
                                 className="form-check-input"
                                 type="checkbox"
+                                checked={sales}
                                 value={sales}
                                 name="sales"
                                 onChange={() => {
                                   setSales(!sales)
                                 }}
-                              />{' '}
+                              />
                               促銷課程
                             </label>
                           </div>
@@ -605,7 +639,11 @@ export default function LessonList({}) {
                           <div
                             className="filter-btn confirm-btn w-100 d-flex justify-content-center"
                             role="presentation"
-                            onClick={() => priceRange(priceLow, priceHigh)}
+                            onClick={() => {
+                              priceRange(priceLow, priceHigh)
+
+                              handleConfirmClick()
+                            }}
                           >
                             確認
                           </div>
@@ -635,7 +673,7 @@ export default function LessonList({}) {
             </div>
             {/* 主內容 */}
             <div className="content">
-              {/* {showHotCourses && ( */}
+              {showHotCourses && (
                 <div className="hot-lesson">
                   <h4 className="text-primary">熱門課程</h4>
                   <div className="hot-lesson-card-group">
@@ -662,7 +700,7 @@ export default function LessonList({}) {
                       })}
                   </div>
                 </div>
-              {/* )} */}
+              )}
               <hr />
               {/*-------- 列表頁卡片迴圈------- */}
               <div className="lesson-card-group">
@@ -681,8 +719,8 @@ export default function LessonList({}) {
                       price,
                       teacher_name,
                       teacher_id,
-                        img,
-                        img_small,
+                      img,
+                      img_small,
                       sales,
                       length,
                     } = v
@@ -735,8 +773,8 @@ export default function LessonList({}) {
                       price,
                       teacher_name,
                       teacher_id,
-                        img,
-                        img_small,
+                      img,
+                      img_small,
                       sales,
                       length,
                     } = v
