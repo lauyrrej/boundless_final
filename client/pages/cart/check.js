@@ -46,6 +46,8 @@ export default function Test() {
     calcLessonPrice,
     calcLessonDiscount,
     handleLessonSelector,
+    handleLessonCUIDSelector,
+    handleInstrumentCUIDSelector,
     calcTotalDiscount,
     calcTotalPrice,
   } = useCart()
@@ -181,6 +183,7 @@ export default function Test() {
                       <LessonCouponList
                         lessonCoupons={lessonCoupons}
                         handleLessonSelector={handleLessonSelector}
+                        handleLessonCUIDSelector={handleLessonCUIDSelector}
                       />
                     </div>
                   </div>
@@ -220,6 +223,7 @@ export default function Test() {
                       <InstrumentCouponList
                         instrumentCoupons={instrumentCoupons}
                         handleInstrumentSelector={handleInstrumentSelector}
+                        handleInstrumentCUIDSelector={handleInstrumentCUIDSelector}
                       />
                     </div>
                   </div>

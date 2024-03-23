@@ -65,7 +65,7 @@ export default function LessonDetailPage() {
   }
   // ----------------------加入右上角購物車的功能  ----------------------
 
-  const { addLessonItem } = useCart()
+  const { addLessonItem, notifyBuy } = useCart()
 
   //-----------------------動態路由
   //  由router中獲得動態路由(屬性名稱pid，即檔案[pid].js)的值，router.query中會包含pid屬性
@@ -111,8 +111,6 @@ export default function LessonDetailPage() {
   console.log('render')
 
   console.log(router.query, ' isReady=', router.isReady)
-
-  const notify = () => toast('{LessonDetail.data[0].name}已加入購物車.')
 
   return (
     <>
@@ -425,6 +423,7 @@ export default function LessonDetailPage() {
                 info={LessonDetail.data[0].info}
                 onshelf_time={LessonDetail.data[0].onshelf_time}
                 addLessonItem={addLessonItem}
+                notifyBuy={notifyBuy}
               />
             )}
           </div>
@@ -486,8 +485,25 @@ export default function LessonDetailPage() {
         <div
           className="cartBtn"
           onClick={() => {
-            addLessonItem(v)
-            notify()
+            addLessonItem({
+              id,
+              img,
+              img_small,
+              type,
+              lesson_category_id,
+              name,
+              homework,
+              sales,
+              price,
+              discount,
+              discount_state,
+              length,
+              info,
+              onshelf_time,
+            })
+            calcTotalItems() // Moved inside the onClick function
+            notifyBuy()
+            //   console.log(id)
           }}
         >
           <Toaster />
@@ -500,7 +516,31 @@ export default function LessonDetailPage() {
         </div>
 
         <div className="buyBtn">
-          <div className="buy">立即購買</div>
+          <div
+            className="buy"
+            onClick={() =>
+              addLessonItem({
+                id,
+                img,
+                img_small,
+                type,
+                lesson_category_id,
+                name,
+                homework,
+                sales,
+                price,
+                discount,
+                discount_state,
+                length,
+                info,
+                onshelf_time,
+              })
+            }
+          >
+            <Link className="buy" href="/cart/check">
+              立即購買
+            </Link>
+          </div>
         </div>
       </div>
       <Footer />
@@ -921,7 +961,7 @@ export default function LessonDetailPage() {
           .detail {
             max-width: 100%;
           }
-          //FIXME
+          /*//FIXME*/
           .review-content {
             max-width: 100%;
             word-wrap: break-word;

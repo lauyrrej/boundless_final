@@ -1,10 +1,11 @@
 import { useMemo, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import Head from 'next/head'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
-import jamHero from '@/assets/jam-hero.png'
+import articleHero from '@/assets/article-hero.png'
 // icons
 import { MdNoteAdd } from 'react-icons/md'
 import { IoHome } from 'react-icons/io5'
@@ -166,9 +167,14 @@ export default function ArticleList() {
 
   return (
     <>
+    <Head>
+      <title>
+        樂友論壇
+      </title>
+    </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       <div className="page-shero d-none d-sm-block">
-        <Image src={jamHero} className="object-fit-cover w-100" alt="cover" />
+        <Image src={articleHero} className="object-fit-cover w-100" alt="cover" />
       </div>
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
@@ -266,10 +272,6 @@ export default function ArticleList() {
                 <ul className="d-flex align-items-center p-0 m-0">
                   <IoHome size={20} />
                   <li style={{ marginLeft: '8px' }}>樂友論壇</li>
-                  <FaChevronRight />
-                  <Link href="/article/article-list">
-                    <li style={{ marginLeft: '10px' }}>文章資訊</li>
-                  </Link>
                 </ul>
               </div>
 
@@ -352,7 +354,7 @@ export default function ArticleList() {
             {/* 主內容 */}
             <main className="content me-2">
               <div className="d-flex justify-content-between align-items-center">
-                <h4 className="text-primary pt-2">
+                <h4 className="pt-2" style={{color:'#1581cc'}}>
                   熱門文章
                 </h4>
                 {/* <Link

@@ -335,7 +335,7 @@ const filterArticle = useMemo(() => {
         <title>個人首頁</title>
       </Head>
       <Navbar menuMbToggle={menuMbToggle} />
-      <div className="container position-relative">
+      <div className="container position-relative" style={{minHeight: '95svh'}}>
         {/* 手機版主選單/navbar */}
         <div
           className={`menu-mb d-sm-none d-flex flex-column align-items-center ${

@@ -9,7 +9,8 @@ router.get('/', async (req, res) => {
     //評價篩選
     let baseQuery = `
       SELECT 
-          product.*, 
+          product.*,
+          lesson_category.name AS lesson_category_name,
           COUNT(product_review.product_id) AS review_count, 
           AVG(product_review.stars) AS average_rating, 
           teacher_info.name AS teacher_name,  
@@ -20,7 +21,9 @@ router.get('/', async (req, res) => {
       LEFT JOIN 
           product_review ON product.id = product_review.product_id
       LEFT JOIN 
-          teacher_info ON product.teacher_id = teacher_info.id 
+          teacher_info ON product.teacher_id = teacher_info.id
+          LEFT JOIN 
+            lesson_category ON product.lesson_category_id = lesson_category.id 
       WHERE 
           product.type = ?`;
 
