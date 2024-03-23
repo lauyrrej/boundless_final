@@ -65,7 +65,7 @@ export default function LessonDetailPage() {
   }
   // ----------------------加入右上角購物車的功能  ----------------------
 
-  const { addLessonItem } = useCart()
+  const { addLessonItem, notifyBuy } = useCart()
 
   //-----------------------動態路由
   //  由router中獲得動態路由(屬性名稱pid，即檔案[pid].js)的值，router.query中會包含pid屬性
@@ -111,8 +111,6 @@ export default function LessonDetailPage() {
   console.log('render')
 
   console.log(router.query, ' isReady=', router.isReady)
-
-  const notify = () => toast('{LessonDetail.data[0].name}已加入購物車.')
 
   return (
     <>
@@ -425,6 +423,7 @@ export default function LessonDetailPage() {
                 info={LessonDetail.data[0].info}
                 onshelf_time={LessonDetail.data[0].onshelf_time}
                 addLessonItem={addLessonItem}
+                notifyBuy={notifyBuy}
               />
             )}
           </div>
@@ -503,7 +502,7 @@ export default function LessonDetailPage() {
               onshelf_time,
             })
             calcTotalItems() // Moved inside the onClick function
-            notify()
+            notifyBuy()
             //   console.log(id)
           }}
         >

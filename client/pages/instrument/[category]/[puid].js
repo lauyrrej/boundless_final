@@ -266,7 +266,7 @@ let nameimg
                   <div className="pic-Con ">
                     <div className="main-Pic">
                       <img
-                        src={nameimg}
+                        src={`/instrument/${InstrumentDetail.category_name}/${nameUnderline}/${selectedImg}`}
                         className="h-100 w-100"
                         style={{ objectFit: 'contain' }}
                       />
@@ -293,7 +293,7 @@ let nameimg
                               }}
                             >
                               <img
-                                src={`${nameimg}`}
+                                src={`/instrument/${InstrumentDetail.category_name}/${nameUnderline}/${v}`}
                                 className="img_small w-100 h-100"
                               />
                             </div>
