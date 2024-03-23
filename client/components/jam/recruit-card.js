@@ -80,7 +80,7 @@ export default function RecruitCard({
             <div className={`${styles.userPhotoWrapper}`}>
               {former.img ? (
                 <Image
-                  src={`/user/${former.img}`}
+                  src={`http://localhost:3005/user/${former.img}`}
                   alt={`${former.name}'s photo`}
                   width={32}
                   height={32}

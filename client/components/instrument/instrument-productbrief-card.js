@@ -1,4 +1,4 @@
-import { React, useState } from 'react'
+import { React, useEffect, useState } from 'react'
 import { FaHeart } from 'react-icons/fa'
 import { FaPlus } from 'react-icons/fa'
 import { FaMinus } from 'react-icons/fa6'
@@ -37,6 +37,13 @@ export default function ProductBriefCard({
   // ----------------------加入右上角購物車的功能
   const [cartItems, setCartItems] = useState([])
   const [cartCount, setCartCount] = useState(0)
+  const [toLocalePrice, setToLocalePrice] = useState('')
+  useEffect(() => {
+    if(data.price){
+      const priceString = data.price.toLocaleString()
+    setToLocalePrice(priceString)
+    }
+  }, [data])
   return (
     <>
       <div className="Right sticky-top">
@@ -65,7 +72,7 @@ export default function ProductBriefCard({
             <div className="sales">已售出 {data.sales}</div>
           </div>
           <div className="productPrice">
-            <div className="price">NT$ {data.price}</div>
+            <div className="price">NT$ {toLocalePrice}</div>
             {/* 收藏功能 */}
             {/* 做好的 onClick*/}
             <div className="likesIcon icon-container ">
@@ -85,7 +92,7 @@ export default function ProductBriefCard({
 
           <div>
             {data.stock === 0 ? (
-              <h6 className="ms-4 mt-2">暫無庫存</h6>
+              <h5 className="mt-2">暫無庫存</h5>
             ) : (
               <div className="quantitySelector">
                 <div

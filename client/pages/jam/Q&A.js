@@ -141,8 +141,8 @@ export default function RecruitList() {
               </div>
             </div>
             {/* 主內容 */}
-            <main className="content">
-              <div className="pb-3" style={{ fontSize: '18px' }}>
+            <main className="content pt-2 pt-sm-0">
+              <div className="pb-4" style={{ fontSize: '18px' }}>
                 <FaQuoteLeft color="#666666" />
                 <p className="m-0">
                   <span className="spec ms-3">Jam </span>

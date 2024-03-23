@@ -1,10 +1,11 @@
 import { useMemo, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import Head from 'next/head'
 import Navbar from '@/components/common/navbar'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
-import jamHero from '@/assets/jam-hero.png'
+import articleHero from '@/assets/article-hero.png'
 // icons
 import { MdNoteAdd } from 'react-icons/md'
 import { IoHome } from 'react-icons/io5'
@@ -166,9 +167,12 @@ export default function ArticleList() {
 
   return (
     <>
+      <Head>
+        <title>技術分享</title>
+      </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       <div className="page-shero d-none d-sm-block">
-        <Image src={jamHero} className="object-fit-cover w-100" alt="cover" />
+        <Image src={articleHero} className="object-fit-cover w-100" alt="cover" />
       </div>
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
@@ -219,15 +223,15 @@ export default function ArticleList() {
             <div className="sidebar">
               <ul className="d-flex flex-column">
                 <li>
-                  <Link href={`/article/article-list`} className="active">
-                    全部
-                  </Link>
+                  <Link href={`/article/article-list`}>全部</Link>
                 </li>
                 <li>
                   <Link href={`/article/article-list/comments`}>音樂評論</Link>
                 </li>
                 <li>
-                  <Link href={`/article/article-list`}>技術分享</Link>
+                  <Link href={`/article/article-list`} className="active">
+                    技術分享
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -265,11 +269,11 @@ export default function ArticleList() {
               <div className="breadcrumb-wrapper">
                 <ul className="d-flex align-items-center p-0 m-0">
                   <IoHome size={20} />
-                  <li style={{ marginLeft: '8px' }}>樂友論壇</li>
-                  <FaChevronRight />
                   <Link href="/article/article-list">
-                    <li style={{ marginLeft: '10px' }}>文章資訊</li>
+                    <li style={{ marginLeft: '8px' }}>樂友論壇</li>
                   </Link>
+                  <FaChevronRight />
+                  <li style={{ marginLeft: '10px' }}>技術分享</li>
                 </ul>
               </div>
 
@@ -352,8 +356,8 @@ export default function ArticleList() {
             {/* 主內容 */}
             <main className="content me-2">
               <div className="d-flex justify-content-between align-items-center">
-                <h4 className="text-primary pt-2">
-                  熱門文章{LoginUserData.name}
+                <h4 className="pt-2" style={{ color: '#1581cc' }}>
+                  熱門文章
                 </h4>
                 <Link
                   href={`/article/article-list/article-publish`}
