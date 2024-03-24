@@ -84,7 +84,7 @@ export default function InstrumentList({
                 </div>
               </div>
               <div className={`${Instrument.instrument_item_total} h6`}>
-                ${v.price}
+                ${v.price * v.qty}
               </div>
               <div className={`${Instrument.instrument_button}`}>
                 <button

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 // icon
@@ -19,7 +19,12 @@ export default function CourseCard({
   sales,
   discount,
 }) {
-//   const [isDiscount, setIsDiscount] = useState(!!discount)
+  const [priceStr, setPriceStr] = useState('')
+  useEffect(() => {
+    if(price) {
+      setPriceStr(price.toLocaleString())
+    }
+  }, [price])
   return (
     <>
       <Link href={`/lesson/${ lesson_category_id}/${luid}`}>
@@ -67,7 +72,7 @@ export default function CourseCard({
               </div>
             )} */}
             <div className="course-price">
-              <div>NT$ {price}</div>
+              <div>NT$ {priceStr}</div>
             </div>
             <div className="students">
               <MdOutlinePeopleAlt size={16} color="#5a5a5a" />

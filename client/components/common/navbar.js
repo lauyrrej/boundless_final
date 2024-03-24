@@ -113,9 +113,7 @@ export default function Navbar({ menuMbToggle }) {
             <li
               className="ms-3 cart-icon"
               onClick={() => {
-                const haveCart = localStorage.getItem('CartData')
-                const trueCart = JSON.parse(haveCart)
-                if (trueCart.length > 0) {
+                if (localStorage.getItem('CartData')&& calcTotalItems() !== 0) {
                   router.push(`/cart/check`)
                 } else {
                   cartNull()
@@ -124,7 +122,7 @@ export default function Navbar({ menuMbToggle }) {
             >
               <div className="cart">
                 <IoCart size={30} className="cart-icon" />
-                {calcTotalItems() == 0 ? (
+                {!localStorage.getItem('CartData') || calcTotalItems() == 0 ? (
                   ''
                 ) : (
                   <span className="button__badge">{calcTotalItems()}</span>
@@ -167,10 +165,7 @@ export default function Navbar({ menuMbToggle }) {
             <div
               className="p-0 me-3 cart-icon"
               onClick={() => {
-                const haveCart = localStorage.getItem('CartData')
-                const trueCart = JSON.parse(haveCart)
-                console.log(trueCart)
-                if (trueCart.length > 0) {
+                if (localStorage.getItem('CartData') && calcTotalItems() !== 0) {
                   router.push(`/cart/check`)
                 } else {
                   cartNull()
@@ -179,7 +174,7 @@ export default function Navbar({ menuMbToggle }) {
             >
               <div className="cart">
                 <IoCart size={30} className="cart-icon" />
-                {calcTotalItems() == 0 ? (
+                {!localStorage.getItem('CartData') || calcTotalItems() == 0 ? (
                   ''
                 ) : (
                   <span className="button__badge">{calcTotalItems()}</span>
