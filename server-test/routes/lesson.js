@@ -9,7 +9,8 @@ router.get('/', async (req, res) => {
     //評價篩選
     let baseQuery = `
       SELECT 
-          product.*, 
+          product.*,
+          lesson_category.name AS lesson_category_name,
           COUNT(product_review.product_id) AS review_count, 
           AVG(product_review.stars) AS average_rating, 
           teacher_info.name AS teacher_name,  
@@ -20,7 +21,9 @@ router.get('/', async (req, res) => {
       LEFT JOIN 
           product_review ON product.id = product_review.product_id
       LEFT JOIN 
-          teacher_info ON product.teacher_id = teacher_info.id 
+          teacher_info ON product.teacher_id = teacher_info.id
+          LEFT JOIN 
+            lesson_category ON product.lesson_category_id = lesson_category.id 
       WHERE 
           product.type = ?`;
 
@@ -50,6 +53,7 @@ router.get('/', async (req, res) => {
     res.status(500).json({ error: '發生錯誤' });
   }
 });
+
 
 //lesson_category
 router.get('/categories', async (req, res) => {
@@ -102,10 +106,9 @@ router.get('/:id', async (req, res, next) => {
   console.log(luid);
   try {
     let [data] = await db.execute(
-
-      'SELECT ' +
+      'SELECT' +
         '  p.*, ' +
-        '  pr.*, ' +
+        // '  pr.user_id AS pr_user_id, pr.content AS pr_content, pr.likes AS pr_likes, ' +
         '  lc.name AS lesson_category_name, ' +
         '  COUNT(pr.product_id) AS review_count, ' +
         '  AVG(pr.stars) AS average_rating ' +

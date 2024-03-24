@@ -36,13 +36,14 @@ export default function ProductBriefCard({
     //按按鍵切換狀態
     setcolorChange(!colorChange)
   }
+console.log(id);
 
   // ----------------------加入右上角購物車的功能  ----------------------
 // console.log(id);
 
   //toast
     const notify = () =>
-      toast('{LessonDetail.data[0].name}已加入購物車.')
+      toast(`${name}已加入購物車.`)
 
   return (
     <>
@@ -62,7 +63,7 @@ export default function ProductBriefCard({
             <div className="sales">購買人數 {sales}</div>
           </div>
           <div className="productPrice">
-            <div className="price">NT$ {price}</div>
+            <div className="price">NT$ {price.toLocaleString()}</div>
             {/* 收藏功能 */}
             {/* 做好的 onClick*/}
             <div className="likesIcon icon-container ">
@@ -114,7 +115,7 @@ export default function ProductBriefCard({
                   onshelf_time,
                 })
                 calcTotalItems() // Moved inside the onClick function
-                  notify()
+                notify()
                 //   console.log(id)
               }}
             >

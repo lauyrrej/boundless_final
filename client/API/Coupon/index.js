@@ -28,10 +28,6 @@ class Coupon {
                 // 格式化截止日期時間
                 'YYYY-MM-DD HH:mm:ss'
               ),
-              // onshelf_time: moment(i.onshelf_time).format(
-              //   // 格式化上架日期時間
-              //   'YYYY-MM-DD HH:mm:ss'
-              // ),
             }
           })
           // 解析處理後的優惠券數據

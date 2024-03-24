@@ -129,7 +129,7 @@ export default function Test({ onSearch }) {
   const [page, setPage] = useState(1)
   const [pageTotal, setPageTotal] = useState(0)
   // 資料排序
-  const [orderby, setOrderby] = useState('ASC')
+  const [orderby, setOrderby] = useState('DESC')
   // 條件品牌
   const [brand, setBrand] = useState('all')
   // 條件關鍵字
@@ -207,10 +207,20 @@ export default function Test({ onSearch }) {
       // 在這裡處理獲取的資料，例如更新狀態
       setInstrument(datas.instrument)
       setProductCategory(datas.category)
+      // 設定獲取頁數總合
+      setPageTotal(datas.pageTotal)
+      // 設定獲取項目
+      setPage(datas.page)
+      setBrandSelect(datas.brandSelect)
+      setPriceLow(datas.priceLow)
+      setPriceHigh(datas.priceHigh)
+      setKeyword(datas.Keyword)
     } catch (error) {
       console.error('Error fetching data:', error)
     }
   }
+
+
 
   // const getDatassearch = async (params) => {
   //   try {
@@ -247,7 +257,7 @@ export default function Test({ onSearch }) {
 
       // 設定回所有狀態(注意所有從查詢字串來都是字串類型)，都要給預設值
       setPage(Number(page) || 1)
-      setOrderby(orderby || 'ASC')
+      setOrderby(orderby || 'DESC')
       setBrandSelect(brandSelect || 'all')
       setPriceLow(priceLow || '')
       setPriceHigh(priceHigh || '')
@@ -309,8 +319,51 @@ export default function Test({ onSearch }) {
   //       })
   //   })
   // }
+
   //-------------------搜尋功能
   const [data, setData] = useState(instrument)
+
+//-----------------篩選功能 //FIXME
+  // 價格篩選
+  //確保 priceLow 和 priceHigh 有被定義後再呼叫 priceRange 函式
+  // const priceRange = (priceLow, priceHigh) => {
+  //   if (priceLow !== '' && priceHigh !== '') {
+  //     console.log('priceLow:', priceLow)
+  //     console.log('priceHigh:', priceHigh)
+  //     fetch(
+  //       `http://localhost:3005/api/instrument?priceLow=${priceLow}&priceHigh=${priceHigh}`
+  //     )
+  //       .then((response) => response.json()) //在網路請求成功時將回應物件轉換為 JSON 格式，並回傳一個新的 Promise 物件。這個新的 Promise 物件會在 JSON 解析成功後被解析，而且 data 參數會包含解析後的 JSON 資料。
+
+  //       .then((data) => setData(data))
+  //     setIsFiltered(true)
+  //     console.log(data)
+  //   }
+  // }
+
+  // // 課程評價篩選
+  // const scoreState = ['all', '5', '4', '3']
+  // const [score, setScore] = useState('all')
+
+  // // 当选中的星级变化时，筛选商品列表
+  // useEffect(() => {
+  //   //   console.log('当前选择的评分:', score) // 调试日志，查看当前选择的评分
+  //   if (score === 'all') {
+  //     // console.log('显示所有课程')
+  //     setData(instrument)
+  //   } else {
+  //     const scoreNum = parseInt(score, 10)
+  //     // console.log('筛选评分为', scoreNum, '的课程')
+  //     const filtered = instrument.filter(
+  //       (instrument) => Math.round(instrument.average_rating) === scoreNum
+  //     )
+  //     // console.log('筛选结果:', filtered) // 调试日志，查看筛选结果
+  //     setData(filtered)
+  //     setIsFiltered(true)
+  //   }
+  // }, [score, instrument])
+
+
 
   // 在組件中定義 isFiltered 狀態，並提供一個函數來更新它的值
   const [isFiltered, setIsFiltered] = useState(false)
@@ -351,6 +404,35 @@ export default function Test({ onSearch }) {
     setData(sortedProducts)
     setIsFiltered(true)
   }
+
+//-------------------渲染分類功能li
+const [InstrumentCategory, setInstrumentCategory] = useState([])
+
+function getInstrumentCategory() {
+  return new Promise((resolve, reject) => {
+    let url = 'http://localhost:3005/api/instrument/categories'
+    fetch(url, {
+      method: 'GET',
+      credentials: 'include',
+    })
+      .then((response) => {
+        return response.json()
+      })
+      .then((result) => {
+        resolve(result)
+        console.log(result)
+        setInstrumentCategory(result)
+      })
+      .catch((error) => {
+        console.log(error)
+        reject()
+      })
+  })
+}
+
+useEffect(() => {
+  getInstrumentCategory()
+}, [])
 
   // 設定sidebar下拉狀態
   const [openAccordion, setOpenAccordion] = useState(null)
@@ -433,7 +515,7 @@ export default function Test({ onSearch }) {
                 <li>
                   <Link href={`/instrument`}>全部</Link>
                 </li>
-                {productCategory.map((v) => {
+                {InstrumentCategory.map((v) => {
                   return v.parent_id === 0 ? (
                     <li
                       className="accordion"
@@ -459,7 +541,7 @@ export default function Test({ onSearch }) {
                           className="accordion-collapse collapse"
                           data-bs-parent={`#accordion${v.name}`}
                         >
-                          {productCategory.map((subv) => {
+                          {InstrumentCategory.map((subv) => {
                             return v.id === subv.parent_id ? (
                               <div
                                 className="accordion-body d-flex flex-column px-0 pt-3 pb-0"
@@ -521,7 +603,7 @@ export default function Test({ onSearch }) {
               <Link href={`/instrument`} className="sm-item active">
                 全部
               </Link>
-              {productCategory.map((v) => {
+              {InstrumentCategory.map((v) => {
                 return v.parent_id === 0 ? (
                   <li
                     className="accordion sm-item"
@@ -547,7 +629,7 @@ export default function Test({ onSearch }) {
                         className="accordion-collapse collapse"
                         data-bs-parent={`#accordion${v.name}`}
                       >
-                        {productCategory.map((subv) => {
+                        {InstrumentCategory.map((subv) => {
                           return v.id === subv.parent_id ? (
                             <div
                               className="accordion-body d-flex flex-column px-0 pt-3 pb-0"
@@ -721,13 +803,15 @@ export default function Test({ onSearch }) {
                                 >
                                   <label className="form-check-label">
                                     <input
-                                      className="form-check-input"
                                       type="radio"
                                       name="score"
                                       value={v}
                                       checked={v === score}
                                       onChange={(e) => {
-                                        setScore(e.target.value)
+                                        const value = e.target.value
+                                        setScore(
+                                          value === 'all' ? 'all' : value
+                                        ) 
                                       }}
                                     />
                                     &nbsp;{v === 'all' ? '全部' : v + '星'}
@@ -844,8 +928,9 @@ export default function Test({ onSearch }) {
                       img_small,
                       sales,
                     } = v
+                    console.log(v)
                     return (
-                      <div key={id}>
+                      <div className="mb-4" key={id}>
                         <Card
                           id={id}
                           puid={puid}
@@ -875,7 +960,7 @@ export default function Test({ onSearch }) {
                       sales,
                     } = v
                     return (
-                      <div key={id}>
+                      <div key={id} className="mb-4">
                         <Card
                           id={id}
                           puid={puid}
@@ -885,10 +970,15 @@ export default function Test({ onSearch }) {
                           category_name={category_name}
                           img_small={img_small}
                           sales={sales}
+                          
                         />
                       </div>
+                      
                     )
+                    console.log(category_name)
                   })}
+             
+
               </div>
             </main>
             <div className="d-flex justify-content-center">
@@ -913,9 +1003,6 @@ export default function Test({ onSearch }) {
           margin-block: 30px;
           gap: 35px;
           flex-wrap: wrap;
-          @media screen and (max-width: 576px) {
-            gap: 15px 10px;
-          }
         }
 
         .hot-instrument-card {
@@ -928,6 +1015,9 @@ export default function Test({ onSearch }) {
           .hot-instrument-card {
             flex-wrap: wrap;
           }
+          .instrument-card-group {
+          gap: 10px;
+        }
           .hot-instrument-card > :global(div) {
             flex-basis: calc(
               40% - 40px
