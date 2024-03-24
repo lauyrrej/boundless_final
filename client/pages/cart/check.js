@@ -144,7 +144,7 @@ export default function Test() {
                   remove={remove}
                 />
                 <div className="cart-subtotal h6">
-                  原價 NT$ {calcLessonPrice()}
+                  原價 NT$ {calcLessonPrice().toLocaleString()}
                 </div>
                 <div className="cart-coupon">
                   <div className="coupon-selector">
@@ -159,12 +159,12 @@ export default function Test() {
                   </div>
                   <div className="cart-discount h6">
                     折扣 -NT$
-                    {calcLessonDiscount()}
+                    {calcLessonDiscount().toLocaleString()}
                   </div>
                 </div>
                 <div className="cart-total">
                   <div className="cart-total-text">
-                    小計 NT$ {calcLessonPrice() - calcLessonDiscount()}
+                    小計 NT$ {(calcLessonPrice() - calcLessonDiscount()).toLocaleString()}
                   </div>
                 </div>
               </div>
@@ -184,7 +184,7 @@ export default function Test() {
                   remove={remove}
                 />
                 <div className="cart-subtotal h6">
-                  原價 NT$ {calcInstrumentPrice()}
+                  原價 NT$ {calcInstrumentPrice().toLocaleString()}
                 </div>
                 <div className="cart-coupon">
                   <div className="coupon-selector">
@@ -200,12 +200,12 @@ export default function Test() {
                     </div>
                   </div>
                   <div className="cart-discount h6">
-                    折扣 -NT$ {calcInstrumentDiscount()}
+                    折扣 -NT$ {calcInstrumentDiscount().toLocaleString()}
                   </div>
                 </div>
                 <div className="cart-total">
                   <div className="cart-total-text">
-                    小計 NT$ {calcInstrumentPrice() - calcInstrumentDiscount()}
+                    小計 NT$ {(calcInstrumentPrice() - calcInstrumentDiscount()).toLocaleString()}
                   </div>
                 </div>
               </div>
@@ -227,15 +227,15 @@ export default function Test() {
                   </div>
                   <div className="d-flex justify-content-between carttext">
                     <div>原價合計</div>
-                    <div>NT ${calcTotalPrice()}</div>
+                    <div>NT ${calcTotalPrice().toLocaleString()}</div>
                   </div>
                   <div className="d-flex justify-content-between carttext discount">
                     <div>折扣合計</div>
-                    <div>-NT ${calcTotalDiscount()}</div>
+                    <div>-NT ${calcTotalDiscount().toLocaleString()}</div>
                   </div>
                   <div className="d-flex justify-content-between h3">
                     <div>合計</div>
-                    <div>NT ${calcTotalPrice() - calcTotalDiscount()}</div>
+                    <div>NT ${(calcTotalPrice() - calcTotalDiscount()).toLocaleString()}</div>
                   </div>
                 </div>
                 <div className="cart-btn">
@@ -266,15 +266,15 @@ export default function Test() {
             </div>
             <div className="d-flex justify-content-between carttext">
               <div>原價合計</div>
-              <div>NT ${calcTotalPrice()}</div>
+              <div>NT ${calcTotalPrice().toLocaleString()}</div>
             </div>
             <div className="d-flex justify-content-between carttext discount">
               <div>折扣合計</div>
-              <div>-NT ${calcTotalDiscount()}</div>
+              <div>-NT ${calcTotalDiscount().toLocaleString()}</div>
             </div>
             <div className="d-flex justify-content-between h3">
               <div>合計</div>
-              <div>NT ${calcTotalPrice() - calcTotalDiscount()}</div>
+              <div>NT ${(calcTotalPrice() - calcTotalDiscount()).toLocaleString()}</div>
             </div>
           </div>
           <div className="cart-btn">

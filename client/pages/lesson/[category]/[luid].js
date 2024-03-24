@@ -82,7 +82,7 @@ export default function LessonDetailPage() {
       // res.json()是解析res的body的json格式資料，得到JS的資料格式
       const data = await res.json()
 
-      console.log(data)
+      // console.log(data)
 
       // 設定到state中，觸發重新渲染(re-render)，會進入到update階段
       // 進入狀態前檢查資料類型有值，以避免錯誤
@@ -117,7 +117,7 @@ export default function LessonDetailPage() {
   return (
     <>
       <Head>
-        <title>{LessonDetail.title}</title>
+        <title>{LessonDetail.name}</title>
       </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       <div className="container position-relative">
@@ -151,7 +151,7 @@ export default function LessonDetailPage() {
               <li style={{ marginLeft: '10px' }}>{LessonDetail.name}</li>
             </ul>
           </div>
-          <div className="col-12 col-sm-6">
+          <div className="col-12 col-sm-6 p-0">
             {/* 主內容 */}
             <main className="content">
               <div>
@@ -229,7 +229,7 @@ export default function LessonDetailPage() {
                     {/* Unit Overview */}
                     <div className="outline detail-wrapp mt40">
                       <div className="detail-title">單元一覽</div>
-                      <div className="list">
+                      <div className="list" style={{borderRadius: '5px'}}>
                         <ul>
                           {LessonDetail.outline &&
                             LessonDetail.outline
@@ -244,7 +244,7 @@ export default function LessonDetailPage() {
                     {/* Target Audience */}
                     <div className="suitable mt40">
                       <div className="detail-title">適合對象</div>
-                      <div className="list">
+                      <div className="list" style={{borderRadius: '5px'}}>
                         <ul>
                           {LessonDetail.suitable &&
                             LessonDetail.suitable
@@ -259,8 +259,8 @@ export default function LessonDetailPage() {
                     {/* What You Will Learn */}
                     <div className="achievement mt40">
                       <div className="detail-title">你將學到</div>
-                      <div className="list">
-                        <ul>
+                      <div className="list" style={{borderRadius: '5px'}}>
+                        <ul className='p-0'>
                           {LessonDetail.achievement &&
                             LessonDetail.achievement
                               .split('\n')
@@ -274,7 +274,7 @@ export default function LessonDetailPage() {
                     {/* Student Feedback */}
                     <div className="reviews mt40">
                       <div className="detail-title">學員回饋</div>
-                      <div className="list">
+                      <div className="list" style={{borderRadius: '5px'}}>
                         {/* Comments */}
                         {reviews.map((review, index) => (
                           <div className="review" key={index}>
@@ -360,7 +360,7 @@ export default function LessonDetailPage() {
                   <div className="teacher-info mt40">
                     <div className="detail-title">講師資訊</div>
                     <div className="teacher-info-area">
-                      <div className="teacher-img-con">
+                      <div className="teacher-img-con" style={{borderRadius: '5px', overflow: 'hidden'}}>
                         <img
                           loading="lazy"
                           src="/課程與師資/teacher_img/teacher_001.jpeg"
@@ -457,28 +457,12 @@ export default function LessonDetailPage() {
           </div>
         </div>
       </div>
-      <div className="shoppingBtn sticky-top" id="shoppingBtn">
+      <div className="shoppingBtn sticky-top" style={{zIndex: '99'}} id="shoppingBtn">
         <div
           className="cartBtn"
           onClick={() => {
-            addLessonItem({
-              id,
-              img,
-              img_small,
-              type,
-              lesson_category_id,
-              name,
-              homework,
-              sales,
-              price,
-              discount,
-              discount_state,
-              length,
-              info,
-              onshelf_time,
-            })
-            notifyBuy()
-            //   console.log(id)
+            notifyBuy(LessonDetail.name)
+            addLessonItem(LessonDetail)
           }}
         >
           <img
@@ -492,28 +476,14 @@ export default function LessonDetailPage() {
         <div className="buyBtn">
           <div
             className="buy"
-            onClick={() =>
-              addLessonItem({
-                id,
-                img,
-                img_small,
-                type,
-                lesson_category_id,
-                name,
-                homework,
-                sales,
-                price,
-                discount,
-                discount_state,
-                length,
-                info,
-                onshelf_time,
-              })
-            }
+            onClick={() => {
+                addLessonItem(LessonDetail)
+                router.push("/cart/check")
+              }}
           >
-            <Link className="buy" href="/cart/check">
+            <div className="buy">
               立即購買
-            </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -589,6 +559,11 @@ export default function LessonDetailPage() {
         /* --------------- container --------------- */
         .container {
           min-height: calc(100vh);
+        }
+        .content {
+          @media screen and (max-width: 576px) {
+            padding-top: 0px;
+          }
         }
         .breadcrumb-wrapper {
           cursor: pointer;
@@ -766,15 +741,15 @@ export default function LessonDetailPage() {
           /* 手機版productbrief-card */
 
           .prodBriefingArea {
-            width: 100%;
-            height: 204px;
+            width: 390px;
+            height: 100%;
+            aspect-ratio: 1.68;
           }
           .prodImg {
             padding: 0px;
-
+            width: 100%;
             background-color: #ff9595;
             border-radius: 10px;
-            height: 204px;
           }
 
           .Right-mobile {

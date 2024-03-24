@@ -23,7 +23,7 @@ export default function LessonList({ items, lessonData, remove }) {
                 />
               </div>
               <div className={`${Lesson.lesson_item_name} h6`}>{v.name}</div>
-              <div className={`${Lesson.lesson_item_price} h6`}>${v.price}</div>
+              <div className={`${Lesson.lesson_item_price} h6`}>${v.price.toLocaleString()}</div>
               <div className={`${Lesson.lesson_button} h6`}>
                 <button
                   type="button"
