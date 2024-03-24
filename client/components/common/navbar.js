@@ -79,6 +79,12 @@ export default function Navbar({ menuMbToggle }) {
         }, 2000)
       )
   }
+  const [cartState, setCartState] = useState(false)
+  useEffect(() => {
+    if(localStorage.getItem('CartData')) {
+      setCartState(true)
+    }
+  }, [])
 
   return (
     <>
@@ -113,7 +119,7 @@ export default function Navbar({ menuMbToggle }) {
             <li
               className="ms-3 cart-icon"
               onClick={() => {
-                if (localStorage.getItem('CartData')&& calcTotalItems() !== 0) {
+                if (cartState && calcTotalItems() !== 0) {
                   router.push(`/cart/check`)
                 } else {
                   cartNull()
@@ -122,10 +128,10 @@ export default function Navbar({ menuMbToggle }) {
             >
               <div className="cart">
                 <IoCart size={30} className="cart-icon" />
-                {!localStorage.getItem('CartData') || calcTotalItems() == 0 ? (
-                  ''
-                ) : (
+                {cartState && calcTotalItems() !== 0 ? (
                   <span className="button__badge">{calcTotalItems()}</span>
+                ) : (
+                  ''
                 )}
               </div>
             </li>
@@ -165,7 +171,7 @@ export default function Navbar({ menuMbToggle }) {
             <div
               className="p-0 me-3 cart-icon"
               onClick={() => {
-                if (localStorage.getItem('CartData') && calcTotalItems() !== 0) {
+                if (cartState && calcTotalItems() !== 0) {
                   router.push(`/cart/check`)
                 } else {
                   cartNull()
@@ -174,10 +180,10 @@ export default function Navbar({ menuMbToggle }) {
             >
               <div className="cart">
                 <IoCart size={30} className="cart-icon" />
-                {!localStorage.getItem('CartData') || calcTotalItems() == 0 ? (
-                  ''
-                ) : (
+                {cartState && calcTotalItems() !== 0 ? (
                   <span className="button__badge">{calcTotalItems()}</span>
+                ) : (
+                  ''
                 )}
               </div>
             </div>
