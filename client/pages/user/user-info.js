@@ -42,7 +42,7 @@ export default function Test() {
   //登出功能
 
   //檢查是否獲取資料
-  console.log(LoginUserData)
+  // console.log(LoginUserData)
   //   讀取使用者資料後 定義大頭貼路徑
   let avatarImage
   if (LoginUserData.img) {

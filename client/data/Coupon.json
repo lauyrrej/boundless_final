@@ -262,7 +262,7 @@
   {
     "id": 21,
     "name": "定期發放",
-    "discount": 2000,
+    "discount": 500,
     "kind": 2,
     "type": "面額",
     "coupon_code": "ndDQErmCye",

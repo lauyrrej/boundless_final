@@ -1,11 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { FaHeart } from 'react-icons/fa'
-//toast
-import toast, { Toaster } from 'react-hot-toast'
+import { useRouter } from 'next/router'
 //收藏的功能
-
-//跳轉頁面
-import Link from 'next/link'
 
 export default function ProductBriefCard({
   id,
@@ -25,23 +21,29 @@ export default function ProductBriefCard({
   info,
   onshelf_time,
   addLessonItem = () => {},
-  calcTotalItems = () => {},
   notifyBuy = () => {},
 }) {
   //收藏按鍵的功能
   const [colorChange, setcolorChange] = useState(false)
+  const router = useRouter()
   const colorToggle = () => {
     //按按鍵切換狀態
     setcolorChange(!colorChange)
   }
-  console.log(id)
+  // console.log(id)
 
   // ----------------------加入右上角購物車的功能  ----------------------
   // console.log(id);
-
+  const [toLocalePrice, setToLocalePrice] = useState('')
+  useEffect(() => {
+    if (price) {
+      const priceString = price.toLocaleString()
+      setToLocalePrice(priceString)
+    }
+  }, [price])
   return (
     <>
-      <div className=" Right sticky-top ">
+      <div className=" Right sticky-top " style={{zIndex: '30'}}>
         <div className="prodBriefing naughty-sticky " style={{ top: '80px' }}>
           <div className="prodMainName">{name}</div>
           <div className="Rating">
@@ -57,7 +59,7 @@ export default function ProductBriefCard({
             <div className="sales">購買人數 {sales}</div>
           </div>
           <div className="productPrice">
-            <div className="price">NT$ {price.toLocaleString()}</div>
+            <div className="price">NT$ {toLocalePrice}</div>
             {/* 收藏功能 */}
             {/* 做好的 onClick*/}
             <div className="likesIcon icon-container ">
@@ -92,6 +94,7 @@ export default function ProductBriefCard({
             <div
               className="cartBtn"
               onClick={() => {
+                notifyBuy(name)
                 addLessonItem({
                   id,
                   img,
@@ -108,8 +111,7 @@ export default function ProductBriefCard({
                   info,
                   onshelf_time,
                 })
-                calcTotalItems() // Moved inside the onClick function
-                notifyBuy(name)
+                
                 //   console.log(id)
               }}
             >
@@ -119,7 +121,6 @@ export default function ProductBriefCard({
                 className=""
               />
               <div className="cart">加入購物車</div>
-              <Toaster />
             </div>
             <div
               className="buyBtn"
@@ -140,23 +141,22 @@ export default function ProductBriefCard({
                   info,
                   onshelf_time,
                 })
-                notifyBuy()
+                router.push("/cart/check")
               }}
             >
-              <Link className="buy" href="/cart/check">
+              <div className="buy">
                 立即購買
-              </Link>
+              </div>
             </div>
           </div>
         </div>
-        <Toaster position="bottom-center" reverseOrder={false} />
       </div>
       <style jsx>
         {`
           .naughty-sticky {
             position: sticky;
             top: 0;
-            z-index: 1020;
+            z-index: 20;
           }
 
           .icon-container {
