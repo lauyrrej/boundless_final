@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import Navbar from '@/components/common/navbar'
+import NavbarMb from '@/components/common/navbar-mb'
 import Footer from '@/components/common/footer'
+import Head from 'next/head'
 import Link from 'next/link'
 import Image from 'next/image'
 import jamHero from '@/assets/jam-hero.png'
@@ -48,7 +50,6 @@ export default function Test() {
     confirmOrderSubmit,
   } = useCart()
 
-
   // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
   const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
@@ -74,8 +75,8 @@ export default function Test() {
     avatarImage = `http://localhost:3005/user/avatar_userDefault.jpg`
   }
 
-  let uid 
-  if(LoginUserData){
+  let uid
+  if (LoginUserData) {
     uid = LoginUserData.uid
     // console.log(uid)
   }
@@ -104,22 +105,15 @@ export default function Test() {
     setFilterVisible(!filterVisible)
   }
 
-
-  const [intial,setInitial] = useState('true');
-
+  const [intial, setInitial] = useState('true')
 
   const [orderID, setOrderID] = useState(1)
 
-  
-  const  originOrderID = ()=>{
+  const originOrderID = () => {
     const data = localStorage.getItem('orderID')
     const parseData = parseInt(data)
-    return parseData 
+    return parseData
   }
-
-  
-  
-
 
   const username = UserInfo[0].Name
   const phone = UserInfo[0].Phone
@@ -134,7 +128,6 @@ export default function Test() {
   const cartData = localStorage.getItem('CartData')
   const LessonCUID = localStorage.getItem('LessonCouponCUID')
   const InstrumentCUID = localStorage.getItem('InstrumentCouponCUID')
-  
 
   const sendForm = async (
     username,
@@ -151,15 +144,15 @@ export default function Test() {
     orderID,
     uid,
     LessonCUID,
-    InstrumentCUID,
-  )=>{
+    InstrumentCUID
+  ) => {
     let formData = new FormData()
     formData.append('username', username)
     formData.append('phone', phone)
     formData.append('email', email)
     formData.append('country', country)
     formData.append('township', township)
-    formData.append('postcode',postcode)
+    formData.append('postcode', postcode)
     formData.append('address', address)
     formData.append('totaldiscount', totaldiscount)
     formData.append('payment', payment)
@@ -169,7 +162,6 @@ export default function Test() {
     formData.append('uid', uid)
     formData.append('LessonCUID', LessonCUID)
     formData.append('InstrumentCUID', InstrumentCUID)
-    
 
     const res = await fetch('http://localhost:3005/api/cart/form', {
       method: 'POST',
@@ -180,6 +172,9 @@ export default function Test() {
 
   return (
     <>
+      <Head>
+        <title>結帳確認</title>
+      </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
@@ -188,40 +183,7 @@ export default function Test() {
             showMenu ? 'menu-mb-show' : ''
           }`}
         >
-          {/* 用戶資訊 */}
-          <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
-            <div className="mb-photo-wrapper mb-2">
-              <Image
-                src="/jam/amazingshow.jpg"
-                alt="user photo mb"
-                fill
-              ></Image>
-            </div>
-            <div>用戶名稱</div>
-          </div>
-          <Link
-            className="mm-item"
-            href="/user"
-            style={{ borderTop: '1px solid #b9b9b9' }}
-          >
-            會員中心
-          </Link>
-          <Link className="mm-item" href="/lesson/lesson-list">
-            探索課程
-          </Link>
-          <Link className="mm-item" href="/instrument/instrument-list">
-            樂器商城
-          </Link>
-          <Link className="mm-item" href="/jam/recruit-list">
-            Let &apos;s JAM!
-          </Link>
-          <Link className="mm-item" href="/article/article-list">
-            樂友論壇
-          </Link>
-          <div className="mm-item" style={{ color: '#1581cc' }}>
-            登出
-            <ImExit size={20} className="ms-2" />
-          </div>
+          <NavbarMb />
         </div>
         <>
           <div className="cart">
@@ -266,9 +228,7 @@ export default function Test() {
                   <div className="lesson-payment">實付金額</div>
                 </div>
                 <div className="cart-item-group">
-                  <LessonConfirmList 
-                    lessonData={lessonData}
-                  />
+                  <LessonConfirmList lessonData={lessonData} />
                 </div>
                 <div className="cart-thead">
                   <div className="instrument-product">樂器</div>
@@ -278,9 +238,7 @@ export default function Test() {
                   <div className="instrument-payment">實付金額</div>
                 </div>
                 <div className="cart-item-group">
-                  <InstrumentConfirmList 
-                    instrumentData={instrumentData}
-                  />
+                  <InstrumentConfirmList instrumentData={instrumentData} />
                 </div>
               </div>
               <div className="consumer-info">
@@ -314,13 +272,11 @@ export default function Test() {
                     <div className="address-location col-sm-10 col-6">
                       <div>{postcode}</div>
                       <div className="col-10 address-location-info">
-                       <div>
-                        {country} {township} 
-                       </div>
-                       <div>
-                       {UserInfo[0].Address}
-                       </div>
-                       </div>
+                        <div>
+                          {country} {township}
+                        </div>
+                        <div>{UserInfo[0].Address}</div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -379,31 +335,28 @@ export default function Test() {
                   <div
                     className="b-btn b-btn-primary d-flex w-100 h-100 justify-content-center"
                     style={{ padding: '14px 0' }}
-                    onClick={
-                      () => {
-                        setOrderID(orderID+1)
-                        localStorage.setItem('orderID', orderID)
-                        sendForm(
-                          username,
-                          phone,
-                          email,
-                          country,
-                          township,
-                          postcode,
-                          address,
-                          totaldiscount,
-                          payment,
-                          transportationstate,
-                          cartData,
-                          orderID,
-                          uid,
-                          LessonCUID,
-                          InstrumentCUID
-                        )
-                        confirmOrderSubmit()
-                        localStorage.removeItem('CartData')
-                      }
-                    }
+                    onClick={() => {
+                      setOrderID(orderID + 1)
+                      localStorage.setItem('orderID', orderID)
+                      sendForm(
+                        username,
+                        phone,
+                        email,
+                        country,
+                        township,
+                        postcode,
+                        address,
+                        totaldiscount,
+                        payment,
+                        transportationstate,
+                        cartData,
+                        orderID,
+                        uid,
+                        LessonCUID,
+                        InstrumentCUID
+                      )
+                      confirmOrderSubmit()
+                    }}
                   >
                     確認付款
                   </div>
@@ -451,31 +404,28 @@ export default function Test() {
             <div
               className="b-btn b-btn-primary d-flex w-100 h-100 justify-content-center"
               style={{ padding: '14px 0' }}
-              onClick={
-                () => {
-                  setOrderID(orderID+1)
-                  localStorage.setItem('orderID', orderID)
-                  sendForm(
-                    username,
-                    phone,
-                    email,
-                    country,
-                    township,
-                    postcode,
-                    address,
-                    totaldiscount,
-                    payment,
-                    transportationstate,
-                    cartData,
-                    orderID,
-                    uid,
-                    LessonCUID,
-                    InstrumentCUID
+              onClick={() => {
+                setOrderID(orderID + 1)
+                localStorage.setItem('orderID', orderID)
+                sendForm(
+                  username,
+                  phone,
+                  email,
+                  country,
+                  township,
+                  postcode,
+                  address,
+                  totaldiscount,
+                  payment,
+                  transportationstate,
+                  cartData,
+                  orderID,
+                  uid,
+                  LessonCUID,
+                  InstrumentCUID
                 )
                 confirmOrderSubmit()
-                localStorage.removeItem('CartData')
-                }
-              }
+              }}
             >
               確認付款
             </div>

@@ -32,7 +32,7 @@ let select = ()=>{
       <select
         className="form-select"
         aria-label="Default select example"
-        defaultValue={'Default'}
+        defaultValue={0}
         value={select()}
         onChange={(e) => {
           console.log(e.target.getAttribute("name"))
@@ -43,7 +43,7 @@ let select = ()=>{
           handleInstrumentCUIDSelector(cuid)
         }}
       >
-        <option value={'Default'} disabled>
+        <option value={0} disabled>
           請選擇折價券
         </option>
         {coupons}

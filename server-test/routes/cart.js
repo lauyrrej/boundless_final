@@ -62,7 +62,7 @@ router.post('/form', upload.none(), async (req, res) => {
             newOrderID,
             v.id,
             v.qty,
-            ouid,
+            ouid
         ]
         ).then(() => {
             // res.status(200).json({ status: 'success' });

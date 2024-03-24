@@ -12,6 +12,9 @@ export function CartProvider({ children }) {
   const router = useRouter()
   const mySwal = withReactContent(Swal)
   const confirmOrderSubmit = () => {
+    localStorage.removeItem('CartData')
+    localStorage.removeItem('LessonCoupon')
+    localStorage.removeItem('InstrumentCoupon')
     mySwal
       .fire({
         position: 'center',
@@ -38,7 +41,6 @@ export function CartProvider({ children }) {
   //加入到購物車的項目
   let [items, setItems] = useState([])
 
-
   useEffect(() => {
     localStorage.setItem('CartData', JSON.stringify(items))
   }, [items])
@@ -62,20 +64,17 @@ export function CartProvider({ children }) {
     }
   }
 
-
-
-   const addLessonItem = (item) => {
-     const index = items.findIndex((v) => {
-       return v.id == item.id
-     })
-     if (index == -1) {
-       const newItem = { ...item, qty: 1 }
-       const newItems = [...items, newItem]
-       setItems(newItems)
-       localStorage.setItem('CartData', JSON.stringify(newItems))
-     }
-   }
-    
+  const addLessonItem = (item) => {
+    const index = items.findIndex((v) => {
+      return v.id == item.id
+    })
+    if (index == -1) {
+      const newItem = { ...item, qty: 1 }
+      const newItems = [...items, newItem]
+      setItems(newItems)
+      localStorage.setItem('CartData', JSON.stringify(newItems))
+    }
+  }
 
   //在購物車中，移除某商品的id
   const remove = (items, id) => {
@@ -208,7 +207,7 @@ export function CartProvider({ children }) {
     localStorage.setItem('LessonCoupon', e)
     setLessonDiscount(e)
   }
-  
+
   // 抓不到 固定用註冊禮
   const handleLessonCUIDSelector = (cuid) => {
     // console.log(cuid)
@@ -267,7 +266,7 @@ export function CartProvider({ children }) {
 
   useEffect(() => {
     const lastInstrumentCoupon = JSON.parse(
-      localStorage.getItem('InstrumentCoupon') ?? '[]'
+      localStorage.getItem('InstrumentCoupon') ?? 0
     )
     setinstrumentDiscount(lastInstrumentCoupon)
   }, [])
@@ -287,6 +286,7 @@ export function CartProvider({ children }) {
       instrumentDiscount < 1 && instrumentDiscount !== 0
         ? calcInstrumentPrice() - calcInstrumentPrice() * instrumentDiscount
         : instrumentDiscount
+    // console.log(instrumentDiscount);
     return total
   }
 

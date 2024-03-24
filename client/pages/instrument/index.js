@@ -5,6 +5,7 @@ import Footer from '@/components/common/footer'
 import Card from '@/components/instrument/card.js'
 import Link from 'next/link'
 import Image from 'next/image'
+import Head from 'next/head'
 import productlistHero from '@/assets/product-list-hero.jpg'
 // icons
 import { IoHome } from 'react-icons/io5'
@@ -220,8 +221,6 @@ export default function Test({ onSearch }) {
     }
   }
 
-
-
   // const getDatassearch = async (params) => {
   //   try {
   //     const res = await fetch(
@@ -323,7 +322,7 @@ export default function Test({ onSearch }) {
   //-------------------搜尋功能
   const [data, setData] = useState(instrument)
 
-//-----------------篩選功能 //FIXME
+  //-----------------篩選功能 //FIXME
   // 價格篩選
   //確保 priceLow 和 priceHigh 有被定義後再呼叫 priceRange 函式
   // const priceRange = (priceLow, priceHigh) => {
@@ -362,8 +361,6 @@ export default function Test({ onSearch }) {
   //     setIsFiltered(true)
   //   }
   // }, [score, instrument])
-
-
 
   // 在組件中定義 isFiltered 狀態，並提供一個函數來更新它的值
   const [isFiltered, setIsFiltered] = useState(false)
@@ -405,34 +402,34 @@ export default function Test({ onSearch }) {
     setIsFiltered(true)
   }
 
-//-------------------渲染分類功能li
-const [InstrumentCategory, setInstrumentCategory] = useState([])
+  //-------------------渲染分類功能li
+  const [InstrumentCategory, setInstrumentCategory] = useState([])
 
-function getInstrumentCategory() {
-  return new Promise((resolve, reject) => {
-    let url = 'http://localhost:3005/api/instrument/categories'
-    fetch(url, {
-      method: 'GET',
-      credentials: 'include',
+  function getInstrumentCategory() {
+    return new Promise((resolve, reject) => {
+      let url = 'http://localhost:3005/api/instrument/categories'
+      fetch(url, {
+        method: 'GET',
+        credentials: 'include',
+      })
+        .then((response) => {
+          return response.json()
+        })
+        .then((result) => {
+          resolve(result)
+          console.log(result)
+          setInstrumentCategory(result)
+        })
+        .catch((error) => {
+          console.log(error)
+          reject()
+        })
     })
-      .then((response) => {
-        return response.json()
-      })
-      .then((result) => {
-        resolve(result)
-        console.log(result)
-        setInstrumentCategory(result)
-      })
-      .catch((error) => {
-        console.log(error)
-        reject()
-      })
-  })
-}
+  }
 
-useEffect(() => {
-  getInstrumentCategory()
-}, [])
+  useEffect(() => {
+    getInstrumentCategory()
+  }, [])
 
   //-------------------選定特定分類
 
@@ -469,7 +466,6 @@ useEffect(() => {
     }
   }, [selectedCategory])
 
-
   // 設定sidebar下拉狀態
   const [openAccordion, setOpenAccordion] = useState(null)
 
@@ -490,9 +486,11 @@ useEffect(() => {
     }
   }, [categoryParam])
 
-
   return (
     <>
+      <Head>
+        <title>樂器商城</title>
+      </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       <div className="hero d-none d-sm-block">
         <Image
@@ -549,65 +547,62 @@ useEffect(() => {
           <div className="sidebar-wrapper d-none d-sm-block  col-sm-2">
             <div className="sidebar">
               <ul className="d-flex flex-column">
-              <li onClick={() => handleCategoryChange(0)}>全部</li>
-      {/* 分類功能 */}
-      {InstrumentCategory.map((v) => {
-        return v.parent_id === 0 ? (
-          <li
-            className="accordion"
-            style={{ paddingBlock: '15px' }}
-            id={`accordion${v.name}`}
-            key={v.id}
-          >
-            <div className="accordion-item">
-              <h2 className="accordion-header">
-                <button
-                  className="accordion-button collapsed"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target={`#collapse${v.name}`}
-                  aria-expanded="false"
-                  aria-controls={`collapse${v.name}`}
-                >
-                  {v.name}
-                </button>
-              </h2>
-              <div
-                id={`collapse${v.name}`}
-                className="accordion-collapse collapse"
-                data-bs-parent={`#accordion${v.name}`}
-              >
-                {InstrumentCategory.map((subv) => {
-                  return v.id === subv.parent_id ? (
-                    <div
-                      className="accordion-body d-flex flex-column px-0 pt-3 pb-0"
-                      key={subv.id}
+                <li onClick={() => handleCategoryChange(0)}>全部</li>
+                {/* 分類功能 */}
+                {InstrumentCategory.map((v) => {
+                  return v.parent_id === 0 ? (
+                    <li
+                      className="accordion"
+                      style={{ paddingBlock: '15px' }}
+                      id={`accordion${v.name}`}
+                      key={v.id}
                     >
-                      <Link
-                        className="subcategory-link p-2"
-                        href={`/instrument/?category=${subv.name}`}
-                        onClick={() => {
-                      handleCategoryChange(subv.id)
-                      setShowSidebar(false)
-                    }}
-                      >
-                        {subv.name}
-                      </Link>
-                    </div>
+                      <div className="accordion-item">
+                        <h2 className="accordion-header">
+                          <button
+                            className="accordion-button collapsed"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target={`#collapse${v.name}`}
+                            aria-expanded="false"
+                            aria-controls={`collapse${v.name}`}
+                          >
+                            {v.name}
+                          </button>
+                        </h2>
+                        <div
+                          id={`collapse${v.name}`}
+                          className="accordion-collapse collapse"
+                          data-bs-parent={`#accordion${v.name}`}
+                        >
+                          {InstrumentCategory.map((subv) => {
+                            return v.id === subv.parent_id ? (
+                              <div
+                                className="accordion-body d-flex flex-column px-0 pt-3 pb-0"
+                                key={subv.id}
+                              >
+                                <Link
+                                  className="subcategory-link p-2"
+                                  href={`/instrument/?category=${subv.name}`}
+                                  onClick={() => {
+                                    handleCategoryChange(subv.id)
+                                    setShowSidebar(false)
+                                  }}
+                                >
+                                  {subv.name}
+                                </Link>
+                              </div>
+                            ) : (
+                              ''
+                            )
+                          })}
+                        </div>
+                      </div>
+                    </li>
                   ) : (
                     ''
-                  );
+                  )
                 })}
-              </div>
-            </div>
-          </li>
-        ) : (
-          ''
-        );
-      })}
-                <li>
-                  <Link href={`/instrument/activity`}>活動專區</Link>
-                </li>
               </ul>
               {/* <div>
             {recipes.map((recipe) => {
@@ -646,7 +641,7 @@ useEffect(() => {
                 return v.parent_id === 0 ? (
                   <li
                     className="accordion sm-item"
-                    style={{paddingBlock: '19px'}}
+                    style={{ paddingBlock: '19px' }}
                     id={`accordion${v.name}`}
                     key={v.id}
                   >
@@ -850,7 +845,7 @@ useEffect(() => {
                                         const value = e.target.value
                                         setScore(
                                           value === 'all' ? 'all' : value
-                                        ) 
+                                        )
                                       }}
                                     />
                                     &nbsp;{v === 'all' ? '全部' : v + '星'}
@@ -922,7 +917,7 @@ useEffect(() => {
             <main className="content">
               {showHotProducts && (
                 <div className="hot-instrument">
-                  <h4 className="text-primary">熱銷商品</h4>
+                  <h4 style={{ color: '#1581cc' }}>熱銷商品</h4>
                   <div className="hot-instrument-card">
                     {instrument
                       .slice() // Create a copy of data array to avoid mutating original array
@@ -1009,15 +1004,11 @@ useEffect(() => {
                           category_name={category_name}
                           img_small={img_small}
                           sales={sales}
-                          
                         />
                       </div>
-                      
                     )
                     console.log(category_name)
                   })}
-             
-
               </div>
             </main>
             <div className="d-flex justify-content-center">
@@ -1055,8 +1046,8 @@ useEffect(() => {
             flex-wrap: wrap;
           }
           .instrument-card-group {
-          gap: 10px;
-        }
+            gap: 10px;
+          }
           .hot-instrument-card > :global(div) {
             flex-basis: calc(
               40% - 40px

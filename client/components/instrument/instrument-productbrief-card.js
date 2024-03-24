@@ -16,9 +16,6 @@ export default function ProductBriefCard({
   setQuantity = {},
   addInstrumentItem = () => {},
   notifyBuy = () => {},
-  increment = () => {},
-  decrement = () => {},
-  remove = () => {},
 }) {
   //收藏按鍵的功能
   const [colorChange, setcolorChange] = useState(false)
@@ -35,13 +32,11 @@ export default function ProductBriefCard({
   // info={InstrumentDetail[0].info}
 
   // ----------------------加入右上角購物車的功能
-  const [cartItems, setCartItems] = useState([])
-  const [cartCount, setCartCount] = useState(0)
   const [toLocalePrice, setToLocalePrice] = useState('')
   useEffect(() => {
-    if(data.price){
+    if (data.price) {
       const priceString = data.price.toLocaleString()
-    setToLocalePrice(priceString)
+      setToLocalePrice(priceString)
     }
   }, [data])
   return (
@@ -142,16 +137,18 @@ export default function ProductBriefCard({
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
                 className="cartIcon"
               />
+
               <div className="cart" role="presentation">
-              <div
-                className="cart"
-                role="presentation"
-              >
                 加入購物車
               </div>
             </div>
+
             <div
-              className="buy"
+              className="buyBtn"
+              style={{
+                backgroundColor: data.stock > 0 ? '' : '#1581cc',
+                cursor: data.stock > 0 ? 'pointer' : 'default',
+              }}
               onClick={() => {
                 if (data.stock > 0) {
                   addInstrumentItem(data, quantity)
@@ -159,179 +156,172 @@ export default function ProductBriefCard({
                 }
               }}
             >
-              <div
-                className="buyBtn"
-                style={{
-                  backgroundColor: data.stock > 0 ? '' : '#1581cc',
-                  cursor: data.stock > 0 ? 'pointer' : 'default',
-                }}
-              >
-                立即購買
-              </div>
+              <div className="buy">立即購買</div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  <style jsx>{`
-    .Right {
-      top: 80px;
-      z-index: 30;
-    }
 
-    .prodBriefing {
-      /* background-color: #ff9595; */
-      margin-left: 45px;
-      top: 120px;
-    }
-    .prodMainName {
-      color: var(--dark, #1d1d1d);
-      /* font: 700 40px Noto Sans TC, sans-serif; */
-      font-weight: 700;
-      font-size: 40px;
-    }
-    /*  */
-    .font-family {
-      font-family: Noto Sans TC, sans-serif;
-    }
-    /*  */
+      <style jsx>
+        {`
+          .Right {
+            top: 80px;
+            z-index: 30;
+          }
 
-    .Rating {
-      justify-content: space-between;
-      display: flex;
-      margin-top: 10px;
-      width: 100%;
-      gap: 20px;
-      font-weight: 400;
-    }
+          .prodBriefing {
+            /* background-color: #ff9595; */
+            margin-left: 45px;
+            top: 120px;
+          }
+          .prodMainName {
+            color: var(--dark, #1d1d1d);
+            /* font: 700 40px Noto Sans TC, sans-serif; */
+            font-weight: 700;
+            font-size: 40px;
+          }
+          /*  */
+          .font-family {
+            font-family: Noto Sans TC, sans-serif;
+          }
+          /*  */
 
-    .star {
-      justify-content: center;
-      align-items: center;
-      display: flex;
-      gap: 10px;
-      white-space: nowrap;
-    }
+          .Rating {
+            justify-content: space-between;
+            display: flex;
+            margin-top: 10px;
+            width: 100%;
+            gap: 20px;
+            font-weight: 400;
+          }
 
-    .ratingNumber {
-      color: var(--yellow, #faad14);
-      align-self: stretch;
-      font: 24px Noto Sans TC, sans-serif;
-    }
+          .star {
+            justify-content: center;
+            align-items: center;
+            display: flex;
+            gap: 10px;
+            white-space: nowrap;
+          }
 
-    .commentNumber {
-      color: var(--body, #b9b9b9);
-      align-self: stretch;
-      flex-grow: 1;
-      margin: auto 0;
-      font: 16px Noto Sans TC, sans-serif;
-    }
-    .sales {
-      color: var(--secondary, #5a5a5a);
-      margin: auto 0;
-      font: 16px Noto Sans TC, sans-serif;
-    }
-    .productPrice {
-      justify-content: space-between;
-      display: flex;
-      margin-top: 10px;
-      gap: 20px;
-    }
-    .price {
-      color: var(--dark, #1d1d1d);
-      white-space: nowrap;
-      padding: 9px 21px 2px 0;
-      font: 700 28px Noto Sans TC, sans-serif;
-    }
-    .likesIcon {
-      justify-content: center;
-      align-items: center;
-      border-radius: 5px;
-      border: 1px solid var(--body, #b9b9b9);
-      display: flex;
-      aspect-ratio: 1;
-      width: 34px;
-      height: 34px;
-      margin: auto 0;
-      padding: 0 7px;
-      transition: 0.2s;
-      color: #b9b9b9;
-      &:hover {
-        color: #ec3f3f;
-      }
-    }
-    .quantitySelector {
-      display: flex;
-      align-items: center;
-      margin-top: 20px;
-    }
-    .decrease-btn {
-      height: 40px;
-      width: 40px;
-      border-radius: 5px 0px 0px 5px;
-      border: 1px solid var(--body, #b9b9b9);
-    }
-    .quantity {
-      display: flex;
-      width: 78px;
-      height: 40px;
-      justify-content: center;
-      align-items: center;
-      border: 1px solid var(--body, #b9b9b9);
-    }
-    .increase-btn {
-      height: 40px;
-      width: 40px;
-      border-radius: 0px 5px 5px 0px;
-    }
-    .hasStock {
-      background-color: #18a1ff;
-    }
-    .hasStock:hover {
-      background-color: #1581cc;
-    }
-    .noStock {
-      background-color: #b9b9b9;
-    }
-    .shoppingBtn {
-      display: flex;
-      margin-top: 20px;
-      justify-content: space-evenly;
-      gap: 12px;
-      font-size: 16px;
-      color: var(--white, #fff);
-      font-weight: 700;
-    }
-    .cartBtn {
-      display: flex;
-      justify-content: space-between;
-      border-radius: 5px;
-      background-color: var(--body, #b9b9b9);
-      gap: 12px;
-      padding: 8px 78px;
-      flex: 1 0 0;
-      cursor: pointer;
-      transition: 0.3s;
-      &:hover {
-        background-color: #666666;
-      }
-    }
-    .buyBtn {
-      display: flex;
-      justify-content: center;
-      border-radius: 5px;
-      background-color: #18a1ff;
-      gap: 12px;
-      padding: 8px 78px;
-      flex: 1 0 0;
-      cursor: pointer;
-      transition: 0.3s;
-      &:hover {
-        background-color: #1581cc;
-      }
-    }
-  `}
-  </style>
-</>
+          .ratingNumber {
+            color: var(--yellow, #faad14);
+            align-self: stretch;
+            font: 24px Noto Sans TC, sans-serif;
+          }
+
+          .commentNumber {
+            color: var(--body, #b9b9b9);
+            align-self: stretch;
+            flex-grow: 1;
+            margin: auto 0;
+            font: 16px Noto Sans TC, sans-serif;
+          }
+          .sales {
+            color: var(--secondary, #5a5a5a);
+            margin: auto 0;
+            font: 16px Noto Sans TC, sans-serif;
+          }
+          .productPrice {
+            justify-content: space-between;
+            display: flex;
+            margin-top: 10px;
+            gap: 20px;
+          }
+          .price {
+            color: var(--dark, #1d1d1d);
+            white-space: nowrap;
+            padding: 9px 21px 2px 0;
+            font: 700 28px Noto Sans TC, sans-serif;
+          }
+          .likesIcon {
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+            border: 1px solid var(--body, #b9b9b9);
+            display: flex;
+            aspect-ratio: 1;
+            width: 34px;
+            height: 34px;
+            margin: auto 0;
+            padding: 0 7px;
+            transition: 0.2s;
+            color: #b9b9b9;
+            &:hover {
+              color: #ec3f3f;
+            }
+          }
+          .quantitySelector {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+          }
+          .decrease-btn {
+            height: 40px;
+            width: 40px;
+            border-radius: 5px 0px 0px 5px;
+            border: 1px solid var(--body, #b9b9b9);
+          }
+          .quantity {
+            display: flex;
+            width: 78px;
+            height: 40px;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid var(--body, #b9b9b9);
+          }
+          .increase-btn {
+            height: 40px;
+            width: 40px;
+            border-radius: 0px 5px 5px 0px;
+          }
+          .hasStock {
+            background-color: #18a1ff;
+          }
+          .hasStock:hover {
+            background-color: #1581cc;
+          }
+          .noStock {
+            background-color: #b9b9b9;
+          }
+          .shoppingBtn {
+            display: flex;
+            margin-top: 20px;
+            justify-content: space-evenly;
+            gap: 12px;
+            font-size: 16px;
+            color: var(--white, #fff);
+            font-weight: 700;
+          }
+          .cartBtn {
+            display: flex;
+            justify-content: center;
+            border-radius: 5px;
+            background-color: var(--body, #b9b9b9);
+            gap: 12px;
+            padding-block: 8px;
+            flex: 1 0 0;
+            cursor: pointer;
+            transition: 0.3s;
+            &:hover {
+              background-color: #666666;
+            }
+          }
+          .buyBtn {
+            display: flex;
+            justify-content: center;
+            border-radius: 5px;
+            background-color: #18a1ff;
+            gap: 12px;
+            padding-block: 8px;
+            flex: 1 0 0;
+            cursor: pointer;
+            transition: 0.3s;
+            &:hover {
+              background-color: #1581cc;
+            }
+          }
+        `}
+      </style>
+    </>
   )
 }

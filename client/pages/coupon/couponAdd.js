@@ -105,7 +105,7 @@ export default function Test() {
 
   return (
     <>
-      <Head menuMbToggle={menuMbToggle}>{/* <title>我的優惠券</title> */}</Head>
+      <Head><title>活動優惠券領取</title></Head>
       <Navbar menuMbToggle={menuMbToggle} />
       {/* 先把HeroSection隱藏 */}
       <div className="page-shero d-none d-sm-block">
@@ -149,7 +149,7 @@ export default function Test() {
                       <div className="row m-sm-3">
                         <div className="col-9">
                           {/* 連結至樂器/課程列表 */}
-                          <Link href={``}>
+                          <Link href={`/instrument`}>
                             {' '}
                             <img
                               className="couponImg"
@@ -171,7 +171,7 @@ export default function Test() {
                             onClick={async () => {
                               const obj = {
                                 user_id: avatarUserID,
-                                coupon_template_id: 1,
+                                coupon_template_id: 2,
                               }
                               const res = await CouponClass.Create(obj)
                               const swal = await Swal.fire({
@@ -196,7 +196,7 @@ export default function Test() {
                       <div className="row row m-sm-3">
                         <div className="col-9">
                           {/* 連結至樂器/課程列表 */}
-                          <Link href={``}>
+                          <Link href={`/instrument`}>
                             {' '}
                             <img
                               className="couponImg"
@@ -218,7 +218,7 @@ export default function Test() {
                             onClick={async () => {
                               const obj = {
                                 user_id: avatarUserID,
-                                coupon_template_id: 1,
+                                coupon_template_id: 10,
                               }
                               const res = await CouponClass.Create(obj)
                               const swal = await Swal.fire({
@@ -243,7 +243,7 @@ export default function Test() {
                       <div className="row row m-sm-3">
                         <div className="col-9">
                           {/* 連結至樂器/課程列表 */}
-                          <Link href={``}>
+                          <Link href={`/lesson`}>
                             {' '}
                             <img className="couponImg" src="bannerNew3.jpg" />
                           </Link>
@@ -258,7 +258,7 @@ export default function Test() {
                             onClick={async () => {
                               const obj = {
                                 user_id: avatarUserID,
-                                coupon_template_id: 1,
+                                coupon_template_id: 18,
                               }
                               const res = await CouponClass.Create(obj)
                               const swal = await Swal.fire({
@@ -356,10 +356,10 @@ export default function Test() {
           flex-direction: column;
           align-items: center;
           border-radius: 5px;
+          gap: 20px;
           background: var(--gray-30, rgba(185, 185, 185, 0.3));
           .couponImg {
             width: 100%;
-            min-width: 390px;
             border-radius: 5px;
             margin-left: 20px @media screen and (max-width: 576px) {
               width: 70%;
