@@ -760,9 +760,9 @@ export default function LessonList({}) {
                       sales,
                       length,
                     } = v
-                    console.log(lesson_category_name)
+                    {/* console.log(lesson_category_name) */}
                     return (
-                      <div className="mb-4" key={id}>
+                      <div key={id}>
                         {isSmallScreen ? (
                           <Cardrwd
                             lesson_category_id={lesson_category_name}
