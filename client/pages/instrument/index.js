@@ -605,7 +605,7 @@ useEffect(() => {
           ''
         );
       })}
-                <li>
+      <li>
                   <Link href={`/instrument/activity`}>活動專區</Link>
                 </li>
               </ul>
@@ -692,9 +692,9 @@ useEffect(() => {
                   ''
                 )
               })}
-              <Link href={`/instrument/instrument`} className="sm-item">
-                活動專區
-              </Link>
+              <li>
+                  <Link href={`/instrument/activity`}>活動專區</Link>
+                </li>
             </div>
             {/*  ---------------------- 頂部功能列  ---------------------- */}
             <div className="top-function-container">
