@@ -217,7 +217,7 @@ export default function UserJam() {
           </span>
         )
       case 2:
-        return <span>拒絕</span>
+        return <span style={{color: '#ec3f3f'}}>拒絕</span>
       default:
         return null
     }

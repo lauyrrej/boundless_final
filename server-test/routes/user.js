@@ -419,6 +419,8 @@ const uNickname = "USER-" + uuid
     // 用戶不存在，插入新用戶
     const [result] = await db.execute('INSERT INTO user (nickname , email, uid, password, created_time , valid) VALUES (?, ?, ?, ?, ?, 1);', [uNickname ,newUser.email, uuid, newUser.password, YYYYMMDDTime]);
     // console.log('User inserted:', result);
+    const [user_id] = await db.execute('SELECT id FROM user WHERE uid = ?', [uuid])
+    const [coupon] = await db.execute('INSERT INTO coupon (user_id, coupon_template_id) VALUES (?, 1)', [user_id[0].id])
   }
 
   // 成功建立會員的回應

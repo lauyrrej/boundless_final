@@ -79,6 +79,12 @@ export default function Navbar({ menuMbToggle }) {
         }, 2000)
       )
   }
+  const [cartState, setCartState] = useState(false)
+  useEffect(() => {
+    if(localStorage.getItem('CartData')) {
+      setCartState(true)
+    }
+  }, [])
 
   return (
     <>
@@ -113,9 +119,7 @@ export default function Navbar({ menuMbToggle }) {
             <li
               className="ms-3 cart-icon"
               onClick={() => {
-                const haveCart = localStorage.getItem('CartData')
-                const trueCart = JSON.parse(haveCart)
-                if (trueCart.length > 0) {
+                if (cartState && calcTotalItems() !== 0) {
                   router.push(`/cart/check`)
                 } else {
                   cartNull()
@@ -124,10 +128,10 @@ export default function Navbar({ menuMbToggle }) {
             >
               <div className="cart">
                 <IoCart size={30} className="cart-icon" />
-                {calcTotalItems() == 0 ? (
-                  ''
-                ) : (
+                {cartState && calcTotalItems() !== 0 ? (
                   <span className="button__badge">{calcTotalItems()}</span>
+                ) : (
+                  ''
                 )}
               </div>
             </li>
@@ -167,10 +171,7 @@ export default function Navbar({ menuMbToggle }) {
             <div
               className="p-0 me-3 cart-icon"
               onClick={() => {
-                const haveCart = localStorage.getItem('CartData')
-                const trueCart = JSON.parse(haveCart)
-                console.log(trueCart)
-                if (trueCart.length > 0) {
+                if (cartState && calcTotalItems() !== 0) {
                   router.push(`/cart/check`)
                 } else {
                   cartNull()
@@ -179,10 +180,10 @@ export default function Navbar({ menuMbToggle }) {
             >
               <div className="cart">
                 <IoCart size={30} className="cart-icon" />
-                {calcTotalItems() == 0 ? (
-                  ''
-                ) : (
+                {cartState && calcTotalItems() !== 0 ? (
                   <span className="button__badge">{calcTotalItems()}</span>
+                ) : (
+                  ''
                 )}
               </div>
             </div>

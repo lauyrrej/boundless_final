@@ -181,9 +181,13 @@ export default function Auid() {
                 <li style={{ marginLeft: '8px' }}>樂友論壇</li>
               </Link>
               <FaChevronRight />
-              <Link href={articleDetail.category_name == '技術'
+              <Link
+                href={
+                  articleDetail.category_name == '技術'
                     ? '/article/article-list/sharing'
-                    : '/article/article-list/comments'}>
+                    : '/article/article-list/comments'
+                }
+              >
                 <li style={{ marginLeft: '10px' }}>
                   {articleDetail.category_name == '技術'
                     ? '技術分享'
@@ -191,9 +195,7 @@ export default function Auid() {
                 </li>
               </Link>
               <FaChevronRight />
-              <Link href="/article/article-list">
-                <li style={{ marginLeft: '10px' }}>{articleDetail.title}</li>
-              </Link>
+              <li style={{ marginLeft: '10px' }}>{articleDetail.title}</li>
             </ul>
           </div>
           <div className="">
