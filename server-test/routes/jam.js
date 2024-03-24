@@ -742,7 +742,7 @@ router.post('/apply', upload.none(), async (req, res) => {
 
 // 修改表單
 router.put('/updateForm', upload.none(), async (req, res) => {
-  const now = new Date().toISOString();
+  const now = new Date();
   const { juid, title, condition, description } = req.body;
   await db
     .execute(
@@ -753,6 +753,7 @@ router.put('/updateForm', upload.none(), async (req, res) => {
       res.status(200).json({ status: 'success' });
     })
     .catch((error) => {
+      console.log(error);
       res.status(500).json({ status: 'error', error });
     });
 });

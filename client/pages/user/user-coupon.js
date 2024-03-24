@@ -254,7 +254,9 @@ export default function Test() {
 
   return (
     <>
-      <Head menuMbToggle={menuMbToggle}><title>我的優惠券</title></Head>
+      <Head>
+        <title>我的優惠券</title>
+      </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       {/* 先把HeroSection隱藏 */}
       {/* <div
@@ -314,15 +316,7 @@ export default function Test() {
                   <Link href="/user/user-info">會員資訊</Link>
                 </li>
                 <li key={2}>
-                  <Link
-                    href={
-                      LoginUserData.jamstate == '1'
-                        ? `/jam/recruit-list/${LoginUserData.my_jam}`
-                        : `/user/user-jam`
-                    }
-                  >
-                    我的樂團
-                  </Link>
+                  <Link href={LoginUserData.jamstate == '1' ?  `/jam/recruit-list/${LoginUserData.my_jam}`: `/user/user-jam`}>我的樂團</Link>
                 </li>
                 <li key={3}>
                   <Link href="/user/user-order">我的訂單</Link>
@@ -372,7 +366,7 @@ export default function Test() {
               <Link href={`/user/user-article`} className="sm-item">
                 我的文章
               </Link>
-              <Link href={`/user/user-coupon`} className="sm-item active">
+              <Link href="/user/user-Coupon" className="sm-item">
                 我的優惠券
               </Link>
             </div>
@@ -697,7 +691,7 @@ export default function Test() {
                     <div className="coupon-content col-12">
                       <div className="coupon-content-top">
                         <div className="user-title-userInfo">
-                          {LoginUserData.nickname}的優惠券
+                          {LoginUserData.nickname ? LoginUserData.nickname : LoginUserData.name}的優惠券
                         </div>
                       </div>
                       {/* components */}
