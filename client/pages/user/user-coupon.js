@@ -6,6 +6,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import jamHero from '@/assets/jam-hero.png'
 import Head from 'next/head'
+import NavbarMb from '@/components/common/navbar-mb'
+
 
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
@@ -248,6 +250,7 @@ export default function Test() {
     setDataPage(GetArr(filter.length / 9))
     setCurrentPage(1)
   }
+  
 
   return (
     <>
@@ -270,47 +273,7 @@ export default function Test() {
           }`}
         >
           {/* 用戶資訊 */}
-          <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
-            <div className="mb-photo-wrapper mb-2">
-              <Image
-                src={avatarImage}
-                alt="user photo mb"
-                fill
-                sizes="(max-width: 150px)"
-              ></Image>
-            </div>
-            <div>{LoginUserData.nickname}</div>
-          </div>
-          <Link
-            className="mm-item"
-            href="/user/user-info"
-            style={{ borderTop: '1px solid #b9b9b9' }}
-          >
-            會員中心
-          </Link>
-          <Link className="mm-item" href="/lesson/lesson-list">
-            探索課程
-          </Link>
-          <Link className="mm-item" href="/instrument/instrument-list">
-            樂器商城
-          </Link>
-          <Link className="mm-item" href="/jam/recruit-list">
-            Let &apos;s JAM!
-          </Link>
-          <Link className="mm-item" href="/article/article-list">
-            樂友論壇
-          </Link>
-          {/*eslint-disable-next-line jsx-a11y/click-events-have-key-events*/}
-          <div
-            onClick={handleLogout}
-            //onclick 要加這個 不然ES會跳沒有給身障人士使用
-            role="presentation"
-            className="mm-item"
-            style={{ color: '#1581cc' }}
-          >
-            登出
-            <ImExit size={20} className="ms-2" />
-          </div>
+          <NavbarMb />
         </div>
 
         <div className="row">
@@ -331,7 +294,9 @@ export default function Test() {
                   <div className="sidebar-user-info-name">
                     {LoginUserData.nickname}
                   </div>
-                  <div className="sidebar-user-info-band">樂團名稱</div>
+                  <div className="sidebar-user-info-band">
+                    {LoginUserData.my_jamname}
+                  </div>
                 </div>
                 {/* 更換大頭貼的功能暫定併回會員資訊 故不再sidebar顯示 */}
                 {/* <div className="sidebar-user-info-Camera-img">
@@ -382,16 +347,23 @@ export default function Test() {
                   }}
                 />
               </div>
-              <Link href="/user/user-info" className="sm-item active">
+              <Link href={`/user/user-info`} className="sm-item ">
                 會員資訊
               </Link>
-              <Link href="/user/user-jam" className="sm-item">
+              <Link
+                href={
+                  LoginUserData.jamstate == '1'
+                    ? `/jam/recruit-list/${LoginUserData.my_jam}`
+                    : `/user/user-jam`
+                }
+                className="sm-item"
+              >
                 我的樂團
               </Link>
-              <Link href="/user/user-order" className="sm-item">
+              <Link href={`/user/user-order`} className="sm-item">
                 我的訂單
               </Link>
-              <Link href="/user/user-acticle" className="sm-item">
+              <Link href={`/user/user-article`} className="sm-item">
                 我的文章
               </Link>
               <Link href="/user/user-Coupon" className="sm-item">
@@ -468,7 +440,7 @@ export default function Test() {
                           </a>
                         </li>
                         {/* userID*/}
-                        <button
+                        {/* <button
                           className="b-btn b-lesson-btn px-5 py-3"
                           style={{
                             backgroundColor: 'rgb(255, 255, 255)',
@@ -496,7 +468,7 @@ export default function Test() {
                           }}
                         >
                           立即領取
-                        </button>
+                        </button> */}
                       </ol>
                     </nav>
                   </div>
@@ -841,7 +813,7 @@ export default function Test() {
           }
           .sidebar-user-info-text {
             display: flex;
-            width: 100px;
+            width: 140px;
             flex-direction: column;
             align-items: flex-start;
             gap: 6px;
@@ -881,7 +853,7 @@ export default function Test() {
         .coupon-content {
           display: flex;
           width: 1070px;
-          height:800px;
+          height: 800px;
           padding: 20px 10px;
           flex-direction: column;
           align-items: flex-start;
@@ -906,11 +878,8 @@ export default function Test() {
         .couponImage {
           display: flex;
           flex-wrap: wrap;
-           {
-             {
-              /* justify-content: space-between; */
-            }
-          }
+          /* justify-content: space-between; */
+           
 
           @media screen and (max-width: 576px) {
             padding: 0;
@@ -920,7 +889,7 @@ export default function Test() {
         @media screen and (max-width: 576px) {
           .coupon-content {
             width: 390px;
-            padding: 10px;  
+            padding: 10px;
             overflow: hidden;
           }
         }
