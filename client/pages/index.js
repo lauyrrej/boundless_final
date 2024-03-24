@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/hooks/user/use-auth'
-import { Toaster } from 'react-hot-toast'
+import { useJam } from '@/hooks/use-jam'
+import { useRouter } from 'next/router'
+import toast, { Toaster } from 'react-hot-toast'
 import Navbar from '@/components/common/navbar'
 import NavbarMb from '@/components/common/navbar-mb'
 import Footer from '@/components/common/footer'
@@ -12,6 +14,7 @@ import 'animate.css'
 import styles from '@/pages/jam/jam.module.scss'
 
 export default function Index() {
+  const router = useRouter()
   // ----------------------會員登入狀態 & 會員資料獲取  ----------------------
   //從hook 獲得使用者登入的資訊  儲存在變數LoginUserData裡面
   const { LoginUserData, handleLoginStatus, getLoginUserData, handleLogout } =
@@ -22,6 +25,7 @@ export default function Index() {
     handleLoginStatus()
     //獲得資料
     getLoginUserData()
+    getData()
   }, [])
   // -------------------------------------------------- 手機版本  --------------------------------------------------
   // 主選單
@@ -29,18 +33,50 @@ export default function Index() {
   const menuMbToggle = () => {
     setShowMenu(!showMenu)
   }
+  const checkLogin = () => {
+    toast('請先登入', {
+      icon: 'ℹ️',
+      style: {
+        border: '1px solid #666666',
+        padding: '16px',
+        color: '#1d1d1d',
+      },
+      duration: 2000,
+    })
+  }
+  const [carouselData, setCarouselData] = useState([])
+  const [carouselUseData, setCarouselUseData] = useState([])
+  const getData = async () => {
+    try {
+      const res = await fetch(`http://localhost:3005`)
 
+      // res.json()是解析res的body的json格式資料，得到JS的資料格式
+      const result = await res.json()
+
+      // 設定到state中，觸發重新渲染(re-render)，會進入到update階段
+      // 進入狀態前檢查資料類型為陣列，以避免錯誤
+      // console.log(datas)
+      if (result.status == 'success') {
+        setCarouselData(result.data)
+      } else {
+        console.log(result.error)
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+  useEffect(() => {
+    if (carouselData.length > 0) {
+      carouselData.push({ img: 'bannerNew.jpg', url: '/coupon/couponAdd' })
+      setCarouselUseData(carouselData)
+    }
+  }, [carouselData])
+  console.log(carouselUseData)
   return (
     <>
       <Head>
         <title>Boundless 線上音樂學習平台</title>
       </Head>
-      <Toaster
-        containerStyle={{
-          top: 80,
-          zIndex: 101,
-        }}
-      />
       <Navbar menuMbToggle={menuMbToggle} />
       <div
         className="container-fill position-relative"
@@ -52,8 +88,7 @@ export default function Index() {
             showMenu ? 'menu-mb-show' : ''
           }`}
         >
-
-          <NavbarMb/>
+          <NavbarMb />
         </div>
         <div>
           <h1 hidden>Boundless 線上音樂學習平台</h1>
@@ -99,7 +134,41 @@ export default function Index() {
                 ></button>
               </div>
               <div className="carousel-inner" style={{ borderRadius: '10px' }}>
-                <div className="carousel-item active" data-bs-interval="4000">
+                {carouselUseData.map((v, i) => {
+                  if (i < 4) {
+                    return (
+                      <Link
+                        href={`/lesson/${v.lesson_category_name}/${v.puid}`}
+                        className={`carousel-item ${i == 0 ? 'active' : ''}`}
+                        data-bs-interval="4000"
+                      >
+                        <Image
+                          src={`/課程與師資/lesson_img/${v.img}`}
+                          alt="..."
+                          fill
+                        />
+                      </Link>
+                    )
+                  } else {
+                    return (
+                      <div
+                        className={`carousel-item`}
+                        data-bs-interval="4000"
+                        style={{cursor: 'pointer'}}
+                        onClick={() => {
+                          if (LoginUserData.id) {
+                            router.push(v.url)
+                          } else {
+                            checkLogin()
+                          }
+                        }}
+                      >
+                        <Image src={`/${v.img}`} alt="..." fill />
+                      </div>
+                    )
+                  }
+                })}
+                {/* <div className="carousel-item active" data-bs-interval="4000">
                   <Image
                     src="/課程與師資/lesson_img/lesson_001.jpeg"
                     alt="..."
@@ -128,12 +197,8 @@ export default function Index() {
                   />
                 </div>
                 <div className="carousel-item" data-bs-interval="4000">
-                  <Image
-                    src="/banner.jpg"
-                    alt="..."
-                    fill
-                  />
-                </div>
+                  <Image src="/banner.jpg" alt="..." fill />
+                </div> */}
               </div>
               <button
                 className="carousel-control-prev"
