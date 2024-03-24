@@ -172,167 +172,166 @@ export default function ProductBriefCard({
           </div>
         </div>
       </div>
+    </div>
+  <style jsx>{`
+    .Right {
+      top: 80px;
+      z-index: 30;
+    }
 
-      <style jsx>
-        {`
-          .Right {
-            top: 80px;
-            z-index: 30;
-          }
+    .prodBriefing {
+      /* background-color: #ff9595; */
+      margin-left: 45px;
+      top: 120px;
+    }
+    .prodMainName {
+      color: var(--dark, #1d1d1d);
+      /* font: 700 40px Noto Sans TC, sans-serif; */
+      font-weight: 700;
+      font-size: 40px;
+    }
+    /*  */
+    .font-family {
+      font-family: Noto Sans TC, sans-serif;
+    }
+    /*  */
 
-          .prodBriefing {
-            /* background-color: #ff9595; */
-            margin-left: 45px;
-            top: 120px;
-          }
-          .prodMainName {
-            color: var(--dark, #1d1d1d);
-            /* font: 700 40px Noto Sans TC, sans-serif; */
-            font-weight: 700;
-            font-size: 40px;
-          }
-          /*  */
-          .font-family {
-            font-family: Noto Sans TC, sans-serif;
-          }
-          /*  */
+    .Rating {
+      justify-content: space-between;
+      display: flex;
+      margin-top: 10px;
+      width: 100%;
+      gap: 20px;
+      font-weight: 400;
+    }
 
-          .Rating {
-            justify-content: space-between;
-            display: flex;
-            margin-top: 10px;
-            width: 100%;
-            gap: 20px;
-            font-weight: 400;
-          }
+    .star {
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      gap: 10px;
+      white-space: nowrap;
+    }
 
-          .star {
-            justify-content: center;
-            align-items: center;
-            display: flex;
-            gap: 10px;
-            white-space: nowrap;
-          }
+    .ratingNumber {
+      color: var(--yellow, #faad14);
+      align-self: stretch;
+      font: 24px Noto Sans TC, sans-serif;
+    }
 
-          .ratingNumber {
-            color: var(--yellow, #faad14);
-            align-self: stretch;
-            font: 24px Noto Sans TC, sans-serif;
-          }
-
-          .commentNumber {
-            color: var(--body, #b9b9b9);
-            align-self: stretch;
-            flex-grow: 1;
-            margin: auto 0;
-            font: 16px Noto Sans TC, sans-serif;
-          }
-          .sales {
-            color: var(--secondary, #5a5a5a);
-            margin: auto 0;
-            font: 16px Noto Sans TC, sans-serif;
-          }
-          .productPrice {
-            justify-content: space-between;
-            display: flex;
-            margin-top: 10px;
-            gap: 20px;
-          }
-          .price {
-            color: var(--dark, #1d1d1d);
-            white-space: nowrap;
-            padding: 9px 21px 2px 0;
-            font: 700 28px Noto Sans TC, sans-serif;
-          }
-          .likesIcon {
-            justify-content: center;
-            align-items: center;
-            border-radius: 5px;
-            border: 1px solid var(--body, #b9b9b9);
-            display: flex;
-            aspect-ratio: 1;
-            width: 34px;
-            height: 34px;
-            margin: auto 0;
-            padding: 0 7px;
-            transition: 0.2s;
-            color: #b9b9b9;
-            &:hover {
-              color: #ec3f3f;
-            }
-          }
-          .quantitySelector {
-            display: flex;
-            align-items: center;
-            margin-top: 20px;
-          }
-          .decrease-btn {
-            height: 40px;
-            width: 40px;
-            border-radius: 5px 0px 0px 5px;
-            border: 1px solid var(--body, #b9b9b9);
-          }
-          .quantity {
-            display: flex;
-            width: 78px;
-            height: 40px;
-            justify-content: center;
-            align-items: center;
-            border: 1px solid var(--body, #b9b9b9);
-          }
-          .increase-btn {
-            height: 40px;
-            width: 40px;
-            border-radius: 0px 5px 5px 0px;
-          }
-          .hasStock {
-            background-color: #18a1ff;
-          }
-          .hasStock:hover {
-            background-color: #1581cc;
-          }
-          .noStock {
-            background-color: #b9b9b9;
-          }
-          .shoppingBtn {
-            display: flex;
-            margin-top: 20px;
-            justify-content: space-evenly;
-            gap: 12px;
-            font-size: 16px;
-            color: var(--white, #fff);
-            font-weight: 700;
-          }
-          .cartBtn {
-            display: flex;
-            justify-content: space-between;
-            border-radius: 5px;
-            background-color: var(--body, #b9b9b9);
-            gap: 12px;
-            padding: 8px 78px;
-            flex: 1 0 0;
-            cursor: pointer;
-            transition: 0.3s;
-            &:hover {
-              background-color: #666666;
-            }
-          }
-          .buyBtn {
-            display: flex;
-            justify-content: center;
-            border-radius: 5px;
-            background-color: #18a1ff;
-            gap: 12px;
-            padding: 8px 78px;
-            flex: 1 0 0;
-            cursor: pointer;
-            transition: 0.3s;
-            &:hover {
-              background-color: #1581cc;
-            }
-          }
-        `}
-      </style>
-    </>
+    .commentNumber {
+      color: var(--body, #b9b9b9);
+      align-self: stretch;
+      flex-grow: 1;
+      margin: auto 0;
+      font: 16px Noto Sans TC, sans-serif;
+    }
+    .sales {
+      color: var(--secondary, #5a5a5a);
+      margin: auto 0;
+      font: 16px Noto Sans TC, sans-serif;
+    }
+    .productPrice {
+      justify-content: space-between;
+      display: flex;
+      margin-top: 10px;
+      gap: 20px;
+    }
+    .price {
+      color: var(--dark, #1d1d1d);
+      white-space: nowrap;
+      padding: 9px 21px 2px 0;
+      font: 700 28px Noto Sans TC, sans-serif;
+    }
+    .likesIcon {
+      justify-content: center;
+      align-items: center;
+      border-radius: 5px;
+      border: 1px solid var(--body, #b9b9b9);
+      display: flex;
+      aspect-ratio: 1;
+      width: 34px;
+      height: 34px;
+      margin: auto 0;
+      padding: 0 7px;
+      transition: 0.2s;
+      color: #b9b9b9;
+      &:hover {
+        color: #ec3f3f;
+      }
+    }
+    .quantitySelector {
+      display: flex;
+      align-items: center;
+      margin-top: 20px;
+    }
+    .decrease-btn {
+      height: 40px;
+      width: 40px;
+      border-radius: 5px 0px 0px 5px;
+      border: 1px solid var(--body, #b9b9b9);
+    }
+    .quantity {
+      display: flex;
+      width: 78px;
+      height: 40px;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid var(--body, #b9b9b9);
+    }
+    .increase-btn {
+      height: 40px;
+      width: 40px;
+      border-radius: 0px 5px 5px 0px;
+    }
+    .hasStock {
+      background-color: #18a1ff;
+    }
+    .hasStock:hover {
+      background-color: #1581cc;
+    }
+    .noStock {
+      background-color: #b9b9b9;
+    }
+    .shoppingBtn {
+      display: flex;
+      margin-top: 20px;
+      justify-content: space-evenly;
+      gap: 12px;
+      font-size: 16px;
+      color: var(--white, #fff);
+      font-weight: 700;
+    }
+    .cartBtn {
+      display: flex;
+      justify-content: space-between;
+      border-radius: 5px;
+      background-color: var(--body, #b9b9b9);
+      gap: 12px;
+      padding: 8px 78px;
+      flex: 1 0 0;
+      cursor: pointer;
+      transition: 0.3s;
+      &:hover {
+        background-color: #666666;
+      }
+    }
+    .buyBtn {
+      display: flex;
+      justify-content: center;
+      border-radius: 5px;
+      background-color: #18a1ff;
+      gap: 12px;
+      padding: 8px 78px;
+      flex: 1 0 0;
+      cursor: pointer;
+      transition: 0.3s;
+      &:hover {
+        background-color: #1581cc;
+      }
+    }
+  `}
+  </style>
+</>
   )
 }
