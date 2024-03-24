@@ -6,6 +6,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import jamHero from '@/assets/jam-hero.png'
 import Head from 'next/head'
+import NavbarMb from '@/components/common/navbar-mb'
+
 
 // 會員認證hook
 import { useAuth } from '@/hooks/user/use-auth'
@@ -52,11 +54,11 @@ export default function Test() {
   //   讀取使用者資料後 定義大頭貼路徑
   let avatarImage
   if (LoginUserData.img) {
-    avatarImage = `/user/${LoginUserData.img}`
+    avatarImage = `http://localhost:3005/user/${LoginUserData.img}`
   } else if (LoginUserData.photo_url) {
     avatarImage = `${LoginUserData.photo_url}`
   } else {
-    avatarImage = `/user/avatar_userDefault.jpg`
+    avatarImage = `http://localhost:3005/user/avatar_userDefault.jpg`
   }
 
   // userID????
@@ -248,10 +250,13 @@ export default function Test() {
     setDataPage(GetArr(filter.length / 9))
     setCurrentPage(1)
   }
+  
 
   return (
     <>
-      <Head menuMbToggle={menuMbToggle}>{/* <title>我的優惠券</title> */}</Head>
+      <Head>
+        <title>我的優惠券</title>
+      </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       {/* 先把HeroSection隱藏 */}
       {/* <div
@@ -268,47 +273,7 @@ export default function Test() {
           }`}
         >
           {/* 用戶資訊 */}
-          <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
-            <div className="mb-photo-wrapper mb-2">
-              <Image
-                src={avatarImage}
-                alt="user photo mb"
-                fill
-                sizes="(max-width: 150px)"
-              ></Image>
-            </div>
-            <div>{LoginUserData.nickname}</div>
-          </div>
-          <Link
-            className="mm-item"
-            href="/user/user-info"
-            style={{ borderTop: '1px solid #b9b9b9' }}
-          >
-            會員中心
-          </Link>
-          <Link className="mm-item" href="/lesson/lesson-list">
-            探索課程
-          </Link>
-          <Link className="mm-item" href="/instrument/instrument-list">
-            樂器商城
-          </Link>
-          <Link className="mm-item" href="/jam/recruit-list">
-            Let &apos;s JAM!
-          </Link>
-          <Link className="mm-item" href="/article/article-list">
-            樂友論壇
-          </Link>
-          {/*eslint-disable-next-line jsx-a11y/click-events-have-key-events*/}
-          <div
-            onClick={handleLogout}
-            //onclick 要加這個 不然ES會跳沒有給身障人士使用
-            role="presentation"
-            className="mm-item"
-            style={{ color: '#1581cc' }}
-          >
-            登出
-            <ImExit size={20} className="ms-2" />
-          </div>
+          <NavbarMb />
         </div>
 
         <div className="row">
@@ -329,7 +294,9 @@ export default function Test() {
                   <div className="sidebar-user-info-name">
                     {LoginUserData.nickname}
                   </div>
-                  <div className="sidebar-user-info-band">樂團名稱</div>
+                  <div className="sidebar-user-info-band">
+                    {LoginUserData.my_jamname}
+                  </div>
                 </div>
                 {/* 更換大頭貼的功能暫定併回會員資訊 故不再sidebar顯示 */}
                 {/* <div className="sidebar-user-info-Camera-img">
@@ -349,25 +316,16 @@ export default function Test() {
                   <Link href="/user/user-info">會員資訊</Link>
                 </li>
                 <li key={2}>
-                  <Link href="/user/user-jam">我的樂團</Link>
+                  <Link href={LoginUserData.jamstate == '1' ?  `/jam/recruit-list/${LoginUserData.my_jam}`: `/user/user-jam`}>我的樂團</Link>
                 </li>
                 <li key={3}>
                   <Link href="/user/user-order">我的訂單</Link>
                 </li>
                 <li key={4}>
-                  <Link href="/user/user-acticle">我的文章</Link>
+                  <Link href="/user/user-article">我的文章</Link>
                 </li>
                 <li key={5}>
-                  <Link href="/user/user-favorite">我的收藏</Link>
-                </li>
-                <li key={6}>
-                  <Link href="/user/user-Coupon">我的優惠券</Link>
-                </li>
-                <li key={7}>
-                  <Link href="/user/user-lesson">我的課程</Link>
-                </li>
-                <li key={8}>
-                  <Link href="/user/user-notify">我的訊息</Link>
+                  <Link href="/user/user-coupon">我的優惠券</Link>
                 </li>
               </ul>
             </div>
@@ -389,29 +347,27 @@ export default function Test() {
                   }}
                 />
               </div>
-              <Link href="/user/user-info" className="sm-item active">
+              <Link href={`/user/user-info`} className="sm-item ">
                 會員資訊
               </Link>
-              <Link href="/user/user-jam" className="sm-item">
+              <Link
+                href={
+                  LoginUserData.jamstate == '1'
+                    ? `/jam/recruit-list/${LoginUserData.my_jam}`
+                    : `/user/user-jam`
+                }
+                className="sm-item"
+              >
                 我的樂團
               </Link>
-              <Link href="/user/user-order" className="sm-item">
+              <Link href={`/user/user-order`} className="sm-item">
                 我的訂單
               </Link>
-              <Link href="/user/user-acticle" className="sm-item">
+              <Link href={`/user/user-article`} className="sm-item">
                 我的文章
-              </Link>
-              <Link href="/user/user-favorite" className="sm-item">
-                我的收藏
               </Link>
               <Link href="/user/user-Coupon" className="sm-item">
                 我的優惠券
-              </Link>
-              <Link href="/user/user-lesson" className="sm-item">
-                我的課程
-              </Link>
-              <Link href="/user/user-notify" className="sm-item">
-                我的訊息
               </Link>
             </div>
             {/* --- 頂部功能列 --- */}
@@ -484,7 +440,7 @@ export default function Test() {
                           </a>
                         </li>
                         {/* userID*/}
-                        <button
+                        {/* <button
                           className="b-btn b-lesson-btn px-5 py-3"
                           style={{
                             backgroundColor: 'rgb(255, 255, 255)',
@@ -512,7 +468,7 @@ export default function Test() {
                           }}
                         >
                           立即領取
-                        </button>
+                        </button> */}
                       </ol>
                     </nav>
                   </div>
@@ -735,7 +691,7 @@ export default function Test() {
                     <div className="coupon-content col-12">
                       <div className="coupon-content-top">
                         <div className="user-title-userInfo">
-                          {LoginUserData.nickname}的優惠券
+                          {LoginUserData.nickname ? LoginUserData.nickname : LoginUserData.name}的優惠券
                         </div>
                       </div>
                       {/* components */}
@@ -857,7 +813,7 @@ export default function Test() {
           }
           .sidebar-user-info-text {
             display: flex;
-            width: 100px;
+            width: 140px;
             flex-direction: column;
             align-items: flex-start;
             gap: 6px;
@@ -897,7 +853,7 @@ export default function Test() {
         .coupon-content {
           display: flex;
           width: 1070px;
-          height:800px;
+          height: 800px;
           padding: 20px 10px;
           flex-direction: column;
           align-items: flex-start;
@@ -922,11 +878,8 @@ export default function Test() {
         .couponImage {
           display: flex;
           flex-wrap: wrap;
-           {
-             {
-              /* justify-content: space-between; */
-            }
-          }
+          /* justify-content: space-between; */
+           
 
           @media screen and (max-width: 576px) {
             padding: 0;
@@ -936,7 +889,7 @@ export default function Test() {
         @media screen and (max-width: 576px) {
           .coupon-content {
             width: 390px;
-            padding: 10px;  
+            padding: 10px;
             overflow: hidden;
           }
         }

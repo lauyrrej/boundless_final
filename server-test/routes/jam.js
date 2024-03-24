@@ -388,10 +388,11 @@ router.get('/getMyApply/:uid', async (req, res) => {
   // console.log(uid);
   const [datas] = await db
     .execute(
-      'SELECT * FROM `jam_apply` WHERE `valid` = 1 AND `applier_uid` = ? ',
+      'SELECT jam_apply.*, jam.title FROM `jam_apply` JOIN `jam` ON jam.juid = jam_apply.juid WHERE jam_apply.valid = 1 AND jam_apply.applier_uid = ? ',
       [uid]
     )
-    .catch(() => {
+    .catch((error) => {
+      console.log(error);
       return undefined;
     });
   if (datas && datas.length > 0) {
@@ -741,7 +742,7 @@ router.post('/apply', upload.none(), async (req, res) => {
 
 // 修改表單
 router.put('/updateForm', upload.none(), async (req, res) => {
-  const now = new Date().toISOString();
+  const now = new Date();
   const { juid, title, condition, description } = req.body;
   await db
     .execute(
@@ -752,6 +753,7 @@ router.put('/updateForm', upload.none(), async (req, res) => {
       res.status(200).json({ status: 'success' });
     })
     .catch((error) => {
+      console.log(error);
       res.status(500).json({ status: 'error', error });
     });
 });

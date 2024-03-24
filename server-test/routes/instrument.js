@@ -142,26 +142,32 @@ router.get('/categories', async (req, res) => {
 });
 
 
-// //特定分類的資料
-// router.get('/category/:category', async (req, res) => {
-//   try {
-//     const category = req.params.category;
-//     console.log(category);
-//     let [instrument] = await db.execute(
-//       'SELECT * FROM `product` ,  instrument_category.name AS category_name  WHERE `product.puid` = ?',
-//       [category]
-//     );
+//特定分類的資料
+router.get('/category/:category', async (req, res) => {
+  try {
+    const category = req.params.category;
+    // console.log(category);
+    let query = 'SELECT * FROM `product` WHERE `type` = 1';
+    let queryParams = [];
+   
+      // 如果 category 不是空字串或'0'，則增加類別過濾條件
+      if (category !== '' && category !== '0') {
+        query += ' AND `instrument_category_id` = ?';
+        queryParams = [category];
+      }
 
-//     if (instrument.length > 0) {
-//       res.json(instrument);
-//     } else {
-//       res.json('沒有找到相應的資訊');
-//     }
-//   } catch (error) {
-//     console.error('發生錯誤：', error);
-//     res.json('發生錯誤');
-//   }
-// });
+      let [instrument] = await db.execute(query, queryParams);
+
+    if (instrument.length > 0) {
+      res.status(200).json(instrument);
+    } else {
+      res.status(404).send({ message: '沒有找到相應的資訊' });
+    }
+  } catch (error) {
+    console.error('發生錯誤：', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 
 // 檢索屬於特定 puid 的產品，並且通過左連接獲取與之相關聯的產品評論

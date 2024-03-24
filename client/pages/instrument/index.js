@@ -434,6 +434,42 @@ useEffect(() => {
   getInstrumentCategory()
 }, [])
 
+  //-------------------選定特定分類
+
+  const [selectedCategory, setSelectedCategory] = useState('') // 儲存所選分類
+  function handleCategoryChange(id) {
+    console.log('Clicked on category with ID:', id)
+    // 在這裡執行你的其他邏輯，比如更新狀態
+    // 特別處理「全部」選項
+    if (id === 0) {
+      setSelectedCategory(0) // 使用空字串表示「全部」
+    } else {
+      setSelectedCategory(id)
+    }
+  }
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3005/api/instrument/category/${selectedCategory}`
+        )
+        const data = await response.json()
+        console.log(data)
+
+        setData(data) //連回渲染特定分類樂器
+      } catch (error) {
+        console.error('Error fetching products:', error)
+      }
+      setIsFiltered(true)
+    }
+    //當selectedCategory變化後重新取得商品數據
+    if (selectedCategory !== '') {
+      fetchProducts()
+    }
+  }, [selectedCategory])
+
+
   // 設定sidebar下拉狀態
   const [openAccordion, setOpenAccordion] = useState(null)
 
@@ -441,18 +477,19 @@ useEffect(() => {
     setOpenAccordion(openAccordion === index ? null : index)
   }
 
-  const { category } = useParams() // 从URL参数中获取category值
-  const [showHotProducts, setShowHotProducts] = useState(true) // 控制是否显示热门课程部分
+  const { category: categoryParam } = useParams() // 從URL參數中得到category值
+  const [showHotProducts, setShowHotProducts] = useState(true) // 控制是否顯示熱門課程部分
 
   useEffect(() => {
-    //   如果URL中存在category參數，則隱藏熱銷商品部分
-    if ('category') {
+    //   如果URL中存在category參數，則隱藏熱銷商品
+    if (categoryParam) {
       setShowHotProducts(false)
     } else {
-      // 否则顯示热门课程部分
+      // 否則顯示熱銷课程
       setShowHotProducts(true)
     }
-  }, [category])
+  }, [categoryParam])
+
 
   return (
     <>
@@ -512,60 +549,62 @@ useEffect(() => {
           <div className="sidebar-wrapper d-none d-sm-block  col-sm-2">
             <div className="sidebar">
               <ul className="d-flex flex-column">
-                <li>
-                  <Link href={`/instrument`}>全部</Link>
-                </li>
-                {InstrumentCategory.map((v) => {
-                  return v.parent_id === 0 ? (
-                    <li
-                      className="accordion"
-                      style={{paddingBlock: '15px'}}
-                      id={`accordion${v.name}`}
-                      key={v.id}
+              <li onClick={() => handleCategoryChange(0)}>全部</li>
+      {/* 分類功能 */}
+      {InstrumentCategory.map((v) => {
+        return v.parent_id === 0 ? (
+          <li
+            className="accordion"
+            style={{ paddingBlock: '15px' }}
+            id={`accordion${v.name}`}
+            key={v.id}
+          >
+            <div className="accordion-item">
+              <h2 className="accordion-header">
+                <button
+                  className="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target={`#collapse${v.name}`}
+                  aria-expanded="false"
+                  aria-controls={`collapse${v.name}`}
+                >
+                  {v.name}
+                </button>
+              </h2>
+              <div
+                id={`collapse${v.name}`}
+                className="accordion-collapse collapse"
+                data-bs-parent={`#accordion${v.name}`}
+              >
+                {InstrumentCategory.map((subv) => {
+                  return v.id === subv.parent_id ? (
+                    <div
+                      className="accordion-body d-flex flex-column px-0 pt-3 pb-0"
+                      key={subv.id}
                     >
-                      <div className="accordion-item">
-                        <h2 className="accordion-header">
-                          <button
-                            className="accordion-button collapsed"
-                            type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target={`#collapse${v.name}`}
-                            aria-expanded="false"
-                            aria-controls={`collapse${v.name}`}
-                          >
-                            {v.name}
-                          </button>
-                        </h2>
-                        <div
-                          id={`collapse${v.name}`}
-                          className="accordion-collapse collapse"
-                          data-bs-parent={`#accordion${v.name}`}
-                        >
-                          {InstrumentCategory.map((subv) => {
-                            return v.id === subv.parent_id ? (
-                              <div
-                                className="accordion-body d-flex flex-column px-0 pt-3 pb-0"
-                                key={subv.id}
-                              >
-                                <Link
-                                  className="subcategory-link p-2"
-                                  href={`/instrument/${subv.name}`}
-                                >
-                                  {subv.name}
-                                </Link>
-                              </div>
-                            ) : (
-                              ''
-                            )
-                          })}
-                        </div>
-                      </div>
-                    </li>
+                      <Link
+                        className="subcategory-link p-2"
+                        href={`/instrument/?category=${subv.name}`}
+                        onClick={() => {
+                      handleCategoryChange(subv.id)
+                      setShowSidebar(false)
+                    }}
+                      >
+                        {subv.name}
+                      </Link>
+                    </div>
                   ) : (
                     ''
-                  )
+                  );
                 })}
-
+              </div>
+            </div>
+          </li>
+        ) : (
+          ''
+        );
+      })}
                 <li>
                   <Link href={`/instrument/activity`}>活動專區</Link>
                 </li>

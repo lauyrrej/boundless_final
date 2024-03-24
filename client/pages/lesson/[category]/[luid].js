@@ -65,7 +65,7 @@ export default function LessonDetailPage() {
   }
   // ----------------------加入右上角購物車的功能  ----------------------
 
-  const { addLessonItem } = useCart()
+  const { addLessonItem, notifyBuy } = useCart()
 
   //-----------------------動態路由
   //  由router中獲得動態路由(屬性名稱pid，即檔案[pid].js)的值，router.query中會包含pid屬性
@@ -111,8 +111,6 @@ export default function LessonDetailPage() {
   console.log('render')
 
   console.log(router.query, ' isReady=', router.isReady)
-
-  const notify = () => toast('{LessonDetail.data[0].name}已加入購物車.')
 
   return (
     <>
@@ -425,6 +423,7 @@ export default function LessonDetailPage() {
                 info={LessonDetail.data[0].info}
                 onshelf_time={LessonDetail.data[0].onshelf_time}
                 addLessonItem={addLessonItem}
+                notifyBuy={notifyBuy}
               />
             )}
           </div>
@@ -503,7 +502,7 @@ export default function LessonDetailPage() {
               onshelf_time,
             })
             calcTotalItems() // Moved inside the onClick function
-            notify()
+            notifyBuy()
             //   console.log(id)
           }}
         >
@@ -666,12 +665,10 @@ export default function LessonDetailPage() {
           padding: 8px 12px;
         }
 
-        .outline {
-           {
-            /* height: 243px;
-          width: 660px; */
-          }
-        }
+        /*.outline {           
+             height: 243px;
+          width: 660px;           
+        }*/
         .outline ul,
         .suitable ul {
           list-style-type: disc;
@@ -726,17 +723,17 @@ export default function LessonDetailPage() {
           padding: 4px 0 4px 80px;
         }
         .teacher-info {
-           {
+           
             /* height: 217px;
           width: 660px; */
-          }
+          
         }
         .teacher-info-area {
           display: flex;
-           {
-            /* height: 166px;
+           
+          /* height: 166px;
           width: 660px; */
-          }
+          
         }
         .teacher-img-con {
           width: 140px;
@@ -759,9 +756,9 @@ export default function LessonDetailPage() {
         /* ------------- */
 
         .you-will-like {
-           {
+           
             /* height: 508px; */
-          }
+          
           width: 100%;
           margin-top: 30px;
         }
@@ -795,9 +792,9 @@ export default function LessonDetailPage() {
           .Right {
             display: none;
           }
-           {
+           
             /* 手機版productbrief-card */
-          }
+          
           .prodBriefingArea {
             width: 100%;
             height: 204px;
@@ -815,9 +812,9 @@ export default function LessonDetailPage() {
           }
           .prodBriefing {
             /* background-color: #ff9595; */
-             {
+             
               /* margin-left: 110px; */
-            }
+            
             margin-top: 20px;
           }
           .prodMainName {
@@ -916,9 +913,9 @@ export default function LessonDetailPage() {
           }
           .shoppingBtn {
             display: flex;
-             {
+             
               /* margin-top: 20px; */
-            }
+            
             justify-content: space-evenly;
             gap: 12px;
             font-size: 16px;
@@ -956,13 +953,11 @@ export default function LessonDetailPage() {
             width: 100%;
           }
 
-           {
-            /* ---------- */
-          }
+           
 
-           {
+           
             /* detail-mobile */
-          }
+          
           .detail {
             max-width: 100%;
           }
@@ -975,14 +970,14 @@ export default function LessonDetailPage() {
           .you-will-like {
             display: none;
           }
-          //FIXME
+          /*//FIXME*/
           .you-will-like-mobile {
             display: block;
           }
           .card-con-mobile {
             display: block;
           }
-          //FIXME
+          /*//FIXME*/
         }
       `}</style>
     </>
