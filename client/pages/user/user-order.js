@@ -707,12 +707,12 @@ export default function Test() {
                                       <p>信用卡</p>
                                     </div>
                                     <div className="user-order-item-instrument-detail-row-col col-lg-3 col-5">
-                                      <h5>商品狀態</h5>
-                                      <p>{product.transportation_state}</p>
+                                      <h5>{product.type == '1' ? '商品狀態': ''}</h5>
+                                      <p>{product.type == '1' ? product.transportation_state : ""}</p>
                                     </div>
                                     <div className="user-order-item-instrument-detail-row-col-address col-lg-4 col-5">
-                                      <h5>配送地址</h5>
-                                      <p>{product.postcode}{product.country}{product.township}{product.address}</p>
+                                      <h5>{product.type == '1' ? '配送地址': ''}</h5>
+                                      <p>{product.type == '1' ? `${product.postcode}${product.country}${product.township}${product.address}` : ''}</p>
                                     </div>
                                     
                                   </div>

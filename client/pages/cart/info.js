@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import Navbar from '@/components/common/navbar'
+import NavbarMb from '@/components/common/navbar-mb'
 import Footer from '@/components/common/footer'
+import Head from 'next/head'
 import Link from 'next/link'
 import Image from 'next/image'
 import jamHero from '@/assets/jam-hero.png'
@@ -40,7 +42,7 @@ export default function Test() {
 
   const [selected, setSeleted] = useState('credit-card')
 
-  console.log(selected);
+  console.log(selected)
 
   //form
   const handleSubmit = (e) => {
@@ -55,24 +57,27 @@ export default function Test() {
 
   //User-Info Data
 
-  const [name, setName] = useState(  ()=>{
+  const [name, setName] = useState(() => {
     const saveItem = localStorage.getItem('UserInfo')
     const parseItem = JSON.parse(saveItem)[0].Name
     return parseItem || ''
   })
 
-  const [phone, setPhone] = useState(  ()=>{
+  const [phone, setPhone] = useState(() => {
     const saveItem = localStorage.getItem('UserInfo')
     const parseItem = JSON.parse(saveItem)[0].Phone
-    return parseItem || ''})
-  const [email, setEmail] = useState(()=>{
+    return parseItem || ''
+  })
+  const [email, setEmail] = useState(() => {
     const saveItem = localStorage.getItem('UserInfo')
     const parseItem = JSON.parse(saveItem)[0].Email
-    return parseItem || ''})
-  const [address, setAddress] = useState(()=>{
+    return parseItem || ''
+  })
+  const [address, setAddress] = useState(() => {
     const saveItem = localStorage.getItem('UserInfo')
     const parseItem = JSON.parse(saveItem)[0].Address
-    return parseItem || ''})
+    return parseItem || ''
+  })
 
   let UserInfo = JSON.stringify([
     { Name: name, Phone: phone, Email: email, Address: address },
@@ -84,20 +89,15 @@ export default function Test() {
     localStorage.setItem('UserInfo', UserInfo)
   }, [UserInfo])
 
-
-
   const country = localStorage.getItem('Country') || ''
   const township = localStorage.getItem('Township') || ''
   const postcode = localStorage.getItem('Postcode') || ''
 
-
-const [data, setData] = useState({
-  country: country,
-  township: township,
-  postcode: postcode,
-})
-
-
+  const [data, setData] = useState({
+    country: country,
+    township: township,
+    postcode: postcode,
+  })
 
   // ----------------------手機版本  ----------------------
   // 主選單
@@ -110,6 +110,9 @@ const [data, setData] = useState({
 
   return (
     <>
+      <Head>
+        <title>填寫訂單資料</title>
+      </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
@@ -118,40 +121,7 @@ const [data, setData] = useState({
             showMenu ? 'menu-mb-show' : ''
           }`}
         >
-          {/* 用戶資訊 */}
-          <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
-            <div className="mb-photo-wrapper mb-2">
-              <Image
-                src="/jam/amazingshow.jpg"
-                alt="user photo mb"
-                fill
-              ></Image>
-            </div>
-            <div>用戶名稱</div>
-          </div>
-          <Link
-            className="mm-item"
-            href="/user"
-            style={{ borderTop: '1px solid #b9b9b9' }}
-          >
-            會員中心
-          </Link>
-          <Link className="mm-item" href="/lesson/lesson-list">
-            探索課程
-          </Link>
-          <Link className="mm-item" href="/instrument/instrument-list">
-            樂器商城
-          </Link>
-          <Link className="mm-item" href="/jam/recruit-list">
-            Let &apos;s JAM!
-          </Link>
-          <Link className="mm-item" href="/article/article-list">
-            樂友論壇
-          </Link>
-          <div className="mm-item" style={{ color: '#1581cc' }}>
-            登出
-            <ImExit size={20} className="ms-2" />
-          </div>
+          <NavbarMb />
         </div>
         <>
           <div className="cart">
@@ -250,14 +220,16 @@ const [data, setData] = useState({
                       寄送地址
                     </label>
                     <div className="address-location col-sm-10">
-                      <Twzipcode initPostcode={data.postcode}
-                                  onPostcodeChange={(country, township, postcode) => {
-                                    setData({
-                                      country,
-                                      township,
-                                      postcode,
-                                    })
-                                  }}/>
+                      <Twzipcode
+                        initPostcode={data.postcode}
+                        onPostcodeChange={(country, township, postcode) => {
+                          setData({
+                            country,
+                            township,
+                            postcode,
+                          })
+                        }}
+                      />
 
                       <div className="col-sm-7 col-7">
                         <label htmlFor="addressinfo" className="form-label">
@@ -285,11 +257,10 @@ const [data, setData] = useState({
                         id="transfer"
                         value={'transfer'}
                         name="paymethods"
-                        onChange={()=>{
+                        onChange={() => {
                           setSeleted('transfer')
-                        }
-                        }
-                        checked = {selected === 'transfer' ? true : false}
+                        }}
+                        checked={selected === 'transfer' ? true : false}
                       />
                       <label htmlFor="transfer">轉帳匯款</label>
                     </div>
@@ -300,11 +271,10 @@ const [data, setData] = useState({
                         id="credit-card"
                         value={'credit-card'}
                         name="paymethods"
-                        onChange={()=>{
+                        onChange={() => {
                           setSeleted('credit-card')
-                        }
-                        }
-                        checked = {selected === 'credit-card' ? true : false}
+                        }}
+                        checked={selected === 'credit-card' ? true : false}
                       />
                       <label htmlFor="credit-card">信用卡</label>
                       <div className="credit-card-pic">
@@ -326,11 +296,10 @@ const [data, setData] = useState({
                         id="mobliepayment"
                         value={'mobliepayment'}
                         name="paymethods"
-                        onChange={()=>{
+                        onChange={() => {
                           setSeleted('mobliepayment')
-                        }
-                        }
-                        checked = {selected == 'mobliepayment' ? true : false}
+                        }}
+                        checked={selected == 'mobliepayment' ? true : false}
                       />
                       <label htmlFor="mobliepayment">Line Pay</label>
                       <div className="credit-card-pic">
@@ -343,143 +312,145 @@ const [data, setData] = useState({
                   <div>
                     <hr />
                   </div>
-                  {selected === 'credit-card' ? (<>
-                    <div className="row g-3 align-items-center">
-                    <label
-                      htmlFor="name"
-                      className="col-form-label col-sm-2 col-3 h6"
-                    >
-                      持卡人姓名
-                    </label>
-                    <div className="col-sm-6 col-7">
-                      <input
-                        type="text"
-                        className="form-control credit-card-input"
-                        id="name"
-                        placeholder="Ex:HSIANG-AN, YANG"
-                      />
-                    </div>
-                  </div>
-                  <div className="row g-3 align-items-center">
-                    <label
-                      htmlFor="credit-card-number"
-                      className="col-form-label col-sm-2 col-3 h6"
-                    >
-                      信用卡卡號
-                    </label>
-                    <div className="creditcard" style={{ width: '5rem' }}>
-                      <input
-                        type="text"
-                        className="form-control credit-card-input"
-                        id="credit-card-number"
-                        maxLength={4}
-                        style={{ textAlign: 'center' }}
-                      />
-                    </div>
-                    <div className="w-auto minussign">
-                      <FiMinus />
-                    </div>
-                    <div className="creditcard" style={{ width: '5rem' }}>
-                      <input
-                        type="text"
-                        className="form-control credit-card-input"
-                        id="credit-card-number"
-                        maxLength={4}
-                        style={{ textAlign: 'center' }}
-                      />
-                    </div>
-                    <div className="w-auto minussign">
-                      <FiMinus />
-                    </div>
-                    <div className="creditcard " style={{ width: '5rem' }}>
-                      <input
-                        type="text"
-                        className="form-control credit-card-input"
-                        id="credit-card-number"
-                        maxLength={4}
-                        style={{ textAlign: 'center' }}
-                      />
-                    </div>
-                    <div className="w-auto minussign">
-                      <FiMinus />
-                    </div>
-                    <div className="creditcard" style={{ width: '5rem' }}>
-                      <input
-                        type="text"
-                        className="form-control credit-card-input"
-                        id="credit-card-number"
-                        maxLength={4}
-                        style={{ textAlign: 'center' }}
-                      />
-                    </div>
-                  </div>
-                  <div className="row g-3 align-items-center">
-                    <label
-                      htmlFor="email"
-                      className="col-form-label col-sm-2 col-3 h6"
-                    >
-                      有效期限
-                    </label>
-                    <div className="creditcard" style={{ width: '5rem' }}>
-                      <input
-                        type="text"
-                        className="form-control credit-card-input"
-                        id="expiration-date"
-                        placeholder="MM"
-                        maxLength={2}
-                        min={1}
-                        max={12}
-                        style={{ textAlign: 'center' }}
-                      />
-                    </div>
-                    <div className="w-auto minussign">
-                      <FiMinus />
-                    </div>
-                    <div className="creditcard" style={{ width: '5rem' }}>
-                      <input
-                        type="text"
-                        className="form-control credit-card-input"
-                        id="expiration-date"
-                        placeholder="YY"
-                        maxLength={2}
-                        style={{ textAlign: 'center' }}
-                      />
-                    </div>
-                  </div>
-                  <div className="row g-3 align-items-center">
-                    <label
-                      htmlFor="3-number"
-                      className="col-form-label col-sm-2 col-3 h6"
-                    >
-                      背面末三碼
-                    </label>
-                    <div className="creditcard" style={{ width: '5rem' }}>
-                      <input
-                        type="text"
-                        className="form-control credit-card-input"
-                        style={{ textAlign: 'center' }}
-                        id="3-number"
-                        maxLength={3}
-                      />
-                    </div>
-                  </div>
-                  </>) : ''}
-                  {selected === 'mobliepayment' ? (<>
-                    <div id="type3">
-                      <h1>TYPE 4</h1>
-                      <div class="btn-9">
-                        CLICK
+                  {selected === 'credit-card' ? (
+                    <>
+                      <div className="row g-3 align-items-center">
+                        <label
+                          htmlFor="name"
+                          className="col-form-label col-sm-2 col-3 h6"
+                        >
+                          持卡人姓名
+                        </label>
+                        <div className="col-sm-6 col-7">
+                          <input
+                            type="text"
+                            className="form-control credit-card-input"
+                            id="name"
+                            placeholder="Ex:HSIANG-AN, YANG"
+                          />
+                        </div>
                       </div>
-                        
-                      <div class="btn-10">
-                        CLICK
+                      <div className="row g-3 align-items-center">
+                        <label
+                          htmlFor="credit-card-number"
+                          className="col-form-label col-sm-2 col-3 h6"
+                        >
+                          信用卡卡號
+                        </label>
+                        <div className="creditcard" style={{ width: '5rem' }}>
+                          <input
+                            type="text"
+                            className="form-control credit-card-input"
+                            id="credit-card-number"
+                            maxLength={4}
+                            style={{ textAlign: 'center' }}
+                          />
+                        </div>
+                        <div className="w-auto minussign">
+                          <FiMinus />
+                        </div>
+                        <div className="creditcard" style={{ width: '5rem' }}>
+                          <input
+                            type="text"
+                            className="form-control credit-card-input"
+                            id="credit-card-number"
+                            maxLength={4}
+                            style={{ textAlign: 'center' }}
+                          />
+                        </div>
+                        <div className="w-auto minussign">
+                          <FiMinus />
+                        </div>
+                        <div className="creditcard " style={{ width: '5rem' }}>
+                          <input
+                            type="text"
+                            className="form-control credit-card-input"
+                            id="credit-card-number"
+                            maxLength={4}
+                            style={{ textAlign: 'center' }}
+                          />
+                        </div>
+                        <div className="w-auto minussign">
+                          <FiMinus />
+                        </div>
+                        <div className="creditcard" style={{ width: '5rem' }}>
+                          <input
+                            type="text"
+                            className="form-control credit-card-input"
+                            id="credit-card-number"
+                            maxLength={4}
+                            style={{ textAlign: 'center' }}
+                          />
+                        </div>
                       </div>
-                        
-                        <div class="btn-11">
-                        CLICK
+                      <div className="row g-3 align-items-center">
+                        <label
+                          htmlFor="email"
+                          className="col-form-label col-sm-2 col-3 h6"
+                        >
+                          有效期限
+                        </label>
+                        <div className="creditcard" style={{ width: '5rem' }}>
+                          <input
+                            type="text"
+                            className="form-control credit-card-input"
+                            id="expiration-date"
+                            placeholder="MM"
+                            maxLength={2}
+                            min={1}
+                            max={12}
+                            style={{ textAlign: 'center' }}
+                          />
+                        </div>
+                        <div className="w-auto minussign">
+                          <FiMinus />
+                        </div>
+                        <div className="creditcard" style={{ width: '5rem' }}>
+                          <input
+                            type="text"
+                            className="form-control credit-card-input"
+                            id="expiration-date"
+                            placeholder="YY"
+                            maxLength={2}
+                            style={{ textAlign: 'center' }}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  </>) : ''}
+                      <div className="row g-3 align-items-center">
+                        <label
+                          htmlFor="3-number"
+                          className="col-form-label col-sm-2 col-3 h6"
+                        >
+                          背面末三碼
+                        </label>
+                        <div className="creditcard" style={{ width: '5rem' }}>
+                          <input
+                            type="text"
+                            className="form-control credit-card-input"
+                            style={{ textAlign: 'center' }}
+                            id="3-number"
+                            maxLength={3}
+                          />
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    ''
+                  )}
+                  {selected === 'mobliepayment' ? (
+                    <>
+                      <div id="type3">
+                        <h1>TYPE 4</h1>
+                        <div class="btn-9">CLICK</div>
+
+                        <div class="btn-10">CLICK</div>
+
+                        <div class="btn-11">CLICK</div>
+                      </div>
+                    </>
+                  ) : (
+                    ''
+                  )}
                 </div>
               </div>
             </div>

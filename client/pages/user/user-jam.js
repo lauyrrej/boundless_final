@@ -217,7 +217,7 @@ export default function UserJam() {
           </span>
         )
       case 2:
-        return <span>拒絕</span>
+        return <span style={{color: '#ec3f3f'}}>拒絕</span>
       default:
         return null
     }
@@ -268,7 +268,7 @@ export default function UserJam() {
         return null
     }
   }
-
+console.log(LoginUserData);
   // 若有樂團，則會直接導向所屬樂團
   useEffect(() => {
     if (LoginUserData.my_jam) {
@@ -325,7 +325,7 @@ export default function UserJam() {
                   <div className="sidebar-user-info-name">
                     {LoginUserData.nickname}
                   </div>
-                  <div className="sidebar-user-info-band">樂團名稱</div>
+                  <div className="sidebar-user-info-band">{LoginUserData.my_jamname}</div>
                 </div>
                 {/* 更換大頭貼的功能暫定併回會員資訊 故不再sidebar顯示 */}
                 {/* <div className="sidebar-user-info-Camera-img">
@@ -440,10 +440,10 @@ export default function UserJam() {
                     <div className="user-notifyList">
                       <div className="user-notifyList-item row flex-nowrap">
                         <div
-                          className="fw-medium text-center col-1"
+                          className="fw-medium text-center col-2"
                           style={{ color: '#124365', paddingInline: '0' }}
                         >
-                          樂團連結
+                          連結
                         </div>
                         <div
                           className="fw-medium text-center col-4"
@@ -452,25 +452,25 @@ export default function UserJam() {
                           主旨
                         </div>
                         <div
-                          className="fw-medium text-center col-3"
+                          className="fw-medium text-center col-2"
                           style={{ color: '#124365', paddingInline: '0' }}
                         >
                           職位
                         </div>
                         <div
-                          className="fw-medium text-center col-3"
+                          className="fw-medium text-center col-2"
                           style={{ color: '#124365', paddingInline: '0' }}
                         >
-                          審核狀態
+                          狀態
                         </div>
                         <div
-                          className="fw-medium text-center col-1"
+                          className="fw-medium text-center col-2"
                           style={{ color: '#124365', paddingInline: '0' }}
                         >
                           操作
                         </div>
                       </div>
-                      <hr style={{ color: '#124365', marginInline: '0' }} />
+                      <hr style={{color: '#1d1d1d'}}/>
                       {myApply.map((v) => {
                         {/* console.log(v) */}
                         return (
@@ -479,7 +479,7 @@ export default function UserJam() {
                             key={v.id}
                           >
                             <div
-                              className="d-flex justify-content-center col-1"
+                              className="d-flex justify-content-center col-2"
                               style={{ color: '#124365', paddingInline: '0' }}
                             >
                               <Link
@@ -497,19 +497,19 @@ export default function UserJam() {
                               {v.title}
                             </div>
                             <div
-                              className="text-center col-3"
+                              className="text-center col-2"
                               style={{ paddingInline: '0' }}
                             >
                               {v.applier_playname}
                             </div>
                             <div
-                              className="text-center col-3"
+                              className="text-center col-2"
                               style={{ paddingInline: '0' }}
                             >
                               {switchSentence(v.state)}
                             </div>
                             <div
-                              className="d-flex justify-content-center col-1"
+                              className="d-flex justify-content-center col-2"
                               style={{ color: '#124365', paddingInline: '0' }}
                             >
                               {switchOption(

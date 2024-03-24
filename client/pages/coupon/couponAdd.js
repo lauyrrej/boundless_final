@@ -105,7 +105,7 @@ export default function Test() {
 
   return (
     <>
-      <Head menuMbToggle={menuMbToggle}>{/* <title>我的優惠券</title> */}</Head>
+      <Head><title>活動優惠券領取</title></Head>
       <Navbar menuMbToggle={menuMbToggle} />
       {/* 先把HeroSection隱藏 */}
       <div className="page-shero d-none d-sm-block">
@@ -130,7 +130,7 @@ export default function Test() {
               <div className="breadcrumb-wrapper-ns">
                 <ul className="d-flex align-items-center p-0 m-0">
                   <IoHome size={20} />
-                  <li style={{ marginLeft: '8px' }}>春季活動優惠領取</li>
+                  <li style={{ marginLeft: '8px' }}>活動優惠領取</li>
                 </ul>
               </div>
             </div>
@@ -146,28 +146,32 @@ export default function Test() {
                   >
                     <div className="coupon-content col-12">
                       {/* 活動領取 */}
-                      <div className="row">
+                      <div className="row m-sm-3">
                         <div className="col-9">
-                          <img
-                            className="couponImg"
-                            // style={{
-                            //   width: '100%',
-                            //   minWidth: '390px',
-                            // }}
-                            src="bannerNew.jpg"
-                          />
+                          {/* 連結至樂器/課程列表 */}
+                          <Link href={`/instrument`}>
+                            {' '}
+                            <img
+                              className="couponImg"
+                              // style={{
+                              //   width: '100%',
+                              //   minWidth: '390px',
+                              // }}
+                              src="bannerNew.jpg"
+                            />
+                          </Link>
                         </div>
                         <div className="col-3 d-flex align-items-center justify-content-center">
                           <button
                             className="b-btn b-lesson-btn px-3 py-3"
                             style={{
                               backgroundColor: 'rgb(255, 255, 255)',
-                              border: '1px solid rgb(0, 0, 0)',
+                              border: '1px solid rgb(255, 255, 255)',
                             }}
                             onClick={async () => {
                               const obj = {
                                 user_id: avatarUserID,
-                                coupon_template_id: 1,
+                                coupon_template_id: 2,
                               }
                               const res = await CouponClass.Create(obj)
                               const swal = await Swal.fire({
@@ -189,9 +193,93 @@ export default function Test() {
                           </button>
                         </div>
                       </div>
+                      <div className="row row m-sm-3">
+                        <div className="col-9">
+                          {/* 連結至樂器/課程列表 */}
+                          <Link href={`/instrument`}>
+                            {' '}
+                            <img
+                              className="couponImg"
+                              // style={{
+                              //   width: '100%',
+                              //   minWidth: '390px',
+                              // }}
+                              src="bannerNew2.jpg"
+                            />
+                          </Link>
+                        </div>
+                        <div className="col-3 d-flex align-items-center justify-content-center">
+                          <button
+                            className="b-btn b-lesson-btn px-3 py-3"
+                            style={{
+                              backgroundColor: 'rgb(255, 255, 255)',
+                              border: '1px solid rgb(255, 255, 255)',
+                            }}
+                            onClick={async () => {
+                              const obj = {
+                                user_id: avatarUserID,
+                                coupon_template_id: 10,
+                              }
+                              const res = await CouponClass.Create(obj)
+                              const swal = await Swal.fire({
+                                title: res === true ? '領取成功' : '領取失敗',
+                                icon: res === true ? 'success' : 'error',
+                                showConfirmButton: false,
+                                timer: 1000,
+                              })
 
-                      {/*  */}
-                      <div className="d-flax"></div>
+                              if (res === true) {
+                                const data = await CouponClass.FindAll(
+                                  LoginUserData.id
+                                )
+                                setDataSort(data)
+                              }
+                            }}
+                          >
+                            立即領取
+                          </button>
+                        </div>
+                      </div>
+                      <div className="row row m-sm-3">
+                        <div className="col-9">
+                          {/* 連結至樂器/課程列表 */}
+                          <Link href={`/lesson`}>
+                            {' '}
+                            <img className="couponImg" src="bannerNew3.jpg" />
+                          </Link>
+                        </div>
+                        <div className="col-3 d-flex align-items-center justify-content-center">
+                          <button
+                            className="b-btn b-lesson-btn px-3 py-3"
+                            style={{
+                              backgroundColor: 'rgb(255, 255, 255)',
+                              border: '1px solid rgb(255, 255, 255)',
+                            }}
+                            onClick={async () => {
+                              const obj = {
+                                user_id: avatarUserID,
+                                coupon_template_id: 18,
+                              }
+                              const res = await CouponClass.Create(obj)
+                              const swal = await Swal.fire({
+                                title: res === true ? '領取成功' : '領取失敗',
+                                icon: res === true ? 'success' : 'error',
+                                showConfirmButton: false,
+                                timer: 1000,
+                              })
+
+                              if (res === true) {
+                                const data = await CouponClass.FindAll(
+                                  LoginUserData.id
+                                )
+                                setDataSort(data)
+                              }
+                            }}
+                          >
+                            立即領取
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -268,12 +356,12 @@ export default function Test() {
           flex-direction: column;
           align-items: center;
           border-radius: 5px;
+          gap: 20px;
           background: var(--gray-30, rgba(185, 185, 185, 0.3));
           .couponImg {
             width: 100%;
-            min-width: 390px;
-            border-radius:5px;
-             @media screen and (max-width: 576px) {
+            border-radius: 5px;
+            margin-left: 20px @media screen and (max-width: 576px) {
               width: 70%;
               min-width: 280px;
             }
