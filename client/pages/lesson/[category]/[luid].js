@@ -21,9 +21,6 @@ import HoriCard from '@/components/lesson/lesson-card-hori'
 //右半部
 import ProductCard from '@/components/lesson/lesson-productbrief-card'
 
-//toast
-import toast, { Toaster } from 'react-hot-toast'
-
 // 購物車hook
 import { useCart } from '@/hooks/use-cart'
 
@@ -73,8 +70,9 @@ export default function LessonDetailPage() {
   // 2. router.isReady(布林值)，true代表本元件已完成水合作用(hydration)，可以取得router.query的值
   const router = useRouter()
 
-    const [LessonDetail, setLessonDetail] = useState()
-
+  const [LessonDetail, setLessonDetail] = useState({})
+  const [reviews, setReviews] = useState([])
+  const [youWillLike, setYouWillLike] = useState([])
 
   // 向伺服器要求資料，設定到狀態中用的函式
   const getLessonDetail = async (luid) => {
@@ -84,14 +82,14 @@ export default function LessonDetailPage() {
       // res.json()是解析res的body的json格式資料，得到JS的資料格式
       const data = await res.json()
 
-      console.log(data)
+      // console.log(data)
 
       // 設定到state中，觸發重新渲染(re-render)，會進入到update階段
       // 進入狀態前檢查資料類型有值，以避免錯誤
       if (data) {
-          setLessonDetail(data)
- 
-        console.log(LessonDetail.data[0].name)
+        setLessonDetail(data.data[0])
+        setReviews(data.product_review)
+        setYouWillLike(data.youwilllike)
       }
     } catch (e) {
       console.error(e)
@@ -108,16 +106,18 @@ export default function LessonDetailPage() {
     }
   }, [router.isReady])
 
-  console.log('render')
-
-  console.log(router.query, ' isReady=', router.isReady)
+  const [toLocalePrice, setToLocalePrice] = useState('')
+  useEffect(() => {
+    if (LessonDetail.price) {
+      const priceString = LessonDetail.price.toLocaleString()
+      setToLocalePrice(priceString)
+    }
+  }, [LessonDetail])
 
   return (
     <>
       <Head>
-        {LessonDetail && LessonDetail.data.length > 0 && (
-          <title>{LessonDetail.data[0].name}</title>
-        )}
+        <title>{LessonDetail.name}</title>
       </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       <div className="container position-relative">
@@ -135,34 +135,34 @@ export default function LessonDetailPage() {
             className="breadcrumb-wrapper-ns"
             style={{ paddingBlock: '20px' }}
           >
-            <ul className="d-flex align-items-center p-0 m-0">
+            <ul className="d-flex align-items-center p-0 m-0 flex-wrap">
               <IoHome size={20} />
               <Link href="/lesson">
                 <li style={{ marginLeft: '8px' }}>探索課程</li>
               </Link>
               <FaChevronRight />
 
-              {LessonDetail && LessonDetail.data.length > 0 && (
-                <li style={{ marginLeft: '10px' }}>
-                  {LessonDetail.data[0].lesson_category_name}
-                </li>
-              )}
+              <li style={{ marginLeft: '10px' }}>
+                {LessonDetail.lesson_category_name}
+              </li>
+
+              <FaChevronRight />
+
+              <li style={{ marginLeft: '10px' }}>{LessonDetail.name}</li>
             </ul>
           </div>
-          <div className="col-12 col-sm-6">
+          <div className="col-12 col-sm-6 p-0">
             {/* 主內容 */}
             <main className="content">
               <div>
                 <div className="Left">
                   {/* Product Briefing Area */}
                   <div className="prodBriefingArea d-flex">
-                    {LessonDetail && LessonDetail.data.length > 0 && (
-                      <img
-                        src={`/課程與師資/lesson_img/${LessonDetail.data[0].img}`}
-                        className="prodImg"
-                        alt="Lesson Preview"
-                      />
-                    )}
+                    <img
+                      src={`/課程與師資/lesson_img/${LessonDetail.img}`}
+                      className="prodImg"
+                      alt="Lesson Preview"
+                    />
                   </div>
 
                   {/* Mobile version product brief card */}
@@ -171,11 +171,7 @@ export default function LessonDetailPage() {
                       className="prodBriefing sticky-top"
                       style={{ zIndex: '20' }}
                     >
-                      {LessonDetail && LessonDetail.data.length > 0 && (
-                        <div className="prodMainName">
-                          {LessonDetail.data[0].name} Logic Pro X 從零開始
-                        </div>
-                      )}
+                      <div className="prodMainName">{LessonDetail.name}</div>
 
                       <div className="Rating">
                         <div className="star">
@@ -185,14 +181,14 @@ export default function LessonDetailPage() {
                             className="starImg"
                             alt="Star Rating"
                           />
-                          <div className="ratingNumber">4.9</div>
-                          <div className="commentNumber">(10)</div>
+                          <div className="ratingNumber">{Math.round(LessonDetail.average_rating)}</div>
+                          <div className="commentNumber">({reviews.length})</div>
                         </div>
-                        <div className="sales">購買人數 50</div>
+                        <div className="sales">購買人數 {LessonDetail.sales}</div>
                       </div>
 
                       <div className="productPrice">
-                        <div className="price">NT$ 1,800</div>
+                        <div className="price">NT$ {toLocalePrice}</div>
                         <div className="likesIcon icon-container">
                           <FaHeart
                             className="likesIcon"
@@ -211,7 +207,7 @@ export default function LessonDetailPage() {
                             className="lengthIcon"
                             alt="Course Length"
                           />
-                          <div className="lengthHomeworkWord">5小時</div>
+                          <div className="lengthHomeworkWord">{LessonDetail.length} 小時</div>
                         </div>
                         <div className="lengthhomework">
                           <img
@@ -220,14 +216,11 @@ export default function LessonDetailPage() {
                             className="img-10"
                             alt="Homework"
                           />
-                          <div className="lengthHomeworkWord">1份作業</div>
+                          <div className="lengthHomeworkWord">{LessonDetail.homework} 份作業</div>
                         </div>
                       </div>
 
-                      <div className="lessonIntro">
-                        Logic Pro
-                        為數位音樂編曲入門的必學軟體，從錄音、編曲到混音一次包辦，帶你認識錄音介面、多重效果器，以及豐富的內建素材庫，是對音樂創作有興趣的你不可錯過的專業音樂編曲課程。
-                      </div>
+                      <div className="lessonIntro">{LessonDetail.info}</div>
                     </div>
                   </div>
 
@@ -236,11 +229,10 @@ export default function LessonDetailPage() {
                     {/* Unit Overview */}
                     <div className="outline detail-wrapp mt40">
                       <div className="detail-title">單元一覽</div>
-                      <div className="list">
+                      <div className="list" style={{borderRadius: '5px'}}>
                         <ul>
-                          {LessonDetail &&
-                            LessonDetail.data.length > 0 &&
-                            LessonDetail.data[0].outline
+                          {LessonDetail.outline &&
+                            LessonDetail.outline
                               .split('\n')
                               .map((line, index) => (
                                 <li key={index}>{line}</li>
@@ -252,11 +244,10 @@ export default function LessonDetailPage() {
                     {/* Target Audience */}
                     <div className="suitable mt40">
                       <div className="detail-title">適合對象</div>
-                      <div className="list">
+                      <div className="list" style={{borderRadius: '5px'}}>
                         <ul>
-                          {LessonDetail &&
-                            LessonDetail.data.length > 0 &&
-                            LessonDetail.data[0].suitable
+                          {LessonDetail.suitable &&
+                            LessonDetail.suitable
                               .split('\n')
                               .map((line, index) => (
                                 <li key={index}>{line}</li>
@@ -268,11 +259,10 @@ export default function LessonDetailPage() {
                     {/* What You Will Learn */}
                     <div className="achievement mt40">
                       <div className="detail-title">你將學到</div>
-                      <div className="list">
-                        <ul>
-                          {LessonDetail &&
-                            LessonDetail.data.length > 0 &&
-                            LessonDetail.data[0].achievement
+                      <div className="list" style={{borderRadius: '5px'}}>
+                        <ul className='p-0'>
+                          {LessonDetail.achievement &&
+                            LessonDetail.achievement
                               .split('\n')
                               .map((line, index) => (
                                 <li key={index}>{line}</li>
@@ -284,88 +274,80 @@ export default function LessonDetailPage() {
                     {/* Student Feedback */}
                     <div className="reviews mt40">
                       <div className="detail-title">學員回饋</div>
-                      <div className="list">
+                      <div className="list" style={{borderRadius: '5px'}}>
                         {/* Comments */}
-                        {LessonDetail &&
-                          LessonDetail.product_review.length > 0 &&
-                          LessonDetail.product_review.map((review, index) => (
-                            <div className="review" key={index}>
-                              {/* Review Content */}
-                              <div className="review-area">
-                                <div className="review-title">
-                                  <img
-                                    loading="lazy"
-                                    src={`/新增資料夾/user/${LessonDetail.product_review[index].img}`}
-                                    className="review-avatar"
-                                    alt="User"
-                                  />
-                                  <div className="review-user">
-                                    <div className="review-Name">
-                                      {LessonDetail.product_review[index].name}
-                                      <div className="review-Date">
-                                        {format(
-                                          new Date(
-                                            LessonDetail.product_review[
-                                              index
-                                            ].created_time
-                                          ),
-                                          'yyyy-MM-dd HH:mm:ss'
-                                        )}
-                                      </div>
-                                    </div>
-                                    <div className="review-Star">
-                                      <img
-                                        loading="lazy"
-                                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                        className="review-star-img"
-                                      />
-                                      <img
-                                        loading="lazy"
-                                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                        className="review-star-img"
-                                      />
-                                      <img
-                                        loading="lazy"
-                                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                        className="review-star-img"
-                                      />
-                                      <img
-                                        loading="lazy"
-                                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                        className="review-star-img"
-                                      />
-                                      <img
-                                        loading="lazy"
-                                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
-                                        className="review-star-img"
-                                      />
+                        {reviews.map((review, index) => (
+                          <div className="review" key={index}>
+                            {/* Review Content */}
+                            <div className="review-area">
+                              <div className="review-title">
+                                <img
+                                  loading="lazy"
+                                  src={`/新增資料夾/user/${review.img}`}
+                                  className="review-avatar"
+                                  alt="User"
+                                />
+                                <div className="review-user">
+                                  <div className="review-Name">
+                                    {review.name}
+                                    <div className="review-Date">
+                                      {format(
+                                        new Date(review.created_time),
+                                        'yyyy-MM-dd HH:mm:ss'
+                                      )}
                                     </div>
                                   </div>
-                                </div>
-                                <div className="review-content">
-                                  {LessonDetail.product_review[index].content}
+                                  <div className="review-Star">
+                                    <img
+                                      loading="lazy"
+                                      src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                      className="review-star-img"
+                                    />
+                                    <img
+                                      loading="lazy"
+                                      src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                      className="review-star-img"
+                                    />
+                                    <img
+                                      loading="lazy"
+                                      src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                      className="review-star-img"
+                                    />
+                                    <img
+                                      loading="lazy"
+                                      src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                      className="review-star-img"
+                                    />
+                                    <img
+                                      loading="lazy"
+                                      src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb8fdbe9fe0ec2e2c0415ca248a5486136ce3b7792c4e42b9c5f42d0e78c89a5?"
+                                      className="review-star-img"
+                                    />
+                                  </div>
                                 </div>
                               </div>
-
-                              <div className="comment-Like text-end">
-                                <div className="comment-Like-Number">
-                                  {LessonDetail.product_review[index].likes}
-                                  人覺得有幫助
-                                </div>
-                                {/* Like Icon */}
-                                <div className="comment-Like-Icon">
-                                  <img
-                                    loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/b33573d1006caa2dd045129e591ff98dd975245bb9b1f9ad55c74a65c6a47d58?"
-                                    className="comment-like-icon-img"
-                                  />
-                                  <div className="comment-Like-Word">
-                                    有幫助
-                                  </div>
-                                </div>
+                              <div className="review-content">
+                                {review.content}
                               </div>
                             </div>
-                          ))}
+
+                            <div className="comment-Like text-end">
+                              <div className="comment-Like-Number">
+                                {review.likes}
+                                人覺得有幫助
+                              </div>
+                              {/* Like Icon */}
+                              <div className="comment-Like-Icon">
+                                <img
+                                  loading="lazy"
+                                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/b33573d1006caa2dd045129e591ff98dd975245bb9b1f9ad55c74a65c6a47d58?"
+                                  className="comment-like-icon-img"
+                                />
+                                <div className="comment-Like-Word">有幫助</div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                       {/* More Button */}
                       <div className="more-review">
@@ -378,15 +360,13 @@ export default function LessonDetailPage() {
                   <div className="teacher-info mt40">
                     <div className="detail-title">講師資訊</div>
                     <div className="teacher-info-area">
-                      <div className="teacher-img-con">
-                        {LessonDetail && LessonDetail.data.length > 0 && (
-                          <img
-                            loading="lazy"
-                            src="/課程與師資/teacher_img/teacher_001.jpeg"
-                            className="teacherImg"
-                            alt="Teacher"
-                          />
-                        )}
+                      <div className="teacher-img-con" style={{borderRadius: '5px', overflow: 'hidden'}}>
+                        <img
+                          loading="lazy"
+                          src="/課程與師資/teacher_img/teacher_001.jpeg"
+                          className="teacherImg"
+                          alt="Teacher"
+                        />
                       </div>
                       <div className="teacher-info-word">
                         <div className="teacher-name">徐歡CheerHsu</div>
@@ -403,25 +383,25 @@ export default function LessonDetailPage() {
 
           {/*   ----------------------頁面內容 右半部---------------------- */}
           <div className="d-none d-sm-block col-sm-6 page-control">
-            {LessonDetail && LessonDetail.data.length > 0 && (
+            {LessonDetail && (
               <ProductCard
                 className="Right-card"
-                id={LessonDetail.data[0].id}
-                average_rating={LessonDetail.data[0].average_rating}
-                review_count={LessonDetail.data[0].review_count}
-                img={LessonDetail.data[0].img}
-                img_small={LessonDetail.data[0].img}
-                type={LessonDetail.data[0].type}
-                lesson_category_id={LessonDetail.data[0].lesson_category_id}
-                name={LessonDetail.data[0].name}
-                homework={LessonDetail.data[0].homework}
-                sales={LessonDetail.data[0].sales}
-                price={LessonDetail.data[0].price}
-                discount={LessonDetail.data[0].discount}
-                discount_state={LessonDetail.data[0].discount_state}
-                length={LessonDetail.data[0].length}
-                info={LessonDetail.data[0].info}
-                onshelf_time={LessonDetail.data[0].onshelf_time}
+                id={LessonDetail.id}
+                average_rating={LessonDetail.average_rating}
+                review_count={LessonDetail.review_count}
+                img={LessonDetail.img}
+                img_small={LessonDetail.img}
+                type={LessonDetail.type}
+                lesson_category_id={LessonDetail.lesson_category_id}
+                name={LessonDetail.name}
+                homework={LessonDetail.homework}
+                sales={LessonDetail.sales}
+                price={LessonDetail.price}
+                discount={LessonDetail.discount}
+                discount_state={LessonDetail.discount_state}
+                length={LessonDetail.length}
+                info={LessonDetail.info}
+                onshelf_time={LessonDetail.onshelf_time}
                 addLessonItem={addLessonItem}
                 notifyBuy={notifyBuy}
               />
@@ -432,81 +412,59 @@ export default function LessonDetailPage() {
         <div className="you-will-like">
           <div className="detail-title ">猜你喜歡...</div>
           <div className="card-con">
-            {LessonDetail &&
-              LessonDetail.youwilllike &&
-              LessonDetail.youwilllike
-                .sort((a, b) => b.sales - a.sales) // Sort courses based on sales volume
-                .slice(0, 5) // Get top 5 courses
-                .map((v, i) => (
-                  <Card
-                    key={i}
-                    id={v.id}
-                    luid={v.puid}
-                    name={v.name}
-                    average_rating={Math.round(v.average_rating)}
-                    review_count={v.review_count}
-                    price={v.price}
-                    teacher_name={v.teacher_name}
-                    img={v.img}
-                    length={v.length}
-                    sales={v.sales}
-                  />
-                ))}
+            {youWillLike
+              .sort((a, b) => b.sales - a.sales) // Sort courses based on sales volume
+              .slice(0, 5) // Get top 5 courses
+              .map((v, i) => (
+                <Card
+                  key={i}
+                  id={v.id}
+                  luid={v.puid}
+                  name={v.name}
+                  average_rating={Math.round(v.average_rating)}
+                  review_count={v.review_count}
+                  price={v.price}
+                  teacher_name={v.teacher_name}
+                  img={v.img}
+                  length={v.length}
+                  sales={v.sales}
+                />
+              ))}
           </div>
         </div>
         <div className="you-will-like-mobile">
           <div className="detail-title ">猜你喜歡...</div>
           {/* 手機版card-con */}
           <div className="card-con-mobile">
-            {LessonDetail &&
-              LessonDetail.youwilllike &&
-              LessonDetail.youwilllike
-                .sort((a, b) => b.sales - a.sales) // Sort courses based on sales volume
-                .slice(0, 3) // Get top 3 courses
-                .map((v, i) => (
-                  <HoriCard
-                    key={i}
-                    id={v.id}
-                    luid={v.puid}
-                    name={v.name}
-                    average_rating={Math.round(v.average_rating)}
-                    review_count={v.review_count}
-                    price={v.price}
-                    teacher_name={v.teacher_name}
-                    img={v.img}
-                    length={v.length}
-                    sales={v.sales}
-                  />
-                ))}
+            {youWillLike
+              .sort((a, b) => b.sales - a.sales) // Sort courses based on sales volume
+              .slice(0, 3) // Get top 3 courses
+              .map((v, i) => (
+                <HoriCard
+                  key={i}
+                  id={v.id}
+                  luid={v.puid}
+                  name={v.name}
+                  average_rating={Math.round(v.average_rating)}
+                  review_count={v.review_count}
+                  price={v.price}
+                  teacher_name={v.teacher_name}
+                  img={v.img}
+                  length={v.length}
+                  sales={v.sales}
+                />
+              ))}
           </div>
         </div>
       </div>
-      <div className="shoppingBtn sticky-top" id="shoppingBtn">
+      <div className="shoppingBtn sticky-top" style={{zIndex: '99'}} id="shoppingBtn">
         <div
           className="cartBtn"
           onClick={() => {
-            addLessonItem({
-              id,
-              img,
-              img_small,
-              type,
-              lesson_category_id,
-              name,
-              homework,
-              sales,
-              price,
-              discount,
-              discount_state,
-              length,
-              info,
-              onshelf_time,
-            })
-            calcTotalItems() // Moved inside the onClick function
-            notifyBuy()
-            //   console.log(id)
+            notifyBuy(LessonDetail.name)
+            addLessonItem(LessonDetail)
           }}
         >
-          <Toaster />
           <img
             loading="lazy"
             src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
@@ -518,28 +476,14 @@ export default function LessonDetailPage() {
         <div className="buyBtn">
           <div
             className="buy"
-            onClick={() =>
-              addLessonItem({
-                id,
-                img,
-                img_small,
-                type,
-                lesson_category_id,
-                name,
-                homework,
-                sales,
-                price,
-                discount,
-                discount_state,
-                length,
-                info,
-                onshelf_time,
-              })
-            }
+            onClick={() => {
+                addLessonItem(LessonDetail)
+                router.push("/cart/check")
+              }}
           >
-            <Link className="buy" href="/cart/check">
+            <div className="buy">
               立即購買
-            </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -615,6 +559,11 @@ export default function LessonDetailPage() {
         /* --------------- container --------------- */
         .container {
           min-height: calc(100vh);
+        }
+        .content {
+          @media screen and (max-width: 576px) {
+            padding-top: 0px;
+          }
         }
         .breadcrumb-wrapper {
           cursor: pointer;
@@ -723,17 +672,14 @@ export default function LessonDetailPage() {
           padding: 4px 0 4px 80px;
         }
         .teacher-info {
-           
-            /* height: 217px;
+          /* height: 217px;
           width: 660px; */
-          
         }
         .teacher-info-area {
           display: flex;
-           
+
           /* height: 166px;
           width: 660px; */
-          
         }
         .teacher-img-con {
           width: 140px;
@@ -756,9 +702,8 @@ export default function LessonDetailPage() {
         /* ------------- */
 
         .you-will-like {
-           
-            /* height: 508px; */
-          
+          /* height: 508px; */
+
           width: 100%;
           margin-top: 30px;
         }
@@ -792,19 +737,19 @@ export default function LessonDetailPage() {
           .Right {
             display: none;
           }
-           
-            /* 手機版productbrief-card */
-          
+
+          /* 手機版productbrief-card */
+
           .prodBriefingArea {
-            width: 100%;
-            height: 204px;
+            width: 390px;
+            height: 100%;
+            aspect-ratio: 1.68;
           }
           .prodImg {
             padding: 0px;
-
+            width: 100%;
             background-color: #ff9595;
             border-radius: 10px;
-            height: 204px;
           }
 
           .Right-mobile {
@@ -812,9 +757,9 @@ export default function LessonDetailPage() {
           }
           .prodBriefing {
             /* background-color: #ff9595; */
-             
-              /* margin-left: 110px; */
-            
+
+            /* margin-left: 110px; */
+
             margin-top: 20px;
           }
           .prodMainName {
@@ -913,9 +858,9 @@ export default function LessonDetailPage() {
           }
           .shoppingBtn {
             display: flex;
-             
-              /* margin-top: 20px; */
-            
+
+            /* margin-top: 20px; */
+
             justify-content: space-evenly;
             gap: 12px;
             font-size: 16px;
@@ -953,11 +898,8 @@ export default function LessonDetailPage() {
             width: 100%;
           }
 
-           
+          /* detail-mobile */
 
-           
-            /* detail-mobile */
-          
           .detail {
             max-width: 100%;
           }

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import Navbar from '@/components/common/navbar'
+import NavbarMb from '@/components/common/navbar-mb'
 import Footer from '@/components/common/footer'
+import Head from 'next/head'
 import Link from 'next/link'
 import Image from 'next/image'
 import jamHero from '@/assets/jam-hero.png'
@@ -58,7 +60,6 @@ export default function Test() {
     setShowMenu(!showMenu)
   }
   // ----------------------假資料  ----------------------
-
   const [filterVisible, setFilterVisible] = useState(false)
   useEffect(() => {
     document.addEventListener('click', (e) => {
@@ -78,12 +79,14 @@ export default function Test() {
   let UserInfo = JSON.stringify([
     { Name: '', Phone: '', Email: '', Address: '' },
   ])
-  
 
   localStorage.setItem('UserInfo', UserInfo)
 
   return (
     <>
+      <Head>
+        <title>修改訂單</title>
+      </Head>
       <Navbar menuMbToggle={menuMbToggle} />
       <div className="container position-relative">
         {/* 手機版主選單/navbar */}
@@ -92,40 +95,7 @@ export default function Test() {
             showMenu ? 'menu-mb-show' : ''
           }`}
         >
-          {/* 用戶資訊 */}
-          <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
-            <div className="mb-photo-wrapper mb-2">
-              <Image
-                src="/jam/amazingshow.jpg"
-                alt="user photo mb"
-                fill
-              ></Image>
-            </div>
-            <div>用戶名稱</div>
-          </div>
-          <Link
-            className="mm-item"
-            href="/user"
-            style={{ borderTop: '1px solid #b9b9b9' }}
-          >
-            會員中心
-          </Link>
-          <Link className="mm-item" href="/lesson/lesson-list">
-            探索課程
-          </Link>
-          <Link className="mm-item" href="/instrument/instrument-list">
-            樂器商城
-          </Link>
-          <Link className="mm-item" href="/jam/recruit-list">
-            Let &apos;s JAM!
-          </Link>
-          <Link className="mm-item" href="/article/article-list">
-            樂友論壇
-          </Link>
-          <div className="mm-item" style={{ color: '#1581cc' }}>
-            登出
-            <ImExit size={20} className="ms-2" />
-          </div>
+          <NavbarMb />
         </div>
         <>
           <div className="cart">
@@ -174,7 +144,7 @@ export default function Test() {
                   remove={remove}
                 />
                 <div className="cart-subtotal h6">
-                  原價 NT$ {calcLessonPrice()}
+                  原價 NT$ {calcLessonPrice().toLocaleString()}
                 </div>
                 <div className="cart-coupon">
                   <div className="coupon-selector">
@@ -189,12 +159,12 @@ export default function Test() {
                   </div>
                   <div className="cart-discount h6">
                     折扣 -NT$
-                    {calcLessonDiscount()}
+                    {calcLessonDiscount().toLocaleString()}
                   </div>
                 </div>
                 <div className="cart-total">
                   <div className="cart-total-text">
-                    小計 NT$ {calcLessonPrice() - calcLessonDiscount()}
+                    小計 NT$ {(calcLessonPrice() - calcLessonDiscount()).toLocaleString()}
                   </div>
                 </div>
               </div>
@@ -214,7 +184,7 @@ export default function Test() {
                   remove={remove}
                 />
                 <div className="cart-subtotal h6">
-                  原價 NT$ {calcInstrumentPrice()}
+                  原價 NT$ {calcInstrumentPrice().toLocaleString()}
                 </div>
                 <div className="cart-coupon">
                   <div className="coupon-selector">
@@ -223,17 +193,19 @@ export default function Test() {
                       <InstrumentCouponList
                         instrumentCoupons={instrumentCoupons}
                         handleInstrumentSelector={handleInstrumentSelector}
-                        handleInstrumentCUIDSelector={handleInstrumentCUIDSelector}
+                        handleInstrumentCUIDSelector={
+                          handleInstrumentCUIDSelector
+                        }
                       />
                     </div>
                   </div>
                   <div className="cart-discount h6">
-                    折扣 -NT$ {calcInstrumentDiscount()}
+                    折扣 -NT$ {calcInstrumentDiscount().toLocaleString()}
                   </div>
                 </div>
                 <div className="cart-total">
                   <div className="cart-total-text">
-                    小計 NT$ {calcInstrumentPrice() - calcInstrumentDiscount()}
+                    小計 NT$ {(calcInstrumentPrice() - calcInstrumentDiscount()).toLocaleString()}
                   </div>
                 </div>
               </div>
@@ -255,15 +227,15 @@ export default function Test() {
                   </div>
                   <div className="d-flex justify-content-between carttext">
                     <div>原價合計</div>
-                    <div>NT ${calcTotalPrice()}</div>
+                    <div>NT ${calcTotalPrice().toLocaleString()}</div>
                   </div>
                   <div className="d-flex justify-content-between carttext discount">
                     <div>折扣合計</div>
-                    <div>-NT ${calcTotalDiscount()}</div>
+                    <div>-NT ${calcTotalDiscount().toLocaleString()}</div>
                   </div>
                   <div className="d-flex justify-content-between h3">
                     <div>合計</div>
-                    <div>NT ${calcTotalPrice() - calcTotalDiscount()}</div>
+                    <div>NT ${(calcTotalPrice() - calcTotalDiscount()).toLocaleString()}</div>
                   </div>
                 </div>
                 <div className="cart-btn">
@@ -294,15 +266,15 @@ export default function Test() {
             </div>
             <div className="d-flex justify-content-between carttext">
               <div>原價合計</div>
-              <div>NT ${calcTotalPrice()}</div>
+              <div>NT ${calcTotalPrice().toLocaleString()}</div>
             </div>
             <div className="d-flex justify-content-between carttext discount">
               <div>折扣合計</div>
-              <div>-NT ${calcTotalDiscount()}</div>
+              <div>-NT ${calcTotalDiscount().toLocaleString()}</div>
             </div>
             <div className="d-flex justify-content-between h3">
               <div>合計</div>
-              <div>NT ${calcTotalPrice() - calcTotalDiscount()}</div>
+              <div>NT ${(calcTotalPrice() - calcTotalDiscount()).toLocaleString()}</div>
             </div>
           </div>
           <div className="cart-btn">

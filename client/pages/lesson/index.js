@@ -191,51 +191,51 @@ export default function LessonList({}) {
     }
   }
 
-//   課程評價篩選
+  //   課程評價篩選
   const scoreState = ['all', '5', '4', '3']
   const [score, setScore] = useState('all')
   const [confirmClicked, setConfirmClicked] = useState(false) // 新状态来跟踪确认按钮点击
-// //   当点击确认按钮时触发的useEffect
-//   useEffect(() => {
-//     if (score === 'all') {
-//       setData(LessonArray)
-//     } else {
-//       const scoreNum = parseInt(score, 10)
-//       const filtered = LessonArray.filter(
-//         (lesson) => Math.round(lesson.average_rating) === scoreNum
-//       )
-//       setData(filtered)
-//       setIsFiltered(true)
-//     }
-//     setConfirmClicked(false) // 处理完后重置确认按钮的点击状态
-//   }, [confirmClicked]) // 依赖于确认按钮点击状态
+  //   当点击确认按钮时触发的useEffect
+    useEffect(() => {
+      if (score === 'all') {
+        setData(LessonArray)
+      } else {
+        const scoreNum = parseInt(score, 10)
+        const filtered = LessonArray.filter(
+          (lesson) => Math.round(lesson.average_rating) === scoreNum
+        )
+        setData(filtered)
+        setIsFiltered(true)
+      }
+      setConfirmClicked(false) // 处理完后重置确认按钮的点击状态
+    }, [confirmClicked]) // 依赖于确认按钮点击状态
 
   // 促銷課程篩選
   const [sales, setSales] = useState(false)
 
   // 监听confirmClicked变化，执行筛选逻辑
-  useEffect(() => {
-    if (confirmClicked) {
-      if (sales == true) {
-        // 筛选促销课程
-        const salesCourses = LessonArray.filter(
-          (lesson) => lesson.discount_state == 1
-        )
-        setData(salesCourses)
-        setIsFiltered(true)
-      } else {
-        // 不筛选，显示所有课程
-        setData(LessonArray)
-      }
-      // 重置confirmClicked状态以便下次点击
-      setConfirmClicked(false)
-    }
-  }, [confirmClicked, sales]) // 添加sales作为依赖项，确保筛选逻辑正确执行
+  // useEffect(() => {
+  //   if (confirmClicked) {
+  //     if (sales == true) {
+  //       // 筛选促销课程
+  //       const salesCourses = LessonArray.filter(
+  //         (lesson) => lesson.discount_state == 1
+  //       )
+  //       setData(salesCourses)
+  //       setIsFiltered(true)
+  //     } else {
+  //       // 不筛选，显示所有课程
+  //       setData(LessonArray)
+  //     }
+  //     // 重置confirmClicked状态以便下次点击
+  //     setConfirmClicked(false)
+  //   }
+  // }, [confirmClicked, sales]) // 添加sales作为依赖项，确保筛选逻辑正确执行
 
   // 点击确认按钮的处理函数
   const handleConfirmClick = () => {
-      setConfirmClicked(true)
-      console.log(confirmClicked)
+    setConfirmClicked(true)
+    console.log(confirmClicked)
   }
 
   // 清除表單內容
@@ -610,24 +610,6 @@ export default function LessonList({}) {
                             })}
                           </div>
                         </div>
-                        {/* 促銷課程 */}
-                        <div className="filter-item">
-                          <div className="form-check">
-                            <label className="form-check-label filter-title mb-0">
-                              <input
-                                className="form-check-input"
-                                type="checkbox"
-                                checked={sales}
-                                value={sales}
-                                name="sales"
-                                onChange={() => {
-                                  setSales(!sales)
-                                }}
-                              />
-                              促銷課程
-                            </label>
-                          </div>
-                        </div>
                         <div className="d-flex justify-content-between gap-2">
                           <div
                             className="filter-btn clean-btn w-100 d-flex justify-content-center"
@@ -672,7 +654,7 @@ export default function LessonList({}) {
               </div>
             </div>
             {/* 主內容 */}
-            <div className="content">
+            <div className="content" style={{ minHeight: '95svh' }}>
               {showHotCourses && (
                 <div className="hot-lesson">
                   <h4 className="text-primary">熱門課程</h4>
@@ -778,9 +760,9 @@ export default function LessonList({}) {
                       sales,
                       length,
                     } = v
-                    console.log(lesson_category_name)
+                    {/* console.log(lesson_category_name) */}
                     return (
-                      <div className="mb-4" key={id}>
+                      <div key={id}>
                         {isSmallScreen ? (
                           <Cardrwd
                             lesson_category_id={lesson_category_name}
@@ -819,11 +801,13 @@ export default function LessonList({}) {
         </div>
       </div>
       <div className="d-flex justify-content-center">
-        <BS5Pagination
-          forcePage={currentPage}
-          onPageChange={handlePageClick}
-          pageCount={totalPage}
-        />
+        {!isFiltered && (
+          <BS5Pagination
+            forcePage={currentPage}
+            onPageChange={handlePageClick}
+            pageCount={totalPage}
+          />
+        )}
       </div>
       <Footer />
       <style jsx>{`

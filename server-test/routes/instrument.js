@@ -146,13 +146,12 @@ router.get('/categories', async (req, res) => {
 router.get('/category/:category', async (req, res) => {
   try {
     const category = req.params.category;
-    // console.log(category);
-    let query = 'SELECT * FROM `product` WHERE `type` = 1';
+    let query = 'SELECT product.*, instrument_category.name AS category_name FROM `product` JOIN instrument_category ON product.instrument_category_id = instrument_category.id WHERE product.type = 1';
     let queryParams = [];
    
       // 如果 category 不是空字串或'0'，則增加類別過濾條件
       if (category !== '' && category !== '0') {
-        query += ' AND `instrument_category_id` = ?';
+        query += ' AND product.instrument_category_id = ?';
         queryParams = [category];
       }
 

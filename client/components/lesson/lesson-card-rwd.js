@@ -1,4 +1,4 @@
-import React from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 // icon
@@ -19,6 +19,12 @@ export default function CourseCard({
   sales,
   discount,
 }) {
+  const [priceStr, setPriceStr] = useState('')
+  useEffect(() => {
+    if(price) {
+      setPriceStr(price.toLocaleString())
+    }
+  }, [price])
   return (
     <>
       <Link href={`/lesson/${lesson_category_id}/${luid}`}>
@@ -66,7 +72,7 @@ export default function CourseCard({
               </div>
             </div>
             <div className="course-price-container">
-              <span className="course-price">NT$ {price}</span>
+              <span className="course-price">NT$ {priceStr}</span>
               <img
                 loading="lazy"
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/f63b958d31f22ceac9729085dc4ee70e1cc6d5a2dab24fdc0543dd3b1c72eac0?apiKey=8130f93a2c9b4a89bbf1aefc4624aa21&"
@@ -87,7 +93,7 @@ export default function CourseCard({
             align-items: center;
             width: 390px;
             height: 147px;
-            border-bottom: solid #b9b9b9;
+            border-bottom: 1px solid #b9b9b9;
           }
           .course-image-container {
             object-fit: hidden;

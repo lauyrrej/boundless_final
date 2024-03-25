@@ -78,24 +78,46 @@ router.get('/categories', async (req, res) => {
 router.get('/category/:category', async (req, res) => {
   try {
     const category = req.params.category;
-    let query = 'SELECT * FROM `product` WHERE `type` = 2';
+    let query = `
+      SELECT 
+          product.*,
+          lesson_category.name AS lesson_category_name,
+          COUNT(product_review.product_id) AS review_count, 
+          AVG(product_review.stars) AS average_rating, 
+          teacher_info.name AS teacher_name,  
+          teacher_info.img AS teacher_img,     
+          teacher_info.info AS teacher_info  
+      FROM 
+          product
+      LEFT JOIN 
+          product_review ON product.id = product_review.product_id
+      LEFT JOIN 
+          teacher_info ON product.teacher_id = teacher_info.id
+      LEFT JOIN 
+          lesson_category ON product.lesson_category_id = lesson_category.id
+      WHERE 
+          product.type = 2`;
+
     let queryParams = [];
 
-    // 如果 category 不是空字串或'0'，則增加類別過濾條件
+    // 如果 category 不是空字符串或'0'，则增加类别过滤条件
     if (category !== '' && category !== '0') {
-      query += ' AND `lesson_category_id` = ?';
-      queryParams = [category];
+      query += ' AND product.lesson_category_id = ?';
+      queryParams.push(category);
     }
+
+    // 添加 GROUP BY 子句以便正确聚合 product_review 数据
+    query += ' GROUP BY product.id';
 
     let [lessons] = await db.execute(query, queryParams);
 
     if (lessons.length > 0) {
       res.status(200).json(lessons);
     } else {
-      res.status(404).send({ message: '沒有找到相應的資訊' });
+      res.status(404).send({ message: '没有找到相应的信息' });
     }
   } catch (error) {
-    console.error('發生錯誤：', error);
+    console.error('发生错误：', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });

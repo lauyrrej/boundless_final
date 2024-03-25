@@ -2,6 +2,7 @@ import { useMemo, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Navbar from '@/components/common/navbar'
+import NavbarMb from '@/components/common/navbar-mb'
 import Footer from '@/components/common/footer'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -181,41 +182,7 @@ export default function ArticleList() {
             showMenu ? 'menu-mb-show' : ''
           }`}
         >
-          {/* 用戶資訊 */}
-          <div className="menu-mb-user-info d-flex align-items-center flex-column mb-3">
-            <div className="mb-photo-wrapper mb-2">
-              <Image
-                src="/jam/amazingshow.jpg"
-                alt="user photo mb"
-                fill
-              ></Image>
-            </div>
-            <div>用戶名稱</div>
-          </div>
-          <Link
-            className="mm-item"
-            href="/user"
-            style={{ borderTop: '1px solid #b9b9b9' }}
-          >
-            會員中心
-          </Link>
-          <Link className="mm-item" href="/lesson/lesson-list">
-            探索課程
-          </Link>
-          <Link className="mm-item" href="/instrument/instrument-list">
-            樂器商城
-          </Link>
-          <Link className="mm-item" href="/jam/recruit-list">
-            Let &apos;s JAM!
-          </Link>
-          <Link className="mm-item" href="/article/article-list">
-            {/* bug 瀏覽器顯示的跟其他人的不一樣 */}
-            樂友論壇
-          </Link>
-          <div className="mm-item" style={{ color: '#1581cc' }}>
-            登出
-            <ImExit size={20} className="ms-2" />
-          </div>
+          <NavbarMb/>
         </div>
         <div className="row">
           {/* -----------sidebar------------ */}
@@ -256,13 +223,13 @@ export default function ArticleList() {
                   }}
                 />
               </div>
-              <Link href={`/article/article-list`} className="sm-item active">
+              <Link href={`/article/article-list`} className="sm-item">
                 全部
               </Link>
-              <Link href={`/article/article-list`} className="sm-item">
-                樂評
+              <Link href={`/article/article-list/comments`} className="sm-item active">
+                音樂評論
               </Link>
-              <Link href={`/article/article-list`} className="sm-item">
+              <Link href={`/article/article-list/sharing`} className="sm-item">
                 技術分享
               </Link>
             </div>

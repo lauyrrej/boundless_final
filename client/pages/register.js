@@ -207,7 +207,7 @@ export default function Test() {
         <div className="bg-register ">
           {/* contnet */}
           <div className="container register-wrap">
-            <div className="register-logo">
+            <Link className="register-logo" href='/'>
               <svg
                 className="register-logoSvg"
                 xmlns="http://www.w3.org/2000/svg"
@@ -257,7 +257,7 @@ export default function Test() {
                   fill="white"
                 />
               </svg>
-            </div>
+            </Link>
             <div className="register-logoText">音樂無國界，學習無邊界</div>
             <div className="register-form">
               <div className="register-titleText">註冊帳號</div>
