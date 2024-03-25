@@ -67,7 +67,7 @@ export default function Index() {
   }
   useEffect(() => {
     if (carouselData.length > 0) {
-      carouselData.push({ img: 'bannerNew.jpg', url: '/coupon/couponAdd' })
+      carouselData.push({ img: 'banner.jpg', url: '/coupon/couponAdd' })
       setCarouselUseData(carouselData)
     }
   }, [carouselData])
