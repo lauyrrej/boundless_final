@@ -236,7 +236,7 @@ export default function Test() {
         <div className="bg-login">
           {/* contnet */}
           <div className="container col-12 login-wrap">
-            <div className="login-logo">
+            <Link className="login-logo" href='/'>
               <svg
                 className="login-logoSvg"
                 xmlns="http://www.w3.org/2000/svg"
@@ -286,7 +286,7 @@ export default function Test() {
                   fill="white"
                 />
               </svg>
-            </div>
+            </Link>
             <div className="login-logoText">音樂無國界，學習無邊界</div>
             <div className="login-form">
               <div className="login-titleText">登入</div>

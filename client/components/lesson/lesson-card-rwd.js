@@ -93,7 +93,7 @@ export default function CourseCard({
             align-items: center;
             width: 390px;
             height: 147px;
-            border-bottom: solid #b9b9b9;
+            border-bottom: 1px solid #b9b9b9;
           }
           .course-image-container {
             object-fit: hidden;

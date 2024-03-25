@@ -198,20 +198,18 @@ let nameimg
             className="breadcrumb-wrapper-ns"
             style={{ paddingBlock: '20px' }}
           >
-            <ul className="d-flex align-items-center p-0 m-0">
+            <ul className="d-flex align-items-center flex-wrap p-0 m-0">
               <IoHome size={20} />
               <Link href="/instrument">
                 <li style={{ marginLeft: '8px' }}>樂器商城</li>
               </Link>
               <FaChevronRight />
-
               <li style={{ marginLeft: '10px' }}>
                 {InstrumentDetail.category_name}
               </li>
-
               <FaChevronRight />
               <li style={{ marginLeft: '10px' }}>
-                {InstrumentDetail.subcategory_name}
+                {InstrumentDetail.name}
               </li>
 
               {InstrumentDetail && InstrumentDetail.length > 0 && (
@@ -498,7 +496,7 @@ let nameimg
           </div>
         </div>
       </div>
-      <div className="shoppingBtn sticky-top d-flex d-sm-none" id="shoppingBtn">
+      <div className="shoppingBtn sticky-top d-flex d-sm-none flex-column" style={{zIndex: '99'}} id="shoppingBtn">
         <div className="quantitySelector p-3">
           <div
             className="btn decrease-btn d-flex align-items-center"
@@ -525,12 +523,13 @@ let nameimg
           >
             <FaPlus color="#fff" />
           </div>
+          {InstrumentDetail.stock == 0 ? <div className='ms-3' style={{color: '#1d1d1d', fontSize: '20px'}}>暫無庫存</div> : ''}
         </div>
         <div
           className="d-flex jusify-content-evenly px-2"
           style={{ gap: '12px' }}
         >
-          <div className="cartBtn">
+          <div className="cartBtn" style={{backgroundColor: `${InstrumentDetail.stock == 0 ? '#666666': ''}`}}>
             <img
               loading="lazy"
               src="https://cdn.builder.io/api/v1/image/assets/TEMP/c240e4bc8653fe6179383ea22f1eb80902c70eec255a944e9d8e0efbf823c4e3?"
@@ -539,13 +538,21 @@ let nameimg
             <div
               className="cart"
               onClick={() => {
-                addInstrumentItem(v)
+                if (InstrumentDetail.stock > 0) {
+                  addInstrumentItem(InstrumentDetail, quantity)
+                  notifyBuy(InstrumentDetail.name)
+                }
               }}
             >
               加入購物車
             </div>
           </div> 
-          <div className="buyBtn">
+          <div className="buyBtn" style={{backgroundColor: `${InstrumentDetail.stock == 0 ? '#1581cc': ''}`}} role='presentation' onClick={() => {
+                if (InstrumentDetail.stock > 0) {
+                  addInstrumentItem(InstrumentDetail, quantity)
+                  router.push('/cart/check')
+                }
+              }}>
             <div className="buy">立即購買</div>
           </div>
         </div>
@@ -577,6 +584,17 @@ let nameimg
 
           & a {
             text-decoration: none;
+          }
+        }
+
+        .content {
+          @media screen and (max-width: 576px) {
+            padding-top: 0px;
+          }
+        }
+        .breadcrumb-wrapper-ns {
+          @media screen and (max-width: 576px) {
+            padding-inline: 4px;
           }
         }
 
@@ -887,8 +905,7 @@ list-style-type: disc;
 max-width: 390px;
  }
    .sub-Pic-Con{
-        display:flex;
-        justify-content:space-between;
+
 width:100%;
 {/* margin-top:5px; */}
 padding-top:20px;
