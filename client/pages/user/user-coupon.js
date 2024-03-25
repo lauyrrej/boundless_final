@@ -337,7 +337,7 @@ export default function Test() {
             <div
               className={`sidebar-mb d-sm-none ${
                 showSidebar ? 'sidebar-mb-show' : ''
-              }`}
+              }`} style={{top:'190px'}}
             >
               <div className="sm-close">
                 <IoClose
@@ -890,7 +890,7 @@ export default function Test() {
           .coupon-content {
             width: 390px;
             padding: 10px;
-            overflow: hidden;
+            overflow: auto;
           }
         }
       `}</style>

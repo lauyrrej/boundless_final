@@ -226,6 +226,10 @@ export default function Auid() {
         main {
           padding-left: 55px;
           padding-right: 55px;
+          @media screen and (max-width: 576px) {
+            padding-inline: 10px;
+            padding-top:0;
+          }
         }
         h1 {
           padding-top: 5;

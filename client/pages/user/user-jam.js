@@ -366,7 +366,7 @@ console.log(LoginUserData);
             <div
               className={`sidebar-mb d-sm-none ${
                 showSidebar ? 'sidebar-mb-show' : ''
-              }`}
+              }`} 
             >
               <div className="sm-close">
                 <IoClose
