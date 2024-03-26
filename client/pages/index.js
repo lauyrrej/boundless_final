@@ -67,7 +67,7 @@ export default function Index() {
   }
   useEffect(() => {
     if (carouselData.length > 0) {
-      carouselData.push({ img: 'bannerNew.jpg', url: '/coupon/couponAdd' })
+      carouselData.push({ img: 'banner.jpg', url: '/coupon/couponAdd' })
       setCarouselUseData(carouselData)
     }
   }, [carouselData])
@@ -140,7 +140,7 @@ export default function Index() {
                       <Link
                         href={`/lesson/${v.lesson_category_name}/${v.puid}`}
                         className={`carousel-item ${i == 0 ? 'active' : ''}`}
-                        data-bs-interval="4000"
+                        data-bs-interval="6000"
                       >
                         <Image
                           src={`/課程與師資/lesson_img/${v.img}`}

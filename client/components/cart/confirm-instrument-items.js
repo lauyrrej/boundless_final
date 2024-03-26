@@ -13,10 +13,10 @@ export default function ConfirmInstrumentItems({
                 <div className={`${InstrumentConfirm.instrument_item_name} h6`}>
                     {v.name}
                 </div>
-                <div className={`${InstrumentConfirm.instrument_item_price} h6`}>${v.price}</div>
+                <div className={`${InstrumentConfirm.instrument_item_price} h6`}>${(v.price).toLocaleString()}</div>
                 <div className={`${InstrumentConfirm.instrument_item_quantity} h6`}>{v.qty}</div>
-                <div className={`${InstrumentConfirm.instrument_item_total} h6`}>${v.price*v.qty}</div>
-                <div className={`${InstrumentConfirm.instrument_item_payment} h6`}>${v.price*v.qty}</div>
+                <div className={`${InstrumentConfirm.instrument_item_total} h6`}>${(v.price*v.qty).toLocaleString()}</div>
+                <div className={`${InstrumentConfirm.instrument_item_payment} h6`}>${(v.price*v.qty).toLocaleString()}</div>
             </div>
         )
     })}

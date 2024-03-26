@@ -196,7 +196,7 @@ export default function Test() {
                       <div className="row row m-sm-3">
                         <div className="col-9">
                           {/* 連結至樂器/課程列表 */}
-                          <Link href={`/instrument`}>
+                          <Link href={`/lesson`}>
                             {' '}
                             <img
                               className="couponImg"
@@ -204,7 +204,7 @@ export default function Test() {
                               //   width: '100%',
                               //   minWidth: '390px',
                               // }}
-                              src="bannerNew2.jpg"
+                              src="bannerNew3.jpg"
                             />
                           </Link>
                         </div>
@@ -243,9 +243,9 @@ export default function Test() {
                       <div className="row row m-sm-3">
                         <div className="col-9">
                           {/* 連結至樂器/課程列表 */}
-                          <Link href={`/lesson`}>
+                          <Link href={`/instrument`}>
                             {' '}
-                            <img className="couponImg" src="bannerNew3.jpg" />
+                            <img className="couponImg" src="bannerNew2.jpg" />
                           </Link>
                         </div>
                         <div className="col-3 d-flex align-items-center justify-content-center">

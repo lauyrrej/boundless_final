@@ -47,7 +47,7 @@ export default function InstrumentList({
                 {v.name}
               </div>
               <div className={`${Instrument.instrument_item_price} h6`}>
-                ${v.price}
+                ${v.price.toLocaleString()}
               </div>
               <div className={`${Instrument.instrument_item_quantity} h6`}>
                 <div className="input-group">
@@ -84,7 +84,7 @@ export default function InstrumentList({
                 </div>
               </div>
               <div className={`${Instrument.instrument_item_total} h6`}>
-                ${v.price * v.qty}
+                ${(v.price * v.qty).toLocaleString()}
               </div>
               <div className={`${Instrument.instrument_button}`}>
                 <button

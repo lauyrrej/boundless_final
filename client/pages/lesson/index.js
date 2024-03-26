@@ -512,24 +512,28 @@ export default function LessonList({}) {
                 </div>
                 {/* 手機版排序 */}
                 <div className="filter-sort d-flex justify-content-between">
-                  <div className="sort-mb d-block d-sm-none">
+                <div className="sort-mb d-block d-sm-none">
                     <select
                       className="form-select"
                       value={dataSort}
                       name="dataSort"
                       onChange={(e) => {
-                        setDataSort(e.target.value)
+                        const selectedValue = e.target.value
+                        if (selectedValue === 'upToDate') {
+                          sortBySales()
+                        } else if (selectedValue === 'review') {
+                          sortByRating()
+                        } else if (selectedValue === 'classLength') {
+                          sortBylength()
+                        }
+                        setDataSort(selectedValue)
                       }}
                     >
-                      <option selected value="upToDate" onClick={sortBySales}>
+                      <option selected value="upToDate">
                         最熱門
                       </option>
-                      <option value="review" onClick={sortByRating}>
-                        依評價
-                      </option>
-                      <option value="classLength" onClick={sortByRating}>
-                        依時數
-                      </option>
+                      <option value="review">依評價</option>
+                      <option value="classLength">依時數</option>
                     </select>
                   </div>
 
@@ -760,9 +764,9 @@ export default function LessonList({}) {
                       sales,
                       length,
                     } = v
-                    console.log(lesson_category_name)
+                    {/* console.log(lesson_category_name) */}
                     return (
-                      <div className="mb-4" key={id}>
+                      <div key={id}>
                         {isSmallScreen ? (
                           <Cardrwd
                             lesson_category_id={lesson_category_name}

@@ -269,14 +269,14 @@ export default function Test() {
             <div
               className={`sidebar-mb d-sm-none ${
                 showSidebar ? 'sidebar-mb-show' : ''
-              }`}
+              }`} style={{top:'190px'}}
             >
               <div className="sm-close">
                 <IoClose
                   size={32}
                   onClick={() => {
                     setShowSidebar(false)
-                  }}
+                  }} 
                 />
               </div>
               <Link href={`/user/user-info`} className="sm-item ">
