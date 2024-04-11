@@ -13,8 +13,8 @@ export default function ConfirmLessonItems({
             <div className={`${LessonConfirm.lesson_item_name} h6`}>
               {v.name}
             </div>
-            <div className={`${LessonConfirm.lesson_item_price} h6`}>${v.price}</div>
-            <div className={`${LessonConfirm.lesson_item_payment} h6`}>${v.price}</div>
+            <div className={`${LessonConfirm.lesson_item_price} h6`}>${(v.price).toLocaleString()}</div>
+            <div className={`${LessonConfirm.lesson_item_payment} h6`}>${(v.price).toLocaleString()}</div>
           </div>
         )
       })}

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2024-03-25 10:22:30
+-- 產生時間： 2024-03-26 09:50:12
 -- 伺服器版本： 10.4.28-MariaDB
 -- PHP 版本： 8.0.28
 
@@ -232,7 +232,7 @@ CREATE TABLE `coupon` (
 
 INSERT INTO `coupon` (`id`, `user_id`, `coupon_template_id`, `created_time`, `valid`) VALUES
 (1, 1, 1, '2023-03-02 16:10:51', 1),
-(2, 1, 2, '2023-10-18 15:24:24', 0),
+(2, 1, 2, '2023-10-18 15:24:24', 1),
 (3, 1, 3, '2023-04-21 22:48:21', 1),
 (4, 1, 4, '2023-04-20 00:26:54', 1),
 (5, 1, 5, '2023-07-22 19:15:38', 1),
@@ -248,7 +248,7 @@ INSERT INTO `coupon` (`id`, `user_id`, `coupon_template_id`, `created_time`, `va
 (15, 1, 15, '2023-12-09 16:28:50', 1),
 (16, 1, 16, '2023-11-01 06:34:56', 1),
 (17, 1, 17, '2023-04-29 08:25:55', 1),
-(18, 1, 18, '2023-04-27 07:59:28', 0),
+(18, 1, 18, '2023-04-27 07:59:28', 1),
 (19, 1, 19, '2023-05-24 22:39:01', 1),
 (20, 1, 20, '2023-07-13 21:06:57', 1),
 (21, 1, 21, '2023-08-04 02:23:34', 1),
@@ -269,15 +269,7 @@ INSERT INTO `coupon` (`id`, `user_id`, `coupon_template_id`, `created_time`, `va
 (36, 1, 36, '2023-10-05 13:25:43', 1),
 (37, 1, 37, '2023-05-20 05:13:03', 1),
 (38, 1, 38, '2023-02-08 12:09:30', 1),
-(39, 1, 2, '2022-06-30 23:17:42', 0),
-(40, 1, 2, '2022-10-12 05:37:01', 0),
-(41, 1, 2, '2022-11-20 07:09:28', 0),
-(42, 1, 3, '2022-08-10 06:01:19', 0),
-(43, 1, 3, '2022-10-29 18:36:58', 0),
-(44, 1, 3, '2022-08-01 13:14:37', 0),
-(45, 1, 4, '2022-08-12 11:55:35', 0),
-(46, 1, 4, '2022-07-29 17:13:00', 0),
-(47, 1, 4, '2022-01-28 10:24:05', 0);
+(39, 1, 2, '2022-06-30 23:17:42', 0);
 
 -- --------------------------------------------------------
 
@@ -512,7 +504,7 @@ INSERT INTO `jam` (`id`, `juid`, `former`, `member`, `name`, `cover_img`, `intro
 (35, 'bsZCt0KDKRmh', '{\"id\": 99, \"play\": 18}', '[{\"id\": 100, \"play\": 5},{\"id\": 101, \"play\": 8}]', 'D.A.N.', 'dan.jpg', '音樂風格融合了電子、合成器、舞曲和實驗性元素，以及時而搭配現場樂器演奏，呈現出獨特的聲音和節奏結構。D.A.N.的音樂充滿了夢幻和悸動，常常帶給聽眾前所未有的聽覺體驗。他們的歌詞內容通常抒發對生活和人生的思考，並以抽象的方式表達情感和心境。D.A.N.以其獨特的音樂風格和創新的音樂理念在日本音樂界贏得了廣泛的聲譽和支持。他們的代表作品包括《SAL》、《SSWB》等，深受樂迷喜愛。', 'ZjPQVunWh6s', '標題 13', '描述 13', 1, '[6,8,18]', '[]', '高雄市', '', '2024-03-10 20:26:54', '0000-00-00 00:00:00', '2024-03-08 05:02:29', 1, 1),
 (36, 's8EHTtOqnjEz', '{\"id\": 102, \"play\": 2}', '[{\"id\": 103, \"play\": 1},{\"id\": 104, \"play\": 7}]', 'JAM-s8EHTtOqnjEz', '', '', NULL, '標題 14', '描述 14', 1, '[1]', '[]', '新北市', '', '2024-03-14 21:58:08', '0000-00-00 00:00:00', '2024-03-17 22:24:14', 1, 1),
 (37, 'vE8OCDx8FmVA', '{\"id\": 105, \"play\": 1}', '[{\"id\": 106, \"play\": 5},{\"id\": 107, \"play\": 3},{\"id\": 108, \"play\": 8},{\"id\": 109, \"play\": 18}]', '魚韻 Sakanaction', 'sakanaction.jpg', '樂團的名稱為「魚」（サカナ）與「Action」（アクション）的結合字。中譯為「魚韻」。樂隊表示，他們的名字，呈現了他們的理念「期許能夠不畏懼音樂潮流的變化，像魚的動作一般，輕快且迅速的悠遊來去於音樂之中」。\n\n音樂風格融合了搖滾、電子、合成器等元素，以其獨特的聲音和多樣化的音樂風格而聞名。樂團的音樂作品常常充滿了夢幻和悸動，結合了強烈的節奏和迷人的旋律，給人一種前所未有的聽覺體驗。他們的歌詞內容涉及了各種主題，包括生活、愛情、社會等，並以抽象的方式表達情感和心境。サカナクション以其獨特的音樂風格和精湛的演出技巧在日本樂壇上獲得了廣泛的讚譽和支持。他們的代表作品包括《新宝島》、《アイデンティティ》等，深受樂迷喜愛。', 'LIlZCmETvsY', '標題 15', '描述 15', 2, '[2,3,18]', '[]', '台北市', '', '2024-02-25 00:06:13', '0000-00-00 00:00:00', '2024-03-10 14:34:21', 1, 1),
-(38, '6q3SoqnuPEXJ', '{\"id\": 110, \"play\": 4}', '[{\"id\":112,\"play\":1}]', NULL, NULL, NULL, NULL, '我想組樂團', '台中日系搖滾樂迷想找夥伴~歡迎加入!', 2, '[4,1]', '[1]', '台中市', '好相處，會聽節拍器。', '2024-03-11 11:31:02', '2024-03-19 00:03:23', '2024-03-15 17:56:43', 0, 1),
+(38, '6q3SoqnuPEXJ', '{\"id\": 110, \"play\": 5}', '[{\"id\":112,\"play\":8}]', NULL, NULL, NULL, NULL, '我想組樂團', '台中日系搖滾樂迷想找夥伴~歡迎加入!', 2, '[4,1]', '[1]', '台中市', '好相處，會聽節拍器。', '2024-03-11 11:31:02', '2024-03-19 00:03:23', '2024-03-15 17:56:43', 0, 1),
 (43, 'qCH6JgZNpMCR', '{\"id\": 114, \"play\": 8}', '[]', NULL, NULL, NULL, NULL, '我的樂團', 'gffewreawrf', 1, '[4]', '[14]', '嘉義縣', '', '2024-03-16 02:35:54', NULL, NULL, 0, 0);
 
 -- --------------------------------------------------------
@@ -539,8 +531,10 @@ CREATE TABLE `jam_apply` (
 
 INSERT INTO `jam_apply` (`id`, `juid`, `former_uid`, `applier_uid`, `applier_play`, `message`, `state`, `created_time`, `valid`) VALUES
 (3, '6q3SoqnuPEXJ', 'n500ef48Ibat', 'n500ef48Ib22', 1, '我想加入!', 4, '2024-03-14 00:24:41', 0),
-(4, '6q3SoqnuPEXJ', 'n500ef48Ibat', 'LkFxTyBxEHWO', 3, '我也想加入!', 4, '2024-03-15 17:52:13', 0),
-(5, '8BgBgtJkv5f7', 'vF1V9si8MRF6', 'n500ef48Ib22', 8, '再申請一個', 3, '2024-03-15 18:02:48', 0);
+(4, '6q3SoqnuPEXJ', 'n500ef48Ibat', 'LkFxTyBxEHWO', 1, '我也想加入!', 0, '2024-03-15 17:52:13', 1),
+(5, '8BgBgtJkv5f7', 'vF1V9si8MRF6', 'n500ef48Ib22', 8, '再申請一個', 3, '2024-03-15 18:02:48', 0),
+(6, 'QF2MrvdS5odH', '6yABeAhqFa6c', 'IxKTTfDkz3Bc', 3, '我彈琴超強', 0, '2024-03-26 09:43:21', 1),
+(7, 'icNrYCOPoJLh', 'R8DjVBJJVCIi', 'IxKTTfDkz3Bc', 6, '李斯特再世就是我', 2, '2024-03-26 09:44:03', 1);
 
 -- --------------------------------------------------------
 
@@ -724,7 +718,7 @@ INSERT INTO `product` (`id`, `puid`, `type`, `name`, `price`, `discount`, `disco
 (16, 'xsRKxDcsKE2A', 1, 'Gibson Kirk Hammett', 39600, 0.0, 0, 9, 0, 5, 0, 'Kirk_Hammett-1.png,Kirk_Hammett-2.png,Kirk_Hammett-3.png,Kirk_Hammett-4.png', 'Kirk_Hammett-1.jpg', '1960 年代美學、現代工藝，與更為精進的Yamaha吉他研發50年經驗\n標準的 Yamaha FG 的琴身擁有飽滿且有力的低頻，非常適合彈撥和刷奏\n新的扇形 FG 琴身木條排列方式展現溫暖厚實的音調、深沉的低音和豐富的共鳴\n原音共鳴強化技術 (A.R.E.) 處理展現熟成木材的音質和延音\n搭配西特卡雲杉木面板和桃花心木側背板的全單板結構\n黑檀木指板、琴橋、弦釘和尾釘\n骨質上弦枕和下弦枕\n日本製\n隨附專用硬琴盒', '', '', '', 0, 0, 'Body Style : ES\nBody Shape : Venetian Cutaway Hollowbody\nBody Material : 3-ply Maple/Poplar/Maple\nBinding : Nitrocellulose VOS (Vintage Patina)', 5, 8, '2023-12-08 01:20:25', '2023-12-15 16:09:10', '', 1),
 (17, 'GW6Vf3AGTawT', 1, 'Gibson LesPaulStandard', 32800, 0.0, 0, 9, 0, 5, 0, 'LesPaulStandard-1.png,LesPaulStandard-2.png,LesPaulStandard-3.png,LesPaulStandard-4.png', 'LesPaulStandard-1.jpg', '1960 年代美學、現代工藝，與更為精進的Yamaha吉他研發50年經驗\nAtmosfeel™ 拾音器和前級放大系統展現獨有的自然插電音質\n標準的 Yamaha FG 的琴身擁有飽滿且有力的低頻，非常適合彈撥和刷奏\n新的扇形 FG 琴身木條排列方式展現溫暖厚實的音調、深沉的低音和豐富的共鳴\n原音共鳴強化技術 (A.R.E.) 處理展現熟成木材的音質和延音\n搭配西特卡雲杉木面板和桃花心木側背板的全單板結構\n黑檀木指板和琴橋\n隨附專用厚琴袋', '', '', '', 0, 0, 'Body Style : ES\nBody Shape : Venetian Cutaway Hollowbody\nBody Material : 3-ply Maple/Poplar/Maple\nBinding : Nitrocellulose VOS (Vintage Patina)', 0, 1, '2023-12-07 11:36:22', '2023-12-11 18:12:54', '2023-12-11 18:12:54', 1),
 (18, 'r5lKGQvMDJpj', 1, 'Gibson Rick Beato Les Paul Special Double Cut ', 46200, 0.0, 0, 9, 0, 5, 0, 'Rick_Beato_Les_Paul_Special_Double_Cut_back-1.png,Rick_Beato_Les_Paul_Special_Double_Cut_back-2.png,Rick_Beato_Les_Paul_Special_Double_Cut_back-3.png,', 'Rick_Beato_Les_Paul_Special_Double_Cut_front-5.jpg', '1960 年代美學、現代工藝，與更為精進的Yamaha吉他研發50年經驗\nAtmosfeel™ 拾音器和前級放大系統展現獨有的自然插電音質\n標準的 Yamaha FG 的琴身擁有飽滿且有力的低頻，非常適合彈撥和刷奏\n新的扇形 FG 面板力木條排列方式展現溫暖厚實的音調、深沉的低音和豐富的共鳴\n原音共鳴強化技術 (A.R.E.) 處理展現熟成木材的音質和延音\n搭配西特卡雲杉木面板和桃花心木側背板的全單板結構\n黑檀木指板、琴橋和琴釘\n骨質上弦枕和下弦枕\n日本製\n隨附專用硬琴盒', '', '', '', 0, 0, 'Body Style : ES\nBody Shape : Venetian Cutaway Hollowbody\nBody Material : 3-ply Maple/Poplar/Maple\nBinding : Nitrocellulose VOS (Vintage Patina)', 5, 0, '2023-12-06 06:03:43', '2023-12-09 04:40:47', '', 1),
-(19, 'arrdOY0317Lc', 1, 'Gibson Explorer', 39600, 0.0, 0, 9, 0, 5, 0, 'Explorer-1.jpg,Explorer-2.jpg,Explorer-3.jpg,Explorer-4.jpg', 'Explorer-1.jpg', '1960 年代美學、現代工藝，與更為精進的Yamaha吉他研發50年經驗\n標準的Yamaha FS Concert 形琴身非常適合喜歡較小型琴身的彈奏者，且擁有略微清亮的音質，讓彈撥和刷奏的音色更為完整。\n新的扇形 FS 面板力木條排列方式展現溫暖厚實的音調和豐富的共鳴\n原音共鳴強化技術 (A.R.E.) 處理展現熟成木材的音質和延音\n搭配西特卡雲杉木面板和桃花心木側背板的全單板結構\n黑檀木指板、琴橋、弦釘和尾釘\n骨質上弦枕和下弦枕\n日本製\n隨附專用硬琴盒', '', '', '', 0, 0, 'Body Style : ES\nBody Shape : Venetian Cutaway Hollowbody\nBody Material : 3-ply Maple/Poplar/Maple\nBinding : Nitrocellulose VOS (Vintage Patina)', 1, 9, '2023-12-07 23:01:05', '2023-12-15 18:35:55', '', 1),
+(19, 'arrdOY0317Lc', 1, 'Gibson Explorer', 39600, 0.0, 0, 9, 0, 5, 0, 'Explorer-1.jpg,Explorer-2.jpg,Explorer-3.png,Explorer-4.png', 'Explorer-1.jpg', '1960 年代美學、現代工藝，與更為精進的Yamaha吉他研發50年經驗\n標準的Yamaha FS Concert 形琴身非常適合喜歡較小型琴身的彈奏者，且擁有略微清亮的音質，讓彈撥和刷奏的音色更為完整。\n新的扇形 FS 面板力木條排列方式展現溫暖厚實的音調和豐富的共鳴\n原音共鳴強化技術 (A.R.E.) 處理展現熟成木材的音質和延音\n搭配西特卡雲杉木面板和桃花心木側背板的全單板結構\n黑檀木指板、琴橋、弦釘和尾釘\n骨質上弦枕和下弦枕\n日本製\n隨附專用硬琴盒', '', '', '', 0, 0, 'Body Style : ES\nBody Shape : Venetian Cutaway Hollowbody\nBody Material : 3-ply Maple/Poplar/Maple\nBinding : Nitrocellulose VOS (Vintage Patina)', 1, 9, '2023-12-07 23:01:05', '2023-12-15 18:35:55', '', 1),
 (20, 'Ks9vZkFXQIUL', 1, 'Gibson 80s Explorer', 46200, 0.0, 0, 9, 0, 5, 0, '80s_Explorer-1.png,80s_Explorer-2.png,80s_Explorer-3.png,80s_Explorer-4.png', '80s_Explorer-1.jpg', '1960 年代美學、現代工藝，與更為精進的Yamaha吉他研發50年經驗\nAtmosfeel™ 拾音器和前級放大系統展現獨有的自然插電音質\n標準的Yamaha FS Concert 形琴身非常適合喜歡較小型琴身的彈奏者，且擁有略微清亮的音質，讓彈撥和刷奏的音色更為完整。\n新的扇形 FS 面板力木條排列方式展現溫暖厚實的音調和豐富的共鳴\n原音共鳴強化技術 (A.R.E.) 處理展現熟成木材的音質和延音\n搭配西特卡雲杉木面板和桃花心木側背板的全單板結構\n黑檀木指板、琴橋和琴釘\n骨質上弦枕和下弦枕\n日本製\n隨附專用硬琴盒', '', '', '', 0, 0, 'Body Style : ES\nBody Shape : Venetian Cutaway Hollowbody\nBody Material : 3-ply Maple/Poplar/Maple\nBinding : Nitrocellulose VOS (Vintage Patina)', 5, 8, '2023-12-07 05:29:08', '2023-12-13 05:34:56', '2023-12-11 02:42:23', 1),
 (21, 'a0GStfPdPKoq', 1, 'Gibson 70s Explorer', 4400, 0.0, 0, 9, 0, 5, 0, '70s_Explorer-1.png,70s_Explorer-2.png,70s_Explorer-3.png,70s_Explorer-4.png', '70s_Explorer-1.jpg', 'Yamaha小型吉他GL1可彈奏出如同Ukulele的夏威夷熱帶草裙音樂風味。\n\n琴長433mm之尼龍弦吉他\n雲杉面板\n隨附原廠吉他袋', '', '', '', 0, 0, 'Body Style : ES\nBody Shape : Venetian Cutaway Hollowbody\nBody Material : 3-ply Maple/Poplar/Maple\nBinding : Nitrocellulose VOS (Vintage Patina)', 6, 2, '2023-12-08 18:52:23', '2023-12-12 21:45:06', '', 1),
 (22, 'YnJ3RfajrZog', 1, 'Gibson 80sFlyingV', 174680, 0.0, 0, 9, 0, 5, 0, '80sFlyingV-1.png,80sFlyingV-2.png,80sFlyingV-3.png,80sFlyingV-4.png', '80sFlyingV-1.jpg', 'L系列的旗艦版。L56 Custom是由頂級制琴師嚴選最高級木材精製而成。不但音色豐富溫暖，細緻的外觀更是使L56成為值得收藏的藝術品。\n\n標準Jumbo型琴身\n單板哥倫比亞雲杉木面板(使用A.R.E.技術)\n單板印度玫瑰木背板及側板\n舒適的琴頸設計\n奢華鮑魚貝鑲邊\n硝基漆表面處理', '', '', '', 0, 0, 'Body Style : ES\nBody Shape : Venetian Cutaway Hollowbody\nBody Material : 3-ply Maple/Poplar/Maple\nBinding : Nitrocellulose VOS (Vintage Patina)', 5, 4, '2023-12-03 07:36:51', '2023-12-04 09:10:16', '', 1),
@@ -1599,9 +1593,9 @@ INSERT INTO `user` (`id`, `uid`, `name`, `email`, `password`, `phone`, `postcode
 (109, 'nSCV34Mnblwm', '薛升雁', 'nicole9181@gmail.com', '23584F96', '0988281862', 520, '彰化縣', '田中鎮', '高鐵東五路２段89號', '2002-04-22', '1,3,18', '6,18', '嗨，我是岡崎英美。音樂對我而言是生活中不可或缺的一部分，是我情感和想法的最佳表達方式。\n\n我擅長彈奏鋼琴和合成器，這兩種樂器讓我能夠深入地感受到音樂的美妙與多樣性。\n\n我喜歡探索各種風格的音樂，尤其是搖滾和電子音樂，這些風格充滿了活力和創意。\n\n音樂是我生活的一部分，也是我與世界連結的橋樑，希望我的音樂能夠觸動您的心靈，為您帶來美好的聆聽體驗。', 'avatar_user0026.jpg', '2', '岡崎英美', '', '', '0,1,0', '', 'vE8OCDx8FmVA', '2023-12-02 21:32:38', '0000-00-00 00:00:00', 1),
 (110, 'n500ef48Ibat', '安迪', 'andy@test.com', 'a21153524', NULL, NULL, NULL, NULL, NULL, '0000-00-00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '6q3SoqnuPEXJ', '2024-03-11 09:54:33', '0000-00-00 00:00:00', 1),
 (112, 'n500ef48Ib22', '安迪22', 'andy22@test.com', '12345', NULL, NULL, NULL, NULL, NULL, '0000-00-00', NULL, NULL, NULL, 'avatar_user0058.jpg', NULL, '潔西卡', NULL, NULL, NULL, NULL, '6q3SoqnuPEXJ', '2024-03-14 00:14:40', '0000-00-00 00:00:00', 1),
-(113, 'LkFxTyBxEHWO', '安迪333', 'andy333@test.com', '12345', NULL, NULL, NULL, NULL, NULL, '0000-00-00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-03-15 18:12:46', '0000-00-00 00:00:00', 1),
+(113, 'LkFxTyBxEHWO', '安迪333', 'andy333@test.com', '12345', NULL, NULL, NULL, NULL, NULL, '0000-00-00', NULL, NULL, NULL, NULL, NULL, '約翰', NULL, NULL, NULL, NULL, NULL, '2024-03-15 18:12:46', '0000-00-00 00:00:00', 1),
 (114, 'PFw0zQ7RWAcp', '', 'andy4@test.com', '12345', NULL, NULL, NULL, NULL, NULL, '0000-00-00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'qCH6JgZNpMCR', '2024-03-16 02:35:15', '0000-00-00 00:00:00', 1),
-(115, 'IxKTTfDkz3Bc', '李桐梧', 'mfee01t@gmail.com', 'a12345678', '0913306401', 802, '高雄市', '苓雅區', '正義路79號', '2000-08-05', '3', '3,6', '嗨，我是櫻木大悟。音樂對我來說是生活中不可或缺的一部分，是我情感和想法的最佳表達方式。\n\n我喜歡各種風格的音樂，從搖滾到電子，每一種都有著獨特的魅力和吸引力。\n\n作為一個音樂愛好者，我擅長彈奏吉他和鍵盤，這些樂器讓我能夠深入地感受到音樂的美妙。\n\n除了音樂之外，我還喜歡探索科技的世界，追求新的挑戰和冒險。希望我的音樂能夠帶給您愉悅和感動，成為您生活中美好的一部分。', 'avatar_user001711331703604.jpg', '1', '櫻木大悟', '113214898383402870616', 'https://lh3.googleusercontent.com/a/ACg8ocIFsn4EVrgmCSp5ZYQkpL7_yAZ9TifPMGA6YmQtWYuGdw=s96-c', '0,0,0', NULL, 'bsZCt0KDKRmh', '2024-03-25 09:29:24', '0000-00-00 00:00:00', 1);
+(115, 'IxKTTfDkz3Bc', '李桐梧', 'mfee01t@gmail.com', 'a12345678', '0913306401', 802, '高雄市', '苓雅區', '正義路79號', '2000-08-05', '3', '3,6', '嗨，我是櫻木大悟。音樂對我來說是生活中不可或缺的一部分，是我情感和想法的最佳表達方式。\n\n我喜歡各種風格的音樂，從搖滾到電子，每一種都有著獨特的魅力和吸引力。\n\n作為一個音樂愛好者，我擅長彈奏吉他和鍵盤，這些樂器讓我能夠深入地感受到音樂的美妙。\n\n除了音樂之外，我還喜歡探索科技的世界，追求新的挑戰和冒險。希望我的音樂能夠帶給您愉悅和感動，成為您生活中美好的一部分。', 'avatar_user001711331703604.jpg', '1', '櫻木大悟', '113214898383402870616', 'https://lh3.googleusercontent.com/a/ACg8ocIFsn4EVrgmCSp5ZYQkpL7_yAZ9TifPMGA6YmQtWYuGdw=s96-c', '0,0,0', NULL, NULL, '2024-03-25 09:29:24', '0000-00-00 00:00:00', 1);
 
 --
 -- 已傾印資料表的索引
@@ -1879,7 +1873,7 @@ ALTER TABLE `jam`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `jam_apply`
 --
 ALTER TABLE `jam_apply`
-  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `lesson_category`
