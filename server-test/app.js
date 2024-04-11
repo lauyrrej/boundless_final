@@ -16,6 +16,8 @@ import articleRouter from './routes/article.js';
 import googleLoginRouter from './routes/google-login.js';
 import cartRouter from './routes/cart.js'
 import forgetpasswordRouter from './routes/reset-password.js';
+import ecpayusersRouter from './routes/ecpay-users.js';
+import ecpayorderRouter from './routes/ecpay-order.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -59,10 +61,11 @@ app.use('/api/coupon', couponRouter);
 app.use('/api/user', userRouter);
 app.use('/api/article', articleRouter);
 app.use('/api/google-login', googleLoginRouter);
-app.use('/api/cart', cartRouter)
+app.use('/api/cart', cartRouter);
 app.use('/api/reset-password', forgetpasswordRouter);
 
-
+app.use('/api/order', ecpayorderRouter);
+app.use('/api/users', ecpayusersRouter);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
@@ -78,7 +81,5 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
-
 
 export default app;
