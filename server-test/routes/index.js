@@ -1,5 +1,7 @@
 import express from 'express';
 import db from '../db.js';
+
+
 const router = express.Router();
 
 /* GET home page. */
@@ -12,7 +14,7 @@ router.get('/', async (req, res) => {
     });
   if (data.length > 0) {
     res.json({ status: 'success', data });
-  }
+  };
 });
 
 export default router;
