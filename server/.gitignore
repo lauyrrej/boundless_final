@@ -36,3 +36,8 @@ make-product-sample.js
 data/product-n2m.sql
 data/test_sql
 
+#sql
+Lesson.sql
+
+#Lesson
+pagination.js
